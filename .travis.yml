@@ -1,0 +1,31 @@
+---
+language: ruby
+cache:
+  - bundler
+  - apt
+rvm:
+  - ruby-2.0.0-p353
+
+# Eventually have Travis send notifications to Hipchat or whatever else we decide to use
+# notifications:
+#   webhooks: https://morsel-something.herokuapp.com/hipchat
+
+# We'll probably use MongoDB for analytics/etc.
+# services:
+#   - mongodb
+
+before_install:
+  # - sudo apt-get update -qq
+  # - sudo apt-get install -qq libxslt-dev libxml2-dev imagemagick
+  # - cp config/database.travis.yml config/database.yml
+
+before_script:
+  - mysql -e 'create database morsel_test;'
+  - "RAILS_ENV=test rake db:schema:load"
+  - "RAILS_ENV=test rake travis:migrate"
+
+script: "RAILS_ENV=test rake spec"
+
+# TODO: Add Travis-CI specific environment variables for tokens like Facebook, Twitter, etc.
+# env:
+#   global:
