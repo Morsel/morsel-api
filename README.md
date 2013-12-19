@@ -1,4 +1,4 @@
-morsel-api
+morsel
 ==========
 
 The API for Morsel
