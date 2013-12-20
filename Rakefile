@@ -3,4 +3,8 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-Morsel::Application.load_tasks
+MorselApp::Application.load_tasks
+
+task :annotate do
+  exec 'annotate --format markdown --force'
+end

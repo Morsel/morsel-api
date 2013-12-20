@@ -9,4 +9,4 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-Morsel::Application.config.secret_key_base = 'f79eb08ca245effdb32a81bcc8c8693f4973dcfb3d92269ab0d05ed5c03176da74a5be17d15a2626c071e633bc95e7d1980fe8f4e69299007ce4c4eaeed1a1ff'
+MorselApp::Application.config.secret_key_base = 'f79eb08ca245effdb32a81bcc8c8693f4973dcfb3d92269ab0d05ed5c03176da74a5be17d15a2626c071e633bc95e7d1980fe8f4e69299007ce4c4eaeed1a1ff'

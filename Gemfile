@@ -1,15 +1,22 @@
 source 'https://rubygems.org'
 
 ruby '2.0.0'
+#ruby-gemset=morsel
 
 gem 'rails', '4.0.2'
 gem 'pg'
 
+gem 'activeadmin', github: 'gregbell/active_admin'
 gem 'bootstrap-sass', '>= 3.0.0.0'
 gem 'coffee-rails', '~> 4.0.0'
+gem 'cancan'
+gem 'devise', "~> 3.2.2"
+# gem 'doorkeeper', '~> 0.7.0'
+# gem 'formtastic'
+# gem "carrierwave", "~> 0.9.0"
 gem 'jbuilder', '~> 1.2'
 gem 'jquery-rails'
-# gem 'paperclip'
+gem 'rolify'
 gem 'sass-rails', '~> 4.0.0'
 gem 'slim-rails'
 gem 'turbolinks'
@@ -19,10 +26,6 @@ gem 'unicorn'
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_19, :mri_20, :rbx]
-  gem 'guard-bundler'
-  gem 'guard-rails'
-  gem 'guard-rspec'
-  gem 'guard-rubocop'
   gem 'quiet_assets'
   gem 'pry'
   gem 'rails_layout'
@@ -33,10 +36,21 @@ group :development do
 end
 
 group :development, :test do
+  gem 'annotate', '>= 2.6.0'
+  gem 'childprocess', '0.3.6'
   gem 'factory_girl_rails'
   gem 'faker'
+  gem "fuubar", "~> 1.3.2"
+  gem 'guard-bundler'
+  gem 'guard-rails'
+  gem 'guard-rails_best_practices'
+  gem 'guard-rspec'
+  gem 'guard-rubocop'
+  gem 'guard-spork', '1.5.0'
+  gem 'rails_best_practices'
   gem 'rspec-instafail'
   gem 'rspec-rails'
+  gem 'spork-rails', '4.0.0'
 end
 
 group :test do
@@ -44,4 +58,8 @@ group :test do
   gem "codeclimate-test-reporter", group: :test, require: nil
   gem 'database_cleaner', '1.0.1'
   gem 'email_spec'
+end
+
+group :production do
+  gem 'rails_12factor'
 end

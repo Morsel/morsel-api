@@ -1,0 +1,5 @@
+/ add navigation links to this file
+li
+- if current_user && current_user.admin?
+  li
+    = link_to "Admin", admin_root_path

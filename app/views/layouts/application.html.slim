@@ -3,8 +3,8 @@ html
   head
     meta[name="viewport" content="width=device-width, initial-scale=1.0"]
     title
-      = content_for?(:title) ? yield(:title) : 'Morsel Api'
-    meta name="description" content="#{content_for?(:description) ? yield(:description) : 'Morsel Api'}"
+      = content_for?(:title) ? yield(:title) : 'Morsel'
+    meta name="description" content="#{content_for?(:description) ? yield(:description) : 'Morsel'}"
     == stylesheet_link_tag "application", :media => "all", "data-turbolinks-track" => true
     == javascript_include_tag "application", "data-turbolinks-track" => true
     == csrf_meta_tags
@@ -14,3 +14,4 @@ html
     main[role="main"]
       == render 'layouts/messages'
       == yield
+    = debug(params.merge(current_user: current_user)) if Rails.env.development?
