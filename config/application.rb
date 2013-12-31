@@ -6,7 +6,7 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
 
-module Morsel
+module MorselApp
   class Application < Rails::Application
     # don't generate RSpec tests for views and helpers
     config.generators do |g|
