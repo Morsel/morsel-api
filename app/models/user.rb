@@ -23,6 +23,10 @@
 # **`last_name`**               | `string(255)`      |
 # **`admin`**                   | `boolean`          | `default(FALSE), not null`
 # **`authentication_token`**    | `string(255)`      |
+# **`profile`**                 | `string(255)`      |
+# **`profile_content_type`**    | `string(255)`      |
+# **`profile_file_size`**       | `string(255)`      |
+# **`profile_updated_at`**      | `datetime`         |
 #
 
 class User < ActiveRecord::Base
@@ -34,12 +38,12 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   before_save :ensure_authentication_token
+  before_save :update_profile_attributes
 
-  has_many :morsels
+  has_many :morsels, foreign_key: :creator_id
+  has_many :posts, foreign_key: :creator_id
 
-  def as_json(options = {})
-    super(only: [:id, :email, :first_name, :last_name, :sign_in_count]).merge(options)
-  end
+  mount_uploader :profile, UserProfileUploader
 
   private
 
@@ -51,6 +55,14 @@ class User < ActiveRecord::Base
     loop do
       token = Devise.friendly_token
       break token unless User.where(authentication_token: token).first
+    end
+  end
+
+  def update_profile_attributes
+    if profile.present? && profile_changed?
+      self.profile_content_type = profile.file.content_type
+      self.profile_file_size = profile.file.size
+      self.profile_updated_at = Time.now
     end
   end
 end

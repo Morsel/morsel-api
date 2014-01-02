@@ -11,26 +11,26 @@ class Api::ApiController < ActionController::Base
 
   private
 
-  # user_token is expected to be in the format: "#{user.id}:#{user.authentication_token}"
+  # api_key is expected to be in the format: "#{user.id}:#{user.authentication_token}"
   def authenticate_user_from_token!
     # !!!: for now we only auth on user_id exists
-    user_id  = params[:user_id].presence
+    user_id  = params[:api_key].presence
     user = user_id && User.find(user_id)
 
     if user
-      sign_in user, store: false
+      sign_in user, store: false, bypass: true
     else
       unauthorized_token
       return
     end
 
-    # user_token  = params[:user_token].presence
-    # split_token = user_token.split(':')
+    # api_key  = params[:api_key].presence
+    # split_token = api_key.split(':')
     # unauthorized_token and return unless split_token.length == 2
 
-    # user = user_token && User.find(split_token[0])
+    # user = api_key && User.find(split_token[0])
 
-    # if user && Devise.secure_compare(user.authentication_token, user_token.split(':')[1])
+    # if user && Devise.secure_compare(user.authentication_token, api_key.split(':')[1])
     #   sign_in user, store: false  # Require token for every request
     # else
     #   unauthorized_token
@@ -38,17 +38,11 @@ class Api::ApiController < ActionController::Base
     # end
   end
 
-  def unauthorized_token
-    json_response(nil, 401)
+  def json_response_with_errors(errors, http_status)
+    render json: { errors: errors.map { |e| { msg: e } } }, status: http_status
   end
 
-  def json_response(response, http_status = 200)
-    render json: {
-      meta: {
-        status: http_status,
-        msg: Rack::Utils::HTTP_STATUS_CODES[http_status]
-      },
-      response: response
-    }
+  def unauthorized_token
+    json_response_with_errors(['Unauthorized'], :unauthorized)
   end
 end

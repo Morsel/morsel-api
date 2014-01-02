@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131230215109) do
+ActiveRecord::Schema.define(version: 20140103222556) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,13 +33,33 @@ ActiveRecord::Schema.define(version: 20131230215109) do
 
   create_table "morsels", force: true do |t|
     t.text     "description"
-    t.integer  "like_count",  default: 0, null: false
+    t.integer  "like_count",         default: 0, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "user_id"
+    t.integer  "creator_id"
+    t.string   "photo"
+    t.string   "photo_content_type"
+    t.string   "photo_file_size"
+    t.datetime "photo_updated_at"
   end
 
-  add_index "morsels", ["user_id"], name: "index_morsels_on_user_id", using: :btree
+  add_index "morsels", ["creator_id"], name: "index_morsels_on_creator_id", using: :btree
+
+  create_table "morsels_posts", id: false, force: true do |t|
+    t.integer "morsel_id"
+    t.integer "post_id"
+  end
+
+  add_index "morsels_posts", ["morsel_id", "post_id"], name: "index_morsels_posts_on_morsel_id_and_post_id", using: :btree
+
+  create_table "posts", force: true do |t|
+    t.string   "title"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "creator_id"
+  end
+
+  add_index "posts", ["creator_id"], name: "index_posts_on_creator_id", using: :btree
 
   create_table "relationships", force: true do |t|
     t.integer  "follower_id"
@@ -76,6 +96,10 @@ ActiveRecord::Schema.define(version: 20131230215109) do
     t.string   "last_name"
     t.boolean  "admin",                  default: false, null: false
     t.string   "authentication_token"
+    t.string   "profile"
+    t.string   "profile_content_type"
+    t.string   "profile_file_size"
+    t.datetime "profile_updated_at"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
