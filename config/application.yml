@@ -1,0 +1,8 @@
+developer:
+  email: <%= ENV['DEVELOPER_EMAIL'] %>
+aws:
+  credentials:
+    access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
+    secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
+  buckets:
+    default: <%= ENV['S3_DEFAULT_BUCKET'] %>
