@@ -12,10 +12,12 @@
   - [GET ```/users/{user_id}/posts``` - User Posts](#get-usersuser_idposts---user-posts)
 - [Morsel Methods](#morsel-methods)
   - [POST ```/morsels``` - Create a new Morsel](#post-morsels---create-a-new-morsel)
+  - [GET ```/morsels/{morsel_id}``` - Morsel](#get-morselsmorsel_id---morsel)
   - [PUT ```/morsels/{morsel_id}``` - Update Morsel](#put-morselsmorsel_id---update-morsel)
 - [Post Methods](#post-methods)
   - [GET ```/posts``` - Posts](#get-posts---posts)
-  - [PUT ```/posts/{post_id}``` - Update Post](#put-morselsmorsel_id---update-morsel)
+  - [GET ```/posts/{post_id}``` - Post](#get-postspost_id---post)
+  - [PUT ```/posts/{post_id}``` - Update Post](#put-postspost_id---update-post)
 
 
 ## Overview
@@ -248,6 +250,23 @@ Created Morsel
 }
 ```
 
+### GET ```/morsels/{morsel_id}``` - Morsel
+Returns Morsel with the specified ```morsel_id```
+
+__Example Response__
+Morsel
+
+```json
+{
+  "id": 4,
+  "description": "This is a description!",
+  "photo_url": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/4/1389119839-morsel.png",
+  "creator_id": 1,
+  "created_at": "2014-01-07T18:37:19.661Z"
+}
+```
+
+
 ### PUT ```/morsels/{morsel_id}``` - Update Morsel
 Updates the Morsel with the specified ```morsel_id```
 
@@ -359,6 +378,22 @@ Array of Posts
   }
 ]
 ```
+
+### GET ```/posts/{post_id}``` -  Post
+Returns the Post with the specified ```post_id```
+
+__Example Response__
+Post
+
+```json
+{
+  "id": 4,
+  "title": null,
+  "creator_id": 1,
+  "created_at": "2014-01-03T22:31:47.113Z"
+}
+```
+
 
 ### PUT ```/posts/{post_id}``` - Update Post
 Updates the Post with the specified ```post_id```
