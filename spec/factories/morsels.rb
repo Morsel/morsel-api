@@ -4,14 +4,18 @@
 #
 # ### Columns
 #
-# Name               | Type               | Attributes
-# ------------------ | ------------------ | ---------------------------
-# **`id`**           | `integer`          | `not null, primary key`
-# **`description`**  | `text`             |
-# **`like_count`**   | `integer`          | `default(0), not null`
-# **`created_at`**   | `datetime`         |
-# **`updated_at`**   | `datetime`         |
-# **`user_id`**      | `integer`          |
+# Name                      | Type               | Attributes
+# ------------------------- | ------------------ | ---------------------------
+# **`id`**                  | `integer`          | `not null, primary key`
+# **`description`**         | `text`             |
+# **`like_count`**          | `integer`          | `default(0), not null`
+# **`created_at`**          | `datetime`         |
+# **`updated_at`**          | `datetime`         |
+# **`creator_id`**          | `integer`          |
+# **`photo`**               | `string(255)`      |
+# **`photo_content_type`**  | `string(255)`      |
+# **`photo_file_size`**     | `string(255)`      |
+# **`photo_updated_at`**    | `datetime`         |
 #
 
 # Read about factories at https://github.com/thoughtbot/factory_girl

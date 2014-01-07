@@ -46,3 +46,15 @@ guard 'rspec', cmd: '--drb --format Fuubar --color', all_on_start: false, all_af
 
   watch('app/controllers/application_controller.rb')  { "spec/requests" }
 end
+
+guard 'brakeman', :run_on_start => true do
+  watch(%r{^app/.+\.(erb|haml|rhtml|rb)$})
+  watch(%r{^config/.+\.rb$})
+  watch(%r{^lib/.+\.rb$})
+  watch('Gemfile')
+end
+
+guard :shell do
+  watch(%r{^Gemfile|Gemfile.lock$}) { system('bundle-audit')}
+  watch('db/schema.rb') { system('rake annotate')}
+end

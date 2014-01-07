@@ -1,0 +1,9 @@
+json.(user,
+  :id,
+  :email,
+  :first_name,
+  :last_name,
+  :sign_in_count,
+  :created_at,
+  :profile_url
+)

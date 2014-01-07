@@ -23,6 +23,10 @@
 # **`last_name`**               | `string(255)`      |
 # **`admin`**                   | `boolean`          | `default(FALSE), not null`
 # **`authentication_token`**    | `string(255)`      |
+# **`profile`**                 | `string(255)`      |
+# **`profile_content_type`**    | `string(255)`      |
+# **`profile_file_size`**       | `string(255)`      |
+# **`profile_updated_at`**      | `datetime`         |
 #
 
 # Read about factories at https://github.com/thoughtbot/factory_girl
