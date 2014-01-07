@@ -1,3 +1,23 @@
+- [Overview](#overview)
+  - [URI Structure](#uri-structure)
+  - [Versioning](#versioning)
+  - [Response Format](#response-format)
+  - [Errors](#errors)
+  - [About the API Documentation](#about-the-api-documentation)
+- [Authentication](#authentication)
+- [User Methods](#user-methods)
+  - [POST ```/users``` - Create a new User](#post-users---create-a-new-user)
+  - [POST ```/users/sign_in``` - User Authentication](#post-userssign_in---user-authentication)
+  - [PUT ```/users/{user_id}``` - Update User](#put-usersuser_id---update-user)
+  - [GET ```/users/{user_id}/posts``` - User Posts](#get-usersuser_idposts---user-posts)
+- [Morsel Methods](#morsel-methods)
+  - [POST ```/morsels``` - Create a new Morsel](#post-morsels---create-a-new-morsel)
+  - [PUT ```/morsels/{morsel_id}``` - Update Morsel](#put-morselsmorsel_id---update-morsel)
+- [Post Methods](#post-methods)
+  - [GET ```/posts``` - Posts](#get-posts---posts)
+  - [PUT ```/posts/{post_id}``` - Update Post](#put-morselsmorsel_id---update-morsel)
+
+
 ## Overview
 ### URI Structure
 All Morsel API requests start with the URL for the API host. The next segment of the URI path depends on the type of request.
