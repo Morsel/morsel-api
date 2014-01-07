@@ -8,8 +8,10 @@ The API for Morsel
 
 ## Environment Variables
 
+```
 DEVELOPER_EMAIL=turdferg@eatmorsel.com
 
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
 S3_DEFAULT_BUCKET=morsel
+```
