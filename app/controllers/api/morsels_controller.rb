@@ -23,6 +23,10 @@ class Api::MorselsController < Api::ApiController
         @post.creator = current_user
       end
 
+      if params[:post_title].present?
+        @post.title = params[:post_title]
+      end
+
       @post.morsels.push(@morsel)
       @post.save!
     else

@@ -17,10 +17,8 @@ class Api::UsersController < Api::ApiController
   end
 
   def update
-    user = User.find(params[:id])
-    user.update_attributes(UserParams.build(params))
-
-    respond_with user, location: root_path
+    @user = User.find(params[:id])
+    @user.update_attributes(UserParams.build(params))
   end
 
   class UserParams
