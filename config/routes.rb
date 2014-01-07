@@ -16,6 +16,6 @@ MorselApp::Application.routes.draw do
       resources :posts, only: [:index]
     end
     resources :morsels, only: [:create, :index, :show, :update]
-    resources :posts, only: [:index, :show]
+    resources :posts, only: [:index, :show, :update]
   end
 end

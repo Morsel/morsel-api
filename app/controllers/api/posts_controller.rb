@@ -12,4 +12,15 @@ class Api::PostsController < Api::ApiController
   def show
     @post = Post.find(params[:id])
   end
+
+  def update
+    @post = Post.find(params[:id])
+    @post.update_attributes(PostParams.build(params))
+  end
+
+  class PostParams
+    def self.build(params)
+      params.require(:post).permit(:title)
+    end
+  end
 end
