@@ -8,7 +8,11 @@ class UserProfileUploader < CarrierWave::Uploader::Base
   end
 
   def store_dir
-    "profile-images/#{model.class.to_s.underscore}/#{model.id}"
+    if Rails.env.test?
+      "#{Rails.root}/spec/support/uploads/profile-images/#{model.class.to_s.underscore}/#{model.id}"
+    else
+      "profile-images/#{model.class.to_s.underscore}/#{model.id}"
+    end
   end
 
   def extension_white_list

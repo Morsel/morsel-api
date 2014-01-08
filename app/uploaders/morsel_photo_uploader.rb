@@ -8,7 +8,11 @@ class MorselPhotoUploader < CarrierWave::Uploader::Base
   end
 
   def store_dir
-    "morsel-images/#{model.class.to_s.underscore}/#{model.id}"
+    if Rails.env.test?
+      "#{Rails.root}/spec/support/uploads/morsel-images/#{model.class.to_s.underscore}/#{model.id}"
+    else
+      "morsel-images/#{model.class.to_s.underscore}/#{model.id}"
+    end
   end
 
   def extension_white_list

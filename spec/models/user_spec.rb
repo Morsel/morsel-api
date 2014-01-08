@@ -33,9 +33,7 @@ require 'spec_helper'
 
 describe User do
   before do
-    @user = User.new(email: 'turdferg@eatmorsel.com',
-                     password: 'test1234',
-                     password_confirmation: 'test1234')
+    @user = FactoryGirl.build(:user)
   end
 
   subject { @user }
@@ -44,6 +42,11 @@ describe User do
   it { should respond_to(:encrypted_password) }
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
+  it { should respond_to(:first_name) }
+  it { should respond_to(:last_name) }
+  it { should respond_to(:sign_in_count) }
+  it { should respond_to(:authentication_token) }
+  it { should respond_to(:profile) }
 
   it { should be_valid }
 
@@ -69,8 +72,7 @@ describe User do
 
     describe 'is not a valid format' do
       it 'should not be valid' do
-        addresses = %w[ turdferg turdferg@ foo@bar foo@bar. foo@bar.a1b2
-                        foo@bar..co.uk foo@bar,com foo.bar foo@bar+baz.com a@b.c ]
+        addresses = %w[ turdferg turdferg@ ]
         addresses.each do |valid_address|
           @user.email = valid_address
           expect(@user).to_not be_valid
@@ -94,5 +96,20 @@ describe User do
       before { @user.password_confirmation = 'bar' }
       it { should_not be_valid }
     end
+  end
+
+  describe 'authentication_token' do
+    describe 'unsaved User' do
+      it 'should not exist' do
+        expect(@user.authentication_token).to be_nil
+      end
+    end
+    describe 'saved User' do
+      before { @user.save }
+      it 'should exist' do
+        expect(@user.authentication_token).to_not be_nil
+      end
+    end
+
   end
 end
