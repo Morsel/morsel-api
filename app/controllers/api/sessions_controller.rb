@@ -5,7 +5,7 @@ class Api::SessionsController < Devise::SessionsController
 
   def create
     if params[:user].blank?
-      json_response_with_errors(['Invalid email or password'], :unprocessable_entity)
+      invalid_login_attempt(:unprocessable_entity)
     else
       @user = User.find_for_database_authentication(email: params[:user][:email])
       return invalid_login_attempt unless @user
@@ -24,7 +24,7 @@ class Api::SessionsController < Devise::SessionsController
     render json: { errors: errors.map { |e| { msg: e } } }, status: http_status
   end
 
-  def invalid_login_attempt
-    json_response_with_errors(['Invalid email or password'], :unauthorized)
+  def invalid_login_attempt(http_status=:unauthorized)
+    json_response_with_errors(['Invalid email or password'], http_status)
   end
 end

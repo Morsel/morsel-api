@@ -36,7 +36,7 @@ FactoryGirl.define do
     email 'turdferg@eatmorsel.com'
     first_name 'Turd'
     last_name 'Ferguson'
-    password 'password123'
-    password_confirmation 'password123'
+    password 'test1234'
+    password_confirmation 'test1234'
   end
 end
