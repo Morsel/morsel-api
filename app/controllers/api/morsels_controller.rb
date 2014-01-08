@@ -23,9 +23,7 @@ class Api::MorselsController < Api::ApiController
         @post.creator = current_user
       end
 
-      if params[:post_title].present?
-        @post.title = params[:post_title]
-      end
+      @post.title = params[:post_title] if params[:post_title].present?
 
       @post.morsels.push(@morsel)
       @post.save!
@@ -41,6 +39,12 @@ class Api::MorselsController < Api::ApiController
   def update
     @morsel = Morsel.find(params[:id])
     @morsel.update_attributes(MorselParams.build(params))
+  end
+
+  def destroy
+    morsel = Morsel.find(params[:id])
+    morsel.destroy
+    render json: 'OK', status: :ok
   end
 
   class MorselParams

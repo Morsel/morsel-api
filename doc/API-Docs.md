@@ -14,6 +14,7 @@
   - [POST ```/morsels``` - Create a new Morsel](#post-morsels---create-a-new-morsel)
   - [GET ```/morsels/{morsel_id}``` - Morsel](#get-morselsmorsel_id---morsel)
   - [PUT ```/morsels/{morsel_id}``` - Update Morsel](#put-morselsmorsel_id---update-morsel)
+  - [DELETE ```/morsels/{morsel_id}``` - Delete Morsel](#delete-morselsmorsel_id---delete-morsel)
 - [Post Methods](#post-methods)
   - [GET ```/posts``` - Posts](#get-posts---posts)
   - [GET ```/posts/{post_id}``` - Post](#get-postspost_id---post)
@@ -291,6 +292,10 @@ Updated Morsel
 ```
 
 
+### DELETE ```/morsels/{morsel_id}``` - Delete Morsel
+Deletes the Morsel with the specified ```morsel_id```. Returns a 200 Status Code on success.
+
+
 ## Post Methods
 
 ### GET ```/posts``` - Posts
@@ -306,6 +311,14 @@ Array of Posts
     "title":null,
     "creator_id":1,
     "created_at":"2014-01-07T16:34:28.012Z",
+    "creator": {
+      "id": 1,
+      "first_name": "Marty",
+      "last_name": "Trzpit",
+      "sign_in_count": 1,
+      "created_at": "2014-01-06T12:30:32.533Z",
+      "profile_url": "https://morsel-staging.s3.amazonaws.com/profile-images/user/3/1389119757-batman.jpeg"
+    },
     "morsels":[
       {
         "id":1,
@@ -321,6 +334,14 @@ Array of Posts
     "title":null,
     "creator_id":1,
     "created_at":"2014-01-07T16:34:44.862Z",
+    "creator": {
+      "id": 1,
+      "first_name": "Marty",
+      "last_name": "Trzpit",
+      "sign_in_count": 1,
+      "created_at": "2014-01-06T12:30:32.533Z",
+      "profile_url": "https://morsel-staging.s3.amazonaws.com/profile-images/user/3/1389119757-batman.jpeg"
+    },
     "morsels":[
       {
         "id":2,
@@ -336,6 +357,14 @@ Array of Posts
     "title":null,
     "creator_id":1,
     "created_at":"2014-01-07T18:09:10.996Z",
+    "creator": {
+      "id": 1,
+      "first_name": "Marty",
+      "last_name": "Trzpit",
+      "sign_in_count": 1,
+      "created_at": "2014-01-06T12:30:32.533Z",
+      "profile_url": "https://morsel-staging.s3.amazonaws.com/profile-images/user/3/1389119757-batman.jpeg"
+    },
     "morsels":[
       {
         "id":3,
@@ -351,6 +380,14 @@ Array of Posts
     "title":null,
     "creator_id":1,
     "created_at":"2014-01-07T18:37:20.544Z",
+    "creator": {
+      "id": 1,
+      "first_name": "Marty",
+      "last_name": "Trzpit",
+      "sign_in_count": 1,
+      "created_at": "2014-01-06T12:30:32.533Z",
+      "profile_url": "https://morsel-staging.s3.amazonaws.com/profile-images/user/3/1389119757-batman.jpeg"
+    },
     "morsels":[
       {
         "id":4,
@@ -366,6 +403,14 @@ Array of Posts
     "title":null,
     "creator_id":2,
     "created_at":"2014-01-07T19:11:33.937Z",
+    "creator": {
+      "id": 2,
+      "first_name": "Bob",
+      "last_name": "Dole",
+      "sign_in_count": 23,
+      "created_at": "2014-01-03T11:12:52.763Z",
+      "profile_url": "https://morsel-staging.s3.amazonaws.com/profile-images/user/3/1389119757-batman.jpeg"
+    },
     "morsels":[
       {
         "id":5,
@@ -391,6 +436,23 @@ Post
   "title": null,
   "creator_id": 1,
   "created_at": "2014-01-03T22:31:47.113Z"
+  "creator": {
+    "id": 1,
+    "first_name": "Marty",
+    "last_name": "Trzpit",
+    "sign_in_count": 1,
+    "created_at": "2014-01-06T12:30:32.533Z",
+    "profile_url": "https://morsel-staging.s3.amazonaws.com/profile-images/user/3/1389119757-batman.jpeg"
+  },
+  "morsels":[
+    {
+      "id":4,
+      "description":"This is a modified description!",
+      "photo_url":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/4/1389119839-morsel.png",
+      "creator_id":1,
+      "created_at":"2014-01-07T18:37:19.661Z"
+    }
+  ]
 }
 ```
 
