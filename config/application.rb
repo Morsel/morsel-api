@@ -18,6 +18,13 @@ module MorselApp
       g.helper_specs false
     end
 
+    config.middleware.use Rack::Cors do
+      allow do
+        origins '*'
+        resource '/api/*', methods: [:get, :post, :put, :delete, :head, :options], headers: :any, max_age: 3600
+      end
+    end
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
