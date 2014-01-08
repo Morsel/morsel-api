@@ -5,6 +5,8 @@ class Api::ApiController < ActionController::Base
 
   before_filter :authenticate_user_from_token!
 
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+
   def authenticate_admin_user!
     redirect_to new_user_session_path unless current_user.try(:admin?)
   end
@@ -40,6 +42,10 @@ class Api::ApiController < ActionController::Base
 
   def json_response_with_errors(errors, http_status)
     render json: { errors: errors.map { |e| { msg: e } } }, status: http_status
+  end
+
+  def record_not_found(error)
+    json_response_with_errors(['Not Found'], :not_found)
   end
 
   def unauthorized_token
