@@ -19,8 +19,8 @@
   - [GET ```/posts``` - Posts](#get-posts---posts)
   - [GET ```/posts/{post_id}``` - Post](#get-postspost_id---post)
   - [PUT ```/posts/{post_id}``` - Update Post](#put-postspost_id---update-post)
-  - [PUT ```/posts/{post_id}/morsels/{morsel_id}``` - Append Morsel to Post](#put-postspost_idmorselsmorsel_id---append_morsel_to_post)
-  - [DELETE ```/posts/{post_id}/morsels/{morsel_id}``` - Detach Morsel from Post](#delete-postspost_idmorselsmorsel_id---detach_morsel_from_post)
+  - [PUT ```/posts/{post_id}/morsels/{morsel_id}``` - Append Morsel to Post](#put-postspost_idmorselsmorsel_id---append-morsel-to-post)
+  - [DELETE ```/posts/{post_id}/morsels/{morsel_id}``` - Detach Morsel from Post](#delete-postspost_idmorselsmorsel_id---detach-morsel-from-post)
 
 
 ## Overview
