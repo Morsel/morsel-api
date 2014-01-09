@@ -19,6 +19,8 @@
   - [GET ```/posts``` - Posts](#get-posts---posts)
   - [GET ```/posts/{post_id}``` - Post](#get-postspost_id---post)
   - [PUT ```/posts/{post_id}``` - Update Post](#put-postspost_id---update-post)
+  - [PUT ```/posts/{post_id}/morsels/{morsel_id}``` - Append Morsel to Post](#put-postspost_idmorselsmorsel_id---append_morsel_to_post)
+  - [DELETE ```/posts/{post_id}/morsels/{morsel_id}``` - Detach Morsel from Post](#delete-postspost_idmorselsmorsel_id---detach_morsel_from_post)
 
 
 ## Overview
@@ -100,8 +102,7 @@ __Request__
 | user[last_name] | String | The last name for the new User. | | |
 | user[profile] | File | The profile picture for the new User. Can be GIF, JPG, or PNG. | | |
 
-__Example Response__
-Created User
+__Example Response__ (Created User)
 
 ```json
 {
@@ -127,8 +128,7 @@ __Request__
 | user[email] | String | The email address for the User | | X |
 | user[password] | String | The password for the User. Minimum 8 characters. | | X |
 
-__Example Response__
-User
+__Example Response__ (User)
 
 ```json
 {
@@ -142,6 +142,12 @@ User
   "auth_token=": "25TLfL6tvc_Qzx52Zh9q"
 }
 ```
+
+__Unique Errors__
+
+| Message | Description |
+| ------- | ----------- |
+| __Invalid email or password__ | The email or password specified are invalid |
 
 
 ### PUT ```/users/{user_id}``` - Update User
@@ -157,8 +163,7 @@ __Request__
 | user[last_name] | String | The last name for the new User. | | |
 | user[profile] | File | The profile picture for the new User. Can be GIF, JPG, or PNG. | | |
 
-__Example Response__
-Updated User
+__Example Response__ (Updated User)
 
 ```json
 {
@@ -176,8 +181,7 @@ Updated User
 ### GET ```/users/{user_id}/posts``` - User Posts
 Returns the Posts for the User with the specified ```user_id```.
 
-__Example Response__
-Array of Posts
+__Example Response__ (Array of Posts)
 
 ```json
 [
@@ -237,8 +241,7 @@ __Request__
 | post_id | Number | The ID of the Post to append this Morsel to. If none is specified, a new Post will be created for this Morsel. | | |
 | post_title | String | If a Post already exists, renames the title to this. Otherwise sets the title for the new Post to this. | | |
 
-__Example Response__
-Created Morsel
+__Example Response__ (Created Morsel)
 
 ```json
 {
@@ -254,8 +257,7 @@ Created Morsel
 ### GET ```/morsels/{morsel_id}``` - Morsel
 Returns Morsel with the specified ```morsel_id```
 
-__Example Response__
-Morsel
+__Example Response__ (Morsel)
 
 ```json
 {
@@ -278,8 +280,7 @@ __Request__
 | morsel[description] | String | The description for the Morsel | | |
 | morsel[photo] | String | The photo for the Morsel | | |
 
-__Example Response__
-Updated Morsel
+__Example Response__ (Updated Morsel)
 
 ```json
 {
@@ -293,7 +294,9 @@ Updated Morsel
 
 
 ### DELETE ```/morsels/{morsel_id}``` - Delete Morsel
-Deletes the Morsel with the specified ```morsel_id```. Returns a 200 Status Code on success.
+Deletes the Morsel with the specified ```morsel_id```.
+
+__Example Response__ (HTTP Status Code 200 on success)
 
 
 ## Post Methods
@@ -301,8 +304,7 @@ Deletes the Morsel with the specified ```morsel_id```. Returns a 200 Status Code
 ### GET ```/posts``` - Posts
 Returns the Posts for all Users.
 
-__Example Response__
-Array of Posts
+__Example Response__ (Array of Posts)
 
 ```json
 [
@@ -427,8 +429,7 @@ Array of Posts
 ### GET ```/posts/{post_id}``` -  Post
 Returns the Post with the specified ```post_id```
 
-__Example Response__
-Post
+__Example Response__ (Post)
 
 ```json
 {
@@ -466,8 +467,7 @@ __Request__
 | ------------------- | ------- | ----------- | ------- | --------- |
 | post[title]         | String  | The title for the Post | | |
 
-__Example Response__
-Updated Post
+__Example Response__ (Updated Post)
 
 ```json
 {
@@ -477,3 +477,49 @@ Updated Post
   "created_at": "2014-01-03T22:31:47.113Z"
 }
 ```
+
+
+### PUT ```/posts/{post_id}/morsels/{morsel_id}``` - Append Morsel to Post
+Appends a Morsel with the specified ```morsel_id``` to the Post with the specified ```post_id```
+
+__Example Response__ (Appended Morsel)
+
+```json
+{
+  "id": 45,
+  "description": "This is a description!",
+  "photo_url": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/4/1389119839-morsel.png",
+  "creator_id": 1,
+  "created_at": "2014-01-07T18:37:19.661Z",
+  "post_id": 34
+}
+```
+
+__Unique Errors__
+
+| Message | Description |
+| ------- | ----------- |
+| __Relationship already exists__ | The Morsel is already appended to the Post |
+
+
+### DELETE ```/posts/{post_id}/morsels/{morsel_id}``` - Detach Morsel from Post
+Detaches the Morsel with the specified ```morsel_id``` from the Post with the specified ```post_id```
+
+__Example Response__ (HTTP Status Code 200 on success)
+
+```json
+{
+  "id": 45,
+  "description": "This is a description!",
+  "photo_url": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/4/1389119839-morsel.png",
+  "creator_id": 1,
+  "created_at": "2014-01-07T18:37:19.661Z",
+  "post_id": 34
+}
+```
+
+__Unique Errors__
+
+| Message | Description |
+| ------- | ----------- |
+| __Relationship not found__ | The Morsel is not appended to the Post |

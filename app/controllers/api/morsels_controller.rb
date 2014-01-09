@@ -38,13 +38,41 @@ class Api::MorselsController < Api::ApiController
 
   def update
     @morsel = Morsel.find(params[:id])
-    @morsel.update_attributes(MorselParams.build(params))
+    if params[:post_id].present?
+      # Appending a Morsel to a Post
+      post = Post.find(params[:post_id])
+      if post.morsels.include? @morsel
+        # Already exists
+        json_response_with_errors(['Relationship already exists'], :bad_request)
+      else
+        post.morsels << @morsel
+        post.save!
+        @morsel.reload
+      end
+    else
+      # Updating a Morsel
+      @morsel.update_attributes(MorselParams.build(params))
+    end
   end
 
   def destroy
     morsel = Morsel.find(params[:id])
-    morsel.destroy
-    render json: 'OK', status: :ok
+    if params[:post_id].present?
+      # Removing a Morsel from a Post
+      post = Post.find(params[:post_id])
+      if post.morsels.include? morsel
+        post.morsels.delete(morsel)
+        post.save!
+
+        render json: 'OK', status: :ok
+      else
+        json_response_with_errors(['Relationship not found'], :not_found)
+      end
+    else
+      # Deleting a Morsel
+      morsel.destroy
+      render json: 'OK', status: :ok
+    end
   end
 
   class MorselParams
