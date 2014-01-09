@@ -40,6 +40,8 @@ class User < ActiveRecord::Base
   before_save :ensure_authentication_token
   before_save :update_profile_attributes
 
+  has_many :liked_morsels, through: :likes, source: :morsel
+  has_many :likes
   has_many :morsels, foreign_key: :creator_id
   has_many :posts, foreign_key: :creator_id
 

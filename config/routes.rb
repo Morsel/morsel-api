@@ -18,6 +18,9 @@ MorselApp::Application.routes.draw do
 
     resources :morsels, only: [:create, :index, :show, :update, :destroy]
 
+    post 'morsels/:morsel_id/like', to: 'likes#create'
+    delete 'morsels/:morsel_id/like', to: 'likes#destroy'
+
     resources :posts, only: [:index, :show, :update] do
       resources :morsels, only: [:update, :destroy]
     end
