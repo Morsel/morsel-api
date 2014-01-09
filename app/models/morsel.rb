@@ -24,6 +24,8 @@ class Morsel < ActiveRecord::Base
 
   belongs_to :creator, foreign_key: 'creator_id', class_name: 'User'
   has_and_belongs_to_many :posts
+  has_many :liking_users, through: :likes, source: :user
+  has_many :likes
 
   mount_uploader :photo, MorselPhotoUploader
 

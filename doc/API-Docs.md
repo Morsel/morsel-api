@@ -15,6 +15,8 @@
   - [GET ```/morsels/{morsel_id}``` - Morsel](#get-morselsmorsel_id---morsel)
   - [PUT ```/morsels/{morsel_id}``` - Update Morsel](#put-morselsmorsel_id---update-morsel)
   - [DELETE ```/morsels/{morsel_id}``` - Delete Morsel](#delete-morselsmorsel_id---delete-morsel)
+  - [POST ```/morsels/{morsel_id}/like``` - Like Morsel](#post-morselsmorsel_idlike---like-morsel)
+  - [DELETE ```/morsels/{morsel_id}/like``` - Unlike Morsel](#delete-morselsmorsel_idlike---unlike-morsel)
 - [Post Methods](#post-methods)
   - [GET ```/posts``` - Posts](#get-posts---posts)
   - [GET ```/posts/{post_id}``` - Post](#get-postspost_id---post)
@@ -145,9 +147,9 @@ __Example Response__ (User)
 
 __Unique Errors__
 
-| Message | Description |
-| ------- | ----------- |
-| __Invalid email or password__ | The email or password specified are invalid |
+| Message | Status | Description |
+| ------- | ------ | ----------- |
+| __Invalid email or password__ | 401 (Unauthorized) or 422 (Unprocessable Entity) | The email or password specified are invalid |
 
 
 ### PUT ```/users/{user_id}``` - Update User
@@ -297,6 +299,31 @@ __Example Response__ (Updated Morsel)
 Deletes the Morsel with the specified ```morsel_id```.
 
 __Example Response__ (HTTP Status Code 200 on success)
+
+
+### POST ```/morsels/{morsel_id}/like``` - Like Morsel
+Likes the Morsel with the specified ```morsel_id``` for the authenticated User
+
+__Example Response__ (HTTP Status Code 200 on success)
+
+__Unique Errors__
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __Already liked__ | 400 (Bad Request) | The Morsel is already liked by the User |
+
+
+### DELETE ```/morsels/{morsel_id}/like``` - Unlike Morsel
+Unlikes the Morsel with the specified ```morsel_id``` for the authenticated User
+
+__Example Response__ (HTTP Status Code 200 on success)
+
+__Unique Errors__
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __Not liked__ | 404 (Not Found) | The Morsel is not liked by the User |
+
 
 
 ## Post Methods
@@ -497,9 +524,9 @@ __Example Response__ (Appended Morsel)
 
 __Unique Errors__
 
-| Message | Description |
-| ------- | ----------- |
-| __Relationship already exists__ | The Morsel is already appended to the Post |
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __Relationship already exists__ | 400 (Bad Request) | The Morsel is already appended to the Post |
 
 
 ### DELETE ```/posts/{post_id}/morsels/{morsel_id}``` - Detach Morsel from Post
@@ -507,19 +534,8 @@ Detaches the Morsel with the specified ```morsel_id``` from the Post with the sp
 
 __Example Response__ (HTTP Status Code 200 on success)
 
-```json
-{
-  "id": 45,
-  "description": "This is a description!",
-  "photo_url": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/4/1389119839-morsel.png",
-  "creator_id": 1,
-  "created_at": "2014-01-07T18:37:19.661Z",
-  "post_id": 34
-}
-```
-
 __Unique Errors__
 
-| Message | Description |
-| ------- | ----------- |
-| __Relationship not found__ | The Morsel is not appended to the Post |
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __Relationship not found__ | 404 (Not Found) | The Morsel is not appended to the Post |

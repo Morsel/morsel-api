@@ -46,8 +46,6 @@ class Api::MorselsController < Api::ApiController
         json_response_with_errors(['Relationship already exists'], :bad_request)
       else
         post.morsels << @morsel
-        post.save!
-        @morsel.reload
       end
     else
       # Updating a Morsel
@@ -62,7 +60,6 @@ class Api::MorselsController < Api::ApiController
       post = Post.find(params[:post_id])
       if post.morsels.include? morsel
         post.morsels.delete(morsel)
-        post.save!
 
         render json: 'OK', status: :ok
       else
