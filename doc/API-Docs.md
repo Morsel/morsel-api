@@ -198,7 +198,8 @@ __Example Response__ (Array of Posts)
         "description": null,
         "photo_url": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
         "creator_id": 1,
-        "created_at": "2014-01-07T16:34:43.071Z"
+        "created_at": "2014-01-07T16:34:43.071Z",
+        "liked": false
       }
     ]
   },
@@ -213,7 +214,8 @@ __Example Response__ (Array of Posts)
         "description": "Some other description!!!!213@!#!@$%",
         "photo_url": null,
         "creator_id": 1,
-        "created_at": "2014-01-07T16:34:27.938Z"
+        "created_at": "2014-01-07T16:34:27.938Z",
+        "liked": true
       }
     ]
   }
@@ -244,7 +246,8 @@ __Example Response__ (Created Morsel)
   "photo_url": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/4/1389119839-morsel.png",
   "creator_id": 1,
   "created_at": "2014-01-07T18:37:19.661Z",
-  "post_id": 4
+  "post_id": 4,
+  "liked": false
 }
 ```
 
@@ -259,7 +262,8 @@ __Example Response__ (Morsel)
   "description": "This is a description!",
   "photo_url": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/4/1389119839-morsel.png",
   "creator_id": 1,
-  "created_at": "2014-01-07T18:37:19.661Z"
+  "created_at": "2014-01-07T18:37:19.661Z",
+  "liked": false
 }
 ```
 
@@ -282,7 +286,8 @@ __Example Response__ (Updated Morsel)
   "description": "This is a modified description!",
   "photo_url": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/4/1389119839-morsel.png",
   "creator_id": 1,
-  "created_at": "2014-01-07T18:37:19.661Z"
+  "created_at": "2014-01-07T18:37:19.661Z",
+  "liked": false
 }
 ```
 
@@ -346,7 +351,8 @@ __Example Response__ (Array of Posts)
         "description":"Some other description!!!!213@!#!@$%",
         "photo_url":null,
         "creator_id":1,
-        "created_at":"2014-01-07T16:34:27.938Z"
+        "created_at":"2014-01-07T16:34:27.938Z",
+        "liked": true
       }
     ]
   },
@@ -369,7 +375,8 @@ __Example Response__ (Array of Posts)
         "description":null,
         "photo_url":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
         "creator_id":1,
-        "created_at":"2014-01-07T16:34:43.071Z"
+        "created_at":"2014-01-07T16:34:43.071Z",
+        "liked": false
       }
     ]
   },
@@ -392,7 +399,8 @@ __Example Response__ (Array of Posts)
         "description":null,
         "photo_url":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/3/1389118150-morsel.png",
         "creator_id":1,
-        "created_at":"2014-01-07T18:09:10.145Z"
+        "created_at":"2014-01-07T18:09:10.145Z",
+        "liked": false
       }
     ]
   },
@@ -415,7 +423,8 @@ __Example Response__ (Array of Posts)
         "description":"This is a modified description!",
         "photo_url":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/4/1389119839-morsel.png",
         "creator_id":1,
-        "created_at":"2014-01-07T18:37:19.661Z"
+        "created_at":"2014-01-07T18:37:19.661Z",
+        "liked": false
       }
     ]
   },
@@ -438,7 +447,8 @@ __Example Response__ (Array of Posts)
         "description":"Here's a nice picture of tacos",
         "photo_url":null,
         "creator_id":2,
-        "created_at":"2014-01-07T19:11:33.929Z"
+        "created_at":"2014-01-07T19:11:33.929Z",
+        "liked": false
       }
     ]
   }
@@ -470,7 +480,8 @@ __Example Response__ (Post)
       "description":"This is a modified description!",
       "photo_url":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/4/1389119839-morsel.png",
       "creator_id":1,
-      "created_at":"2014-01-07T18:37:19.661Z"
+      "created_at":"2014-01-07T18:37:19.661Z",
+      "liked": false
     }
   ]
 }
@@ -510,7 +521,8 @@ __Example Response__ (Appended Morsel)
   "photo_url": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/4/1389119839-morsel.png",
   "creator_id": 1,
   "created_at": "2014-01-07T18:37:19.661Z",
-  "post_id": 34
+  "post_id": 34,
+  "liked": false
 }
 ```
 
