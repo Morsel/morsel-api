@@ -188,14 +188,6 @@ __Example Response__ (Array of Posts)
 ```json
 [
   {
-    "id": 4,
-    "description": "This is a description!",
-    "photo_url": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/4/1389119839-morsel.png",
-    "creator_id": 1,
-    "created_at": "2014-01-07T18:37:19.661Z",
-    "post_id": 4
-  },
-  {
     "id": 2,
     "title": null,
     "creator_id": 1,
