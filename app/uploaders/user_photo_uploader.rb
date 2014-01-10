@@ -1,6 +1,6 @@
 require 'carrierwave/processing/mime_types'
 
-class UserProfileUploader < CarrierWave::Uploader::Base
+class UserPhotoUploader < CarrierWave::Uploader::Base
   include CarrierWave::MimeTypes
 
   configure do |config|
@@ -32,8 +32,8 @@ class UserProfileUploader < CarrierWave::Uploader::Base
   process :save_content_type_and_size_in_model
 
   def save_content_type_and_size_in_model
-    model.profile_content_type = file.content_type if file.content_type
-    model.profile_file_size = file.size
-    model.profile_updated_at = Time.now
+    model.photo_content_type = file.content_type if file.content_type
+    model.photo_file_size = file.size
+    model.photo_updated_at = Time.now
   end
 end

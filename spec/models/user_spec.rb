@@ -23,10 +23,10 @@
 # **`last_name`**               | `string(255)`      |
 # **`admin`**                   | `boolean`          | `default(FALSE), not null`
 # **`authentication_token`**    | `string(255)`      |
-# **`profile`**                 | `string(255)`      |
-# **`profile_content_type`**    | `string(255)`      |
-# **`profile_file_size`**       | `string(255)`      |
-# **`profile_updated_at`**      | `datetime`         |
+# **`photo`**                   | `string(255)`      |
+# **`photo_content_type`**      | `string(255)`      |
+# **`photo_file_size`**         | `string(255)`      |
+# **`photo_updated_at`**        | `datetime`         |
 #
 
 require 'spec_helper'

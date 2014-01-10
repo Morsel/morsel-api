@@ -102,7 +102,7 @@ __Request__
 | user[password] | String | The password for the new User. Minimum 8 characters. | | X |
 | user[first_name] | String | The first name for the new User. | | |
 | user[last_name] | String | The last name for the new User. | | |
-| user[profile] | File | The profile picture for the new User. Can be GIF, JPG, or PNG. | | |
+| user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
 
 __Example Response__ (Created User)
 
@@ -114,7 +114,7 @@ __Example Response__ (Created User)
   "last_name": null,
   "sign_in_count": 0,
   "created_at": "2014-01-07T18:35:57.877Z",
-  "profile_url": "https://morsel-staging.s3.amazonaws.com/profile-images/user/3/1389119757-batman.jpeg",
+  "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
   "auth_token=": "25TLfL6tvc_Qzx52Zh9q"
 }
 ```
@@ -140,7 +140,7 @@ __Example Response__ (User)
   "last_name": null,
   "sign_in_count": 1,
   "created_at": "2014-01-07T18:35:57.877Z",
-  "profile_url": "https://morsel-staging.s3.amazonaws.com/profile-images/user/3/1389119757-batman.jpeg",
+  "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
   "auth_token=": "25TLfL6tvc_Qzx52Zh9q"
 }
 ```
@@ -163,7 +163,7 @@ __Request__
 | user[password] | String | The password for the new User. Minimum 8 characters. | | |
 | user[first_name] | String | The first name for the new User. | | |
 | user[last_name] | String | The last name for the new User. | | |
-| user[profile] | File | The profile picture for the new User. Can be GIF, JPG, or PNG. | | |
+| user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
 
 __Example Response__ (Updated User)
 
@@ -175,7 +175,7 @@ __Example Response__ (Updated User)
   "last_name": "Ferguson",
   "sign_in_count": 1,
   "created_at": "2014-01-07T18:35:57.877Z",
-  "profile_url": "https://morsel-staging.s3.amazonaws.com/profile-images/user/3/1389119757-batman.jpeg",
+  "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
 }
 ```
 
@@ -346,7 +346,7 @@ __Example Response__ (Array of Posts)
       "last_name": "Trzpit",
       "sign_in_count": 1,
       "created_at": "2014-01-06T12:30:32.533Z",
-      "profile_url": "https://morsel-staging.s3.amazonaws.com/profile-images/user/3/1389119757-batman.jpeg"
+      "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
     },
     "morsels":[
       {
@@ -369,7 +369,7 @@ __Example Response__ (Array of Posts)
       "last_name": "Trzpit",
       "sign_in_count": 1,
       "created_at": "2014-01-06T12:30:32.533Z",
-      "profile_url": "https://morsel-staging.s3.amazonaws.com/profile-images/user/3/1389119757-batman.jpeg"
+      "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
     },
     "morsels":[
       {
@@ -392,7 +392,7 @@ __Example Response__ (Array of Posts)
       "last_name": "Trzpit",
       "sign_in_count": 1,
       "created_at": "2014-01-06T12:30:32.533Z",
-      "profile_url": "https://morsel-staging.s3.amazonaws.com/profile-images/user/3/1389119757-batman.jpeg"
+      "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
     },
     "morsels":[
       {
@@ -415,7 +415,7 @@ __Example Response__ (Array of Posts)
       "last_name": "Trzpit",
       "sign_in_count": 1,
       "created_at": "2014-01-06T12:30:32.533Z",
-      "profile_url": "https://morsel-staging.s3.amazonaws.com/profile-images/user/3/1389119757-batman.jpeg"
+      "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
     },
     "morsels":[
       {
@@ -438,7 +438,7 @@ __Example Response__ (Array of Posts)
       "last_name": "Dole",
       "sign_in_count": 23,
       "created_at": "2014-01-03T11:12:52.763Z",
-      "profile_url": "https://morsel-staging.s3.amazonaws.com/profile-images/user/3/1389119757-batman.jpeg"
+      "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
     },
     "morsels":[
       {
@@ -470,7 +470,7 @@ __Example Response__ (Post)
     "last_name": "Trzpit",
     "sign_in_count": 1,
     "created_at": "2014-01-06T12:30:32.533Z",
-    "profile_url": "https://morsel-staging.s3.amazonaws.com/profile-images/user/3/1389119757-batman.jpeg"
+    "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
   },
   "morsels":[
     {

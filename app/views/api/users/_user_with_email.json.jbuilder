@@ -5,5 +5,5 @@ json.(user,
   :last_name,
   :sign_in_count,
   :created_at,
-  :profile_url
+  :photo_url
 )
