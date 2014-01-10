@@ -46,7 +46,7 @@ describe User do
   it { should respond_to(:last_name) }
   it { should respond_to(:sign_in_count) }
   it { should respond_to(:authentication_token) }
-  it { should respond_to(:profile) }
+  it { should respond_to(:photo) }
 
   it { should be_valid }
 
