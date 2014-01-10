@@ -23,10 +23,10 @@
 # **`last_name`**               | `string(255)`      |
 # **`admin`**                   | `boolean`          | `default(FALSE), not null`
 # **`authentication_token`**    | `string(255)`      |
-# **`profile`**                 | `string(255)`      |
-# **`profile_content_type`**    | `string(255)`      |
-# **`profile_file_size`**       | `string(255)`      |
-# **`profile_updated_at`**      | `datetime`         |
+# **`photo`**                   | `string(255)`      |
+# **`photo_content_type`**      | `string(255)`      |
+# **`photo_file_size`**         | `string(255)`      |
+# **`photo_updated_at`**        | `datetime`         |
 #
 
 class User < ActiveRecord::Base
@@ -38,14 +38,16 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   before_save :ensure_authentication_token
-  before_save :update_profile_attributes
+  before_save :update_photo_attributes
 
   has_many :liked_morsels, through: :likes, source: :morsel
   has_many :likes
   has_many :morsels, foreign_key: :creator_id
   has_many :posts, foreign_key: :creator_id
 
-  mount_uploader :profile, UserProfileUploader
+  include PhotoUploadable
+
+  mount_uploader :photo, UserPhotoUploader
 
   private
 
@@ -60,11 +62,11 @@ class User < ActiveRecord::Base
     end
   end
 
-  def update_profile_attributes
-    if profile.present? && profile_changed?
-      self.profile_content_type = profile.file.content_type
-      self.profile_file_size = profile.file.size
-      self.profile_updated_at = Time.now
+  def update_photo_attributes
+    if photo.present? && photo_changed?
+      self.photo_content_type = photo.file.content_type
+      self.photo_file_size = photo.file.size
+      self.photo_updated_at = Time.now
     end
   end
 end

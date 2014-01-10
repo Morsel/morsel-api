@@ -17,7 +17,7 @@
 class Like < ActiveRecord::Base
   acts_as_paranoid
 
-  validates_uniqueness_of :user_id, :scope => :morsel_id
+  validates_uniqueness_of :user_id, scope: :morsel_id
 
   belongs_to :morsel
   belongs_to :user

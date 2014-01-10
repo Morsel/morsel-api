@@ -1,6 +1,6 @@
 require 'carrierwave/processing/mime_types'
 
-class UserProfileUploader < CarrierWave::Uploader::Base
+class BasePhotoUploader < CarrierWave::Uploader::Base
   include CarrierWave::MimeTypes
 
   configure do |config|
@@ -8,10 +8,10 @@ class UserProfileUploader < CarrierWave::Uploader::Base
   end
 
   def store_dir
-    if Rails.env.test?
-      "#{Rails.root}/spec/support/uploads/profile-images/#{model.class.to_s.underscore}/#{model.id}"
+    if Rails.env.production?
+      "#{model.class.to_s.underscore}-photos/#{model.id}"
     else
-      "profile-images/#{model.class.to_s.underscore}/#{model.id}"
+      "#{Rails.root}/spec/support/uploads/#{model.class.to_s.underscore}-photos/#{model.id}"
     end
   end
 
@@ -32,8 +32,8 @@ class UserProfileUploader < CarrierWave::Uploader::Base
   process :save_content_type_and_size_in_model
 
   def save_content_type_and_size_in_model
-    model.profile_content_type = file.content_type if file.content_type
-    model.profile_file_size = file.size
-    model.profile_updated_at = Time.now
+    model.photo_content_type = file.content_type if file.content_type
+    model.photo_file_size = file.size
+    model.photo_updated_at = Time.now
   end
 end

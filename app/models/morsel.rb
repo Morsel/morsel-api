@@ -27,6 +27,8 @@ class Morsel < ActiveRecord::Base
   has_many :liking_users, through: :likes, source: :user
   has_many :likes
 
+  include PhotoUploadable
+
   mount_uploader :photo, MorselPhotoUploader
 
   before_save :update_photo_attributes
@@ -34,14 +36,6 @@ class Morsel < ActiveRecord::Base
   validate :description_or_photo_present?
 
   private
-
-  def update_photo_attributes
-    if photo.present? && photo_changed?
-      self.photo_content_type = photo.file.content_type
-      self.photo_file_size = photo.file.size
-      self.photo_updated_at = Time.now
-    end
-  end
 
   def description_or_photo_present?
     errors.add(:description_or_photo, 'is required.') if description.blank? && photo.blank?
