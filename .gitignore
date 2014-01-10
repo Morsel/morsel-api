@@ -81,3 +81,4 @@ pickle-email-*.html
 # Ignore application configuration
 .env
 public/uploads/tmp/
+spec/support/uploads

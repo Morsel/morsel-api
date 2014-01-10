@@ -24,7 +24,7 @@ class Api::SessionsController < Devise::SessionsController
     render json: { errors: errors.map { |e| { msg: e } } }, status: http_status
   end
 
-  def invalid_login_attempt(http_status=:unauthorized)
+  def invalid_login_attempt(http_status = :unauthorized)
     json_response_with_errors(['Invalid email or password'], http_status)
   end
 end

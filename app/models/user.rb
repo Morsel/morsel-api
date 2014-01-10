@@ -45,6 +45,8 @@ class User < ActiveRecord::Base
   has_many :morsels, foreign_key: :creator_id
   has_many :posts, foreign_key: :creator_id
 
+  include PhotoUploadable
+
   mount_uploader :photo, UserPhotoUploader
 
   private
