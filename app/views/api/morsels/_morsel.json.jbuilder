@@ -5,3 +5,5 @@ json.(morsel,
   :creator_id,
   :created_at
 )
+
+json.liked current_user.likes?(morsel) if current_user
