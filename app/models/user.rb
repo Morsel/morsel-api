@@ -49,6 +49,10 @@ class User < ActiveRecord::Base
 
   mount_uploader :photo, UserPhotoUploader
 
+  def likes?(morsel)
+    self.liked_morsels.include?(morsel)
+  end
+
   private
 
   def ensure_authentication_token
