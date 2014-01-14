@@ -1,2 +1,1 @@
-json.partial! @morsel
-json.post_id @post.id
+json.partial! @morsel, post: @post

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140113161658) do
+ActiveRecord::Schema.define(version: 20140114220144) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,16 @@ ActiveRecord::Schema.define(version: 20140113161658) do
     t.datetime "updated_at"
   end
 
+  add_index "likes", ["user_id", "morsel_id"], name: "index_likes_on_user_id_and_morsel_id", using: :btree
+
+  create_table "morsel_posts", force: true do |t|
+    t.integer "morsel_id"
+    t.integer "post_id"
+    t.integer "sort_order"
+  end
+
+  add_index "morsel_posts", ["morsel_id", "post_id"], name: "index_morsel_posts_on_morsel_id_and_post_id", using: :btree
+
   create_table "morsels", force: true do |t|
     t.text     "description"
     t.integer  "like_count",         default: 0, null: false
@@ -53,13 +63,6 @@ ActiveRecord::Schema.define(version: 20140113161658) do
   end
 
   add_index "morsels", ["creator_id"], name: "index_morsels_on_creator_id", using: :btree
-
-  create_table "morsels_posts", id: false, force: true do |t|
-    t.integer "morsel_id"
-    t.integer "post_id"
-  end
-
-  add_index "morsels_posts", ["morsel_id", "post_id"], name: "index_morsels_posts_on_morsel_id_and_post_id", using: :btree
 
   create_table "posts", force: true do |t|
     t.string   "title"

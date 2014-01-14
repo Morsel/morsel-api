@@ -11,7 +11,7 @@ MorselApp::Application.routes.draw do
                   registrations: 'api/registrations'
                 }
 
-    resources :users, only: [:create, :index, :show, :update] do
+    resources :users, only: [:index, :show, :update] do
       resources :morsels, only: [:index]
       resources :posts, only: [:index]
     end
@@ -24,5 +24,8 @@ MorselApp::Application.routes.draw do
     resources :posts, only: [:index, :show, :update] do
       resources :morsels, only: [:update, :destroy]
     end
+
+    post 'posts/:id/append', to: 'posts#append'
+    delete 'posts/:id/append', to: 'posts#unappend'
   end
 end

@@ -8,6 +8,7 @@
 - [User Methods](#user-methods)
   - [POST ```/users``` - Create a new User](#post-users---create-a-new-user)
   - [POST ```/users/sign_in``` - User Authentication](#post-userssign_in---user-authentication)
+  - [GET ```/users/{user_id}``` - User](#get-usersuser_id---user)
   - [PUT ```/users/{user_id}``` - Update User](#put-usersuser_id---update-user)
   - [GET ```/users/{user_id}/posts``` - User Posts](#get-usersuser_idposts---user-posts)
 - [Morsel Methods](#morsel-methods)
@@ -21,8 +22,8 @@
   - [GET ```/posts``` - Posts](#get-posts---posts)
   - [GET ```/posts/{post_id}``` - Post](#get-postspost_id---post)
   - [PUT ```/posts/{post_id}``` - Update Post](#put-postspost_id---update-post)
-  - [PUT ```/posts/{post_id}/morsels/{morsel_id}``` - Append Morsel to Post](#put-postspost_idmorselsmorsel_id---append-morsel-to-post)
-  - [DELETE ```/posts/{post_id}/morsels/{morsel_id}``` - Detach Morsel from Post](#delete-postspost_idmorselsmorsel_id---detach-morsel-from-post)
+  - [POST ```/posts/{post_id}/append``` - Append Morsel to Post](#post-postspost_idappend---append-morsel-to-post)
+  - [DELETE ```/posts/{post_id}/append``` - Detach Morsel from Post](#delete-postspost_idappend---detach-morsel-from-post)
 
 
 ## Overview
@@ -155,6 +156,24 @@ __Unique Errors__
 | __Invalid email or password__ | 401 (Unauthorized) or 422 (Unprocessable Entity) | The email or password specified are invalid |
 
 
+### GET ```/users/{user_id}``` - User
+Returns the User with the specified ```user_id```
+
+__Example Response__ (User)
+
+```json
+{
+  "id": 3,
+  "first_name": "Turd",
+  "last_name": "Ferguson",
+  "sign_in_count": 1,
+  "created_at": "2014-01-07T18:35:57.877Z",
+  "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+  "title": "Executive Chef at Jeopardy"
+}
+```
+
+
 ### PUT ```/users/{user_id}``` - Update User
 Updates the User with the specified ```user_id```
 
@@ -282,6 +301,8 @@ __Request__
 | ------------------- | ------- | ----------- | ------- | --------- |
 | morsel[description] | String | The description for the Morsel | | |
 | morsel[photo] | String | The photo for the Morsel | | |
+| morsel[post_id] | Number | Changes the ```sort_order``` of a Post when combined with ```sort_order```. | | |
+| morsel[sort_order] | Number | Changes the ```sort_order``` of a Post when combined with ```post_id```. | | |
 
 __Example Response__ (Updated Morsel)
 
@@ -520,22 +541,52 @@ __Example Response__ (Updated Post)
 ```
 
 
-### PUT ```/posts/{post_id}/morsels/{morsel_id}``` - Append Morsel to Post
+### POST ```/posts/{post_id}/append``` - Append Morsel to Post
 Appends a Morsel with the specified ```morsel_id``` to the Post with the specified ```post_id```
 
-__Example Response__ (Appended Morsel)
+__Request__
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| morsel_id         | Number  | ID of the Morsel to append | | x |
+| sort_order         | Number  | The ```sort_order``` for the Morsel in the Post | end of Post | |
+
+__Example Response__ (Post with Appended Morsel)
 
 ```json
 {
-  "id": 45,
-  "description": "This is a description!",
-  "photo_url": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/4/1389119839-morsel.png",
+  "id": 4,
+  "title": null,
   "creator_id": 1,
-  "created_at": "2014-01-07T18:37:19.661Z",
-  "post_id": 34,
-  "liked": false
-}
-```
+  "created_at": "2014-01-03T22:31:47.113Z"
+  "creator": {
+    "id": 1,
+    "first_name": "Marty",
+    "last_name": "Trzpit",
+    "sign_in_count": 1,
+    "created_at": "2014-01-06T12:30:32.533Z",
+    "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "title": "Backend Chef at Morsel"
+  },
+  "morsels":[
+    {
+      "id":4,
+      "description":"This is a modified description!",
+      "photo_url":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/4/1389119839-morsel.png",
+      "creator_id":1,
+      "created_at":"2014-01-07T18:37:19.661Z",
+      "liked": false
+    },
+    {
+      "id":7,
+      "description":"I got appended!",
+      "photo_url":null,
+      "creator_id":1,
+      "created_at":"2014-03-09T18:37:19.661Z",
+      "liked": false
+    }
+  ]
+}```
 
 __Unique Errors__
 
@@ -544,8 +595,14 @@ __Unique Errors__
 | __Relationship already exists__ | 400 (Bad Request) | The Morsel is already appended to the Post |
 
 
-### DELETE ```/posts/{post_id}/morsels/{morsel_id}``` - Detach Morsel from Post
+### DELETE ```/posts/{post_id}/append``` - Detach Morsel from Post
 Detaches the Morsel with the specified ```morsel_id``` from the Post with the specified ```post_id```
+
+__Request__
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| morsel_id         | Number  | ID of the Morsel to detach | | x |
 
 __Example Response__ (HTTP Status Code 200 on success)
 

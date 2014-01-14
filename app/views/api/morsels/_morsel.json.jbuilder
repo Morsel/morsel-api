@@ -6,4 +6,9 @@ json.(morsel,
   :created_at
 )
 
-json.liked current_user.likes?(morsel) if current_user
+if defined?(post) && post.present?
+  json.post_id post.id
+  json.sort_order morsel.sort_order_for_post_id(post.id)
+end
+
+json.liked current_user.likes?(morsel) if defined?(current_user)

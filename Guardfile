@@ -31,7 +31,7 @@ guard 'spork', rspec_env: { RAILS_ENV: 'test' } do
   watch('spec/spec_helper.rb') { :rspec }
 end
 
-guard 'rspec', cmd: '--drb --format Fuubar --color', all_on_start: false, all_after_pass: false do
+guard 'rspec', cmd: 'bundle exec rspec --drb --format Fuubar --color', all_after_pass: true, all_on_start: true, failed_mode: :keep do
   watch(%r{^app/(.*)(\.erb|\.haml)$})                 { |m| "spec/#{m[1]}#{m[2]}_spec.rb" }
   watch(%r{^app/(.+)\.rb$})                           { |m| "spec/#{m[1]}_spec.rb" }
 
@@ -42,6 +42,7 @@ guard 'rspec', cmd: '--drb --format Fuubar --color', all_on_start: false, all_af
   watch(%r{^lib/(.+)\.rb$})      { |m| "spec/lib/#{m[1]}_spec.rb" }
 
   watch(%r{^spec/.+_spec\.rb$})
+  watch(%r{^spec/factories/(.+)\.rb$})
   watch(%r{^spec/requests/support/views/(.+)_view\.rb$}) { |m| "spec/requests/#{m[1]}_controller_spec.rb" }
 
   watch('app/controllers/application_controller.rb')  { "spec/requests" }

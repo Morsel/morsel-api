@@ -27,6 +27,7 @@
 # **`photo_content_type`**      | `string(255)`      |
 # **`photo_file_size`**         | `string(255)`      |
 # **`photo_updated_at`**        | `datetime`         |
+# **`title`**                   | `string(255)`      |
 #
 
 class User < ActiveRecord::Base
@@ -50,7 +51,7 @@ class User < ActiveRecord::Base
   mount_uploader :photo, UserPhotoUploader
 
   def likes?(morsel)
-    self.liked_morsels.include?(morsel)
+    liked_morsels.include?(morsel)
   end
 
   private

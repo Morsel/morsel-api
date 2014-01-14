@@ -27,6 +27,7 @@
 # **`photo_content_type`**      | `string(255)`      |
 # **`photo_file_size`**         | `string(255)`      |
 # **`photo_updated_at`**        | `datetime`         |
+# **`title`**                   | `string(255)`      |
 #
 
 require 'spec_helper'
@@ -110,6 +111,5 @@ describe User do
         expect(@user.authentication_token).to_not be_nil
       end
     end
-
   end
 end
