@@ -18,6 +18,7 @@ gem 'devise', "~> 3.2.2"
 gem 'jbuilder', '~> 1.2'
 gem 'jquery-rails'
 gem 'mime-types'
+gem 'newrelic_rpm'
 gem 'paranoia', '~> 2.0'
 gem 'rack-cors', require: 'rack/cors'
 gem 'rolify'
