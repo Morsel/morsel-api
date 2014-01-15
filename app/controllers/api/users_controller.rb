@@ -1,13 +1,6 @@
 class Api::UsersController < Api::ApiController
   respond_to :json
 
-  def create
-    user = User.create(UserParams.build(params))
-
-    render json: { user: user.as_json(auth_token: user.authentication_token) }, status: :created
-    respond_with user, location: root_path
-  end
-
   def index
     @users = User.all
   end

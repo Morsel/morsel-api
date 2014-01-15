@@ -11,9 +11,8 @@ Spork.prefork do
   require File.expand_path('../../config/environment', __FILE__)
   require 'rspec/rails'
   require 'email_spec'
-  require 'capybara/rails'
-  require 'capybara/rspec'
   require 'rspec/autorun'
+  require 'factory_girl'
 
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
@@ -50,14 +49,17 @@ Spork.prefork do
     #     --seed 1234
     config.order = 'random'
 
-    config.include Devise::TestHelpers, type: :controller
+    config.include Requests::JsonHelpers, type: :request
 
     config.before(:suite) do
-      DatabaseCleaner.strategy = :truncation
+      DatabaseCleaner.strategy = :transaction
+      DatabaseCleaner.clean_with(:truncation)
     end
+
     config.before(:each) do
       DatabaseCleaner.start
     end
+
     config.after(:each) do
       DatabaseCleaner.clean
       FileUtils.rm_rf(Dir["#{Rails.root}/spec/support/uploads"])
@@ -67,4 +69,7 @@ end
 
 Spork.each_run do
   # This code will be run each time you run your specs.
+  FactoryGirl.sequences.clear
+  FactoryGirl.factories.clear
+  Dir[Rails.root.join('spec/factories/**/*.rb')].each { |f| load f }
 end

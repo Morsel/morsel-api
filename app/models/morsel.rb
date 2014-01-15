@@ -23,9 +23,10 @@ class Morsel < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :creator, foreign_key: 'creator_id', class_name: 'User'
-  has_and_belongs_to_many :posts
   has_many :liking_users, through: :likes, source: :user
   has_many :likes
+  has_many :morsel_posts
+  has_many :posts, through: :morsel_posts
 
   include PhotoUploadable
 
@@ -35,9 +36,27 @@ class Morsel < ActiveRecord::Base
 
   validate :description_or_photo_present?
 
+  def change_sort_order_for_post_id(post_id, new_sort_order)
+    MorselPost.increment_sort_order_for_post_id(post_id, new_sort_order)
+    set_new_sort_order_for_post_id(post_id, new_sort_order)
+  end
+
+  def sort_order_for_post_id(post_id)
+    morsel_posts.where(post_id: post_id).first.sort_order
+  end
+
   private
 
   def description_or_photo_present?
-    errors.add(:description_or_photo, 'is required.') if description.blank? && photo.blank?
+    if description.blank? && photo.blank?
+      errors.add(:description_or_photo, 'is required.')
+      return false
+    end
+  end
+
+  def set_new_sort_order_for_post_id(post_id, new_sort_order)
+    morsel_post = morsel_posts.where(post_id: post_id).first
+    morsel_post.sort_order = new_sort_order
+    morsel_post.save
   end
 end

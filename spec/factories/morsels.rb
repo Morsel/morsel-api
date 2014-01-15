@@ -22,9 +22,10 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
-  factory :morsel do
-    description 'Some Morsel Description'
-    like_count 0
-    photo Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
+  factory :morsel_without_description_and_photo, class: Morsel do
+    factory :morsel do
+      description { Faker::Lorem.sentence(rand(5..100)) }
+      photo Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
+    end
   end
 end

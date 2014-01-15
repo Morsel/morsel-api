@@ -13,8 +13,18 @@
 # **`creator_id`**  | `integer`          |
 #
 
-class Post < ActiveRecord::Base
-  belongs_to :creator, foreign_key: 'creator_id', class_name: 'User'
-  has_many :morsel_posts
-  has_many :morsels, -> { order('morsel_posts.sort_order ASC') }, through: :morsel_posts
+FactoryGirl.define do
+  factory :post do
+    title { Faker::Lorem.sentence(rand(2..5)) }
+
+    factory :post_with_morsels, class: Post do
+      ignore do
+        morsels_count 3
+      end
+
+      after(:create) do |post, evaluator|
+        create_list(:morsel, evaluator.morsels_count, posts: [post], creator: post.creator)
+      end
+    end
+  end
 end
