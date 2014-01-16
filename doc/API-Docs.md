@@ -158,6 +158,7 @@ __Unique Errors__
 
 ### GET ```/users/{user_id}``` - User
 Returns the User with the specified ```user_id```
+NOTE: In MTP, this will return the User's Posts and their Morsels. After that we'll need to use pagination since there may be too many Posts and Morsels to return in a response.
 
 __Example Response__ (User)
 
