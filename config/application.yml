@@ -9,3 +9,6 @@ aws:
 new_relic:
   app_name: <%= ENV['NEW_RELIC_APP_NAME'] %>
   license_key: <%= ENV['NEW_RELIC_LICENSE_KEY'] %>
+rollbar:
+  access_token: <%= ENV['ROLLBAR_ACCESS_TOKEN'] %>
+  endpoint: <%= ENV['ROLLBAR_ENDPOINT'] %>
