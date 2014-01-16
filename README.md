@@ -8,6 +8,9 @@ The API for Morsel
 ## Environment Variables
 
 ```
+RACK_ENV=development
+PORT=3000
+
 DEVELOPER_EMAIL=turdferg@eatmorsel.com
 
 AWS_ACCESS_KEY_ID=
@@ -16,4 +19,7 @@ S3_DEFAULT_BUCKET=morsel
 
 NEW_RELIC_LICENSE_KEY=
 NEW_RELIC_APP_NAME=
+
+ROLLBAR_ACCESS_TOKEN=
+ROLLBAR_ENDPOINT=
 ```
