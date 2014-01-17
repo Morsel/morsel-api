@@ -28,19 +28,22 @@
 # **`photo_file_size`**         | `string(255)`      |
 # **`photo_updated_at`**        | `datetime`         |
 # **`title`**                   | `string(255)`      |
+# **`provider`**                | `string(255)`      |
+# **`uid`**                     | `string(255)`      |
+# **`username`**                | `string(255)`      |
 #
 
 class User < ActiveRecord::Base
   rolify
 
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
   before_save :ensure_authentication_token
   before_save :update_photo_attributes
 
+  has_many :authorizations
+  has_many :twitter_authorizations, -> { where provider: 'twitter' }, foreign_key: :user_id, class_name: 'Authorization'
   has_many :liked_morsels, through: :likes, source: :morsel
   has_many :likes
   has_many :morsels, foreign_key: :creator_id
@@ -52,6 +55,23 @@ class User < ActiveRecord::Base
 
   def likes?(morsel)
     liked_morsels.include?(morsel)
+  end
+
+  def twitter_authorization
+    twitter_authorizations.first
+  end
+
+  def authorized_with_twitter?
+    twitter_authorization.present?
+  end
+
+  def post_to_twitter(message)
+    if twitter_client.present?
+      twitter_client.update(message)
+    else
+      nil
+      # todo throw an error
+    end
   end
 
   private
@@ -72,6 +92,19 @@ class User < ActiveRecord::Base
       self.photo_content_type = photo.file.content_type
       self.photo_file_size = photo.file.size
       self.photo_updated_at = Time.now
+    end
+  end
+
+  def twitter_client
+    if authorized_with_twitter? && twitter_authorization.token.present?
+      Twitter::REST::Client.new do |config|
+        config.consumer_key = Settings.twitter.consumer_key
+        config.consumer_secret = Settings.twitter.consumer_secret
+        config.access_token = twitter_authorization.token
+        config.access_token_secret = twitter_authorization.secret
+      end
+    else
+      nil
     end
   end
 end

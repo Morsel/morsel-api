@@ -5,7 +5,7 @@ class Api::MorselsController < Api::ApiController
     if params[:user_id].blank?
       @morsels = Morsel.all
     else
-      @morsels = Morsel.find_all_by_creator_id params[:user_id]
+      @morsels = Morsel.where(creator_id: params[:user_id])
     end
   end
 
@@ -28,7 +28,11 @@ class Api::MorselsController < Api::ApiController
       @post.morsels.push(@morsel)
       @post.save!
 
-      @morsel.change_sort_order_for_post_id(@post.id, params[:sort_order]) if params[:sort_order].present?
+      @morsel.change_sort_order_for_post_id(@post.id, params[:sort_order]) if params[:post_id].present? && params[:sort_order].present?
+
+      if params[:post_to_twitter] && current_user.authorized_with_twitter?
+        @tweet = current_user.post_to_twitter(@morsel.twitter_message(@post))
+      end
     else
       json_response_with_errors(@morsel.errors.full_messages, :unprocessable_entity)
     end

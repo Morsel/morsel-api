@@ -28,6 +28,9 @@
 # **`photo_file_size`**         | `string(255)`      |
 # **`photo_updated_at`**        | `datetime`         |
 # **`title`**                   | `string(255)`      |
+# **`provider`**                | `string(255)`      |
+# **`uid`**                     | `string(255)`      |
+# **`username`**                | `string(255)`      |
 #
 
 # Read about factories at https://github.com/thoughtbot/factory_girl
@@ -35,6 +38,7 @@
 FactoryGirl.define do
   factory :user do
     email { Faker::Internet.email }
+    username { "#{first_name}-#{last_name}" }
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
     password 'password'
@@ -48,10 +52,17 @@ FactoryGirl.define do
         create_list(:post_with_morsels, evaluator.posts_count, creator: user)
       end
     end
+
+    factory :user_with_twitter_authorization do
+      after(:create) do |user|
+        create_list(:authorization, 1, user: user)
+      end
+    end
   end
 
   factory :turd_ferg, class: User do
     email 'turdferg@eatmorsel.com'
+    username 'turdferg'
     first_name 'Turd'
     last_name 'Ferguson'
     password 'test1234'

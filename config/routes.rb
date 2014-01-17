@@ -12,6 +12,7 @@ MorselApp::Application.routes.draw do
                 }
 
     resources :users, only: [:index, :show, :update] do
+      resources :authorizations, only: [:create, :index]
       resources :morsels, only: [:index]
       resources :posts, only: [:index]
     end

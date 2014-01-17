@@ -28,6 +28,9 @@
 # **`photo_file_size`**         | `string(255)`      |
 # **`photo_updated_at`**        | `datetime`         |
 # **`title`**                   | `string(255)`      |
+# **`provider`**                | `string(255)`      |
+# **`uid`**                     | `string(255)`      |
+# **`username`**                | `string(255)`      |
 #
 
 require 'spec_helper'
@@ -49,10 +52,18 @@ describe User do
   it { should respond_to(:authentication_token) }
   it { should respond_to(:photo) }
 
+  its(:authentication_token) { should be_nil }
+
+  its(:twitter_authorizations) { should be_empty }
+
+  its(:twitter_authorization) { should be_nil }
+  its(:authorized_with_twitter?) { should be_false }
+  its(:twitter_client) { should be_nil }
+
   it { should be_valid }
 
   describe 'email' do
-    describe 'is already taken' do
+    context 'already taken' do
       before do
         user_with_same_email = @user.dup
         user_with_same_email.save
@@ -61,7 +72,7 @@ describe User do
       it { should_not be_valid }
     end
 
-    describe 'is a valid format' do
+    context 'a valid format' do
       it 'should be valid' do
         addresses = %w[ foo@bar.COM a_b-c@d.e.org turd.ferg@uson.pl a+b@cdefg.hi ]
         addresses.each do |valid_address|
@@ -71,7 +82,7 @@ describe User do
       end
     end
 
-    describe 'is not a valid format' do
+    context 'not a valid format' do
       it 'should not be valid' do
         addresses = %w[ turdferg turdferg@ ]
         addresses.each do |valid_address|
@@ -83,33 +94,37 @@ describe User do
   end
 
   describe 'password' do
-    describe 'is not present' do
+    context 'is not present' do
       before { @user.password = '' }
       it { should_not be_valid }
     end
 
-    describe 'is too short' do
+    context 'too short' do
       before { @user.password = 'test123' }
       it { should_not be_valid }
     end
 
-    describe 'does not match confirmation' do
+    context 'does not match confirmation' do
       before { @user.password_confirmation = 'bar' }
       it { should_not be_valid }
     end
   end
 
-  describe 'authentication_token' do
-    describe 'unsaved User' do
-      it 'should not exist' do
-        expect(@user.authentication_token).to be_nil
-      end
-    end
-    describe 'saved User' do
-      before { @user.save }
-      it 'should exist' do
-        expect(@user.authentication_token).to_not be_nil
-      end
+  context 'persisted' do
+    before { @user.save }
+    its(:authentication_token) { should_not be_nil }
+  end
+
+  context 'Authorizations' do
+    context 'Twitter' do
+      before { @user_with_twitter_authorization = FactoryGirl.create(:user_with_twitter_authorization) }
+      subject { @user_with_twitter_authorization }
+
+      its(:twitter_authorizations) { should_not be_empty }
+
+      its(:twitter_authorization) { should_not be_nil }
+      its(:authorized_with_twitter?) { should be_true }
+      its(:twitter_client) { should_not be_nil }
     end
   end
 end

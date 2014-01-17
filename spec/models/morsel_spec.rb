@@ -8,7 +8,6 @@
 # ------------------------- | ------------------ | ---------------------------
 # **`id`**                  | `integer`          | `not null, primary key`
 # **`description`**         | `text`             |
-# **`like_count`**          | `integer`          | `default(0), not null`
 # **`created_at`**          | `datetime`         |
 # **`updated_at`**          | `datetime`         |
 # **`creator_id`**          | `integer`          |
@@ -40,29 +39,45 @@ describe Morsel do
   end
 
   describe 'changing the sort_order in a post' do
+    subject(:post_with_morsels) { FactoryGirl.create(:post_with_morsels) }
+    subject(:first_morsel) { post_with_morsels.morsels.first }
     before do
-      @post = FactoryGirl.create(:post_with_morsels)
-      @first_morsel = @post.morsels.first
-      @first_morsel.change_sort_order_for_post_id(@post.id, 2)
+      first_morsel.change_sort_order_for_post_id(post_with_morsels.id, 2)
     end
 
     it 'increments the sort_order for all Morsels after new sort_order' do
-      expect(@post.morsels.last.sort_order_for_post_id(@post.id)).to eq(@post.morsels.count + 1)
+      expect(post_with_morsels.morsels.last.sort_order_for_post_id(post_with_morsels.id)).to eq(post_with_morsels.morsels.count + 1)
     end
 
     it 'sets the new sort_order' do
-      expect(@first_morsel.sort_order_for_post_id(@post.id)).to eq(2)
+      expect(first_morsel.sort_order_for_post_id(post_with_morsels.id)).to eq(2)
     end
   end
 
   describe 'getting the the sort_order in a post' do
-    before do
-      @post = FactoryGirl.create(:post_with_morsels)
-      @first_morsel = @post.morsels.first
-    end
+    subject(:post_with_morsels) { FactoryGirl.create(:post_with_morsels) }
+    subject(:first_morsel) { post_with_morsels.morsels.first }
 
     it 'returns the sort_order' do
-      expect(@first_morsel.sort_order_for_post_id(@post.id)).to eq(1)
+      expect(first_morsel.sort_order_for_post_id(post_with_morsels.id)).to eq(1)
     end
+  end
+
+  describe '#url' do
+    let(:post_with_morsels_and_creator) { FactoryGirl.create(:post_with_morsels_and_creator) }
+    let(:first_morsel) { post_with_morsels_and_creator.morsels.first }
+    subject(:url) { first_morsel.url(post_with_morsels_and_creator) }
+
+    it { should eq("https://eatmorsel.com/posts/#{first_morsel.creator.username}/posts/#{post_with_morsels_and_creator.id}/#{first_morsel.id}") }
+  end
+
+  describe '#twitter_message' do
+    let(:post_with_morsels_and_creator) { FactoryGirl.create(:post_with_morsels_and_creator) }
+    let(:first_morsel) { post_with_morsels_and_creator.morsels.first }
+    subject(:twitter_message) { first_morsel.twitter_message(post_with_morsels_and_creator) }
+
+    it { should include(first_morsel.url(post_with_morsels_and_creator)) }
+    it { should include(post_with_morsels_and_creator.title) }
+    it { should include(first_morsel.description[40]) } # Since description can get truncated, check that at least the first 40 characters are included
   end
 end

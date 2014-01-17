@@ -27,6 +27,7 @@ gem 'sass-rails', '~> 4.0.0'
 gem 'settingslogic'
 gem 'slim-rails'
 gem 'turbolinks'
+gem "twitter", "~> 5.5.1"
 gem 'uglifier', '>= 1.3.0'
 gem 'unicorn'
 

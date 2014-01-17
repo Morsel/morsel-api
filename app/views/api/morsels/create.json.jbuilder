@@ -1,1 +1,1 @@
-json.partial! @morsel, post: @post
+json.partial! @morsel, post: @post, tweet: @tweet

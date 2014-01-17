@@ -8,7 +8,6 @@
 # ------------------------- | ------------------ | ---------------------------
 # **`id`**                  | `integer`          | `not null, primary key`
 # **`description`**         | `text`             |
-# **`like_count`**          | `integer`          | `default(0), not null`
 # **`created_at`**          | `datetime`         |
 # **`updated_at`**          | `datetime`         |
 # **`creator_id`**          | `integer`          |
@@ -26,6 +25,10 @@ FactoryGirl.define do
     factory :morsel do
       description { Faker::Lorem.sentence(rand(5..100)) }
       photo Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
+
+      factory :morsel_with_creator, class: Morsel do
+        association(:creator, factory: :user)
+      end
     end
   end
 end

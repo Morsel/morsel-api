@@ -11,6 +11,8 @@
   - [GET ```/users/{user_id}``` - User](#get-usersuser_id---user)
   - [PUT ```/users/{user_id}``` - Update User](#put-usersuser_id---update-user)
   - [GET ```/users/{user_id}/posts``` - User Posts](#get-usersuser_idposts---user-posts)
+  - [POST ```/users/{user_id}/authorizations``` - Create User Authorizations](#post-usersuser_idauthorizations---create-user-authorizations)
+  - [GET ```/users/{user_id}/authorizations``` - User Authorizations](#get-usersuser_idauthorizations---user-authorizations)
 - [Morsel Methods](#morsel-methods)
   - [POST ```/morsels``` - Create a new Morsel](#post-morsels---create-a-new-morsel)
   - [GET ```/morsels/{morsel_id}``` - Morsel](#get-morselsmorsel_id---morsel)
@@ -118,7 +120,7 @@ __Example Response__ (Created User)
   "created_at": "2014-01-07T18:35:57.877Z",
   "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
   "title": "Executive Chef at Jeopardy",
-  "auth_token=": "25TLfL6tvc_Qzx52Zh9q"
+  "auth_token": "25TLfL6tvc_Qzx52Zh9q"
 }
 ```
 
@@ -145,7 +147,7 @@ __Example Response__ (User)
   "created_at": "2014-01-07T18:35:57.877Z",
   "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
   "title": "Executive Chef at Jeopardy",
-  "auth_token=": "25TLfL6tvc_Qzx52Zh9q"
+  "auth_token": "25TLfL6tvc_Qzx52Zh9q"
 }
 ```
 
@@ -248,6 +250,52 @@ __Example Response__ (Array of Posts)
 ```
 
 
+### POST ```/users/{user_id}/authorizations``` - Create User Authorizations
+Creates a new User authorization
+
+__Request__
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| authorization[provider] | String | The provider the User is authorizing. Currently the only valid value is 'twitter'. | | X |
+| authorization[token] | String | The User's Access Token for the service. | | X |
+| authorization[secret] | String | The User's Access Token Secret for the service. Only required for Twitter. | | Twitter |
+
+__Example Response__ (Authorization)
+
+```json
+{
+  "id": 1,
+  "provider": "twitter",
+  "uid": "12345",
+  "user_id": 3,
+  "token": "25T-LfL6tvc_Qzx52Zh9q",
+  "secret": "25fqrG3214ojivxCq",
+  "name": "eatmorsel",
+  "link": "https://twitter.com/eatmorsel"
+}
+```
+
+
+### GET ```/users/{user_id}/authorizations``` - User Authorizations
+Returns the User's authorizations
+
+__Example Response__ (Array of Authorizations)
+
+```json
+[{
+  "id": 1,
+  "provider": "twitter",
+  "uid": "12345",
+  "user_id": 3,
+  "token": "25T-LfL6tvc_Qzx52Zh9q",
+  "secret": "25fqrG3214ojivxCq",
+  "name": "eatmorsel",
+  "link": "https://twitter.com/eatmorsel"
+}]
+```
+
+
 ## Morsel Methods
 
 ### POST ```/morsels``` - Create a new Morsel
@@ -261,6 +309,8 @@ __Request__
 | morsel[photo] | String | The photo for the new Morsel | | Only if description is null |
 | post_id | Number | The ID of the Post to append this Morsel to. If none is specified, a new Post will be created for this Morsel. | | |
 | post_title | String | If a Post already exists, renames the title to this. Otherwise sets the title for the new Post to this. | | |
+| sort_order         | Number | The ```sort_order``` for the Morsel in the Post. Requires ```post_id``` | end of Post | |
+| post_to_twitter | Boolean | Send a Tweet from the current_user with the Post's title and Morsel description (if they exist) along with a link to the Morsel. If the title and description are too long they will be truncated to allow enough room for the links. | false | |
 
 __Example Response__ (Created Morsel)
 

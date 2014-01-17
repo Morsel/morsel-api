@@ -12,3 +12,7 @@ if defined?(post) && post.present?
 end
 
 json.liked current_user.likes?(morsel) if defined?(current_user)
+
+if defined?(tweet) && tweet.present?
+  json.tweet_url tweet.url
+end
