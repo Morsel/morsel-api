@@ -55,6 +55,10 @@ class User < ActiveRecord::Base
 
   mount_uploader :photo, UserPhotoUploader
 
+  def morsel_likes_for_my_morsels_by_others_count
+    Like.where(morsel_id: morsel_ids).count
+  end
+
   def likes?(morsel)
     liked_morsels.include?(morsel)
   end

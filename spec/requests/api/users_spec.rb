@@ -50,17 +50,25 @@ describe 'Users API' do
   end
 
   describe 'GET /api/users/{:user_id} users#show' do
-    let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
+    let(:user_with_posts) { FactoryGirl.create(:user_with_posts) }
+    let(:number_of_morsel_likes) { rand(2..6) }
+
+    before do
+      morsel = user_with_posts.morsels.first
+      number_of_morsel_likes.times { morsel.likers << FactoryGirl.create(:user) }
+    end
 
     it 'returns the User' do
-      get "/api/users/#{turd_ferg.id}", api_key: turd_ferg.id, format: :json
+      get "/api/users/#{user_with_posts.id}", api_key: user_with_posts.id, format: :json
 
       expect(response).to be_success
 
-      expect_json_keys(json, turd_ferg, %w(id username first_name last_name sign_in_count title))
+      expect_json_keys(json, user_with_posts, %w(id username first_name last_name sign_in_count title))
       expect_nil_json_keys(json, %w(password encrypted_password auth_token))
 
-      expect(json['photo_url']).to eq(turd_ferg.photo_url)
+      expect(json['photo_url']).to eq(user_with_posts.photo_url)
+
+      expect(json['like_count']).to eq(number_of_morsel_likes)
     end
   end
 
