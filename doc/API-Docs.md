@@ -176,7 +176,8 @@ __Example Response__ (User)
   "created_at": "2014-01-07T18:35:57.877Z",
   "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
   "title": "Executive Chef at Jeopardy",
-  "like_count": 0
+  "like_count": 0,
+  "morsel_count": 1
 }
 ```
 
