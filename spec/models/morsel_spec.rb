@@ -68,7 +68,7 @@ describe Morsel do
     let(:first_morsel) { post_with_morsels_and_creator.morsels.first }
     subject(:url) { first_morsel.url(post_with_morsels_and_creator) }
 
-    it { should eq("https://eatmorsel.com/posts/#{first_morsel.creator.username}/posts/#{post_with_morsels_and_creator.id}/#{first_morsel.id}") }
+    it { should eq("https://eatmorsel.com/#{first_morsel.creator.username}/#{post_with_morsels_and_creator.id}/#{post_with_morsels_and_creator.cached_slug}/1") }
   end
 
   describe '#twitter_message' do
