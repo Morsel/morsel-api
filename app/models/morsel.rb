@@ -53,7 +53,8 @@ class Morsel < ActiveRecord::Base
   end
 
   def url(post)
-    "#{Settings.morsel.web_url}/posts/#{creator.username}/posts/#{post.id}/#{id}"
+    # https://eatmorsel.com/marty/1/my-first-post/2
+    "#{Settings.morsel.web_url}/#{creator.username}/#{post.id}/#{post.cached_slug}/#{post.morsels.find_index(self) + 1}"
   end
 
   private
