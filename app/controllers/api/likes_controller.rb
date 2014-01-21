@@ -3,10 +3,10 @@ class Api::LikesController < Api::ApiController
 
   def create
     @morsel = Morsel.find(params[:morsel_id])
-    if @morsel.liking_users.include? current_user
+    if @morsel.likers.include? current_user
       json_response_with_errors(['Already liked'], :bad_request)
     else
-      @morsel.liking_users << current_user
+      @morsel.likers << current_user
 
       render json: 'OK', status: :ok
     end
@@ -14,8 +14,8 @@ class Api::LikesController < Api::ApiController
 
   def destroy
     @morsel = Morsel.find(params[:morsel_id])
-    if @morsel.liking_users.include? current_user
-      @morsel.liking_users.delete(current_user)
+    if @morsel.likers.include? current_user
+      @morsel.likers.delete(current_user)
 
       render json: 'OK', status: :ok
     else

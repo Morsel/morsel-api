@@ -52,6 +52,7 @@ describe User do
   it { should respond_to(:sign_in_count) }
   it { should respond_to(:authentication_token) }
   it { should respond_to(:photo) }
+  it { should respond_to(:morsel_likes_for_my_morsels_by_others_count) }
 
   its(:authentication_token) { should be_nil }
 
@@ -130,14 +131,29 @@ describe User do
 
   context 'Authorizations' do
     context 'Twitter' do
-      before { @user_with_twitter_authorization = FactoryGirl.create(:user_with_twitter_authorization) }
-      subject { @user_with_twitter_authorization }
+      subject(:user_with_twitter_authorization) { FactoryGirl.create(:user_with_twitter_authorization) }
 
       its(:twitter_authorizations) { should_not be_empty }
 
       its(:twitter_authorization) { should_not be_nil }
       its(:authorized_with_twitter?) { should be_true }
       its(:twitter_client) { should_not be_nil }
+    end
+  end
+
+  describe '#morsel_likes_for_my_morsels_by_others_count' do
+    context 'Morsels have been liked' do
+      subject(:user_with_posts) { FactoryGirl.create(:user_with_posts) }
+      let(:number_of_morsel_likes) { rand(2..6) }
+
+      before do
+        morsel = user_with_posts.morsels.first
+        number_of_morsel_likes.times { morsel.likers << FactoryGirl.create(:user) }
+      end
+
+      it 'returns the total number of Likes for my Morsels' do
+        expect(user_with_posts.morsel_likes_for_my_morsels_by_others_count).to eq(number_of_morsel_likes)
+      end
     end
   end
 end
