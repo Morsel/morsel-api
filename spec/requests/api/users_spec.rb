@@ -69,6 +69,7 @@ describe 'Users API' do
       expect(json['photo_url']).to eq(user_with_posts.photo_url)
 
       expect(json['like_count']).to eq(number_of_morsel_likes)
+      expect(json['morsel_count']).to eq(user_with_posts.morsels.count)
     end
   end
 
