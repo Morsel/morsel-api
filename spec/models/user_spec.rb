@@ -43,6 +43,7 @@ describe User do
   subject { @user }
 
   it { should respond_to(:email) }
+  it { should respond_to(:username) }
   it { should respond_to(:encrypted_password) }
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
@@ -90,6 +91,18 @@ describe User do
           expect(@user).to_not be_valid
         end
       end
+    end
+  end
+
+  describe 'username' do
+    context 'already taken' do
+      before do
+        user_with_same_username = @user.dup
+        user_with_same_username.email = 'qwerfsdafdfas@asdfs.com'
+        user_with_same_username.save
+      end
+
+      it { should_not be_valid }
     end
   end
 

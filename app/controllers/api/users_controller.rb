@@ -16,7 +16,7 @@ class Api::UsersController < Api::ApiController
 
   class UserParams
     def self.build(params)
-      params.require(:user).permit(:email, :password, :password_confirmation,
+      params.require(:user).permit(:email, :username, :password, :password_confirmation,
                                    :first_name, :last_name, :photo, :title)
     end
   end
