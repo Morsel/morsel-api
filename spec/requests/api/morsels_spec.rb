@@ -39,7 +39,12 @@ describe 'Morsels API' do
     let(:existing_post) { FactoryGirl.create(:post) }
 
     it 'creates a Morsel' do
-      post '/api/morsels', api_key: turd_ferg.id, format: :json, morsel: { description: 'It\'s not a toomarh!', photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))) }
+      post '/api/morsels',  api_key: turd_ferg.id,
+                            format: :json,
+                            morsel: {
+                              description: 'It\'s not a toomarh!',
+                              photo: Rack::Test::UploadedFile.new(
+                                File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))) }
 
       expect(response).to be_success
 
@@ -109,7 +114,6 @@ describe 'Morsels API' do
 
       it 'posts a Tweet' do
         client = double('Twitter::REST::Client')
-        twitter_user = double('Twitter::User')
         tweet = double('Twitter::Tweet')
         tweet.stub(:url).and_return(expected_tweet_url)
 
@@ -149,7 +153,9 @@ describe 'Morsels API' do
     let(:new_description) { 'The proof is in the puddin' }
 
     it 'updates the Morsel' do
-      put "/api/morsels/#{existing_morsel.id}", api_key: turd_ferg.id, format: :json, morsel: { description: new_description }
+      put "/api/morsels/#{existing_morsel.id}", api_key: turd_ferg.id,
+                                                format: :json,
+                                                morsel: { description: new_description }
 
       expect(response).to be_success
 

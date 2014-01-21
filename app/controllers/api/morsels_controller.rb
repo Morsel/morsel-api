@@ -10,6 +10,7 @@ class Api::MorselsController < Api::ApiController
   end
 
   def create
+    # TODO: Cyclomatic complexity for create is too high
     morsel_params = MorselParams.build(params)
 
     @morsel = current_user.morsels.build(morsel_params)
@@ -28,7 +29,7 @@ class Api::MorselsController < Api::ApiController
       @post.morsels.push(@morsel)
       @post.save!
 
-      @morsel.change_sort_order_for_post_id(@post.id, params[:sort_order]) if params[:post_id].present? && params[:sort_order].present?
+      @morsel.change_sort_order_for_post_id(@post.id, params[:sort_order])  if params[:post_id].present? && params[:sort_order].present?
 
       if params[:post_to_twitter] && current_user.authorized_with_twitter?
         @tweet = current_user.post_to_twitter(@morsel.twitter_message(@post))

@@ -4,8 +4,7 @@ class String
   end
 
   def twitter_string(url = nil)
-    # normalize
-    twitter_string = self.normalize
+    twitter_string = normalize
 
     twitter_max_tweet_length = 140
 
@@ -17,7 +16,9 @@ class String
     end
 
     # truncate
-    twitter_string = twitter_string.truncate(max_message_length, separator: ' ', omission: '... ') if twitter_string.length > max_message_length
+    twitter_string = twitter_string.truncate( max_message_length,
+                                              separator: ' ',
+                                              omission: '... ') if twitter_string.length > max_message_length
 
     twitter_string << url if url.present?
 

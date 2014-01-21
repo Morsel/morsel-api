@@ -4,13 +4,14 @@
 #
 # ### Columns
 #
-# Name              | Type               | Attributes
-# ----------------- | ------------------ | ---------------------------
-# **`id`**          | `integer`          | `not null, primary key`
-# **`title`**       | `string(255)`      |
-# **`created_at`**  | `datetime`         |
-# **`updated_at`**  | `datetime`         |
-# **`creator_id`**  | `integer`          |
+# Name               | Type               | Attributes
+# ------------------ | ------------------ | ---------------------------
+# **`id`**           | `integer`          | `not null, primary key`
+# **`title`**        | `string(255)`      |
+# **`created_at`**   | `datetime`         |
+# **`updated_at`**   | `datetime`         |
+# **`creator_id`**   | `integer`          |
+# **`cached_slug`**  | `string(255)`      |
 #
 
 FactoryGirl.define do

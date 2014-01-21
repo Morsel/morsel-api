@@ -46,6 +46,7 @@ describe 'Posts API' do
       expect(response).to be_success
 
       expect_json_keys(json, post_with_morsels_and_creator, %w(id title creator_id))
+      expect(json['slug']).to eq(post_with_morsels_and_creator.cached_slug)
     end
   end
 

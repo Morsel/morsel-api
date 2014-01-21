@@ -127,10 +127,10 @@ describe 'Users API' do
         twitter_user.stub(:url).and_return("https://twitter.com/#{dummy_screen_name}")
 
         post "api/users/#{turd_ferg.id}/authorizations", api_key: turd_ferg.id,
-                                                     provider: 'twitter',
-                                                     token: dummy_token,
-                                                     secret: dummy_secret,
-                                                     format: :json
+                                                         provider: 'twitter',
+                                                         token: dummy_token,
+                                                         secret: dummy_secret,
+                                                         format: :json
 
         expect(response).to be_success
 

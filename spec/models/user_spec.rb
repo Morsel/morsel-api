@@ -124,6 +124,22 @@ describe User do
     end
   end
 
+  describe '#morsel_likes_for_my_morsels_by_others_count' do
+    context 'Morsels have been liked' do
+      subject(:user_with_posts) { FactoryGirl.create(:user_with_posts) }
+      let(:number_of_morsel_likes) { rand(2..6) }
+
+      before do
+        morsel = user_with_posts.morsels.first
+        number_of_morsel_likes.times { morsel.likers << FactoryGirl.create(:user) }
+      end
+
+      it 'returns the total number of Likes for my Morsels' do
+        expect(user_with_posts.morsel_likes_for_my_morsels_by_others_count).to eq(number_of_morsel_likes)
+      end
+    end
+  end
+
   context 'persisted' do
     before { @user.save }
     its(:authentication_token) { should_not be_nil }
@@ -138,22 +154,6 @@ describe User do
       its(:twitter_authorization) { should_not be_nil }
       its(:authorized_with_twitter?) { should be_true }
       its(:twitter_client) { should_not be_nil }
-    end
-  end
-
-  describe '#morsel_likes_for_my_morsels_by_others_count' do
-    context 'Morsels have been liked' do
-      subject(:user_with_posts) { FactoryGirl.create(:user_with_posts) }
-      let(:number_of_morsel_likes) { rand(2..6) }
-
-      before do
-        morsel = user_with_posts.morsels.first
-        number_of_morsel_likes.times { morsel.likers << FactoryGirl.create(:user) }
-      end
-
-      it 'returns the total number of Likes for my Morsels' do
-        expect(user_with_posts.morsel_likes_for_my_morsels_by_others_count).to eq(number_of_morsel_likes)
-      end
     end
   end
 end
