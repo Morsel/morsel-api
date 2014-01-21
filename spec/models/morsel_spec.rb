@@ -78,6 +78,6 @@ describe Morsel do
 
     it { should include(first_morsel.url(post_with_morsels_and_creator)) }
     it { should include(post_with_morsels_and_creator.title) }
-    it { should include(first_morsel.description[40]) } # Since description can get truncated, check that at least the first 40 characters are included
+    it { should include(first_morsel.description[40]) } # Only bother checking the first 40 characters are included
   end
 end

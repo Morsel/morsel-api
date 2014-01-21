@@ -45,7 +45,7 @@ class Morsel < ActiveRecord::Base
   end
 
   def twitter_message(post)
-    message = ""
+    message = ''
     message << "#{post.title}: " if post.title.present?
     message << description if description.present?
 

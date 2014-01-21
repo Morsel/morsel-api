@@ -13,9 +13,7 @@ class Api::AuthorizationsController < Api::ApiController
 
   class AuthorizationParams
     def self.build(params)
-      if params[:provider] == 'twitter'
-        params.require(:secret)
-      end
+      params.require(:secret) if params[:provider] == 'twitter'
       params.permit(:provider, :uid, :user_id, :token, :secret)
     end
   end

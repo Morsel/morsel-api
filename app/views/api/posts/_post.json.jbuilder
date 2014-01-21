@@ -4,3 +4,5 @@ json.(post,
   :creator_id,
   :created_at
 )
+
+json.slug post.cached_slug

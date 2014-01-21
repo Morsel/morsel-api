@@ -209,6 +209,8 @@ GEM
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
     lumberjack (1.0.4)
+    macaddr (1.6.1)
+      systemu (~> 2.5.0)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -338,6 +340,10 @@ GEM
       railties (>= 3.0, < 4.1)
       slim (~> 2.0)
     slop (3.4.7)
+    slugged (2.0.0)
+      activerecord (>= 3.0)
+      activesupport (>= 3.0)
+      uuid
     spork (1.0.0rc4)
     spork-rails (4.0.0)
       rails (>= 3.0.0, < 5)
@@ -351,6 +357,7 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
+    systemu (2.5.2)
     temple (0.6.7)
     terminal-notifier-guard (1.5.3)
     terminal-table (1.4.5)
@@ -383,6 +390,8 @@ GEM
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
+    uuid (2.3.7)
+      macaddr (~> 1.0)
     uuidtools (2.1.4)
     warden (1.2.3)
       rack (>= 1.0)
@@ -441,6 +450,7 @@ DEPENDENCIES
   sass-rails (~> 4.0.0)
   settingslogic
   slim-rails
+  slugged (~> 2.0)
   spork-rails (= 4.0.0)
   terminal-notifier-guard
   turbolinks

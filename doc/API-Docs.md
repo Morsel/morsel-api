@@ -224,6 +224,7 @@ __Example Response__ (Array of Posts)
   {
     "id": 2,
     "title": null,
+    "slug": null,
     "creator_id": 1,
     "created_at": "2014-01-07T16:34:44.862Z",
     "morsels": [
@@ -240,6 +241,7 @@ __Example Response__ (Array of Posts)
   {
     "id": 1,
     "title": null,
+    "slug": null,
     "creator_id": 1,
     "created_at": "2014-01-07T16:34:28.012Z",
     "morsels": [
@@ -419,6 +421,7 @@ __Example Response__ (Array of Posts)
   {
     "id":1,
     "title":null,
+    "slug": null,
     "creator_id":1,
     "created_at":"2014-01-07T16:34:28.012Z",
     "creator": {
@@ -445,6 +448,7 @@ __Example Response__ (Array of Posts)
   {
     "id":2,
     "title":null,
+    "slug": null,
     "creator_id":1,
     "created_at":"2014-01-07T16:34:44.862Z",
     "creator": {
@@ -471,6 +475,7 @@ __Example Response__ (Array of Posts)
   {
     "id":3,
     "title":null,
+    "slug": null,
     "creator_id":1,
     "created_at":"2014-01-07T18:09:10.996Z",
     "creator": {
@@ -497,6 +502,7 @@ __Example Response__ (Array of Posts)
   {
     "id":4,
     "title":null,
+    "slug": null,
     "creator_id":1,
     "created_at":"2014-01-07T18:37:20.544Z",
     "creator": {
@@ -523,6 +529,7 @@ __Example Response__ (Array of Posts)
   {
     "id":5,
     "title":null,
+    "slug": null,
     "creator_id":2,
     "created_at":"2014-01-07T19:11:33.937Z",
     "creator": {
@@ -558,6 +565,7 @@ __Example Response__ (Post)
 {
   "id": 4,
   "title": null,
+  "slug": null,
   "creator_id": 1,
   "created_at": "2014-01-03T22:31:47.113Z"
   "creator": {
@@ -591,7 +599,7 @@ __Request__
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| post[title]         | String  | The title for the Post | | |
+| post[title]         | String  | The title for the Post. Changing this will change the slug. | | |
 
 __Example Response__ (Updated Post)
 
@@ -599,6 +607,7 @@ __Example Response__ (Updated Post)
 {
   "id": 4,
   "title": "Look ma! A Title!",
+  "slug": "look-ma-a-title",
   "creator_id": 1,
   "created_at": "2014-01-03T22:31:47.113Z"
 }
@@ -621,6 +630,7 @@ __Example Response__ (Post with Appended Morsel)
 {
   "id": 4,
   "title": null,
+  "slug": null,
   "creator_id": 1,
   "created_at": "2014-01-03T22:31:47.113Z"
   "creator": {

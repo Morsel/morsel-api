@@ -76,7 +76,7 @@ class User < ActiveRecord::Base
       twitter_client.update(message)
     else
       nil
-      # todo throw an error
+      # TODO: throw an error
     end
   end
 
