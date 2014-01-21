@@ -25,6 +25,10 @@ FactoryGirl.define do
       after(:create) do |post, evaluator|
         create_list(:morsel, evaluator.morsels_count, posts: [post], creator: post.creator)
       end
+
+      factory :post_with_morsels_and_creator, class: Post do
+        association(:creator, factory: :user)
+      end
     end
   end
 end

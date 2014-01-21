@@ -8,7 +8,6 @@
 # ------------------------- | ------------------ | ---------------------------
 # **`id`**                  | `integer`          | `not null, primary key`
 # **`description`**         | `text`             |
-# **`like_count`**          | `integer`          | `default(0), not null`
 # **`created_at`**          | `datetime`         |
 # **`updated_at`**          | `datetime`         |
 # **`creator_id`**          | `integer`          |
@@ -43,6 +42,18 @@ class Morsel < ActiveRecord::Base
 
   def sort_order_for_post_id(post_id)
     morsel_posts.where(post_id: post_id).first.sort_order
+  end
+
+  def twitter_message(post)
+    message = ""
+    message << "#{post.title}: " if post.title.present?
+    message << description if description.present?
+
+    message.twitter_string(url(post))
+  end
+
+  def url(post)
+    "#{Settings.morsel.web_url}/posts/#{creator.username}/posts/#{post.id}/#{id}"
   end
 
   private

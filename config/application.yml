@@ -1,5 +1,7 @@
 developer:
   email: <%= ENV['DEVELOPER_EMAIL'] %>
+morsel:
+  web_url: <%= ENV['MORSEL_WEB_URL'] %>
 aws:
   credentials:
     access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
@@ -12,3 +14,6 @@ new_relic:
 rollbar:
   access_token: <%= ENV['ROLLBAR_ACCESS_TOKEN'] %>
   endpoint: <%= ENV['ROLLBAR_ENDPOINT'] %>
+twitter:
+  consumer_key: <%= ENV['TWITTER_CONSUMER_KEY'] %>
+  consumer_secret: <%= ENV['TWITTER_CONSUMER_SECRET'] %>

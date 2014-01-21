@@ -5,7 +5,7 @@ class Api::PostsController < Api::ApiController
     if params[:user_id].blank?
       @posts = Post.all
     else
-      @posts = Post.find_all_by_creator_id params[:user_id]
+      @posts = Post.where(creator_id: params[:user_id])
     end
   end
 
@@ -29,9 +29,7 @@ class Api::PostsController < Api::ApiController
       @post.morsels << morsel
     end
 
-    if params[:sort_order].present?
-      morsel.change_sort_order_for_post_id(@post.id, params[:sort_order])
-    end
+    morsel.change_sort_order_for_post_id(@post.id, params[:sort_order]) if params[:sort_order].present?
   end
 
   def unappend
