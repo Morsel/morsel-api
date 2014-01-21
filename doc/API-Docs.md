@@ -102,6 +102,7 @@ __Request__
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | user[email] | String | The email address for the new User | | X |
+| user[username] | String | The username for the new User | | X |
 | user[password] | String | The password for the new User. Minimum 8 characters. | | X |
 | user[first_name] | String | The first name for the new User. | | |
 | user[last_name] | String | The last name for the new User. | | |
@@ -114,6 +115,7 @@ __Example Response__ (Created User)
 {
   "id": 3,
   "email": "turdferg@eatmorsel.com",
+  "username": "turdferg",
   "first_name": null,
   "last_name": null,
   "sign_in_count": 0,
@@ -167,6 +169,7 @@ __Example Response__ (User)
 ```json
 {
   "id": 3,
+  "username": "turdferg",
   "first_name": "Turd",
   "last_name": "Ferguson",
   "sign_in_count": 1,
@@ -185,6 +188,7 @@ __Request__
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | user[email] | String | The email address for the new User | | |
+| user[username] | String | The username for the new User. Better if you don't allow the User to change this. | | |
 | user[password] | String | The password for the new User. Minimum 8 characters. | | |
 | user[first_name] | String | The first name for the new User. | | |
 | user[last_name] | String | The last name for the new User. | | |
@@ -197,6 +201,7 @@ __Example Response__ (Updated User)
 {
   "id": 3,
   "email": "turdferg@eatmorsel.com",
+  "username": "turdferg",
   "first_name": "Turd",
   "last_name": "Ferguson",
   "sign_in_count": 1,
@@ -416,6 +421,7 @@ __Example Response__ (Array of Posts)
     "created_at":"2014-01-07T16:34:28.012Z",
     "creator": {
       "id": 1,
+      "username": "marty",
       "first_name": "Marty",
       "last_name": "Trzpit",
       "sign_in_count": 1,
@@ -441,6 +447,7 @@ __Example Response__ (Array of Posts)
     "created_at":"2014-01-07T16:34:44.862Z",
     "creator": {
       "id": 1,
+      "username": "marty",
       "first_name": "Marty",
       "last_name": "Trzpit",
       "sign_in_count": 1,
@@ -466,6 +473,7 @@ __Example Response__ (Array of Posts)
     "created_at":"2014-01-07T18:09:10.996Z",
     "creator": {
       "id": 1,
+      "username": "marty",
       "first_name": "Marty",
       "last_name": "Trzpit",
       "sign_in_count": 1,
@@ -491,6 +499,7 @@ __Example Response__ (Array of Posts)
     "created_at":"2014-01-07T18:37:20.544Z",
     "creator": {
       "id": 1,
+      "username": "marty",
       "first_name": "Marty",
       "last_name": "Trzpit",
       "sign_in_count": 1,
@@ -516,6 +525,7 @@ __Example Response__ (Array of Posts)
     "created_at":"2014-01-07T19:11:33.937Z",
     "creator": {
       "id": 2,
+      "username": "viagra_bob",
       "first_name": "Bob",
       "last_name": "Dole",
       "sign_in_count": 23,
@@ -550,6 +560,7 @@ __Example Response__ (Post)
   "created_at": "2014-01-03T22:31:47.113Z"
   "creator": {
     "id": 1,
+    "username": "marty",
     "first_name": "Marty",
     "last_name": "Trzpit",
     "sign_in_count": 1,
@@ -612,6 +623,7 @@ __Example Response__ (Post with Appended Morsel)
   "created_at": "2014-01-03T22:31:47.113Z"
   "creator": {
     "id": 1,
+    "username": "marty",
     "first_name": "Marty",
     "last_name": "Trzpit",
     "sign_in_count": 1,
