@@ -120,7 +120,7 @@ class User < ActiveRecord::Base
 
   def facebook_client
     if authorized_with_facebook? && facebook_authorization.token.present?
-      graph = Koala::Facebook::API.new(facebook_authorization.token)
+      Koala::Facebook::API.new(facebook_authorization.token)
     else
       nil
     end
