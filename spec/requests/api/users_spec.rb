@@ -67,6 +67,7 @@ describe 'Users API' do
       expect_nil_json_keys(json, %w(password encrypted_password auth_token))
 
       expect(json['photo_url']).to eq(user_with_posts.photo_url)
+      expect(json['twitter_username']).to eq(user_with_posts.twitter_username)
 
       expect(json['like_count']).to eq(number_of_morsel_likes)
       expect(json['morsel_count']).to eq(user_with_posts.morsels.count)

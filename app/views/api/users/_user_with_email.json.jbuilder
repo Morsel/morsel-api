@@ -7,5 +7,6 @@ json.(user,
   :sign_in_count,
   :created_at,
   :photo_url,
-  :title
+  :title,
+  :twitter_username
 )

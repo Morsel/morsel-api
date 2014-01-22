@@ -97,6 +97,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def twitter_username
+    twitter_authorization.name if authorized_with_twitter?
+  end
+
   private
 
   def ensure_authentication_token
