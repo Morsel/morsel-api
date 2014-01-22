@@ -106,7 +106,6 @@ __Request__
 | user[password] | String | The password for the new User. Minimum 8 characters. | | X |
 | user[first_name] | String | The first name for the new User. | | |
 | user[last_name] | String | The last name for the new User. | | |
-| user[last_name] | String | The last name for the new User. | | |
 | user[title] | String | The title for the new User. In MTP this includes "at <Restaurant>" | | |
 
 __Example Response__ (Created User)
@@ -122,6 +121,7 @@ __Example Response__ (Created User)
   "created_at": "2014-01-07T18:35:57.877Z",
   "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
   "title": "Executive Chef at Jeopardy",
+  "twitter_username": null,
   "auth_token": "25TLfL6tvc_Qzx52Zh9q"
 }
 ```
@@ -149,6 +149,7 @@ __Example Response__ (User)
   "created_at": "2014-01-07T18:35:57.877Z",
   "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
   "title": "Executive Chef at Jeopardy",
+  "twitter_username": null,
   "auth_token": "25TLfL6tvc_Qzx52Zh9q"
 }
 ```
@@ -176,6 +177,7 @@ __Example Response__ (User)
   "created_at": "2014-01-07T18:35:57.877Z",
   "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
   "title": "Executive Chef at Jeopardy",
+  "twitter_username": null,
   "like_count": 0,
   "morsel_count": 1
 }
@@ -209,7 +211,8 @@ __Example Response__ (Updated User)
   "sign_in_count": 1,
   "created_at": "2014-01-07T18:35:57.877Z",
   "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-  "title": "Executive Chef at Jeopardy"
+  "title": "Executive Chef at Jeopardy",
+  "twitter_username": null
 }
 ```
 
@@ -442,7 +445,8 @@ __Example Response__ (Array of Posts)
       "sign_in_count": 1,
       "created_at": "2014-01-06T12:30:32.533Z",
       "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "title": "Backend Chef at Morsel"
+      "title": "Backend Chef at Morsel",
+      "twitter_username": "martytrzpit"
     },
     "morsels":[
       {
@@ -469,7 +473,8 @@ __Example Response__ (Array of Posts)
       "sign_in_count": 1,
       "created_at": "2014-01-06T12:30:32.533Z",
       "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "title": "Backend Chef at Morsel"
+      "title": "Backend Chef at Morsel",
+      "twitter_username": "martytrzpit"
     },
     "morsels":[
       {
@@ -496,7 +501,8 @@ __Example Response__ (Array of Posts)
       "sign_in_count": 1,
       "created_at": "2014-01-06T12:30:32.533Z",
       "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "title": "Backend Chef at Morsel"
+      "title": "Backend Chef at Morsel",
+      "twitter_username": "martytrzpit"
     },
     "morsels":[
       {
@@ -523,7 +529,8 @@ __Example Response__ (Array of Posts)
       "sign_in_count": 1,
       "created_at": "2014-01-06T12:30:32.533Z",
       "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "title": "Backend Chef at Morsel"
+      "title": "Backend Chef at Morsel",
+      "twitter_username": "martytrzpit"
     },
     "morsels":[
       {
@@ -550,7 +557,8 @@ __Example Response__ (Array of Posts)
       "sign_in_count": 23,
       "created_at": "2014-01-03T11:12:52.763Z",
       "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "title": "Bob Dole at Bob Dole"
+      "title": "Bob Dole at Bob Dole",
+      "twitter_username": null
     },
     "morsels":[
       {
@@ -587,6 +595,7 @@ __Example Response__ (Post)
     "created_at": "2014-01-06T12:30:32.533Z",
     "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
     "title": "Backend Chef at Morsel"
+    "twitter_username": "martytrzpit",
   },
   "morsels":[
     {
@@ -651,7 +660,8 @@ __Example Response__ (Post with Appended Morsel)
     "sign_in_count": 1,
     "created_at": "2014-01-06T12:30:32.533Z",
     "photo_url": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "title": "Backend Chef at Morsel"
+    "title": "Backend Chef at Morsel",
+    "twitter_username": "martytrzpit"
   },
   "morsels":[
     {
@@ -696,3 +706,4 @@ __Unique Errors__
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
 | __Relationship not found__ | 404 (Not Found) | The Morsel is not appended to the Post |
+

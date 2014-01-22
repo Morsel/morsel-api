@@ -61,6 +61,7 @@ describe User do
   its(:twitter_authorization) { should be_nil }
   its(:authorized_with_twitter?) { should be_false }
   its(:twitter_client) { should be_nil }
+  its(:twitter_username) { should be_nil }
 
   it { should be_valid }
 
@@ -164,6 +165,7 @@ describe User do
       its(:twitter_authorization) { should_not be_nil }
       its(:authorized_with_twitter?) { should be_true }
       its(:twitter_client) { should_not be_nil }
+      its(:twitter_username) { should_not be_nil }
     end
   end
 end
