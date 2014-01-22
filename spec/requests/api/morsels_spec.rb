@@ -123,7 +123,8 @@ describe 'Morsels API' do
         client = double('Koala::Facebook::API')
 
         Koala::Facebook::API.stub(:new).and_return(client)
-        client.stub(:put_connections).and_return({ id: '12345_67890' })
+
+        client.stub(:put_connections).and_return({ 'id' => '12345_67890' })
 
         post '/api/morsels',  api_key: user_with_facebook_authorization.id,
                               format: :json,
