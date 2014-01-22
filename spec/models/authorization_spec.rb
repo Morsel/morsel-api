@@ -22,7 +22,7 @@ require 'spec_helper'
 
 describe Authorization do
   before do
-    @authorization = FactoryGirl.build(:authorization)
+    @authorization = FactoryGirl.build(:facebook_authorization)
   end
 
   subject { @authorization }

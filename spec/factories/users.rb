@@ -53,9 +53,15 @@ FactoryGirl.define do
       end
     end
 
+    factory :user_with_facebook_authorization do
+      after(:create) do |user|
+        create_list(:facebook_authorization, 1, user: user)
+      end
+    end
+
     factory :user_with_twitter_authorization do
       after(:create) do |user|
-        create_list(:authorization, 1, user: user)
+        create_list(:twitter_authorization, 1, user: user)
       end
     end
   end

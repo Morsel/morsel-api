@@ -68,7 +68,17 @@ describe Morsel do
     let(:first_morsel) { post_with_morsels_and_creator.morsels.first }
     subject(:url) { first_morsel.url(post_with_morsels_and_creator) }
 
-    it { should eq("https://eatmorsel.com/#{first_morsel.creator.username}/#{post_with_morsels_and_creator.id}/#{post_with_morsels_and_creator.cached_slug}/1") }
+    it { should eq("https://test.eatmorsel.com/#{first_morsel.creator.username}/#{post_with_morsels_and_creator.id}/#{post_with_morsels_and_creator.cached_slug}/1") }
+  end
+
+  describe '#facebook_message' do
+    let(:post_with_morsels_and_creator) { FactoryGirl.create(:post_with_morsels_and_creator) }
+    let(:first_morsel) { post_with_morsels_and_creator.morsels.first }
+    subject(:facebook_message) { first_morsel.facebook_message(post_with_morsels_and_creator) }
+
+    it { should include(first_morsel.url(post_with_morsels_and_creator)) }
+    it { should include(post_with_morsels_and_creator.title) }
+    it { should include(first_morsel.description) }
   end
 
   describe '#twitter_message' do

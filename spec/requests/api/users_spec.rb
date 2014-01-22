@@ -134,7 +134,7 @@ describe 'Users API' do
 
         expect(response).to be_success
 
-        expect(json['id']).to_not be_nil
+        expect(json['id']).to_not eq(123)
         expect(json['provider']).to eq('twitter')
         expect(json['secret']).to eq(dummy_secret)
         expect(json['token']).to eq(dummy_token)
@@ -142,6 +142,37 @@ describe 'Users API' do
         expect(json['name']).to eq(dummy_screen_name)
 
         expect(turd_ferg.twitter_authorizations.count).to eq(1)
+      end
+    end
+
+    context 'Facebook' do
+      it 'creates a new Facebook authorization' do
+        dummy_name = 'Facebook User'
+        dummy_token = 'token'
+        client = double('Koala::Facebook::API')
+        Koala::Facebook::API.stub(:new).and_return(client)
+        facebook_user = double('Hash')
+        facebook_user.stub(:[]).with('id').and_return(123)
+        facebook_user.stub(:[]).with('name').and_return(dummy_name)
+        facebook_user.stub(:[]).with('link').and_return("https://facebook.com/#{dummy_name}")
+
+        client.stub(:get_object).and_return(facebook_user)
+
+        post "api/users/#{turd_ferg.id}/authorizations", api_key: turd_ferg.id,
+                                                         provider: 'facebook',
+                                                         token: dummy_token,
+                                                         format: :json
+
+        expect(response).to be_success
+
+        expect(json['id']).to_not eq(123)
+        expect(json['provider']).to eq('facebook')
+        expect(json['secret']).to be_nil
+        expect(json['token']).to eq(dummy_token)
+        expect(json['user_id']).to eq(turd_ferg.id)
+        expect(json['name']).to eq(dummy_name)
+
+        expect(turd_ferg.facebook_authorizations.count).to eq(1)
       end
     end
   end

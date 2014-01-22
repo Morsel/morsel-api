@@ -146,6 +146,16 @@ describe User do
   end
 
   context 'Authorizations' do
+    context 'Facebook' do
+      subject(:user_with_facebook_authorization) { FactoryGirl.create(:user_with_facebook_authorization) }
+
+      its(:facebook_authorizations) { should_not be_empty }
+
+      its(:facebook_authorization) { should_not be_nil }
+      its(:authorized_with_facebook?) { should be_true }
+      its(:facebook_client) { should_not be_nil }
+    end
+
     context 'Twitter' do
       subject(:user_with_twitter_authorization) { FactoryGirl.create(:user_with_twitter_authorization) }
 

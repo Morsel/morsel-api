@@ -44,10 +44,19 @@ class Morsel < ActiveRecord::Base
     morsel_posts.where(post_id: post_id).first.sort_order
   end
 
+  def facebook_message(post)
+    message = ''
+    message << "#{post.title}: " if post.title.present?
+    message << "#{description} " if description.present?
+    message << url(post)
+
+    message.normalize
+  end
+
   def twitter_message(post)
     message = ''
     message << "#{post.title}: " if post.title.present?
-    message << description if description.present?
+    message << "#{description} " if description.present?
 
     message.twitter_string(url(post))
   end

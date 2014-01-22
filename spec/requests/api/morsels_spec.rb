@@ -108,6 +108,36 @@ describe 'Morsels API' do
       end
     end
 
+    context 'post_to_facebook included in parameters' do
+      let(:user_with_facebook_authorization) { FactoryGirl.create(:user_with_facebook_authorization) }
+      let(:expected_fb_post_url) { "https://facebook.com/12345_67890" }
+
+      it 'posts to Facebook' do
+        dummy_name = 'Facebook User'
+        dummy_token = 'token'
+
+        facebook_user = double('Hash')
+        facebook_user.stub(:[]).with('id').and_return('12345_67890')
+        facebook_user.stub(:[]).with('name').and_return(dummy_name)
+
+        client = double('Koala::Facebook::API')
+
+        Koala::Facebook::API.stub(:new).and_return(client)
+        client.stub(:put_connections).and_return({ id: '12345_67890' })
+
+        post '/api/morsels',  api_key: user_with_facebook_authorization.id,
+                              format: :json,
+                              morsel: { description: 'The Fresh Prince of Bel Air' },
+                              post_to_facebook: true
+
+        expect(response).to be_success
+
+        expect(json['id']).to_not be_nil
+
+        expect(json['fb_post_url']).to eq(expected_fb_post_url)
+      end
+    end
+
     context 'post_to_twitter included in parameters' do
       let(:user_with_twitter_authorization) { FactoryGirl.create(:user_with_twitter_authorization) }
       let(:expected_tweet_url) { "https://twitter.com/#{user_with_twitter_authorization.username}/status/12345" }
