@@ -8,6 +8,7 @@ Spork.prefork do
   # if you change any configuration or code from libraries loaded here, you'll
   # need to restart spork for it take effect.
   ENV['RAILS_ENV'] ||= 'test'
+
   require File.expand_path('../../config/environment', __FILE__)
   require 'rspec/rails'
   require 'email_spec'
@@ -72,4 +73,5 @@ Spork.each_run do
   FactoryGirl.sequences.clear
   FactoryGirl.factories.clear
   Dir[Rails.root.join('spec/factories/**/*.rb')].each { |f| load f }
+  ENV.update Dotenv::Environment.new('.env.test')
 end

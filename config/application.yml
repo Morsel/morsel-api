@@ -8,6 +8,9 @@ aws:
     secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
   buckets:
     default: <%= ENV['S3_DEFAULT_BUCKET'] %>
+facebook:
+  app_id: <%= ENV['FACEBOOK_APP_ID'] %>
+  app_secret: <%= ENV['FACEBOOK_APP_SECRET'] %>
 new_relic:
   app_name: <%= ENV['NEW_RELIC_APP_NAME'] %>
   license_key: <%= ENV['NEW_RELIC_LICENSE_KEY'] %>

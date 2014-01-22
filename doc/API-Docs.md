@@ -266,7 +266,7 @@ __Request__
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| authorization[provider] | String | The provider the User is authorizing. Currently the only valid value is 'twitter'. | | X |
+| authorization[provider] | String | The provider the User is authorizing. Currently the only valid values are 'facebook' and 'twitter'. | | X |
 | authorization[token] | String | The User's Access Token for the service. | | X |
 | authorization[secret] | String | The User's Access Token Secret for the service. Only required for Twitter. | | Twitter |
 
@@ -294,6 +294,15 @@ __Example Response__ (Array of Authorizations)
 ```json
 [{
   "id": 1,
+  "provider": "facebook",
+  "uid": "1249832184",
+  "user_id": 3,
+  "token": "25T-Cac6vtt_QzgfrZh9q",
+  "secret": null,
+  "name": "Turd Ferguson",
+  "link": "https://facebook.com/turd.ferguson"
+}, {
+  "id": 2,
   "provider": "twitter",
   "uid": "12345",
   "user_id": 3,
@@ -318,7 +327,8 @@ __Request__
 | morsel[photo] | String | The photo for the new Morsel | | Only if description is null |
 | post_id | Number | The ID of the Post to append this Morsel to. If none is specified, a new Post will be created for this Morsel. | | |
 | post_title | String | If a Post already exists, renames the title to this. Otherwise sets the title for the new Post to this. | | |
-| sort_order         | Number | The ```sort_order``` for the Morsel in the Post. Requires ```post_id``` | end of Post | |
+| sort_order | Number | The ```sort_order``` for the Morsel in the Post. Requires ```post_id``` | end of Post | |
+| post_to_facebook | Boolean | Post to the current_user's Facebook wall with the Post's title and Morsel description (if they exist) along with a link to the Morsel. | false | |
 | post_to_twitter | Boolean | Send a Tweet from the current_user with the Post's title and Morsel description (if they exist) along with a link to the Morsel. If the title and description are too long they will be truncated to allow enough room for the links. | false | |
 
 __Example Response__ (Created Morsel)

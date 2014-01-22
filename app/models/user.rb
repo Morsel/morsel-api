@@ -43,6 +43,7 @@ class User < ActiveRecord::Base
   before_save :update_photo_attributes
 
   has_many :authorizations
+  has_many :facebook_authorizations, -> { where provider: 'facebook' }, foreign_key: :user_id, class_name: 'Authorization'
   has_many :twitter_authorizations, -> { where provider: 'twitter' }, foreign_key: :user_id, class_name: 'Authorization'
   has_many :liked_morsels, through: :likes, source: :morsel
   has_many :likes
@@ -61,6 +62,22 @@ class User < ActiveRecord::Base
 
   def likes?(morsel)
     liked_morsels.include?(morsel)
+  end
+
+  def facebook_authorization
+    facebook_authorizations.first
+  end
+
+  def authorized_with_facebook?
+    facebook_authorizations.present?
+  end
+
+  def post_to_facebook(message)
+    if facebook_client.present?
+      facebook_client.put_connections('me', 'feed', message: message)
+    else
+      nil
+    end
   end
 
   def twitter_authorization
@@ -98,6 +115,14 @@ class User < ActiveRecord::Base
       self.photo_content_type = photo.file.content_type
       self.photo_file_size = photo.file.size
       self.photo_updated_at = Time.now
+    end
+  end
+
+  def facebook_client
+    if authorized_with_facebook? && facebook_authorization.token.present?
+      graph = Koala::Facebook::API.new(facebook_authorization.token)
+    else
+      nil
     end
   end
 

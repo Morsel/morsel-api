@@ -21,13 +21,13 @@
 class Authorization < ActiveRecord::Base
   belongs_to :user
 
-  validates :provider, inclusion: %w(twitter), allow_blank: false, presence: true
+  validates :provider, inclusion: %w(facebook twitter), allow_blank: false, presence: true
   validates :token, presence: true
   validates :uid, uniqueness: { scope: :provider }, presence: true
   validates :user, presence: true
   validates_associated :user
 
-  def self.build_authorization(provider, user, token, secret)
+  def self.build_authorization(provider, user, token, secret = nil)
     authorization = user.authorizations.build(provider: provider,
                                               token: token,
                                               secret: secret,
@@ -45,6 +45,17 @@ class Authorization < ActiveRecord::Base
         authorization.uid = twitter_client.current_user.id
         authorization.name = twitter_client.current_user.screen_name
         authorization.link = twitter_client.current_user.url.to_s
+        user.save
+      else
+        authorization.errors.add(:token, 'is not valid') if authorization.uid.blank?
+      end
+    elsif provider == 'facebook'
+      facebook_user = Koala::Facebook::API.new(token).get_object('me')
+
+      if facebook_user.present?
+        authorization.uid = facebook_user['id'] if facebook_user['id'].present?
+        authorization.name = facebook_user['name'] if facebook_user['name'].present?
+        authorization.link = facebook_user['link'] if facebook_user['link'].present?
         user.save
       else
         authorization.errors.add(:token, 'is not valid') if authorization.uid.blank?
