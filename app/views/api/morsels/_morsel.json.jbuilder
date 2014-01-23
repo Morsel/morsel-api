@@ -5,12 +5,16 @@ json.(morsel,
   :created_at
 )
 
-json.photos do
-  json._104x morsel.photo_url(:_104x)
-  json._208x morsel.photo_url(:_208x)
-  json._320x214 morsel.photo_url(:_320x214)
-  json._640x428 morsel.photo_url(:_640x428)
-  json._640x morsel.photo_url(:_640x)
+if morsel.photo_url.present?
+  json.photos do
+    json._104x morsel.photo_url(:_104x)
+    json._208x morsel.photo_url(:_208x)
+    json._320x214 morsel.photo_url(:_320x214)
+    json._640x428 morsel.photo_url(:_640x428)
+    json._640x morsel.photo_url(:_640x)
+  end
+else
+  json.photos nil
 end
 
 if defined?(post) && post.present?
