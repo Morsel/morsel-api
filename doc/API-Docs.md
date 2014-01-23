@@ -120,10 +120,10 @@ __Example Response__ (Created User)
   "sign_in_count": 0,
   "created_at": "2014-01-07T18:35:57.877Z",
   "photos": {
-    "_40x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_72x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_80x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_144x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+    "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
   },
   "title": "Executive Chef at Jeopardy",
   "twitter_username": null,
@@ -153,10 +153,10 @@ __Example Response__ (User)
   "sign_in_count": 1,
   "created_at": "2014-01-07T18:35:57.877Z",
   "photos": {
-    "_40x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_72x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_80x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_144x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+    "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
   },
   "title": "Executive Chef at Jeopardy",
   "twitter_username": null,
@@ -186,10 +186,10 @@ __Example Response__ (User)
   "sign_in_count": 1,
   "created_at": "2014-01-07T18:35:57.877Z",
   "photos": {
-    "_40x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_72x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_80x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_144x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+    "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
   },
   "title": "Executive Chef at Jeopardy",
   "twitter_username": null,
@@ -226,10 +226,10 @@ __Example Response__ (Updated User)
   "sign_in_count": 1,
   "created_at": "2014-01-07T18:35:57.877Z",
   "photos": {
-    "_40x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_72x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_80x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_144x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+    "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
   },
   "title": "Executive Chef at Jeopardy",
   "twitter_username": null
@@ -254,13 +254,7 @@ __Example Response__ (Array of Posts)
       {
         "id": 2,
         "description": null,
-        "photos": {
-          "_104x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_208x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
-        },
+        "photos": null,
         "creator_id": 1,
         "created_at": "2014-01-07T16:34:43.071Z",
         "liked": false
@@ -278,11 +272,11 @@ __Example Response__ (Array of Posts)
         "id": 1,
         "description": "Some other description!!!!213@!#!@$%",
         "photos": {
-          "_104x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_208x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+          "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+          "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
           "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
           "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+          "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
         },
         "creator_id": 1,
         "created_at": "2014-01-07T16:34:27.938Z",
@@ -373,8 +367,8 @@ __Example Response__ (Created Morsel)
   "id": 4,
   "description": "This is a description!",
   "photos": {
-    "_104x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-    "_208x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+    "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+    "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
     "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
     "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
   },
@@ -395,8 +389,8 @@ __Example Response__ (Morsel)
   "id": 4,
   "description": "This is a description!",
   "photos": {
-    "_104x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-    "_208x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+    "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+    "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
     "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
     "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
   },
@@ -426,8 +420,8 @@ __Example Response__ (Updated Morsel)
   "id": 4,
   "description": "This is a modified description!",
   "photos": {
-    "_104x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-    "_208x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+    "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+    "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
     "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
     "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
   },
@@ -492,10 +486,10 @@ __Example Response__ (Array of Posts)
       "sign_in_count": 1,
       "created_at": "2014-01-06T12:30:32.533Z",
       "photos": {
-        "_40x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_72x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_80x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_144x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+        "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+        "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+        "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+        "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
       },
       "title": "Backend Chef at Morsel",
       "twitter_username": "martytrzpit"
@@ -505,11 +499,11 @@ __Example Response__ (Array of Posts)
         "id":1,
         "description":"Some other description!!!!213@!#!@$%",
         "photos": {
-          "_104x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_208x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+          "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+          "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
           "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
           "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+          "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
         },
         "creator_id":1,
         "created_at":"2014-01-07T16:34:27.938Z",
@@ -531,10 +525,10 @@ __Example Response__ (Array of Posts)
       "sign_in_count": 1,
       "created_at": "2014-01-06T12:30:32.533Z",
       "photos": {
-        "_40x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_72x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_80x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_144x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+        "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+        "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+        "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+        "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
       },
       "title": "Backend Chef at Morsel",
       "twitter_username": "martytrzpit"
@@ -544,11 +538,11 @@ __Example Response__ (Array of Posts)
         "id":2,
         "description":null,
         "photos": {
-          "_104x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_208x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+          "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+          "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
           "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
           "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+          "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
         },
         "creator_id":1,
         "created_at":"2014-01-07T16:34:43.071Z",
@@ -570,10 +564,10 @@ __Example Response__ (Array of Posts)
       "sign_in_count": 1,
       "created_at": "2014-01-06T12:30:32.533Z",
       "photos": {
-        "_40x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_72x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_80x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_144x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+        "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+        "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+        "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+        "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
       },
       "title": "Backend Chef at Morsel",
       "twitter_username": "martytrzpit"
@@ -583,11 +577,11 @@ __Example Response__ (Array of Posts)
         "id":3,
         "description":null,
         "photos": {
-          "_104x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_208x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+          "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+          "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
           "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
           "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+          "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
         },
         "creator_id":1,
         "created_at":"2014-01-07T18:09:10.145Z",
@@ -609,10 +603,10 @@ __Example Response__ (Array of Posts)
       "sign_in_count": 1,
       "created_at": "2014-01-06T12:30:32.533Z",
       "photos": {
-        "_40x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_72x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_80x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_144x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+        "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+        "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+        "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+        "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
       },
       "title": "Backend Chef at Morsel",
       "twitter_username": "martytrzpit"
@@ -622,11 +616,11 @@ __Example Response__ (Array of Posts)
         "id":4,
         "description":"This is a modified description!",
         "photos": {
-          "_104x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_208x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+          "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+          "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
           "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
           "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+          "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
         },
         "creator_id":1,
         "created_at":"2014-01-07T18:37:19.661Z",
@@ -648,10 +642,10 @@ __Example Response__ (Array of Posts)
       "sign_in_count": 23,
       "created_at": "2014-01-03T11:12:52.763Z",
       "photos": {
-        "_40x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_72x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_80x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_144x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+        "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+        "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+        "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+        "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
       },
       "title": "Bob Dole at Bob Dole",
       "twitter_username": null
@@ -661,11 +655,11 @@ __Example Response__ (Array of Posts)
         "id":5,
         "description":"Here's a nice picture of tacos",
         "photos": {
-          "_104x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_208x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+          "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+          "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
           "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
           "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+          "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
         },
         "creator_id":2,
         "created_at":"2014-01-07T19:11:33.929Z",
@@ -696,10 +690,10 @@ __Example Response__ (Post)
     "sign_in_count": 1,
     "created_at": "2014-01-06T12:30:32.533Z",
     "photos": {
-      "_40x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "_72x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "_80x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "_144x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+      "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+      "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+      "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+      "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
     },
     "title": "Backend Chef at Morsel"
     "twitter_username": "martytrzpit",
@@ -709,8 +703,8 @@ __Example Response__ (Post)
       "id":4,
       "description":"This is a modified description!",
       "photos": {
-        "_104x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-        "_208x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+        "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+        "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
         "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
         "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
       },
@@ -772,10 +766,10 @@ __Example Response__ (Post with Appended Morsel)
     "sign_in_count": 1,
     "created_at": "2014-01-06T12:30:32.533Z",
     "photos": {
-      "_40x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "_72x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "_80x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "_144x": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+      "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+      "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+      "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+      "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
     },
     "title": "Backend Chef at Morsel",
     "twitter_username": "martytrzpit"
@@ -785,8 +779,8 @@ __Example Response__ (Post with Appended Morsel)
       "id":4,
       "description":"This is a modified description!",
       "photos": {
-        "_104x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-        "_208x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+        "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+        "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
         "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
         "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
       },
@@ -798,8 +792,8 @@ __Example Response__ (Post with Appended Morsel)
       "id":7,
       "description":"I got appended!",
       "photos": {
-        "_104x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-        "_208x": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+        "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+        "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
         "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
         "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
       },
