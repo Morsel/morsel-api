@@ -11,10 +11,10 @@ json.(user,
 
 if user.photo_url.present?
   json.photos do
-    json._40x user.photo_url(:_40x)
-    json._72x user.photo_url(:_72x)
-    json._80x user.photo_url(:_80x)
-    json._144x user.photo_url(:_144x)
+    json._40x40 user.photo_url(:_40x40)
+    json._72x72 user.photo_url(:_72x72)
+    json._80x80 user.photo_url(:_80x80)
+    json._144x144 user.photo_url(:_144x144)
   end
 else
   json.photos nil

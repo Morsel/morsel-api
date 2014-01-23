@@ -7,11 +7,11 @@ json.(morsel,
 
 if morsel.photo_url.present?
   json.photos do
-    json._104x morsel.photo_url(:_104x)
-    json._208x morsel.photo_url(:_208x)
+    json._104x104 morsel.photo_url(:_104x104)
+    json._208x208 morsel.photo_url(:_208x208)
     json._320x214 morsel.photo_url(:_320x214)
     json._640x428 morsel.photo_url(:_640x428)
-    json._640x morsel.photo_url(:_640x)
+    json._640x640 morsel.photo_url(:_640x640)
   end
 else
   json.photos nil
