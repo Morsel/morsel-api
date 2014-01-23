@@ -1,8 +1,12 @@
 class MorselPhotoUploader < BasePhotoUploader
   include CarrierWave::MiniMagick
 
+  version :_640x do
+    process resize_to_fill: [640, 640]
+  end
+
   # (Retina)
-  version :_640x428 do
+  version :_640x428, from_version: :_640x do
     process resize_to_fill: [640, 428]
   end
 
