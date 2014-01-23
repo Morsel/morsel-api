@@ -1,6 +1,9 @@
 json.partial! post
 
-json.creator post.creator, :id, :username, :first_name, :last_name, :photo_url, :twitter_username, :created_at
+json.creator do
+  json.partial! 'api/users/user', user: post.creator
+end
+
 
 json.morsels post.morsels do |morsel|
   json.partial! morsel, post: post
