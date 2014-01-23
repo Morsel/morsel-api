@@ -19,6 +19,7 @@ gem 'jbuilder', '~> 1.2'
 gem 'jquery-rails'
 gem "koala", "~> 1.8.0rc1"
 gem 'mime-types'
+gem 'mini_magick'
 gem 'newrelic_rpm'
 gem 'paranoia', '~> 2.0'
 gem 'rack-cors', require: 'rack/cors'
