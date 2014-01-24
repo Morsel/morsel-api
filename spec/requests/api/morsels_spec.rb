@@ -52,7 +52,7 @@ describe 'Morsels API' do
 
       new_morsel = Morsel.find json['id']
       expect_json_keys(json, new_morsel, %w(id description creator_id))
-      expect(json['photo_url']).to eq(new_morsel.photo_url)
+      expect(json['photos']).to_not be_nil
 
       expect(new_morsel.posts).to_not include(existing_post)
     end
@@ -175,7 +175,44 @@ describe 'Morsels API' do
 
       expect_json_keys(json, morsel, %w(id description creator_id))
       expect(json['liked']).to be_false
-      expect(json['photo_url']).to eq(morsel.photo_url)
+      expect(json['photos']).to_not be_nil
+    end
+
+    context 'has a photo' do
+      before do
+        morsel.photo = Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
+        morsel.save
+      end
+
+      it 'returns the User with the appropriate image sizes' do
+        get "/api/morsels/#{morsel.id}", api_key: turd_ferg.id, format: :json
+
+        expect(response).to be_success
+
+        photos = json['photos']
+        expect(photos['_640x640']).to_not be_nil
+        expect(photos['_640x428']).to_not be_nil
+        expect(photos['_320x214']).to_not be_nil
+        expect(photos['_208x208']).to_not be_nil
+        expect(photos['_104x104']).to_not be_nil
+      end
+    end
+
+    context 'has Comments' do
+      before do
+        2.times { FactoryGirl.create(:comment, morsel: morsel) }
+      end
+
+      it 'returns the Morsel with Comments' do
+        get "/api/morsels/#{morsel.id}", api_key: turd_ferg.id, format: :json
+
+        expect(response).to be_success
+
+        expect_json_keys(json, morsel, %w(id description creator_id))
+        expect(json['liked']).to be_false
+
+        expect(json['comments']).to_not be_empty
+      end
     end
   end
 
@@ -222,6 +259,78 @@ describe 'Morsels API' do
 
       expect(response).to be_success
       expect(Morsel.where(id: existing_morsel.id)).to be_empty
+    end
+  end
+
+  describe 'GET /api/morsels/{:morsel_id}/comments comments#index' do
+    let(:morsel_with_creator_and_comments) { FactoryGirl.create(:morsel_with_creator_and_comments) }
+
+    it 'returns a list of Comments for the Morsel' do
+      get "/api/morsels/#{morsel_with_creator_and_comments.id}/comments", api_key: turd_ferg.id, format: :json
+
+      expect(response).to be_success
+
+      expect(json.count).to eq(2)
+    end
+  end
+
+  describe 'POST /api/morsels/{:morsel_id}/comments comments#create' do
+    let(:existing_morsel) { FactoryGirl.create(:morsel) }
+
+    it 'creates a Comment for the Morsel' do
+      post "/api/morsels/#{existing_morsel.id}/comments", api_key: turd_ferg.id,
+                                                          format: :json,
+                                                          comment: {
+                                                            description: 'Drop it like it\'s hot.' }
+
+      expect(response).to be_success
+
+      expect(json['id']).to_not be_nil
+
+      new_comment = Comment.find(json['id'])
+      expect_json_keys(json, new_comment, %w(id description))
+      expect(json['creator_id']).to eq(new_comment.user.id)
+      expect(json['morsel_id']).to eq(new_comment.morsel.id)
+    end
+  end
+
+  describe 'DELETE /api/comments/{:comment_id} comments#destroy' do
+    let(:existing_comment) { FactoryGirl.create(:comment) }
+    context 'current_user is the Comment creator' do
+      before do
+        existing_comment.user = turd_ferg
+        existing_comment.save
+      end
+
+      it 'soft deletes the Comment' do
+        delete "/api/comments/#{existing_comment.id}", api_key: turd_ferg.id, format: :json
+
+        expect(response).to be_success
+        expect(Comment.where(id: existing_comment.id)).to be_empty
+      end
+    end
+
+    context 'current_user is the Morsel creator' do
+      before do
+        existing_comment.morsel.creator = turd_ferg
+        existing_comment.morsel.save
+      end
+
+      it 'soft deletes the Comment' do
+        delete "/api/comments/#{existing_comment.id}", api_key: turd_ferg.id, format: :json
+
+        expect(response).to be_success
+        expect(Comment.where(id: existing_comment.id)).to be_empty
+      end
+    end
+
+    context 'current_user is not the Comment or Morsel creator' do
+      it 'does NOT soft delete the Comment' do
+        delete "/api/comments/#{existing_comment.id}", api_key: turd_ferg.id, format: :json
+
+        expect(response).to_not be_success
+        expect(Comment.where(id: existing_comment.id)).to_not be_empty
+      end
     end
   end
 end

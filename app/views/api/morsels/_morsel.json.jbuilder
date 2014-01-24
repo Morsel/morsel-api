@@ -31,3 +31,7 @@ end
 if defined?(fb_post) && fb_post.present?
   json.fb_post_url "https://facebook.com/#{fb_post['id']}"
 end
+
+json.comments morsel.comments do |comment|
+  json.partial! comment
+end

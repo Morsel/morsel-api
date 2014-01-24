@@ -13,7 +13,7 @@ describe 'Users API' do
       new_user = User.find json['id']
       expect_json_keys(json, new_user, %w(id username first_name last_name sign_in_count title))
       expect(json['auth_token']).to eq(new_user.authentication_token)
-      expect(json['photo_url']).to eq(new_user.photo_url)
+      expect(json['photos']).to be_nil
       expect_nil_json_keys(json, %w(password encrypted_password))
     end
   end
@@ -28,7 +28,7 @@ describe 'Users API' do
 
       expect_json_keys(json, user, %w(id username first_name last_name title))
       expect(json['auth_token']).to eq(user.authentication_token)
-      expect(json['photo_url']).to eq(user.photo_url)
+      expect(json['photos']).to be_nil
       expect(json['sign_in_count']).to eq(1)
       expect_nil_json_keys(json, %w(password encrypted_password))
     end
@@ -66,11 +66,30 @@ describe 'Users API' do
       expect_json_keys(json, user_with_posts, %w(id username first_name last_name sign_in_count title))
       expect_nil_json_keys(json, %w(password encrypted_password auth_token))
 
-      expect(json['photo_url']).to eq(user_with_posts.photo_url)
+      expect(json['photos']).to be_nil
       expect(json['twitter_username']).to eq(user_with_posts.twitter_username)
 
       expect(json['like_count']).to eq(number_of_morsel_likes)
       expect(json['morsel_count']).to eq(user_with_posts.morsels.count)
+    end
+
+    context 'has a photo' do
+      before do
+        user_with_posts.photo = Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
+        user_with_posts.save
+      end
+
+      it 'returns the User with the appropriate image sizes' do
+        get "/api/users/#{user_with_posts.id}", api_key: user_with_posts.id, format: :json
+
+        expect(response).to be_success
+
+        photos = json['photos']
+        expect(photos['_144x144']).to_not be_nil
+        expect(photos['_72x72']).to_not be_nil
+        expect(photos['_80x80']).to_not be_nil
+        expect(photos['_40x40']).to_not be_nil
+      end
     end
   end
 

@@ -43,6 +43,7 @@ class User < ActiveRecord::Base
   before_save :update_photo_attributes
 
   has_many :authorizations
+  has_many :comments, through: :morsels
   has_many :facebook_authorizations, -> { where provider: 'facebook' }, foreign_key: :user_id, class_name: 'Authorization'
   has_many :twitter_authorizations, -> { where provider: 'twitter' }, foreign_key: :user_id, class_name: 'Authorization'
   has_many :liked_morsels, through: :likes, source: :morsel
