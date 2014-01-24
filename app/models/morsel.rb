@@ -22,6 +22,7 @@ class Morsel < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :creator, foreign_key: 'creator_id', class_name: 'User'
+  has_many :comments
   has_many :likers, through: :likes, source: :user
   has_many :likes
   has_many :morsel_posts

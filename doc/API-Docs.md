@@ -20,6 +20,9 @@
   - [DELETE ```/morsels/{morsel_id}``` - Delete Morsel](#delete-morselsmorsel_id---delete-morsel)
   - [POST ```/morsels/{morsel_id}/like``` - Like Morsel](#post-morselsmorsel_idlike---like-morsel)
   - [DELETE ```/morsels/{morsel_id}/like``` - Unlike Morsel](#delete-morselsmorsel_idlike---unlike-morsel)
+  - [POST ```/morsels/{morsel_id}/comments``` - Create Comment](#post-morselsmorsel_idcomments---create-comment)
+  - [GET ```/morsels/{morsel_id}/comments``` - Morsel Comments](#get-morselsmorsel_idcomments---morsel-comments)
+  - [DELETE ```/comments/{comment_id}``` - Delete Comment](#delete-commentscomment_id---delete-comment)
 - [Post Methods](#post-methods)
   - [GET ```/posts``` - Posts](#get-posts---posts)
   - [GET ```/posts/{post_id}``` - Post](#get-postspost_id---post)
@@ -396,7 +399,21 @@ __Example Response__ (Morsel)
   },
   "creator_id": 1,
   "created_at": "2014-01-07T18:37:19.661Z",
-  "liked": false
+  "liked": false,
+  "comments": [{
+    "id": 4,
+    "description": "Your dish sucks bro!",
+    "creator_id": 1,
+    "morsel_id": 5,
+    "created_at": "2014-01-07T18:37:19.661Z"
+  }, {
+    "id": 7,
+    "description": "Worst dish, eva.",
+    "creator_id": 2,
+    "morsel_id": 5,
+    "created_at": "2014-01-07T18:38:13.855Z"
+  }]
+
 }
 ```
 
@@ -460,6 +477,71 @@ __Unique Errors__
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
 | __Not liked__ | 404 (Not Found) | The Morsel is not liked by the User |
+
+
+### POST ```/morsels/{morsel_id}/comments``` - Create Comment
+Create a Comment for the Morsel with the specified ```morsel_id```
+
+__Request__
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| comment[description] | String | The description for the Comment | | |
+
+__Example Response__ (Created Comment)
+
+```json
+{
+  "id": 4,
+  "description": "Your dish sucks bro!",
+  "creator_id": 1,
+  "morsel_id": 5
+  "created_at": "2014-01-07T18:37:19.661Z",
+}
+```
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __Morsel not found__ | 404 (Not Found) | The Morsel could not be found |
+
+
+### GET ```/morsels/{morsel_id}/comments``` - Morsel Comments
+List the Comments for the Morsel with the specified ```morsel_id```
+
+__Example Response__ (Array of Comments)
+
+```json
+[{
+  "id": 4,
+  "description": "Your dish sucks bro!",
+  "creator_id": 1,
+  "morsel_id": 5,
+  "created_at": "2014-01-07T18:37:19.661Z"
+}, {
+  "id": 7,
+  "description": "Worst dish, eva.",
+  "creator_id": 2,
+  "morsel_id": 5,
+  "created_at": "2014-01-07T18:38:13.855Z"
+}]
+```
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __Morsel not found__ | 404 (Not Found) | The Morsel could not be found |
+
+
+### DELETE ```/comments/{comment_id}``` - Delete Comment
+Deletes the Comment with the specified ```comment_id``` if the authenticated User is the Comment or Morsel Creator
+
+__Example Response__ (HTTP Status Code 200 on success)
+
+__Unique Errors__
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __Comment not found__ | 404 (Not Found) | The Comment could not be found |
+| __Forbidden__ | 403 (Forbidden) | The Authenticated User is not authorized to delete the Comment |
 
 
 
