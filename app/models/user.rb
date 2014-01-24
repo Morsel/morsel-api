@@ -51,7 +51,7 @@ class User < ActiveRecord::Base
   has_many :morsels, foreign_key: :creator_id
   has_many :posts, foreign_key: :creator_id
 
-  validates :username, uniqueness: { case_sensitive: false }, presence: true
+  validates :username, uniqueness: { case_sensitive: false }, presence: true, format: { with: /\A[A-Za-z0-9_]+$\z/ }
 
   include PhotoUploadable
 
