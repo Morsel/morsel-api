@@ -16,9 +16,9 @@ class String
     end
 
     # truncate
-    twitter_string = twitter_string.truncate( max_message_length,
-                                              separator: ' ',
-                                              omission: '... ') if twitter_string.length > max_message_length
+    twitter_string = twitter_string.truncate(max_message_length,
+                                             separator: ' ',
+                                             omission: '... ') if twitter_string.length > max_message_length
 
     twitter_string << url if url.present?
 

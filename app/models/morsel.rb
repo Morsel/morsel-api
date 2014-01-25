@@ -47,7 +47,7 @@ class Morsel < ActiveRecord::Base
 
   def facebook_message(post)
     message = ''
-    message << "#{post.title}: " if post.title.present?
+    message << "#{post.title}: " if post.title?
     message << "#{description} " if description.present?
     message << url(post)
 
@@ -56,7 +56,7 @@ class Morsel < ActiveRecord::Base
 
   def twitter_message(post)
     message = ''
-    message << "#{post.title}: " if post.title.present?
+    message << "#{post.title}: " if post.title?
     message << "#{description} " if description.present?
 
     message.twitter_string(url(post))

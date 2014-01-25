@@ -3,13 +3,13 @@ require 'spec_helper'
 describe 'Posts API' do
   let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
 
-  describe 'GET /api/posts posts#index' do
+  describe 'GET /posts posts#index' do
     before do
       4.times { FactoryGirl.create(:post_with_morsels_and_creator) }
     end
 
     it 'returns a list of Posts' do
-      get '/api/posts', api_key: turd_ferg.id, format: :json
+      get '/posts', api_key: turd_ferg.id, format: :json
 
       expect(response).to be_success
 
@@ -20,9 +20,9 @@ describe 'Posts API' do
       let(:post_with_morsels_and_creator) { FactoryGirl.create(:post_with_morsels_and_creator) }
 
       it 'returns all Posts for user_id' do
-        get '/api/posts', api_key: turd_ferg.id,
-                          user_id: post_with_morsels_and_creator.creator.id,
-                          format: :json
+        get '/posts', api_key: turd_ferg.id,
+                      user_id: post_with_morsels_and_creator.creator.id,
+                      format: :json
 
         expect(response).to be_success
 
@@ -37,11 +37,11 @@ describe 'Posts API' do
     end
   end
 
-  describe 'GET /api/posts posts#show' do
+  describe 'GET /posts posts#show' do
     let(:post_with_morsels_and_creator) { FactoryGirl.create(:post_with_morsels_and_creator) }
 
     it 'returns the Post' do
-      get "/api/posts/#{post_with_morsels_and_creator.id}", api_key: turd_ferg.id, format: :json
+      get "/posts/#{post_with_morsels_and_creator.id}", api_key: turd_ferg.id, format: :json
 
       expect(response).to be_success
 
@@ -50,14 +50,14 @@ describe 'Posts API' do
     end
   end
 
-  describe 'PUT /api/posts/{:post_id} posts#update' do
+  describe 'PUT /posts/{:post_id} posts#update' do
     let(:existing_post) { FactoryGirl.create(:post_with_morsels_and_creator) }
     let(:new_title) { 'Shy Ronnie 2: Ronnie & Clyde' }
 
     it 'updates the Post' do
-      put "/api/posts/#{existing_post.id}", api_key: turd_ferg.id,
-                                            format: :json,
-                                            post: { title: new_title }
+      put "/posts/#{existing_post.id}", api_key: turd_ferg.id,
+                                        format: :json,
+                                        post: { title: new_title }
 
       expect(response).to be_success
 
@@ -66,14 +66,14 @@ describe 'Posts API' do
     end
   end
 
-  describe 'POST /api/posts/{:post_id}/append posts#append' do
+  describe 'POST /posts/{:post_id}/append posts#append' do
     let(:existing_post) { FactoryGirl.create(:post_with_morsels_and_creator) }
     let(:morsel) { FactoryGirl.create(:morsel) }
 
     it 'appends the Morsel to the Post' do
-      post "/api/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
-                                                    format: :json,
-                                                    morsel_id: morsel.id
+      post "/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
+                                                format: :json,
+                                                morsel_id: morsel.id
 
       expect(response).to be_success
 
@@ -86,9 +86,9 @@ describe 'Posts API' do
       let(:morsel_in_existing_post) { existing_post.morsels.first }
 
       it 'returns an error' do
-        post "/api/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
-                                                      format: :json,
-                                                      morsel_id: morsel_in_existing_post.id
+        post "/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
+                                                  format: :json,
+                                                  morsel_id: morsel_in_existing_post.id
 
         expect(response).to_not be_success
 
@@ -100,10 +100,10 @@ describe 'Posts API' do
       let(:existing_post) { FactoryGirl.create(:post_with_morsels_and_creator) }
 
       it 'changes the sort_order' do
-        post "/api/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
-                                                      format: :json,
-                                                      morsel_id: morsel.id,
-                                                      sort_order: 1
+        post "/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
+                                                  format: :json,
+                                                  morsel_id: morsel.id,
+                                                  sort_order: 1
 
         expect(response).to be_success
 
@@ -119,9 +119,9 @@ describe 'Posts API' do
     let(:morsel_in_existing_post) { existing_post.morsels.first }
 
     it 'unappends the Morsel from the Post' do
-      delete "/api/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
-                                                      format: :json,
-                                                      morsel_id: morsel_in_existing_post.id
+      delete "/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
+                                                  format: :json,
+                                                  morsel_id: morsel_in_existing_post.id
 
       expect(response).to be_success
 
@@ -131,9 +131,9 @@ describe 'Posts API' do
     context 'relationship not found' do
       let(:morsel) { FactoryGirl.create(:morsel) }
       it 'returns an error' do
-        delete "/api/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
-                                                        format: :json,
-                                                        morsel_id: morsel.id
+        delete "/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
+                                                    format: :json,
+                                                    morsel_id: morsel.id
 
         expect(response).to_not be_success
 

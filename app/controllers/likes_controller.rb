@@ -1,4 +1,4 @@
-class Api::LikesController < Api::ApiController
+class LikesController < ApiController
   respond_to :json
 
   def create

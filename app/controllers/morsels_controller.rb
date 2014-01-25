@@ -1,4 +1,4 @@
-class Api::MorselsController < Api::ApiController
+class MorselsController < ApiController
   respond_to :json
 
   def index

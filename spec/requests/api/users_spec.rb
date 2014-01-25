@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe 'Users API' do
-  describe 'POST /api/users registrations#create' do
+  describe 'POST /users registrations#create' do
     it 'creates a new User' do
-      post '/api/users', format: :json, user: { email: 'foo@bar.com', password: 'password',
-                                                first_name: 'Foo', last_name: 'Bar', username: 'foobar' }
+      post '/users', format: :json, user: { email: 'foo@bar.com', password: 'password',
+                                            first_name: 'Foo', last_name: 'Bar', username: 'foobar' }
 
       expect(response).to be_success
 
@@ -18,11 +18,11 @@ describe 'Users API' do
     end
   end
 
-  describe 'POST /api/users/sign_in sessions#create' do
+  describe 'POST /users/sign_in sessions#create' do
     let(:user) { FactoryGirl.create(:user) }
 
     it 'signs in the User' do
-      post '/api/users/sign_in', format: :json, user: { email: user.email, password: 'password' }
+      post '/users/sign_in', format: :json, user: { email: user.email, password: 'password' }
 
       expect(response).to be_success
 
@@ -35,13 +35,13 @@ describe 'Users API' do
   end
 
   # Undocumented method
-  describe 'GET /api/users users#index' do
+  describe 'GET /users users#index' do
     before do
       3.times { FactoryGirl.create(:user) }
     end
 
     it 'returns a list of Users' do
-      get '/api/users', api_key: User.first.id, format: :json
+      get '/users', api_key: User.first.id, format: :json
 
       expect(response).to be_success
 
@@ -49,7 +49,7 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /api/users/{:user_id} users#show' do
+  describe 'GET /users/{:user_id} users#show' do
     let(:user_with_posts) { FactoryGirl.create(:user_with_posts) }
     let(:number_of_morsel_likes) { rand(2..6) }
 
@@ -59,7 +59,7 @@ describe 'Users API' do
     end
 
     it 'returns the User' do
-      get "/api/users/#{user_with_posts.id}", api_key: user_with_posts.id, format: :json
+      get "/users/#{user_with_posts.id}", api_key: user_with_posts.id, format: :json
 
       expect(response).to be_success
 
@@ -80,7 +80,7 @@ describe 'Users API' do
       end
 
       it 'returns the User with the appropriate image sizes' do
-        get "/api/users/#{user_with_posts.id}", api_key: user_with_posts.id, format: :json
+        get "/users/#{user_with_posts.id}", api_key: user_with_posts.id, format: :json
 
         expect(response).to be_success
 
@@ -93,13 +93,13 @@ describe 'Users API' do
     end
   end
 
-  describe 'PUT /api/users/{:user_id} users#update' do
+  describe 'PUT /users/{:user_id} users#update' do
     let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
 
     it 'updates the User' do
       new_first_name = 'Bob'
 
-      put "/api/users/#{turd_ferg.id}", api_key: turd_ferg.id, format: :json, user: { first_name: new_first_name }
+      put "/users/#{turd_ferg.id}", api_key: turd_ferg.id, format: :json, user: { first_name: new_first_name }
 
       expect(response).to be_success
 
@@ -108,11 +108,11 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /api/users/{:user_id}/posts' do
+  describe 'GET /users/{:user_id}/posts' do
     let(:user_with_posts) { FactoryGirl.create(:user_with_posts) }
 
     it 'returns all of the User\'s  Posts' do
-      get "/api/users/#{user_with_posts.id}/posts", api_key: user_with_posts.id, format: :json
+      get "/users/#{user_with_posts.id}/posts", api_key: user_with_posts.id, format: :json
 
       expect(response).to be_success
 
@@ -120,17 +120,17 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /api/users/{:user_id}/authorizations' do
+  describe 'GET /users/{:user_id}/authorizations' do
     let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
 
     it 'returns the User\'s Authorizations' do
-      get "/api/users/#{turd_ferg.id}/authorizations", api_key: turd_ferg.id, format: :json
+      get "/users/#{turd_ferg.id}/authorizations", api_key: turd_ferg.id, format: :json
 
       expect(response).to be_success
     end
   end
 
-  describe 'POST /api/users/{:user_id}/authorizations' do
+  describe 'POST /users/{:user_id}/authorizations' do
     let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
 
     context 'Twitter' do
@@ -146,11 +146,11 @@ describe 'Users API' do
         twitter_user.stub(:screen_name).and_return(dummy_screen_name)
         twitter_user.stub(:url).and_return("https://twitter.com/#{dummy_screen_name}")
 
-        post "api/users/#{turd_ferg.id}/authorizations", api_key: turd_ferg.id,
-                                                         provider: 'twitter',
-                                                         token: dummy_token,
-                                                         secret: dummy_secret,
-                                                         format: :json
+        post "/users/#{turd_ferg.id}/authorizations", api_key: turd_ferg.id,
+                                                      provider: 'twitter',
+                                                      token: dummy_token,
+                                                      secret: dummy_secret,
+                                                      format: :json
 
         expect(response).to be_success
 
@@ -178,10 +178,10 @@ describe 'Users API' do
 
         client.stub(:get_object).and_return(facebook_user)
 
-        post "api/users/#{turd_ferg.id}/authorizations", api_key: turd_ferg.id,
-                                                         provider: 'facebook',
-                                                         token: dummy_token,
-                                                         format: :json
+        post "/users/#{turd_ferg.id}/authorizations", api_key: turd_ferg.id,
+                                                      provider: 'facebook',
+                                                      token: dummy_token,
+                                                      format: :json
 
         expect(response).to be_success
 
