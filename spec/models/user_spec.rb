@@ -106,6 +106,12 @@ describe User do
 
       it { should_not be_valid }
     end
+
+    context 'too long' do
+      before { @user.username = '16_char_username' }
+      it { should_not be_valid }
+    end
+
   end
 
   describe 'password' do

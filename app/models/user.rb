@@ -44,14 +44,24 @@ class User < ActiveRecord::Base
 
   has_many :authorizations
   has_many :comments, through: :morsels
-  has_many :facebook_authorizations, -> { where provider: 'facebook' }, foreign_key: :user_id, class_name: 'Authorization'
-  has_many :twitter_authorizations, -> { where provider: 'twitter' }, foreign_key: :user_id, class_name: 'Authorization'
-  has_many :liked_morsels, through: :likes, source: :morsel
+  has_many  :facebook_authorizations,
+            -> { where provider: 'facebook' },
+            class_name: 'Authorization',
+            foreign_key: :user_id
+  has_many  :twitter_authorizations,
+            -> { where provider: 'twitter' },
+            class_name: 'Authorization',
+            foreign_key: :user_id
+  has_many :liked_morsels, source: :morsel, through: :likes
   has_many :likes
   has_many :morsels, foreign_key: :creator_id
   has_many :posts, foreign_key: :creator_id
 
-  validates :username, uniqueness: { case_sensitive: false }, presence: true, format: { with: /\A[A-Za-z0-9_]+$\z/ }
+  validates :username,
+            format: { with: /\A[A-Za-z0-9_]+$\z/ },
+            length: { maximum: 15 },
+            presence: true,
+            uniqueness: { case_sensitive: false }
 
   include PhotoUploadable
 
