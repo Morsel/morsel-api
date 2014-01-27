@@ -21,9 +21,11 @@
 class Authorization < ActiveRecord::Base
   belongs_to :user
 
-  validates :provider, inclusion: %w(facebook twitter), allow_blank: false, presence: true
+  validates :provider,  allow_blank: false,
+                        inclusion: %w(facebook twitter),
+                        presence: true
   validates :token, presence: true
-  validates :uid, uniqueness: { scope: :provider }, presence: true
+  validates :uid, presence: true, uniqueness: { scope: :provider }
   validates :user, presence: true
   validates_associated :user
 

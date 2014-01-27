@@ -17,7 +17,7 @@
 class Post < ActiveRecord::Base
   is_sluggable :title
 
-  belongs_to :creator, foreign_key: 'creator_id', class_name: 'User'
+  belongs_to :creator, class_name: 'User', foreign_key: 'creator_id'
   has_many :morsel_posts
   has_many :morsels, -> { order('morsel_posts.sort_order ASC') }, through: :morsel_posts
 end

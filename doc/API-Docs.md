@@ -105,7 +105,7 @@ __Request__
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | user[email] | String | The email address for the new User | | X |
-| user[username] | String | The username for the new User. Regex: [A-Za-z0-9_] | | X |
+| user[username] | String | The username for the new User. Maximum 15 characters. Regex: [A-Za-z0-9_] | | X |
 | user[password] | String | The password for the new User. Minimum 8 characters. | | X |
 | user[first_name] | String | The first name for the new User. | | |
 | user[last_name] | String | The last name for the new User. | | |

@@ -8,7 +8,7 @@ HandleExceptions:
   Enabled: false
 
 LineLength:
-  Max: 120
+  Enabled: false
 
 NumericLiterals:
   Enabled: false
