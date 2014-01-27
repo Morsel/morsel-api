@@ -29,4 +29,6 @@ MorselApp::Application.routes.draw do
 
   post 'posts/:id/append', to: 'posts#append'
   delete 'posts/:id/append', to: 'posts#unappend'
+
+  resources :subscribers, only: [:create]
 end

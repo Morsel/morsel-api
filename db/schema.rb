@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140124013813) do
+ActiveRecord::Schema.define(version: 20140127201821) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -128,6 +128,17 @@ ActiveRecord::Schema.define(version: 20140124013813) do
   add_index "slugs", ["scope", "record_id"], name: "index_slugs_on_scope_and_record_id", using: :btree
   add_index "slugs", ["scope", "slug", "created_at"], name: "index_slugs_on_scope_and_slug_and_created_at", using: :btree
   add_index "slugs", ["scope", "slug"], name: "index_slugs_on_scope_and_slug", using: :btree
+
+  create_table "subscribers", force: true do |t|
+    t.string   "email"
+    t.string   "url"
+    t.string   "source_url"
+    t.string   "role"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "subscribers", ["email"], name: "index_subscribers_on_email", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "",    null: false

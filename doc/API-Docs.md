@@ -29,6 +29,8 @@
   - [PUT ```/posts/{post_id}``` - Update Post](#put-postspost_id---update-post)
   - [POST ```/posts/{post_id}/append``` - Append Morsel to Post](#post-postspost_idappend---append-morsel-to-post)
   - [DELETE ```/posts/{post_id}/append``` - Detach Morsel from Post](#delete-postspost_idappend---detach-morsel-from-post)
+- [Subscriber Methods](#subscriber-methods)
+  - [POST ```/subscribers``` - Create a new Subscriber](#post-subscribers---create-a-new-subscriber)
 
 
 ## Overview
@@ -93,6 +95,7 @@ The API uses two different levels of authentication, depending on the method.
 
 1. __None:__ No authentication. Anybody can query the method.
 2. __API key:__ Requires an API key. User API keys are in the following format: {user.id}:{user.auth_token} Example: api_key=3:25TLfL6tvc_Qzx52Zh9q
+
 
 
 ## User Methods
@@ -344,6 +347,7 @@ __Example Response__ (Array of Authorizations)
   "link": "https://twitter.com/eatmorsel"
 }]
 ```
+
 
 
 ## Morsel Methods
@@ -910,3 +914,20 @@ __Unique Errors__
 | ------- | ------ |  ----------- |
 | __Relationship not found__ | 404 (Not Found) | The Morsel is not appended to the Post |
 
+
+
+## Subscriber Methods
+
+### POST ```/subscribers``` - Create a new Subscriber
+Creates a new Subscriber
+
+__Request__
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| subscriber[email] | String | The email address for the new Subscriber | | X |
+| subscriber[url] | String | The URL of the page on Morsel | | |
+| subscriber[source_url] | String | The URL of the page that referred to URL | | |
+| subscriber[role] | String | The role of the subscriber. Currently only 'chef' is expected | | |
+
+__Example Response__ (HTTP Status Code 200 on success)
