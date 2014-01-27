@@ -21,7 +21,7 @@ module MorselApp
     config.middleware.use Rack::Cors do
       allow do
         origins '*'
-        resource '/api/*', methods: [:get, :post, :put, :delete, :head, :options], headers: :any, max_age: 3600
+        resource '/*', methods: [:get, :post, :put, :delete, :head, :options], headers: :any, max_age: 3600
       end
     end
 

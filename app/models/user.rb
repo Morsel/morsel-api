@@ -36,8 +36,8 @@
 class User < ActiveRecord::Base
   rolify
 
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+  devise :database_authenticatable, :registerable, :rememberable, :trackable, :validatable
+  # :recoverable
 
   before_save :ensure_authentication_token
   before_save :update_photo_attributes
@@ -56,6 +56,10 @@ class User < ActiveRecord::Base
   include PhotoUploadable
 
   mount_uploader :photo, UserPhotoUploader
+
+  def can_delete_comment?(comment)
+    comment.user == self || comment.morsel.creator == self
+  end
 
   def morsel_likes_for_my_morsels_by_others_count
     Like.where(morsel_id: morsel_ids).count

@@ -47,7 +47,7 @@ class Authorization < ActiveRecord::Base
         authorization.link = twitter_client.current_user.url.to_s
         user.save
       else
-        authorization.errors.add(:token, 'is not valid') if authorization.uid.blank?
+        authorization.errors.add(:token, 'is not valid') if authorization.uid?
       end
     elsif provider == 'facebook'
       facebook_user = Koala::Facebook::API.new(token).get_object('me')
@@ -58,7 +58,7 @@ class Authorization < ActiveRecord::Base
         authorization.link = facebook_user['link'] if facebook_user['link'].present?
         user.save
       else
-        authorization.errors.add(:token, 'is not valid') if authorization.uid.blank?
+        authorization.errors.add(:token, 'is not valid') if authorization.uid?
       end
     end
 

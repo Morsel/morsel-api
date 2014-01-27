@@ -1,8 +1,8 @@
-class Api::RegistrationsController < Devise::RegistrationsController
+class RegistrationsController < Devise::RegistrationsController
   respond_to :json
 
   def create
-    @user = User.new(Api::UsersController::UserParams.build(params))
+    @user = User.new(UsersController::UserParams.build(params))
     unless @user.save
       warden.custom_failure!
       json_response_with_errors(@user.errors.full_messages, :unprocessable_entity)

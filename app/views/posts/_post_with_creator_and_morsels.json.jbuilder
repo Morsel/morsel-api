@@ -1,7 +1,9 @@
 json.partial! post
 
 json.creator do
-  json.partial! 'api/users/user', user: post.creator
+  if post.creator.present?
+    json.partial! 'users/user', user: post.creator
+  end
 end
 
 

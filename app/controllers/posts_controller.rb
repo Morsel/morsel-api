@@ -1,4 +1,4 @@
-class Api::PostsController < Api::ApiController
+class PostsController < ApiController
   respond_to :json
 
   def index

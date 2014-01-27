@@ -1,4 +1,4 @@
-class Api::CommentsController < Api::ApiController
+class CommentsController < ApiController
   respond_to :json
 
   def create
@@ -27,7 +27,7 @@ class Api::CommentsController < Api::ApiController
   def destroy
     comment = Comment.find(params[:id])
     if comment
-      if comment.user == current_user || comment.morsel.creator == current_user
+      if current_user.can_delete_comment?(comment)
         comment.destroy
         render json: 'OK', status: :ok
       else

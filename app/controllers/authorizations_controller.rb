@@ -1,4 +1,4 @@
-class Api::AuthorizationsController < Api::ApiController
+class AuthorizationsController < ApiController
   respond_to :json
 
   def create
