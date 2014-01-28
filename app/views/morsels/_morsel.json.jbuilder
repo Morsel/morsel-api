@@ -2,7 +2,8 @@ json.(morsel,
   :id,
   :description,
   :creator_id,
-  :created_at
+  :created_at,
+  :draft
 )
 
 if morsel.photo_url.present?

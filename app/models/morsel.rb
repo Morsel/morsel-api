@@ -16,6 +16,7 @@
 # **`photo_file_size`**     | `string(255)`      |
 # **`photo_updated_at`**    | `datetime`         |
 # **`deleted_at`**          | `datetime`         |
+# **`draft`**               | `boolean`          | `default(FALSE), not null`
 #
 
 class Morsel < ActiveRecord::Base

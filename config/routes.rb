@@ -11,11 +11,10 @@ MorselApp::Application.routes.draw do
 
   resources :users, only: [:index, :show, :update] do
     resources :authorizations, only: [:create, :index]
-    resources :morsels, only: [:index]
     resources :posts, only: [:index]
   end
 
-  resources :morsels, only: [:create, :index, :show, :update, :destroy] do
+  resources :morsels, only: [:create, :show, :update, :destroy] do
     resources :comments, only: [:create, :index]
   end
   resources :comments, only: [:destroy]

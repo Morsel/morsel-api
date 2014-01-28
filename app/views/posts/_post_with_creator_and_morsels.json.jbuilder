@@ -7,6 +7,12 @@ json.creator do
 end
 
 
-json.morsels post.morsels do |morsel|
-  json.partial! morsel, post: post
+if defined?(include_drafts) && include_drafts
+  json.morsels post.morsels do |morsel|
+    json.partial! morsel, post: post
+  end
+else
+  json.morsels post.morsels.published do |morsel|
+    json.partial! morsel, post: post
+  end
 end
