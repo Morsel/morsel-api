@@ -13,6 +13,7 @@
 # **`role`**        | `string(255)`      |
 # **`created_at`**  | `datetime`         |
 # **`updated_at`**  | `datetime`         |
+# **`user_id`**     | `integer`          |
 #
 
 FactoryGirl.define do
@@ -21,5 +22,6 @@ FactoryGirl.define do
     url { Faker::Internet.domain_name }
     source_url { Faker::Internet.domain_name }
     role 'chef'
+    user_id 1
   end
 end

@@ -13,6 +13,7 @@
 # **`role`**        | `string(255)`      |
 # **`created_at`**  | `datetime`         |
 # **`updated_at`**  | `datetime`         |
+# **`user_id`**     | `integer`          |
 #
 
 require 'spec_helper'
@@ -24,6 +25,7 @@ describe Subscriber do
   it { should respond_to(:url) }
   it { should respond_to(:source_url) }
   it { should respond_to(:role) }
+  it { should respond_to(:user_id) }
 
   it { should be_valid }
 

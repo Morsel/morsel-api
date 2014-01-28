@@ -930,5 +930,6 @@ __Request__
 | subscriber[url] | String | The URL of the page on Morsel | | |
 | subscriber[source_url] | String | The URL of the page that referred to URL | | |
 | subscriber[role] | String | The role of the subscriber. Currently only 'chef' is expected | | |
+| subscriber[user_id] | String | The ID of the User who referred the User | | |
 
 __Example Response__ (HTTP Status Code 200 on success)
