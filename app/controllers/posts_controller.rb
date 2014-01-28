@@ -7,15 +7,18 @@ class PostsController < ApiController
     else
       @posts = Post.where(creator_id: params[:user_id])
     end
+    @include_drafts = params[:include_drafts] == "true" if params[:include_drafts].present?
   end
 
   def show
     @post = Post.find(params[:id])
+    @include_drafts = params[:include_drafts] == "true" if params[:include_drafts].present?
   end
 
   def update
     @post = Post.find(params[:id])
     @post.update_attributes(PostParams.build(params))
+    @include_drafts = params[:include_drafts] == "true" if params[:include_drafts].present?
   end
 
   def append
@@ -30,6 +33,8 @@ class PostsController < ApiController
     end
 
     morsel.change_sort_order_for_post_id(@post.id, params[:sort_order]) if params[:sort_order].present?
+
+    @include_drafts = params[:include_drafts] == "true" if params[:include_drafts].present?
   end
 
   def unappend

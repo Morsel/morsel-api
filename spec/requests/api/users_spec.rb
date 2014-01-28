@@ -119,6 +119,18 @@ describe 'Users API' do
 
       expect(json.count).to eq(user_with_posts.posts.count)
     end
+
+    context 'include_drafts=true included in parameters' do
+      it 'returns all of the User\'s  Posts including Morsel drafts' do
+        get "/users/#{user_with_posts.id}/posts", api_key: user_with_posts.id,
+                                                  format: :json,
+                                                  include_drafts: true
+
+        expect(response).to be_success
+
+        expect(json.count).to eq(user_with_posts.posts.count)
+      end
+    end
   end
 
   describe 'GET /users/{:user_id}/authorizations' do

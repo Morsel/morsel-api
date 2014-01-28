@@ -1,1 +1,1 @@
-json.partial! @post
+json.partial! @post, include_drafts: @include_drafts

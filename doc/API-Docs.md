@@ -252,6 +252,10 @@ __Example Response__ (Updated User)
 ### GET ```/users/{user_id}/posts``` - User Posts
 Returns the Posts for the User with the specified ```user_id```.
 
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
+
 __Example Response__ (Array of Posts)
 
 ```json
@@ -269,7 +273,8 @@ __Example Response__ (Array of Posts)
         "photos": null,
         "creator_id": 1,
         "created_at": "2014-01-07T16:34:43.071Z",
-        "liked": false
+        "liked": false,
+        "draft": false
       }
     ]
   },
@@ -292,7 +297,8 @@ __Example Response__ (Array of Posts)
         },
         "creator_id": 1,
         "created_at": "2014-01-07T16:34:27.938Z",
-        "liked": true
+        "liked": true,
+        "draft": true
       }
     ]
   }
@@ -367,6 +373,7 @@ __Request__
 | ------------------- | ------- | ----------- | ------- | --------- |
 | morsel[description] | String | The description for the new Morsel | | Only if photo is null |
 | morsel[photo] | String | The photo for the new Morsel | | Only if description is null |
+| morsel[draft] | Boolean | Set to true if the Morsel is a draft | false | |
 | post_id | Number | The ID of the Post to append this Morsel to. If none is specified, a new Post will be created for this Morsel. | | |
 | post_title | String | If a Post already exists, renames the title to this. Otherwise sets the title for the new Post to this. | | |
 | sort_order | Number | The ```sort_order``` for the Morsel in the Post. Requires ```post_id``` | end of Post | |
@@ -388,7 +395,8 @@ __Example Response__ (Created Morsel)
   "creator_id": 1,
   "created_at": "2014-01-07T18:37:19.661Z",
   "post_id": 4,
-  "liked": false
+  "liked": false,
+  "draft": false
 }
 ```
 
@@ -410,6 +418,7 @@ __Example Response__ (Morsel)
   "creator_id": 1,
   "created_at": "2014-01-07T18:37:19.661Z",
   "liked": false,
+  "draft": false,
   "comments": [{
     "id": 4,
     "description": "Your dish sucks bro!",
@@ -439,6 +448,7 @@ __Request__
 | morsel[photo] | String | The photo for the Morsel | | |
 | morsel[post_id] | Number | Changes the ```sort_order``` of a Post when combined with ```sort_order```. | | |
 | morsel[sort_order] | Number | Changes the ```sort_order``` of a Post when combined with ```post_id```. | | |
+| morsel[draft] | Boolean | Set to true if the Morsel is a draft | false | |
 
 __Example Response__ (Updated Morsel)
 
@@ -454,7 +464,8 @@ __Example Response__ (Updated Morsel)
   },
   "creator_id": 1,
   "created_at": "2014-01-07T18:37:19.661Z",
-  "liked": false
+  "liked": false,
+  "draft": false
 }
 ```
 
@@ -560,6 +571,12 @@ __Unique Errors__
 ### GET ```/posts``` - Posts
 Returns the Posts for all Users.
 
+__Request__
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
+
 __Example Response__ (Array of Posts)
 
 ```json
@@ -599,7 +616,8 @@ __Example Response__ (Array of Posts)
         },
         "creator_id":1,
         "created_at":"2014-01-07T16:34:27.938Z",
-        "liked": true
+        "liked": true,
+        "draft": false
       }
     ]
   },
@@ -638,7 +656,8 @@ __Example Response__ (Array of Posts)
         },
         "creator_id":1,
         "created_at":"2014-01-07T16:34:43.071Z",
-        "liked": false
+        "liked": false,
+        "draft": false
       }
     ]
   },
@@ -677,7 +696,8 @@ __Example Response__ (Array of Posts)
         },
         "creator_id":1,
         "created_at":"2014-01-07T18:09:10.145Z",
-        "liked": false
+        "liked": false,
+        "draft": false
       }
     ]
   },
@@ -716,7 +736,8 @@ __Example Response__ (Array of Posts)
         },
         "creator_id":1,
         "created_at":"2014-01-07T18:37:19.661Z",
-        "liked": false
+        "liked": false,
+        "draft": false
       }
     ]
   },
@@ -755,7 +776,8 @@ __Example Response__ (Array of Posts)
         },
         "creator_id":2,
         "created_at":"2014-01-07T19:11:33.929Z",
-        "liked": false
+        "liked": false,
+        "draft": false
       }
     ]
   }
@@ -764,6 +786,10 @@ __Example Response__ (Array of Posts)
 
 ### GET ```/posts/{post_id}``` -  Post
 Returns the Post with the specified ```post_id```
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
 
 __Example Response__ (Post)
 
@@ -802,7 +828,8 @@ __Example Response__ (Post)
       },
       "creator_id":1,
       "created_at":"2014-01-07T18:37:19.661Z",
-      "liked": false
+      "liked": false,
+      "draft": false
     }
   ]
 }
@@ -840,6 +867,7 @@ __Request__
 | ------------------- | ------- | ----------- | ------- | --------- |
 | morsel_id         | Number  | ID of the Morsel to append | | x |
 | sort_order         | Number  | The ```sort_order``` for the Morsel in the Post | end of Post | |
+| include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
 
 __Example Response__ (Post with Appended Morsel)
 
@@ -878,7 +906,8 @@ __Example Response__ (Post with Appended Morsel)
       },
       "creator_id":1,
       "created_at":"2014-01-07T18:37:19.661Z",
-      "liked": false
+      "liked": false,
+      "draft": false
     },
     {
       "id":7,
@@ -891,7 +920,8 @@ __Example Response__ (Post with Appended Morsel)
       },
       "creator_id":1,
       "created_at":"2014-03-09T18:37:19.661Z",
-      "liked": false
+      "liked": false,
+      "draft": false
     }
   ]
 }

@@ -1,14 +1,6 @@
 class MorselsController < ApiController
   respond_to :json
 
-  def index
-    if params[:user_id].blank?
-      @morsels = Morsel.all
-    else
-      @morsels = Morsel.where(creator_id: params[:user_id])
-    end
-  end
-
   def create
     # TODO: Cyclomatic complexity for create is too high
     morsel_params = MorselParams.build(params)

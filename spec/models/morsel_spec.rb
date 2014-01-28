@@ -16,6 +16,7 @@
 # **`photo_file_size`**     | `string(255)`      |
 # **`photo_updated_at`**    | `datetime`         |
 # **`deleted_at`**          | `datetime`         |
+# **`draft`**               | `boolean`          | `default(FALSE), not null`
 #
 
 require 'spec_helper'
@@ -25,6 +26,7 @@ describe Morsel do
 
   it { should respond_to(:description) }
   it { should respond_to(:photo) }
+  it { should respond_to(:draft) }
 
   it { should respond_to(:creator) }
   it { should respond_to(:morsel_posts) }
@@ -64,30 +66,30 @@ describe Morsel do
   end
 
   describe '#url' do
-    let(:post_with_morsels_and_creator) { FactoryGirl.create(:post_with_morsels_and_creator) }
-    let(:first_morsel) { post_with_morsels_and_creator.morsels.first }
-    subject(:url) { first_morsel.url(post_with_morsels_and_creator) }
+    let(:post_with_morsels_and_creator_and_draft) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
+    let(:first_morsel) { post_with_morsels_and_creator_and_draft.morsels.first }
+    subject(:url) { first_morsel.url(post_with_morsels_and_creator_and_draft) }
 
-    it { should eq("https://test.eatmorsel.com/#{first_morsel.creator.username}/#{post_with_morsels_and_creator.id}/#{post_with_morsels_and_creator.cached_slug}/1") }
+    it { should eq("https://test.eatmorsel.com/#{first_morsel.creator.username}/#{post_with_morsels_and_creator_and_draft.id}/#{post_with_morsels_and_creator_and_draft.cached_slug}/1") }
   end
 
   describe '#facebook_message' do
-    let(:post_with_morsels_and_creator) { FactoryGirl.create(:post_with_morsels_and_creator) }
-    let(:first_morsel) { post_with_morsels_and_creator.morsels.first }
-    subject(:facebook_message) { first_morsel.facebook_message(post_with_morsels_and_creator) }
+    let(:post_with_morsels_and_creator_and_draft) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
+    let(:first_morsel) { post_with_morsels_and_creator_and_draft.morsels.first }
+    subject(:facebook_message) { first_morsel.facebook_message(post_with_morsels_and_creator_and_draft) }
 
-    it { should include(first_morsel.url(post_with_morsels_and_creator)) }
-    it { should include(post_with_morsels_and_creator.title) }
+    it { should include(first_morsel.url(post_with_morsels_and_creator_and_draft)) }
+    it { should include(post_with_morsels_and_creator_and_draft.title) }
     it { should include(first_morsel.description) }
   end
 
   describe '#twitter_message' do
-    let(:post_with_morsels_and_creator) { FactoryGirl.create(:post_with_morsels_and_creator) }
-    let(:first_morsel) { post_with_morsels_and_creator.morsels.first }
-    subject(:twitter_message) { first_morsel.twitter_message(post_with_morsels_and_creator) }
+    let(:post_with_morsels_and_creator_and_draft) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
+    let(:first_morsel) { post_with_morsels_and_creator_and_draft.morsels.first }
+    subject(:twitter_message) { first_morsel.twitter_message(post_with_morsels_and_creator_and_draft) }
 
-    it { should include(first_morsel.url(post_with_morsels_and_creator)) }
-    it { should include(post_with_morsels_and_creator.title) }
+    it { should include(first_morsel.url(post_with_morsels_and_creator_and_draft)) }
+    it { should include(post_with_morsels_and_creator_and_draft.title) }
     it { should include(first_morsel.description[40]) } # Only bother checking the first 40 characters are included
   end
 end

@@ -3,38 +3,6 @@ require 'spec_helper'
 describe 'Morsels API' do
   let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
 
-  describe 'GET /morsels morsels#index' do
-    before do
-      4.times { FactoryGirl.create(:morsel_with_creator) }
-    end
-
-    it 'returns a list of Morsels' do
-      get '/morsels', api_key: turd_ferg.id, format: :json
-
-      expect(response).to be_success
-
-      expect(json.count).to eq(4)
-    end
-
-    context 'user_id included in parameters' do
-      let(:post_with_morsels_and_creator) { FactoryGirl.create(:post_with_morsels_and_creator) }
-
-      it 'returns all Morsels for user_id' do
-        get '/morsels', api_key: turd_ferg.id, user_id: post_with_morsels_and_creator.creator.id, format: :json
-
-        expect(response).to be_success
-
-        expect(json.count).to eq(3)
-
-        creator_id = post_with_morsels_and_creator.creator.id
-
-        json.each do |morsel_json|
-          expect(morsel_json['creator_id']).to eq(creator_id)
-        end
-      end
-    end
-  end
-
   describe 'POST /morsels morsels#create' do
     let(:existing_post) { FactoryGirl.create(:post) }
 
@@ -172,7 +140,7 @@ describe 'Morsels API' do
 
       expect(response).to be_success
 
-      expect_json_keys(json, morsel, %w(id description creator_id))
+      expect_json_keys(json, morsel, %w(id description creator_id draft))
       expect(json['liked']).to be_false
       expect(json['photos']).to_not be_nil
     end
