@@ -42,6 +42,7 @@ FactoryGirl.define do
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
     password 'password'
+    bio 'Hi! I like turtles!'
 
     factory :user_with_posts do
       ignore do

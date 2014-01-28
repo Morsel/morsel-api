@@ -4,14 +4,15 @@ describe 'Users API' do
   describe 'POST /users registrations#create' do
     it 'creates a new User' do
       post '/users', format: :json, user: { email: 'foo@bar.com', password: 'password',
-                                            first_name: 'Foo', last_name: 'Bar', username: 'foobar' }
+                                            first_name: 'Foo', last_name: 'Bar', username: 'foobar',
+                                            bio: 'Foo to the Stars' }
 
       expect(response).to be_success
 
       expect(json['id']).to_not be_nil
 
       new_user = User.find json['id']
-      expect_json_keys(json, new_user, %w(id username first_name last_name sign_in_count title))
+      expect_json_keys(json, new_user, %w(id username first_name last_name sign_in_count title bio))
       expect(json['auth_token']).to eq(new_user.authentication_token)
       expect(json['photos']).to be_nil
       expect_nil_json_keys(json, %w(password encrypted_password))
@@ -26,7 +27,7 @@ describe 'Users API' do
 
       expect(response).to be_success
 
-      expect_json_keys(json, user, %w(id username first_name last_name title))
+      expect_json_keys(json, user, %w(id username first_name last_name title bio))
       expect(json['auth_token']).to eq(user.authentication_token)
       expect(json['photos']).to be_nil
       expect(json['sign_in_count']).to eq(1)
@@ -63,7 +64,7 @@ describe 'Users API' do
 
       expect(response).to be_success
 
-      expect_json_keys(json, user_with_posts, %w(id username first_name last_name sign_in_count title))
+      expect_json_keys(json, user_with_posts, %w(id username first_name last_name sign_in_count title bio))
       expect_nil_json_keys(json, %w(password encrypted_password auth_token))
 
       expect(json['photos']).to be_nil

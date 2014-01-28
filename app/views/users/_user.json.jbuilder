@@ -6,7 +6,8 @@ json.(user,
   :sign_in_count,
   :created_at,
   :title,
-  :twitter_username
+  :twitter_username,
+  :bio
 )
 
 if user.photo_url.present?

@@ -113,6 +113,7 @@ __Request__
 | user[first_name] | String | The first name for the new User. | | |
 | user[last_name] | String | The last name for the new User. | | |
 | user[title] | String | The title for the new User. In MTP this includes "at <Restaurant>" | | |
+| user[bio] | String | The bio for the new User. Maximum 255 characters. | | |
 
 __Example Response__ (Created User)
 
@@ -133,6 +134,7 @@ __Example Response__ (Created User)
   },
   "title": "Executive Chef at Jeopardy",
   "twitter_username": null,
+  "bio": "I like turtles",
   "auth_token": "25TLfL6tvc_Qzx52Zh9q"
 }
 ```
@@ -166,6 +168,7 @@ __Example Response__ (User)
   },
   "title": "Executive Chef at Jeopardy",
   "twitter_username": null,
+  "bio": "I like turtles",
   "auth_token": "25TLfL6tvc_Qzx52Zh9q"
 }
 ```
@@ -199,6 +202,7 @@ __Example Response__ (User)
   },
   "title": "Executive Chef at Jeopardy",
   "twitter_username": null,
+  "bio": "I like turtles",
   "like_count": 0,
   "morsel_count": 1
 }
@@ -219,6 +223,7 @@ __Request__
 | user[last_name] | String | The last name for the new User. | | |
 | user[title] | String | The title for the new User. In MTP this includes "at <Restaurant>" | | |
 | user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
+| user[bio] | String | The bio for the new User. Maximum 255 characters | | |
 
 __Example Response__ (Updated User)
 
@@ -238,7 +243,8 @@ __Example Response__ (Updated User)
     "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
   },
   "title": "Executive Chef at Jeopardy",
-  "twitter_username": null
+  "twitter_username": null,
+  "bio": "I like turtles"
 }
 ```
 
