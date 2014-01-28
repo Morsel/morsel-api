@@ -53,6 +53,7 @@ describe User do
   it { should respond_to(:authentication_token) }
   it { should respond_to(:photo) }
   it { should respond_to(:morsel_likes_for_my_morsels_by_others_count) }
+  it { should respond_to(:bio) }
 
   its(:authentication_token) { should be_nil }
 
