@@ -9,7 +9,7 @@ class SubscribersController < ApiController
 
   class SubscriberParams
     def self.build(params)
-      params.require(:subscriber).permit(:email, :url, :source_url, :role)
+      params.require(:subscriber).permit(:email, :url, :source_url, :role, :user_id)
     end
   end
 end

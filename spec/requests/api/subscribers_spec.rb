@@ -5,6 +5,7 @@ describe 'Subscribers API' do
     it 'creates a new Subscriber' do
       post '/subscribers',  format: :json,
                             subscriber: {
+                              user_id: 1,
                               email: 'foo@bar.com',
                               url: 'https://www.eatmorsel.com/marty',
                               source_url: 'https://twitter.com/martytrzpit',
