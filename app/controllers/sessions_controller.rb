@@ -1,4 +1,6 @@
 class SessionsController < Devise::SessionsController
+  layout 'api'
+  include JSONEnvelopable
   prepend_before_filter :require_no_authentication, only: [:create]
 
   respond_to :json
@@ -24,11 +26,7 @@ class SessionsController < Devise::SessionsController
 
   private
 
-  def json_response_with_errors(errors, http_status)
-    render json: { errors: errors.map { |e| { msg: e } } }, status: http_status
-  end
-
   def invalid_login_attempt(http_status = :unauthorized)
-    json_response_with_errors(['Invalid email or password'], http_status)
+    render_json_errors({ 'email or password' => ['is invalid'] }, http_status)
   end
 end

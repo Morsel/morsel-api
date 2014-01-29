@@ -27,14 +27,14 @@ class PostsController < ApiController
     @post = Post.find(params[:id])
     if @post.morsels.include? morsel
       # Already exists
-      json_response_with_errors(['Relationship already exists'], :bad_request)
+      render_json_errors({ relationship: ['already exists']}, :bad_request)
     else
       @post.morsels << morsel
+
+      morsel.change_sort_order_for_post_id(@post.id, params[:sort_order]) if params[:sort_order].present?
+
+      @include_drafts = params[:include_drafts] == "true" if params[:include_drafts].present?
     end
-
-    morsel.change_sort_order_for_post_id(@post.id, params[:sort_order]) if params[:sort_order].present?
-
-    @include_drafts = params[:include_drafts] == "true" if params[:include_drafts].present?
   end
 
   def unappend
@@ -46,7 +46,7 @@ class PostsController < ApiController
 
       render json: 'OK', status: :ok
     else
-      json_response_with_errors(['Relationship not found'], :not_found)
+      render_json_errors({ relationship: ['not found']}, :not_found)
     end
   end
 

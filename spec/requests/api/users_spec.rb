@@ -9,13 +9,13 @@ describe 'Users API' do
 
       expect(response).to be_success
 
-      expect(json['id']).to_not be_nil
+      expect(json_data['id']).to_not be_nil
 
-      new_user = User.find json['id']
-      expect_json_keys(json, new_user, %w(id username first_name last_name sign_in_count title bio))
-      expect(json['auth_token']).to eq(new_user.authentication_token)
-      expect(json['photos']).to be_nil
-      expect_nil_json_keys(json, %w(password encrypted_password))
+      new_user = User.find json_data['id']
+      expect_json_keys(json_data, new_user, %w(id username first_name last_name sign_in_count title bio))
+      expect(json_data['auth_token']).to eq(new_user.authentication_token)
+      expect(json_data['photos']).to be_nil
+      expect_nil_json_keys(json_data, %w(password encrypted_password))
     end
   end
 
@@ -27,11 +27,11 @@ describe 'Users API' do
 
       expect(response).to be_success
 
-      expect_json_keys(json, user, %w(id username first_name last_name title bio))
-      expect(json['auth_token']).to eq(user.authentication_token)
-      expect(json['photos']).to be_nil
-      expect(json['sign_in_count']).to eq(1)
-      expect_nil_json_keys(json, %w(password encrypted_password))
+      expect_json_keys(json_data, user, %w(id username first_name last_name title bio))
+      expect(json_data['auth_token']).to eq(user.authentication_token)
+      expect(json_data['photos']).to be_nil
+      expect(json_data['sign_in_count']).to eq(1)
+      expect_nil_json_keys(json_data, %w(password encrypted_password))
     end
   end
 
@@ -46,7 +46,7 @@ describe 'Users API' do
 
       expect(response).to be_success
 
-      expect(json.count).to eq(3)
+      expect(json_data.count).to eq(3)
     end
   end
 
@@ -64,14 +64,14 @@ describe 'Users API' do
 
       expect(response).to be_success
 
-      expect_json_keys(json, user_with_posts, %w(id username first_name last_name sign_in_count title bio))
-      expect_nil_json_keys(json, %w(password encrypted_password auth_token))
+      expect_json_keys(json_data, user_with_posts, %w(id username first_name last_name sign_in_count title bio))
+      expect_nil_json_keys(json_data, %w(password encrypted_password auth_token))
 
-      expect(json['photos']).to be_nil
-      expect(json['twitter_username']).to eq(user_with_posts.twitter_username)
+      expect(json_data['photos']).to be_nil
+      expect(json_data['twitter_username']).to eq(user_with_posts.twitter_username)
 
-      expect(json['like_count']).to eq(number_of_morsel_likes)
-      expect(json['morsel_count']).to eq(user_with_posts.morsels.count)
+      expect(json_data['like_count']).to eq(number_of_morsel_likes)
+      expect(json_data['morsel_count']).to eq(user_with_posts.morsels.count)
     end
 
     context 'has a photo' do
@@ -85,7 +85,7 @@ describe 'Users API' do
 
         expect(response).to be_success
 
-        photos = json['photos']
+        photos = json_data['photos']
         expect(photos['_144x144']).to_not be_nil
         expect(photos['_72x72']).to_not be_nil
         expect(photos['_80x80']).to_not be_nil
@@ -104,7 +104,7 @@ describe 'Users API' do
 
       expect(response).to be_success
 
-      expect(json['first_name']).to eq(new_first_name)
+      expect(json_data['first_name']).to eq(new_first_name)
       expect(User.first.first_name).to eq(new_first_name)
     end
   end
@@ -117,7 +117,7 @@ describe 'Users API' do
 
       expect(response).to be_success
 
-      expect(json.count).to eq(user_with_posts.posts.count)
+      expect(json_data.count).to eq(user_with_posts.posts.count)
     end
 
     context 'include_drafts=true included in parameters' do
@@ -128,7 +128,7 @@ describe 'Users API' do
 
         expect(response).to be_success
 
-        expect(json.count).to eq(user_with_posts.posts.count)
+        expect(json_data.count).to eq(user_with_posts.posts.count)
       end
     end
   end
@@ -167,12 +167,12 @@ describe 'Users API' do
 
         expect(response).to be_success
 
-        expect(json['id']).to_not eq(123)
-        expect(json['provider']).to eq('twitter')
-        expect(json['secret']).to eq(dummy_secret)
-        expect(json['token']).to eq(dummy_token)
-        expect(json['user_id']).to eq(turd_ferg.id)
-        expect(json['name']).to eq(dummy_screen_name)
+        expect(json_data['id']).to_not eq(123)
+        expect(json_data['provider']).to eq('twitter')
+        expect(json_data['secret']).to eq(dummy_secret)
+        expect(json_data['token']).to eq(dummy_token)
+        expect(json_data['user_id']).to eq(turd_ferg.id)
+        expect(json_data['name']).to eq(dummy_screen_name)
 
         expect(turd_ferg.twitter_authorizations.count).to eq(1)
       end
@@ -198,12 +198,12 @@ describe 'Users API' do
 
         expect(response).to be_success
 
-        expect(json['id']).to_not eq(123)
-        expect(json['provider']).to eq('facebook')
-        expect(json['secret']).to be_nil
-        expect(json['token']).to eq(dummy_token)
-        expect(json['user_id']).to eq(turd_ferg.id)
-        expect(json['name']).to eq(dummy_name)
+        expect(json_data['id']).to_not eq(123)
+        expect(json_data['provider']).to eq('facebook')
+        expect(json_data['secret']).to be_nil
+        expect(json_data['token']).to eq(dummy_token)
+        expect(json_data['user_id']).to eq(turd_ferg.id)
+        expect(json_data['name']).to eq(dummy_name)
 
         expect(turd_ferg.facebook_authorizations.count).to eq(1)
       end

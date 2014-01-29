@@ -11,7 +11,7 @@ class CommentsController < ApiController
 
       @comment.save
     else
-      json_response_with_errors(['Morsel not found'], :not_found)
+      render_json_errors({ morsel: ['not found']}, :not_found)
     end
   end
 
@@ -20,7 +20,7 @@ class CommentsController < ApiController
     if morsel.present?
       @comments = morsel.comments
     else
-      json_response_with_errors(['Morsel not found'], :not_found)
+      render_json_errors({ morsel: ['not found']}, :not_found)
     end
   end
 
@@ -31,10 +31,10 @@ class CommentsController < ApiController
         comment.destroy
         render json: 'OK', status: :ok
       else
-        json_response_with_errors(['Forbidden'], :forbidden)
+        render_json_errors({ api: ['forbidden']}, :forbidden)
       end
     else
-      json_response_with_errors(['Comment not found'], :not_found)
+      render_json_errors({ comment: ['not found']}, :not_found)
     end
   end
 

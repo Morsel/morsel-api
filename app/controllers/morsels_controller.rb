@@ -26,7 +26,8 @@ class MorselsController < ApiController
       @fb_post = current_user.post_to_facebook(@morsel.facebook_message(@post)) if params[:post_to_facebook]
       @tweet = current_user.post_to_twitter(@morsel.twitter_message(@post)) if params[:post_to_twitter]
     else
-      json_response_with_errors(@morsel.errors.full_messages, :unprocessable_entity)
+
+      render_json_errors(@morsel.errors, :unprocessable_entity)
     end
   end
 

@@ -16,11 +16,11 @@ describe 'Morsels API' do
 
       expect(response).to be_success
 
-      expect(json['id']).to_not be_nil
+      expect(json_data['id']).to_not be_nil
 
-      new_morsel = Morsel.find json['id']
-      expect_json_keys(json, new_morsel, %w(id description creator_id))
-      expect(json['photos']).to_not be_nil
+      new_morsel = Morsel.find json_data['id']
+      expect_json_keys(json_data, new_morsel, %w(id description creator_id))
+      expect(json_data['photos']).to_not be_nil
 
       expect(new_morsel.posts).to_not include(existing_post)
     end
@@ -34,9 +34,9 @@ describe 'Morsels API' do
 
         expect(response).to be_success
 
-        expect(json['id']).to_not be_nil
+        expect(json_data['id']).to_not be_nil
 
-        new_morsel = Morsel.find json['id']
+        new_morsel = Morsel.find json_data['id']
         expect(new_morsel.posts).to include(existing_post)
       end
 
@@ -52,9 +52,9 @@ describe 'Morsels API' do
 
           expect(response).to be_success
 
-          expect(json['id']).to_not be_nil
+          expect(json_data['id']).to_not be_nil
 
-          expect(post_with_morsels.morsel_ids.first).to eq(json['id'])
+          expect(post_with_morsels.morsel_ids.first).to eq(json_data['id'])
         end
       end
     end
@@ -69,9 +69,9 @@ describe 'Morsels API' do
 
         expect(response).to be_success
 
-        expect(json['id']).to_not be_nil
+        expect(json_data['id']).to_not be_nil
 
-        new_morsel = Morsel.find json['id']
+        new_morsel = Morsel.find json_data['id']
         expect(new_morsel.posts.first.title).to eq(expected_title)
       end
     end
@@ -100,9 +100,9 @@ describe 'Morsels API' do
 
         expect(response).to be_success
 
-        expect(json['id']).to_not be_nil
+        expect(json_data['id']).to_not be_nil
 
-        expect(json['fb_post_url']).to eq(expected_fb_post_url)
+        expect(json_data['fb_post_url']).to eq(expected_fb_post_url)
       end
     end
 
@@ -125,9 +125,9 @@ describe 'Morsels API' do
 
         expect(response).to be_success
 
-        expect(json['id']).to_not be_nil
+        expect(json_data['id']).to_not be_nil
 
-        expect(json['tweet_url']).to eq(expected_tweet_url)
+        expect(json_data['tweet_url']).to eq(expected_tweet_url)
       end
     end
   end
@@ -140,9 +140,9 @@ describe 'Morsels API' do
 
       expect(response).to be_success
 
-      expect_json_keys(json, morsel, %w(id description creator_id draft))
-      expect(json['liked']).to be_false
-      expect(json['photos']).to_not be_nil
+      expect_json_keys(json_data, morsel, %w(id description creator_id draft))
+      expect(json_data['liked']).to be_false
+      expect(json_data['photos']).to_not be_nil
     end
 
     context 'has a photo' do
@@ -156,7 +156,7 @@ describe 'Morsels API' do
 
         expect(response).to be_success
 
-        photos = json['photos']
+        photos = json_data['photos']
         expect(photos['_640x640']).to_not be_nil
         expect(photos['_640x428']).to_not be_nil
         expect(photos['_320x214']).to_not be_nil
@@ -175,10 +175,10 @@ describe 'Morsels API' do
 
         expect(response).to be_success
 
-        expect_json_keys(json, morsel, %w(id description creator_id))
-        expect(json['liked']).to be_false
+        expect_json_keys(json_data, morsel, %w(id description creator_id))
+        expect(json_data['liked']).to be_false
 
-        expect(json['comments']).to_not be_empty
+        expect(json_data['comments']).to_not be_empty
       end
     end
   end
@@ -194,7 +194,7 @@ describe 'Morsels API' do
 
       expect(response).to be_success
 
-      expect(json['description']).to eq(new_description)
+      expect(json_data['description']).to eq(new_description)
       expect(Morsel.find(existing_morsel.id).description).to eq(new_description)
     end
 
@@ -211,9 +211,9 @@ describe 'Morsels API' do
 
         expect(response).to be_success
 
-        expect(json['id']).to_not be_nil
+        expect(json_data['id']).to_not be_nil
 
-        expect(post_with_morsels.morsel_ids.first).to eq(json['id'])
+        expect(post_with_morsels.morsel_ids.first).to eq(json_data['id'])
       end
     end
   end
@@ -237,7 +237,7 @@ describe 'Morsels API' do
 
       expect(response).to be_success
 
-      expect(json.count).to eq(2)
+      expect(json_data.count).to eq(2)
     end
   end
 
@@ -252,12 +252,12 @@ describe 'Morsels API' do
 
       expect(response).to be_success
 
-      expect(json['id']).to_not be_nil
+      expect(json_data['id']).to_not be_nil
 
-      new_comment = Comment.find(json['id'])
-      expect_json_keys(json, new_comment, %w(id description))
-      expect(json['creator_id']).to eq(new_comment.user.id)
-      expect(json['morsel_id']).to eq(new_comment.morsel.id)
+      new_comment = Comment.find(json_data['id'])
+      expect_json_keys(json_data, new_comment, %w(id description))
+      expect(json_data['creator_id']).to eq(new_comment.user.id)
+      expect(json_data['morsel_id']).to eq(new_comment.morsel.id)
     end
   end
 

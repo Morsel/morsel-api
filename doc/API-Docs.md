@@ -41,43 +41,62 @@ All Morsel API requests start with the URL for the API host. The next segment of
 Versioning will be part of the HTTP HEADER instead of the URL. We'll worry about it when we get to that point.
 
 ### Response Format
-The API returns JSON-encoded objects (content-type: application/json) for the resource requested, unless an error occurs. Any additional metadata (like pagination info) will be returned in the HTTP response headers.
+The API returns a JSON-encoded object (content-type: application/json) that wraps the response data with extra information such as errors and other metadata.
 
 So if you request a user: ```/users/1```
 expect to get a user resource in return:
 ```json
 {
-  "id": 1,
-  "email": "turdferguson@eatmorsel.com",
-  "first_name": "Turd",
-  "last_name": "Ferguson"
+  "meta": {
+    "status": 200,
+    "message": "OK"
+  },
+  "errors": null,
+  "data": {
+    "id": 1,
+    "email": "turdferguson@eatmorsel.com",
+    "first_name": "Turd",
+    "last_name": "Ferguson"
+  }
 }
 ```
 
 if you make a call for a user's posts: ```users/1/posts```
 expect to get an array of resources in return:
 ```json
-[{
-  "id": 4,
-  "title": "Some Post Title"
-}, {
-  "id": 5,
-  "title": "Another Post Title"
-}]
+  "meta": {
+    "status": 200,
+    "message": "OK"
+  },
+  "errors": null,
+  "data": [{
+    "id": 4,
+    "title": "Some Post Title"
+  }, {
+    "id": 5,
+    "title": "Another Post Title"
+  }]
 ```
 
 ### Errors
 
-Errors are returned as an array with an ```errors``` key. This lets the client handle how it wants to display multiple errors:
+Errors are returned as a dictionary in ```errors```. Each key represents the resource the error originated from or 'api' if none is specified
 ```json
 {
-  "errors": [
-    {
-      "msg": "Email has already been taken"
-    }, {
-      "msg": "Password is too short (minimum is 8 characters)"
-    }
-  ]
+  "meta": {
+    "status": 400,
+    "message": "Bad Request"
+  },
+  "errors": {
+    "password": [
+      "is too short",
+      "should be cooler"
+    ],
+    "api": [
+      "access denied"
+    ]
+  },
+  "data": null
 }
 ```
 
@@ -115,7 +134,7 @@ __Request__
 | user[title] | String | The title for the new User. In MTP this includes "at <Restaurant>" | | |
 | user[bio] | String | The bio for the new User. Maximum 255 characters. | | |
 
-__Example Response__ (Created User)
+__Example "data" Response__ (Created User)
 
 ```json
 {
@@ -150,7 +169,7 @@ __Request__
 | user[email] | String | The email address for the User | | X |
 | user[password] | String | The password for the User. Minimum 8 characters. | | X |
 
-__Example Response__ (User)
+__Example "data" Response__ (User)
 
 ```json
 {
@@ -184,7 +203,7 @@ __Unique Errors__
 Returns the User with the specified ```user_id```
 NOTE: In MTP, this will return the User's Posts and their Morsels. After that we'll need to use pagination since there may be too many Posts and Morsels to return in a response.
 
-__Example Response__ (User)
+__Example "data" Response__ (User)
 
 ```json
 {
@@ -225,7 +244,7 @@ __Request__
 | user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
 | user[bio] | String | The bio for the new User. Maximum 255 characters | | |
 
-__Example Response__ (Updated User)
+__Example "data" Response__ (Updated User)
 
 ```json
 {
@@ -256,7 +275,7 @@ Returns the Posts for the User with the specified ```user_id```.
 | ------------------- | ------- | ----------- | ------- | --------- |
 | include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
 
-__Example Response__ (Array of Posts)
+__Example "data" Response__ (Array of Posts)
 
 ```json
 [
@@ -317,7 +336,7 @@ __Request__
 | authorization[token] | String | The User's Access Token for the service. | | X |
 | authorization[secret] | String | The User's Access Token Secret for the service. Only required for Twitter. | | Twitter |
 
-__Example Response__ (Authorization)
+__Example "data" Response__ (Authorization)
 
 ```json
 {
@@ -336,7 +355,7 @@ __Example Response__ (Authorization)
 ### GET ```/users/{user_id}/authorizations``` - User Authorizations
 Returns the User's authorizations
 
-__Example Response__ (Array of Authorizations)
+__Example "data" Response__ (Array of Authorizations)
 
 ```json
 [{
@@ -380,7 +399,7 @@ __Request__
 | post_to_facebook | Boolean | Post to the current_user's Facebook wall with the Post's title and Morsel description (if they exist) along with a link to the Morsel. | false | |
 | post_to_twitter | Boolean | Send a Tweet from the current_user with the Post's title and Morsel description (if they exist) along with a link to the Morsel. If the title and description are too long they will be truncated to allow enough room for the links. | false | |
 
-__Example Response__ (Created Morsel)
+__Example "data" Response__ (Created Morsel)
 
 ```json
 {
@@ -403,7 +422,7 @@ __Example Response__ (Created Morsel)
 ### GET ```/morsels/{morsel_id}``` - Morsel
 Returns Morsel with the specified ```morsel_id```
 
-__Example Response__ (Morsel)
+__Example "data" Response__ (Morsel)
 
 ```json
 {
@@ -450,7 +469,7 @@ __Request__
 | morsel[sort_order] | Number | Changes the ```sort_order``` of a Post when combined with ```post_id```. | | |
 | morsel[draft] | Boolean | Set to true if the Morsel is a draft | false | |
 
-__Example Response__ (Updated Morsel)
+__Example "data" Response__ (Updated Morsel)
 
 ```json
 {
@@ -509,7 +528,7 @@ __Request__
 | ------------------- | ------- | ----------- | ------- | --------- |
 | comment[description] | String | The description for the Comment | | |
 
-__Example Response__ (Created Comment)
+__Example "data" Response__ (Created Comment)
 
 ```json
 {
@@ -529,7 +548,7 @@ __Example Response__ (Created Comment)
 ### GET ```/morsels/{morsel_id}/comments``` - Morsel Comments
 List the Comments for the Morsel with the specified ```morsel_id```
 
-__Example Response__ (Array of Comments)
+__Example "data" Response__ (Array of Comments)
 
 ```json
 [{
@@ -577,7 +596,7 @@ __Request__
 | ------------------- | ------- | ----------- | ------- | --------- |
 | include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
 
-__Example Response__ (Array of Posts)
+__Example "data" Response__ (Array of Posts)
 
 ```json
 [
@@ -791,7 +810,7 @@ Returns the Post with the specified ```post_id```
 | ------------------- | ------- | ----------- | ------- | --------- |
 | include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
 
-__Example Response__ (Post)
+__Example "data" Response__ (Post)
 
 ```json
 {
@@ -845,7 +864,7 @@ __Request__
 | ------------------- | ------- | ----------- | ------- | --------- |
 | post[title]         | String  | The title for the Post. Changing this will change the slug. | | |
 
-__Example Response__ (Updated Post)
+__Example "data" Response__ (Updated Post)
 
 ```json
 {
@@ -869,7 +888,7 @@ __Request__
 | sort_order         | Number  | The ```sort_order``` for the Morsel in the Post | end of Post | |
 | include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
 
-__Example Response__ (Post with Appended Morsel)
+__Example "data" Response__ (Post with Appended Morsel)
 
 ```json
 {
