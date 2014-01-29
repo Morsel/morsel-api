@@ -33,6 +33,9 @@ class Morsel < ActiveRecord::Base
 
   mount_uploader :photo, MorselPhotoUploader
 
+  scope :drafts, -> { where(draft: true) }
+  scope :published, -> { where(draft: false) }
+
   before_save :update_photo_attributes
 
   validate :description_or_photo_present?

@@ -13,9 +13,9 @@ describe 'Posts API' do
 
       expect(response).to be_success
 
-      expect(json.count).to eq(4)
+      expect(json_data.count).to eq(4)
 
-      expect(json.first['morsels'].count).to eq(3)
+      expect(json_data.first['morsels'].count).to eq(3)
     end
 
     context 'user_id included in parameters' do
@@ -28,11 +28,11 @@ describe 'Posts API' do
 
         expect(response).to be_success
 
-        expect(json.count).to eq(1)
+        expect(json_data.count).to eq(1)
 
         creator_id = post_with_morsels_and_creator_and_draft.creator.id
 
-        json.each do |morsel_json|
+        json_data.each do |morsel_json|
           expect(morsel_json['creator_id']).to eq(creator_id)
         end
       end
@@ -46,9 +46,9 @@ describe 'Posts API' do
 
         expect(response).to be_success
 
-        expect(json.count).to eq(4)
+        expect(json_data.count).to eq(4)
 
-        expect(json.first['morsels'].count).to eq(4)
+        expect(json_data.first['morsels'].count).to eq(4)
       end
     end
   end
@@ -61,10 +61,10 @@ describe 'Posts API' do
 
       expect(response).to be_success
 
-      expect_json_keys(json, post_with_morsels_and_creator_and_draft, %w(id title creator_id))
-      expect(json['slug']).to eq(post_with_morsels_and_creator_and_draft.cached_slug)
+      expect_json_keys(json_data, post_with_morsels_and_creator_and_draft, %w(id title creator_id))
+      expect(json_data['slug']).to eq(post_with_morsels_and_creator_and_draft.cached_slug)
 
-      expect(json['morsels'].count).to eq(3)
+      expect(json_data['morsels'].count).to eq(3)
     end
 
     context 'include_drafts=true included in parameters' do
@@ -76,9 +76,9 @@ describe 'Posts API' do
 
         expect(response).to be_success
 
-        expect_json_keys(json, post_with_morsels_and_creator_and_draft, %w(id title creator_id))
-        expect(json['slug']).to eq(post_with_morsels_and_creator_and_draft.cached_slug)
-        expect(json['morsels'].count).to eq(4)
+        expect_json_keys(json_data, post_with_morsels_and_creator_and_draft, %w(id title creator_id))
+        expect(json_data['slug']).to eq(post_with_morsels_and_creator_and_draft.cached_slug)
+        expect(json_data['morsels'].count).to eq(4)
       end
     end
   end
@@ -94,7 +94,7 @@ describe 'Posts API' do
 
       expect(response).to be_success
 
-      expect(json['title']).to eq(new_title)
+      expect(json_data['title']).to eq(new_title)
       expect(Post.find(existing_post.id).title).to eq(new_title)
     end
   end
@@ -110,11 +110,11 @@ describe 'Posts API' do
 
       expect(response).to be_success
 
-      expect(json['id']).to eq(existing_post.id)
+      expect(json_data['id']).to eq(existing_post.id)
 
       expect(existing_post.morsels).to include(morsel)
 
-      expect(json['morsels'].count).to eq(4)
+      expect(json_data['morsels'].count).to eq(4)
     end
 
     context 'relationship already exists' do
@@ -126,8 +126,10 @@ describe 'Posts API' do
                                                   morsel_id: morsel_in_existing_post.id
 
         expect(response).to_not be_success
+        expect(response.status).to eq(400)
 
-        expect(json['errors'].first['msg']).to eq('Relationship already exists')
+        expect(json_data).to be_nil
+        expect(json_errors['relationship'].first).to eq('already exists')
       end
     end
 
@@ -142,9 +144,9 @@ describe 'Posts API' do
 
         expect(response).to be_success
 
-        expect(json['id']).to_not be_nil
+        expect(json_data['id']).to_not be_nil
 
-        expect(existing_post.morsel_ids.first).to eq(json['morsels'].first['id'])
+        expect(existing_post.morsel_ids.first).to eq(json_data['morsels'].first['id'])
       end
     end
 
@@ -157,11 +159,11 @@ describe 'Posts API' do
 
         expect(response).to be_success
 
-        expect(json['id']).to eq(existing_post.id)
+        expect(json_data['id']).to eq(existing_post.id)
 
         expect(existing_post.morsels).to include(morsel)
 
-        expect(json['morsels'].count).to eq(5)
+        expect(json_data['morsels'].count).to eq(5)
       end
     end
   end
@@ -188,8 +190,10 @@ describe 'Posts API' do
                                                     morsel_id: morsel.id
 
         expect(response).to_not be_success
+        expect(response.status).to eq(404)
 
-        expect(json['errors'].first['msg']).to eq('Relationship not found')
+        expect(json_data).to be_nil
+        expect(json_errors['relationship'].first).to eq('not found')
       end
     end
   end

@@ -4,6 +4,7 @@ class ApiController < ActionController::Base
   protect_from_forgery with: :null_session
 
   before_filter :authenticate_user_from_token!
+  include JSONEnvelopable
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
@@ -40,15 +41,11 @@ class ApiController < ActionController::Base
     # end
   end
 
-  def json_response_with_errors(errors, http_status)
-    render json: { errors: errors.map { |e| { msg: e } } }, status: http_status
-  end
-
   def record_not_found(error)
-    json_response_with_errors(['Not Found'], :not_found)
+    render_json_errors({ record: ['not found']}, :not_found)
   end
 
   def unauthorized_token
-    json_response_with_errors(['Unauthorized'], :unauthorized)
+    render_json_errors({ api: ['unauthorized']}, :unauthorized)
   end
 end
