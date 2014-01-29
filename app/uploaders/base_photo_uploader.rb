@@ -8,7 +8,7 @@ class BasePhotoUploader < CarrierWave::Uploader::Base
   end
 
   def store_dir
-    if Rails.env.production?
+    if Rails.env.production? || Rails.env.staging?
       "#{model.class.to_s.underscore}-photos/#{model.id}"
     else
       "#{Rails.root}/spec/support/uploads/#{model.class.to_s.underscore}-photos/#{model.id}"
