@@ -20,7 +20,7 @@ class BasePhotoUploader < CarrierWave::Uploader::Base
   end
 
   def filename
-    @name ||= "#{timestamp}-#{super}" if original_filename.present? && super.present?
+    @name ||= "#{model.class.to_s[0].downcase}#{model.id}-#{timestamp}.#{file.extension}" if file.present? && model.id.present?
   end
 
   def timestamp
