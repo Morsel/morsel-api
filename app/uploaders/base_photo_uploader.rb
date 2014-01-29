@@ -30,10 +30,28 @@ class BasePhotoUploader < CarrierWave::Uploader::Base
 
   process :set_content_type
   process :save_content_type_and_size_in_model
+  process :fix_exif_rotation
+  process :strip
 
   def save_content_type_and_size_in_model
     model.photo_content_type = file.content_type if file.content_type
     model.photo_file_size = file.size
     model.photo_updated_at = Time.now
+  end
+
+  def fix_exif_rotation
+    manipulate! do |img|
+      img.auto_orient
+      img = yield(img) if block_given?
+      img
+    end
+  end
+
+  def strip
+    manipulate! do |img|
+      img.strip
+      img = yield(img) if block_given?
+      img
+    end
   end
 end
