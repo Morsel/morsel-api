@@ -10,6 +10,8 @@ class BasePhotoUploader < CarrierWave::Uploader::Base
   def store_dir
     if Rails.env.production? || Rails.env.staging?
       "#{model.class.to_s.underscore}-photos/#{model.id}"
+    elsif Rails.env.development?
+      "#{Rails.root}/public/uploads_dev/#{model.class.to_s.underscore}-photos/#{model.id}"
     else
       "#{Rails.root}/spec/support/uploads/#{model.class.to_s.underscore}-photos/#{model.id}"
     end
@@ -20,12 +22,12 @@ class BasePhotoUploader < CarrierWave::Uploader::Base
   end
 
   def filename
-    @name ||= "#{model.class.to_s[0].downcase}#{model.id}-#{timestamp}.#{file.extension}" if file.present? && model.id.present?
+   "#{secure_token}.#{file.extension}" if original_filename.present?
   end
 
-  def timestamp
-    var = :"@#{mounted_as}_timestamp"
-    model.instance_variable_get(var) || model.instance_variable_set(var, Time.now.to_i)
+  def secure_token
+    var = :"@#{mounted_as}_secure_token"
+    model.instance_variable_get(var) or model.instance_variable_set(var, SecureRandom.uuid)
   end
 
   process :set_content_type
