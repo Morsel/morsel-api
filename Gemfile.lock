@@ -208,7 +208,6 @@ GEM
     kaminari (0.15.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
-    kgio (2.8.1)
     koala (1.8.0rc1)
       addressable
       faraday
@@ -256,6 +255,8 @@ GEM
     pry-debugger (0.2.2)
       debugger (~> 1.3)
       pry (~> 0.9.10)
+    puma (2.7.1)
+      rack (>= 1.1, < 2.0)
     quiet_assets (1.0.2)
       railties (>= 3.1, < 5.0)
     rack (1.5.2)
@@ -291,7 +292,6 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rainbow (1.1.4)
-    raindrops (0.12.0)
     rake (10.1.0)
     ransack (1.1.0)
       actionpack (>= 3.0)
@@ -403,10 +403,6 @@ GEM
     uglifier (2.3.3)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
-    unicorn (4.7.0)
-      kgio (~> 2.6)
-      rack
-      raindrops (~> 0.7)
     uuid (2.3.7)
       macaddr (~> 1.0)
     uuidtools (2.1.4)
@@ -454,6 +450,7 @@ DEPENDENCIES
   pg
   pry
   pry-debugger
+  puma
   quiet_assets
   rack-cors
   rails (= 4.0.2)
@@ -476,4 +473,3 @@ DEPENDENCIES
   turbolinks
   twitter (~> 5.5.1)
   uglifier (>= 1.3.0)
-  unicorn
