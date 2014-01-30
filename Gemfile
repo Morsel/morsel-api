@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 ruby '2.0.0'
 #ruby-gemset=morsel
 
+gem 'puma'
 gem 'rails', '4.0.2'
 gem 'pg'
 
@@ -32,7 +33,6 @@ gem 'slugged', '~> 2.0'
 gem 'turbolinks'
 gem "twitter", "~> 5.5.1"
 gem 'uglifier', '>= 1.3.0'
-gem 'unicorn'
 
 group :development do
   gem 'better_errors'
