@@ -130,6 +130,22 @@ describe 'Morsels API' do
         expect(json_data['tweet_url']).to eq(expected_tweet_url)
       end
     end
+
+    context 'draft set to true' do
+      it 'should return draft set to true' do
+        post '/morsels',  api_key: turd_ferg.id,
+                          format: :json,
+                          morsel: { description: 'Mnemic', draft: true }
+
+        expect(response).to be_success
+
+        expect(json_data['id']).to_not be_nil
+        expect(json_data['draft']).to be_true
+
+        new_morsel = Morsel.find json_data['id']
+        expect(new_morsel.draft).to be_true
+      end
+    end
   end
 
   describe 'GET /morsels morsels#show' do
