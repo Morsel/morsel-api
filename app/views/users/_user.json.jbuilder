@@ -20,3 +20,9 @@ if user.photo_url.present?
 else
   json.photos nil
 end
+
+if user == current_user
+  json.like_count user.morsel_likes_for_my_morsels_by_others_count
+  json.morsel_count user.morsels.count
+  json.draft_count user.morsels.drafts.count
+end

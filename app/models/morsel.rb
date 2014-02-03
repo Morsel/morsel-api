@@ -74,7 +74,7 @@ class Morsel < ActiveRecord::Base
   private
 
   def description_or_photo_present?
-    if description.blank? && photo.blank?
+    if description.blank? && (photo.blank? && photo_url.blank?)
       errors.add(:base, 'Description or photo is required.')
       return false
     end

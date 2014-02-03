@@ -2,10 +2,12 @@ class PostsController < ApiController
   respond_to :json
 
   def index
-    if params[:user_id].blank?
+    if params[:user_id_or_username].blank?
       @posts = Post.all
     else
-      @posts = Post.where(creator_id: params[:user_id])
+      user = User.find_by_id_or_username(params[:user_id_or_username])
+      raise ActiveRecord::RecordNotFound if user.nil?
+      @posts = user.posts
     end
     @include_drafts = params[:include_drafts] == "true" if params[:include_drafts].present?
   end

@@ -50,7 +50,7 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /users/{:user_id} users#show' do
+  describe 'GET /users/{:user_id|user_username} users#show' do
     let(:user_with_posts) { FactoryGirl.create(:user_with_posts) }
     let(:number_of_morsel_likes) { rand(2..6) }
 
@@ -72,6 +72,24 @@ describe 'Users API' do
 
       expect(json_data['like_count']).to eq(number_of_morsel_likes)
       expect(json_data['morsel_count']).to eq(user_with_posts.morsels.count)
+      expect(json_data['draft_count']).to eq(user_with_posts.morsels.drafts.count)
+    end
+
+    context 'username passed instead of id' do
+      it 'returns the User' do
+        get "/users/#{user_with_posts.username}", api_key: user_with_posts.id, format: :json
+
+        expect(response).to be_success
+
+        expect_json_keys(json_data, user_with_posts, %w(id username first_name last_name sign_in_count title bio))
+        expect_nil_json_keys(json_data, %w(password encrypted_password auth_token))
+
+        expect(json_data['photos']).to be_nil
+        expect(json_data['twitter_username']).to eq(user_with_posts.twitter_username)
+
+        expect(json_data['like_count']).to eq(number_of_morsel_likes)
+        expect(json_data['morsel_count']).to eq(user_with_posts.morsels.count)
+      end
     end
 
     context 'has a photo' do
@@ -92,6 +110,22 @@ describe 'Users API' do
         expect(photos['_40x40']).to_not be_nil
       end
     end
+
+    context 'has a Morsel draft' do
+      before do
+        first_morsel = user_with_posts.morsels.first
+        first_morsel.draft = true
+        first_morsel.save
+      end
+
+      it 'returns 1 for draft_count' do
+        get "/users/#{user_with_posts.id}", api_key: user_with_posts.id, format: :json
+
+        expect(response).to be_success
+
+        expect(json_data['draft_count']).to eq(1)
+      end
+    end
   end
 
   describe 'PUT /users/{:user_id} users#update' do
@@ -109,7 +143,7 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /users/{:user_id}/posts' do
+  describe 'GET /users/{:user_id|user_username}/posts' do
     let(:user_with_posts) { FactoryGirl.create(:user_with_posts) }
 
     it 'returns all of the User\'s  Posts' do
@@ -118,6 +152,16 @@ describe 'Users API' do
       expect(response).to be_success
 
       expect(json_data.count).to eq(user_with_posts.posts.count)
+    end
+
+    context 'username passed instead of id' do
+      it 'returns all of the User\'s  Posts' do
+        get "/users/#{user_with_posts.username}/posts", api_key: user_with_posts.id, format: :json
+
+        expect(response).to be_success
+
+        expect(json_data.count).to eq(user_with_posts.posts.count)
+      end
     end
 
     context 'include_drafts=true included in parameters' do

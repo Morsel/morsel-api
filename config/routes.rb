@@ -9,10 +9,11 @@ MorselApp::Application.routes.draw do
                 registrations: 'registrations'
               }
 
-  resources :users, only: [:index, :show, :update] do
+  resources :users, only: [:index, :update] do
     resources :authorizations, only: [:create, :index]
-    resources :posts, only: [:index]
   end
+  get 'users/:user_id_or_username' => 'users#show'
+  get 'users/:user_id_or_username/posts' => 'posts#index'
 
   resources :morsels, only: [:create, :show, :update, :destroy] do
     resources :comments, only: [:create, :index]
