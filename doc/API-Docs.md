@@ -8,9 +8,9 @@
 - [User Methods](#user-methods)
   - [POST ```/users``` - Create a new User](#post-users---create-a-new-user)
   - [POST ```/users/sign_in``` - User Authentication](#post-userssign_in---user-authentication)
-  - [GET ```/users/{user_id}``` - User](#get-usersuser_id---user)
+  - [GET ```/users/{user_id|user_username}``` - User](#get-usersuser_iduser_username---user)
   - [PUT ```/users/{user_id}``` - Update User](#put-usersuser_id---update-user)
-  - [GET ```/users/{user_id}/posts``` - User Posts](#get-usersuser_idposts---user-posts)
+  - [GET ```/users/{user_id|user_username}/posts``` - User Posts](#get-usersuser_iduser_usernameposts---user-posts)
   - [POST ```/users/{user_id}/authorizations``` - Create User Authorizations](#post-usersuser_idauthorizations---create-user-authorizations)
   - [GET ```/users/{user_id}/authorizations``` - User Authorizations](#get-usersuser_idauthorizations---user-authorizations)
 - [Morsel Methods](#morsel-methods)
@@ -127,7 +127,7 @@ __Request__
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | user[email] | String | The email address for the new User | | X |
-| user[username] | String | The username for the new User. Maximum 15 characters. Regex: [A-Za-z0-9_] | | X |
+| user[username] | String | The username for the new User. Maximum 15 characters and must start with a letter. Regex: ```[a-zA-Z][A-Za-z0-9_]```| | X |
 | user[password] | String | The password for the new User. Minimum 8 characters. | | X |
 | user[first_name] | String | The first name for the new User. | | |
 | user[last_name] | String | The last name for the new User. | | |
@@ -154,6 +154,9 @@ __Example "data" Response__ (Created User)
   "title": "Executive Chef at Jeopardy",
   "twitter_username": null,
   "bio": "I like turtles",
+  "like_count": 0,
+  "morsel_count": 1,
+  "draft_count": 0,
   "auth_token": "25TLfL6tvc_Qzx52Zh9q"
 }
 ```
@@ -188,6 +191,9 @@ __Example "data" Response__ (User)
   "title": "Executive Chef at Jeopardy",
   "twitter_username": null,
   "bio": "I like turtles",
+  "like_count": 0,
+  "morsel_count": 1,
+  "draft_count": 0,
   "auth_token": "25TLfL6tvc_Qzx52Zh9q"
 }
 ```
@@ -199,8 +205,8 @@ __Unique Errors__
 | __Invalid email or password__ | 401 (Unauthorized) or 422 (Unprocessable Entity) | The email or password specified are invalid |
 
 
-### GET ```/users/{user_id}``` - User
-Returns the User with the specified ```user_id```
+### GET ```/users/{user_id|user_username}``` - User
+Returns the User with the specified ```user_id``` or ```user_username```
 NOTE: In MTP, this will return the User's Posts and their Morsels. After that we'll need to use pagination since there may be too many Posts and Morsels to return in a response.
 
 __Example "data" Response__ (User)
@@ -223,7 +229,8 @@ __Example "data" Response__ (User)
   "twitter_username": null,
   "bio": "I like turtles",
   "like_count": 0,
-  "morsel_count": 1
+  "morsel_count": 1,
+  "draft_count": 0
 }
 ```
 
@@ -263,13 +270,16 @@ __Example "data" Response__ (Updated User)
   },
   "title": "Executive Chef at Jeopardy",
   "twitter_username": null,
-  "bio": "I like turtles"
+  "bio": "I like turtles",
+  "like_count": 0,
+  "morsel_count": 1,
+  "draft_count": 0
 }
 ```
 
 
-### GET ```/users/{user_id}/posts``` - User Posts
-Returns the Posts for the User with the specified ```user_id```.
+### GET ```/users/{user_id|user_username}/posts``` - User Posts
+Returns the Posts for the User with the specified ```user_id``` or ```user_username```.
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |

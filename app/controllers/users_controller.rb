@@ -6,7 +6,8 @@ class UsersController < ApiController
   end
 
   def show
-    @user = User.find(params[:id])
+    @user = User.find_by_id_or_username(params[:user_id_or_username])
+    raise ActiveRecord::RecordNotFound if @user.nil?
   end
 
   def update

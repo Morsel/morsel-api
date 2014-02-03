@@ -59,7 +59,7 @@ class User < ActiveRecord::Base
   has_many :posts, foreign_key: :creator_id
 
   validates :username,
-            format: { with: /\A[A-Za-z0-9_]+$\z/ },
+            format: { with: /\A[a-zA-Z][A-Za-z0-9_]+$\z/ },
             length: { maximum: 15 },
             presence: true,
             uniqueness: { case_sensitive: false }
@@ -67,6 +67,15 @@ class User < ActiveRecord::Base
   include PhotoUploadable
 
   mount_uploader :photo, UserPhotoUploader
+
+  def self.find_by_id_or_username(id_or_username)
+    if id_or_username.to_i > 0
+      user = User.find(id_or_username)
+    else
+      user = User.where('lower(username) = lower(?)', id_or_username).first
+    end
+    user
+  end
 
   def can_delete_comment?(comment)
     comment.user == self || comment.morsel.creator == self

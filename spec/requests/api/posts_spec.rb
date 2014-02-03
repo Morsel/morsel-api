@@ -23,7 +23,7 @@ describe 'Posts API' do
 
       it 'returns all Posts for user_id' do
         get '/posts', api_key: turd_ferg.id,
-                      user_id: post_with_morsels_and_creator_and_draft.creator.id,
+                      user_id_or_username: post_with_morsels_and_creator_and_draft.creator.id,
                       format: :json
 
         expect(response).to be_success
