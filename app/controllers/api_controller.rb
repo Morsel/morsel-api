@@ -42,10 +42,10 @@ class ApiController < ActionController::Base
   end
 
   def record_not_found(error)
-    render_json_errors({ record: ['not found']}, :not_found)
+    render_json_errors({ record: ['not found'] }, :not_found)
   end
 
   def unauthorized_token
-    render_json_errors({ api: ['unauthorized']}, :unauthorized)
+    render_json_errors({ api: ['unauthorized'] }, :unauthorized)
   end
 end

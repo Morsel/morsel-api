@@ -5,10 +5,10 @@ class AuthorizationsController < ApiController
     authorization_params = AuthorizationParams.build(params)
     if params[:user_id].blank?
       @authorization = Authorization.build_authorization(authorization_params['provider'], current_user,
-                                                       authorization_params['token'], authorization_params['secret'])
+                                                         authorization_params['token'], authorization_params['secret'])
     else
       @authorization = Authorization.build_authorization(authorization_params['provider'], User.find(params[:user_id]),
-                                                       authorization_params['token'], authorization_params['secret'])
+                                                         authorization_params['token'], authorization_params['secret'])
     end
   end
 

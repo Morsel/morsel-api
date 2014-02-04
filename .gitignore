@@ -82,3 +82,4 @@ pickle-email-*.html
 .env
 public/uploads/tmp/
 spec/support/uploads
+public/uploads_dev

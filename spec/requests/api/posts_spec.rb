@@ -71,8 +71,8 @@ describe 'Posts API' do
       let(:post_with_morsels_and_creator_and_draft) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
       it 'returns the Post including Morsel drafts' do
         get "/posts/#{post_with_morsels_and_creator_and_draft.id}", api_key: turd_ferg.id,
-                                                          format: :json,
-                                                          include_drafts: true
+                                                                    format: :json,
+                                                                    include_drafts: true
 
         expect(response).to be_success
 

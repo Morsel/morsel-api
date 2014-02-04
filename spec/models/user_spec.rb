@@ -64,6 +64,7 @@ describe User do
   its(:authorized_with_twitter?) { should be_false }
   its(:twitter_client) { should be_nil }
   its(:twitter_username) { should be_nil }
+  its(:facebook_uid) { should be_nil }
 
   it { should be_valid }
 
@@ -163,6 +164,7 @@ describe User do
       its(:facebook_authorization) { should_not be_nil }
       its(:authorized_with_facebook?) { should be_true }
       its(:facebook_client) { should_not be_nil }
+      its(:facebook_uid) { should_not be_nil }
     end
 
     context 'Twitter' do
