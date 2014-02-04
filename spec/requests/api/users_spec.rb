@@ -69,6 +69,7 @@ describe 'Users API' do
 
       expect(json_data['photos']).to be_nil
       expect(json_data['twitter_username']).to eq(user_with_posts.twitter_username)
+      expect(json_data['facebook_uid']).to eq(user_with_posts.facebook_uid)
 
       expect(json_data['like_count']).to eq(number_of_morsel_likes)
       expect(json_data['morsel_count']).to eq(user_with_posts.morsels.count)
@@ -86,6 +87,7 @@ describe 'Users API' do
 
         expect(json_data['photos']).to be_nil
         expect(json_data['twitter_username']).to eq(user_with_posts.twitter_username)
+        expect(json_data['facebook_uid']).to eq(user_with_posts.facebook_uid)
 
         expect(json_data['like_count']).to eq(number_of_morsel_likes)
         expect(json_data['morsel_count']).to eq(user_with_posts.morsels.count)
@@ -219,6 +221,7 @@ describe 'Users API' do
         expect(json_data['name']).to eq(dummy_screen_name)
 
         expect(turd_ferg.twitter_authorizations.count).to eq(1)
+        expect(turd_ferg.twitter_username).to eq(dummy_screen_name)
       end
     end
 
@@ -226,10 +229,11 @@ describe 'Users API' do
       it 'creates a new Facebook authorization' do
         dummy_name = 'Facebook User'
         dummy_token = 'token'
+        dummy_fb_uid = '123456'
         client = double('Koala::Facebook::API')
         Koala::Facebook::API.stub(:new).and_return(client)
         facebook_user = double('Hash')
-        facebook_user.stub(:[]).with('id').and_return(123)
+        facebook_user.stub(:[]).with('id').and_return(dummy_fb_uid)
         facebook_user.stub(:[]).with('name').and_return(dummy_name)
         facebook_user.stub(:[]).with('link').and_return("https://facebook.com/#{dummy_name}")
 
@@ -242,7 +246,7 @@ describe 'Users API' do
 
         expect(response).to be_success
 
-        expect(json_data['id']).to_not eq(123)
+        expect(json_data['uid']).to eq(dummy_fb_uid)
         expect(json_data['provider']).to eq('facebook')
         expect(json_data['secret']).to be_nil
         expect(json_data['token']).to eq(dummy_token)
@@ -250,6 +254,7 @@ describe 'Users API' do
         expect(json_data['name']).to eq(dummy_name)
 
         expect(turd_ferg.facebook_authorizations.count).to eq(1)
+        expect(turd_ferg.facebook_uid).to eq(dummy_fb_uid)
       end
     end
   end

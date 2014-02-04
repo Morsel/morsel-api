@@ -4,7 +4,7 @@ class LikesController < ApiController
   def create
     @morsel = Morsel.find(params[:morsel_id])
     if @morsel.likers.include? current_user
-      render_json_errors({ like: ['already exist']}, :bad_request)
+      render_json_errors({ like: ['already exist'] }, :bad_request)
     else
       @morsel.likers << current_user
 
@@ -19,7 +19,7 @@ class LikesController < ApiController
 
       render json: 'OK', status: :ok
     else
-      render_json_errors({ like: ['not found']}, :not_found)
+      render_json_errors({ like: ['not found'] }, :not_found)
     end
   end
 end

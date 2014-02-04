@@ -20,6 +20,7 @@ module JSONEnvelopable
         },
         errors: errors,
         data: data
-        }, status: http_status
+        },
+        status: http_status
     end
 end

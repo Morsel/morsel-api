@@ -153,6 +153,7 @@ __Example "data" Response__ (Created User)
   },
   "title": "Executive Chef at Jeopardy",
   "twitter_username": null,
+  "facebook_uid": "1234567890",
   "bio": "I like turtles",
   "like_count": 0,
   "morsel_count": 1,
@@ -190,6 +191,7 @@ __Example "data" Response__ (User)
   },
   "title": "Executive Chef at Jeopardy",
   "twitter_username": null,
+  "facebook_uid": "1234567890",
   "bio": "I like turtles",
   "like_count": 0,
   "morsel_count": 1,
@@ -227,6 +229,7 @@ __Example "data" Response__ (User)
   },
   "title": "Executive Chef at Jeopardy",
   "twitter_username": null,
+  "facebook_uid": null,
   "bio": "I like turtles",
   "like_count": 0,
   "morsel_count": 1,
@@ -270,6 +273,7 @@ __Example "data" Response__ (Updated User)
   },
   "title": "Executive Chef at Jeopardy",
   "twitter_username": null,
+  "facebook_uid": "1234567890",
   "bio": "I like turtles",
   "like_count": 0,
   "morsel_count": 1,
@@ -631,6 +635,7 @@ __Example "data" Response__ (Array of Posts)
       },
       "title": "Backend Chef at Morsel",
       "twitter_username": "martytrzpit"
+      "facebook_uid": null,
     },
     "morsels":[
       {
@@ -671,6 +676,7 @@ __Example "data" Response__ (Array of Posts)
       },
       "title": "Backend Chef at Morsel",
       "twitter_username": "martytrzpit"
+      "facebook_uid": null,
     },
     "morsels":[
       {
@@ -711,6 +717,7 @@ __Example "data" Response__ (Array of Posts)
       },
       "title": "Backend Chef at Morsel",
       "twitter_username": "martytrzpit"
+      "facebook_uid": null,
     },
     "morsels":[
       {
@@ -751,6 +758,7 @@ __Example "data" Response__ (Array of Posts)
       },
       "title": "Backend Chef at Morsel",
       "twitter_username": "martytrzpit"
+      "facebook_uid": null,
     },
     "morsels":[
       {
@@ -791,6 +799,7 @@ __Example "data" Response__ (Array of Posts)
       },
       "title": "Bob Dole at Bob Dole",
       "twitter_username": null
+      "facebook_uid": null,
     },
     "morsels":[
       {
@@ -844,6 +853,7 @@ __Example "data" Response__ (Post)
     },
     "title": "Backend Chef at Morsel"
     "twitter_username": "martytrzpit",
+    "facebook_uid": null,
   },
   "morsels":[
     {
@@ -922,6 +932,7 @@ __Example "data" Response__ (Post with Appended Morsel)
     },
     "title": "Backend Chef at Morsel",
     "twitter_username": "martytrzpit"
+    "facebook_uid": null,
   },
   "morsels":[
     {

@@ -105,6 +105,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def facebook_uid
+    facebook_authorization.uid if authorized_with_facebook?
+  end
+
   def twitter_authorization
     twitter_authorizations.first
   end
