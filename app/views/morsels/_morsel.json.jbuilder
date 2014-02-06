@@ -21,6 +21,7 @@ end
 if defined?(post) && post.present?
   json.post_id post.id
   json.sort_order morsel.sort_order_for_post_id(post.id)
+  json.url morsel.url(post)
 end
 
 json.liked current_user.likes?(morsel) if defined?(current_user)
