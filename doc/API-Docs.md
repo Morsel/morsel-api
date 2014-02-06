@@ -303,6 +303,7 @@ __Example "data" Response__ (Array of Posts)
       {
         "id": 2,
         "description": null,
+        "url": "http://eatmorsel.com/marty/1/butter/1",
         "photos": null,
         "creator_id": 1,
         "created_at": "2014-01-07T16:34:43.071Z",
@@ -321,6 +322,7 @@ __Example "data" Response__ (Array of Posts)
       {
         "id": 1,
         "description": "Some other description!!!!213@!#!@$%",
+        "url": "http://eatmorsel.com/marty/1/butter/1",
         "photos": {
           "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
           "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -419,6 +421,7 @@ __Example "data" Response__ (Created Morsel)
 {
   "id": 4,
   "description": "This is a description!",
+  "url": "http://eatmorsel.com/marty/1/butter/1",
   "photos": {
     "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
     "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -442,6 +445,7 @@ __Example "data" Response__ (Morsel)
 {
   "id": 4,
   "description": "This is a description!",
+  "url": "http://eatmorsel.com/marty/1/butter/1",
   "photos": {
     "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
     "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -489,6 +493,7 @@ __Example "data" Response__ (Updated Morsel)
 {
   "id": 4,
   "description": "This is a modified description!",
+  "url": "http://eatmorsel.com/marty/1/butter/1",
   "photos": {
     "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
     "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -641,6 +646,7 @@ __Example "data" Response__ (Array of Posts)
       {
         "id":1,
         "description":"Some other description!!!!213@!#!@$%",
+        "url": "http://eatmorsel.com/marty/1/butter/1",
         "photos": {
           "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
           "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -682,6 +688,7 @@ __Example "data" Response__ (Array of Posts)
       {
         "id":2,
         "description":null,
+        "url": "http://eatmorsel.com/marty/1/butter/1",
         "photos": {
           "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
           "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -723,6 +730,7 @@ __Example "data" Response__ (Array of Posts)
       {
         "id":3,
         "description":null,
+        "url": "http://eatmorsel.com/marty/1/butter/1",
         "photos": {
           "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
           "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -764,6 +772,7 @@ __Example "data" Response__ (Array of Posts)
       {
         "id":4,
         "description":"This is a modified description!",
+        "url": "http://eatmorsel.com/marty/1/butter/1",
         "photos": {
           "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
           "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -805,6 +814,7 @@ __Example "data" Response__ (Array of Posts)
       {
         "id":5,
         "description":"Here's a nice picture of tacos",
+        "url": "http://eatmorsel.com/marty/1/butter/1",
         "photos": {
           "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
           "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -859,6 +869,7 @@ __Example "data" Response__ (Post)
     {
       "id":4,
       "description":"This is a modified description!",
+      "url": "http://eatmorsel.com/marty/1/butter/1",
       "photos": {
         "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
         "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -938,6 +949,7 @@ __Example "data" Response__ (Post with Appended Morsel)
     {
       "id":4,
       "description":"This is a modified description!",
+      "url": "http://eatmorsel.com/marty/1/butter/1",
       "photos": {
         "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
         "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -952,6 +964,7 @@ __Example "data" Response__ (Post with Appended Morsel)
     {
       "id":7,
       "description":"I got appended!",
+      "url": "http://eatmorsel.com/marty/1/butter/1",
       "photos": {
         "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
         "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
