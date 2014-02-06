@@ -479,8 +479,8 @@ __Request__
 | ------------------- | ------- | ----------- | ------- | --------- |
 | morsel[description] | String | The description for the Morsel | | |
 | morsel[photo] | String | The photo for the Morsel | | |
-| morsel[post_id] | Number | Changes the ```sort_order``` of a Post when combined with ```sort_order```. | | |
-| morsel[sort_order] | Number | Changes the ```sort_order``` of a Post when combined with ```post_id```. | | |
+| post_id | Number | Changes the ```sort_order``` of a Post when combined with ```sort_order```. | | |
+| sort_order | Number | Changes the ```sort_order``` of a Post when combined with ```post_id```. | | |
 | morsel[draft] | Boolean | Set to true if the Morsel is a draft | false | |
 
 __Example "data" Response__ (Updated Morsel)
