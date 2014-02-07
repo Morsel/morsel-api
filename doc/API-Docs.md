@@ -132,6 +132,7 @@ __Request__
 | user[first_name] | String | The first name for the new User. | | |
 | user[last_name] | String | The last name for the new User. | | |
 | user[title] | String | The title for the new User. In MTP this includes "at <Restaurant>" | | |
+| user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
 | user[bio] | String | The bio for the new User. Maximum 255 characters. | | |
 
 __Example "data" Response__ (Created User)
