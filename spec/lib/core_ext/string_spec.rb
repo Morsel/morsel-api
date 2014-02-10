@@ -12,7 +12,7 @@ describe 'Core Extensions' do
 
     describe '#twitter_string' do
       context 'greater than 140 characters' do
-        subject(:twitter_string) { Faker::Lorem.characters(rand(140..200)).twitter_string }
+        subject(:twitter_string) { Faker::Lorem.characters(rand(145..200)).twitter_string }
 
         it 'truncates up to 140 characters' do
           expect(twitter_string.length).to be <= 140

@@ -1,6 +1,7 @@
 require 'carrierwave/processing/mime_types'
 
 class BasePhotoUploader < CarrierWave::Uploader::Base
+  include ::CarrierWave::Backgrounder::Delay
   include CarrierWave::MimeTypes
 
   configure do |config|

@@ -16,6 +16,15 @@ GIT
       ransack (~> 1.0)
       sass-rails
 
+GIT
+  remote: git://github.com/machinespit/guard-delayed.git
+  revision: d7bb1b89263b321917fb0084fbd255cf90c556a1
+  specs:
+    guard-delayed (0.2.2)
+      daemons
+      delayed_job
+      guard (> 0.3)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -28,6 +37,8 @@ GEM
       erubis (~> 2.7.0)
       rack (~> 1.5.2)
       rack-test (~> 0.6.2)
+    active_model_serializers (0.8.1)
+      activemodel (>= 3.0)
     activemodel (4.0.2)
       activesupport (= 4.0.2)
       builder (~> 3.1.0)
@@ -91,6 +102,8 @@ GEM
     carrierwave-aws (0.3.2)
       aws-sdk (>= 1.8.0)
       carrierwave (>= 0.7.0)
+    carrierwave_backgrounder (0.3.0)
+      carrierwave (~> 0.5)
     celluloid (0.15.2)
       timers (~> 1.1.0)
     childprocess (0.3.6)
@@ -109,6 +122,7 @@ GEM
     coffee-script-source (1.6.3)
     colored (1.2)
     columnize (0.3.6)
+    daemons (1.1.9)
     database_cleaner (1.0.1)
     debug_inspector (0.0.2)
     debugger (1.6.5)
@@ -117,6 +131,11 @@ GEM
       debugger-ruby_core_source (~> 1.3.1)
     debugger-linecache (1.2.0)
     debugger-ruby_core_source (1.3.1)
+    delayed_job (4.0.0)
+      activesupport (>= 3.0, < 4.1)
+    delayed_job_active_record (4.0.0)
+      activerecord (>= 3.0, < 4.1)
+      delayed_job (>= 3.0, < 4.1)
     descendants_tracker (0.0.3)
     devise (3.2.2)
       bcrypt-ruby (~> 3.0)
@@ -237,12 +256,14 @@ GEM
     newrelic_rpm (3.7.1.182)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
+    open4 (1.3.0)
     orm_adapter (0.5.0)
     paranoia (2.0.1)
       activerecord (~> 4.0)
     parser (2.0.0)
       ast (~> 1.1)
       slop (~> 3.4, >= 3.4.5)
+    perftools.rb (2.0.1)
     pg (0.17.1)
     polyamorous (0.6.4)
       activerecord (>= 3.0)
@@ -261,6 +282,10 @@ GEM
       railties (>= 3.1, < 5.0)
     rack (1.5.2)
     rack-cors (0.2.9)
+    rack-perftools_profiler (0.6.1)
+      open4 (~> 1.0)
+      perftools.rb (~> 2.0.1)
+      rack (~> 1.0)
     rack-test (0.6.2)
       rack (>= 1.0)
     rails (4.0.2)
@@ -413,6 +438,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_model_serializers
   activeadmin!
   annotate (>= 2.6.0)
   better_errors
@@ -422,10 +448,12 @@ DEPENDENCIES
   cancan
   carrierwave (~> 0.9.0)
   carrierwave-aws
+  carrierwave_backgrounder
   childprocess (= 0.3.6)
   codeclimate-test-reporter
   coffee-rails (~> 4.0.0)
   database_cleaner (= 1.0.1)
+  delayed_job_active_record
   devise (~> 3.2.2)
   dotenv-rails
   email_spec
@@ -434,6 +462,7 @@ DEPENDENCIES
   fuubar (~> 1.3.2)
   guard-brakeman
   guard-bundler
+  guard-delayed!
   guard-rails
   guard-rails_best_practices
   guard-rspec
@@ -453,6 +482,7 @@ DEPENDENCIES
   puma
   quiet_assets
   rack-cors
+  rack-perftools_profiler
   rails (= 4.0.2)
   rails_12factor
   rails_best_practices

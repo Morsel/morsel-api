@@ -32,6 +32,7 @@ class Morsel < ActiveRecord::Base
   include PhotoUploadable
 
   mount_uploader :photo, MorselPhotoUploader
+  # process_in_background :photo
 
   scope :drafts, -> { where(draft: true) }
   scope :published, -> { where(draft: false) }
@@ -39,11 +40,6 @@ class Morsel < ActiveRecord::Base
   before_save :update_photo_attributes
 
   validate :description_or_photo_present?
-
-  def change_sort_order_for_post_id(post_id, new_sort_order)
-    MorselPost.increment_sort_order_for_post_id(post_id, new_sort_order)
-    set_new_sort_order_for_post_id(post_id, new_sort_order)
-  end
 
   def sort_order_for_post_id(post_id)
     morsel_posts.where(post_id: post_id).first.sort_order
@@ -78,11 +74,5 @@ class Morsel < ActiveRecord::Base
       errors.add(:base, 'Description or photo is required.')
       return false
     end
-  end
-
-  def set_new_sort_order_for_post_id(post_id, new_sort_order)
-    morsel_post = morsel_posts.where(post_id: post_id).first
-    morsel_post.sort_order = new_sort_order
-    morsel_post.save
   end
 end

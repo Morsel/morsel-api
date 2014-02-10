@@ -12,11 +12,13 @@ class SessionsController < Devise::SessionsController
       if params[:user].blank?
         invalid_login_attempt(:unprocessable_entity)
       else
-        @user = User.find_for_database_authentication(email: params[:user][:email])
-        return invalid_login_attempt unless @user
+        user = User.find_for_database_authentication(email: params[:user][:email])
+        return invalid_login_attempt unless user
 
-        if @user.valid_password?(params[:user][:password])
-          sign_in @user, store: false
+        if user.valid_password?(params[:user][:password])
+          sign_in user, store: false
+
+          custom_respond_with user, serializer: UserWithAuthTokenSerializer
         else
           invalid_login_attempt
         end

@@ -60,7 +60,7 @@ describe Post do
 
     it 'returns Morsels ordered by sort_order' do
       morsel_ids = post_with_morsels.morsel_ids
-      post_with_morsels.morsels.last.change_sort_order_for_post_id(post_with_morsels.id, 1)
+      post_with_morsels.set_sort_order_for_morsel(post_with_morsels.morsels.last.id, 1)
       expect(post_with_morsels.morsel_ids).to eq(morsel_ids.rotate!(-1))
     end
   end

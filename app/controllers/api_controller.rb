@@ -3,10 +3,13 @@ class ApiController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :null_session
 
+  responders :json
+
   before_filter :authenticate_user_from_token!
   include JSONEnvelopable
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+  rescue_from ActionController::ParameterMissing, with: :parameter_missing
 
   def authenticate_admin_user!
     redirect_to new_user_session_path unless current_user.try(:admin?)
@@ -43,6 +46,10 @@ class ApiController < ActionController::Base
 
   def record_not_found(error)
     render_json_errors({ record: ['not found'] }, :not_found)
+  end
+
+  def parameter_missing(error)
+    render_json_errors({ api: error.message }, :not_found)
   end
 
   def unauthorized_token

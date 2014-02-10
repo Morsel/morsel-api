@@ -4,20 +4,24 @@ class AuthorizationsController < ApiController
   def create
     authorization_params = AuthorizationParams.build(params)
     if params[:user_id].blank?
-      @authorization = Authorization.build_authorization(authorization_params['provider'], current_user,
+      authorization = Authorization.create_authorization(authorization_params['provider'], current_user,
                                                          authorization_params['token'], authorization_params['secret'])
     else
-      @authorization = Authorization.build_authorization(authorization_params['provider'], User.find(params[:user_id]),
+      authorization = Authorization.create_authorization(authorization_params['provider'], User.find(params[:user_id]),
                                                          authorization_params['token'], authorization_params['secret'])
     end
+
+    custom_respond_with authorization
   end
 
   def index
     if params[:user_id].blank?
-      @authorizations = current_user.authorizations
+      authorizations = current_user.authorizations
     else
-      @authorizations = Authorization.where(user_id: params[:user_id])
+      authorizations = Authorization.where(user_id: params[:user_id])
     end
+
+    custom_respond_with authorizations
   end
 
   class AuthorizationParams

@@ -3,39 +3,45 @@ class PostsController < ApiController
 
   def index
     if params[:user_id_or_username].blank?
-      @posts = Post.all
+      posts = Post.includes(:morsel_posts, :morsels, :creator).where('creator_id > 0')
     else
-      user = User.find_by_id_or_username(params[:user_id_or_username])
+      user = User.includes(posts: [:morsel_posts, :morsels]).find_by_id_or_username(params[:user_id_or_username])
       raise ActiveRecord::RecordNotFound if user.nil?
-      @posts = user.posts
+      posts = user.posts
     end
-    @include_drafts = params[:include_drafts] == 'true' if params[:include_drafts].present?
+
+    custom_respond_with posts, include_drafts: (params[:include_drafts] == 'true')
   end
 
   def show
-    @post = Post.find(params[:id])
-    @include_drafts = params[:include_drafts] == 'true' if params[:include_drafts].present?
+    custom_respond_with Post.includes(:morsel_posts, :morsels, :creator).find(params[:id]), include_drafts: (params[:include_drafts] == 'true')
   end
 
   def update
-    @post = Post.find(params[:id])
-    @post.update_attributes(PostParams.build(params))
-    @include_drafts = params[:include_drafts] == 'true' if params[:include_drafts].present?
+    post = Post.includes(:morsel_posts, :morsels, :creator).find(params[:id])
+
+    if post.update_attributes(PostParams.build(params))
+      custom_respond_with post, include_drafts: (params[:include_drafts] == 'true')
+    else
+      render_json_errors(post.errors, :unprocessable_entity)
+    end
   end
 
   def append
     morsel = Morsel.find(params[:morsel_id])
 
-    @post = Post.find(params[:id])
-    if @post.morsels.include? morsel
+    post = Post.includes(:morsel_posts, :morsels, :creator).find(params[:id])
+    if post.morsels.include? morsel
       # Already exists
       render_json_errors({ relationship: ['already exists'] }, :bad_request)
     else
-      @post.morsels << morsel
+      if post.morsels << morsel
+        post.set_sort_order_for_morsel(morsel.id, params[:sort_order]) if params[:sort_order].present?
 
-      morsel.change_sort_order_for_post_id(@post.id, params[:sort_order]) if params[:sort_order].present?
-
-      @include_drafts = params[:include_drafts] == 'true' if params[:include_drafts].present?
+        custom_respond_with post, include_drafts: (params[:include_drafts] == 'true')
+      else
+        render_json_errors(post.errors, :unprocessable_entity)
+      end
     end
   end
 
@@ -44,9 +50,11 @@ class PostsController < ApiController
 
     post = Post.find(params[:id])
     if post.morsels.include? morsel
-      post.morsels.delete(morsel)
-
-      render json: 'OK', status: :ok
+      if post.morsels.delete(morsel)
+        render json: 'OK', status: :ok
+      else
+        render_json_errors(post.errors, :unprocessable_entity)
+      end
     else
       render_json_errors({ relationship: ['not found'] }, :not_found)
     end

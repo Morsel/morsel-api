@@ -67,14 +67,14 @@ class User < ActiveRecord::Base
   include PhotoUploadable
 
   mount_uploader :photo, UserPhotoUploader
+  # process_in_background :photo
 
   def self.find_by_id_or_username(id_or_username)
     if id_or_username.to_i > 0
-      user = User.find(id_or_username)
+      where(id: id_or_username).first
     else
-      user = User.where('lower(username) = lower(?)', id_or_username).first
+      where('lower(username) = lower(?)', id_or_username).first
     end
-    user
   end
 
   def can_delete_comment?(comment)

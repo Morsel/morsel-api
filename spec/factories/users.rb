@@ -37,7 +37,7 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
-  factory :user do
+  factory :user, aliases: [:creator] do
     email { Faker::Internet.email }
     username { "user_#{Faker::Lorem.characters(10)}" }
     first_name { Faker::Name.first_name }

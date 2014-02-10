@@ -5,50 +5,60 @@ class MorselsController < ApiController
     # TODO: Cyclomatic complexity for create is too high
     morsel_params = MorselParams.build(params)
 
-    @morsel = current_user.morsels.build(morsel_params)
+    morsel = current_user.morsels.build(morsel_params)
 
-    if @morsel.save
+    if morsel.save
       if params[:post_id].present?
-        @post = Post.find(params[:post_id])
+        post = Post.find(params[:post_id])
       else
         # If a post is not specified for this Morsel, create a new one
-        @post = Post.new
-        @post.creator = current_user
+        post = Post.new
+        post.creator = current_user
       end
 
-      @post.title = params[:post_title] if params[:post_title].present?
+      post.title = params[:post_title] if params[:post_title].present?
 
-      @post.morsels.push(@morsel)
-      @post.save!
+      post.morsels.push(morsel)
+      post.set_sort_order_for_morsel(morsel.id, params[:sort_order]) if params[:sort_order].present?
+      post.save!
 
-      @morsel.change_sort_order_for_post_id(@post.id, params[:sort_order])  if params[:post_id].present? && params[:sort_order].present?
+      current_user.delay(queue: 'social').post_to_facebook(morsel.facebook_message(post)) if params[:post_to_facebook]
+      current_user.delay(queue: 'social').post_to_twitter(morsel.twitter_message(post)) if params[:post_to_twitter]
 
-      @fb_post = current_user.post_to_facebook(@morsel.facebook_message(@post)) if params[:post_to_facebook]
-      @tweet = current_user.post_to_twitter(@morsel.twitter_message(@post)) if params[:post_to_twitter]
+      custom_respond_with morsel, post: post
     else
-
-      render_json_errors(@morsel.errors, :unprocessable_entity)
+      render_json_errors(morsel.errors, :unprocessable_entity)
     end
   end
 
   def show
-    @morsel = Morsel.find(params[:id])
+    custom_respond_with Morsel.find(params[:id]), serializer: MorselWithCommentsSerializer
   end
 
   def update
-    @morsel = Morsel.find(params[:id])
+    morsel = Morsel.find(params[:id])
 
-    @morsel.update_attributes(MorselParams.build(params))
-    if params[:post_id].present? && params[:sort_order].present?
-      @post = Post.find(params[:post_id])
-      @morsel.change_sort_order_for_post_id(@post.id, params[:sort_order])
+    if morsel.update_attributes(MorselParams.build(params))
+      if params[:post_id].present? && params[:sort_order].present?
+        post = Post.find(params[:post_id])
+        post.set_sort_order_for_morsel(morsel.id, params[:sort_order])
+
+        custom_respond_with morsel, post: post
+      else
+        custom_respond_with morsel
+      end
+    else
+      render_json_errors(morsel.errors, :unprocessable_entity)
     end
   end
 
   def destroy
     morsel = Morsel.find(params[:id])
-    morsel.destroy
-    render json: 'OK', status: :ok
+    if morsel.destroy
+      render json: 'OK', status: :ok
+    else
+      render_json_errors(morsel.errors, :unprocessable_entity)
+    end
   end
 
   class MorselParams

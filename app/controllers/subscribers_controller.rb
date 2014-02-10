@@ -3,8 +3,11 @@ class SubscribersController < ApiController
   skip_before_filter :authenticate_user_from_token!
 
   def create
-    Subscriber.create(SubscriberParams.build(params))
-    render json: 'OK', status: :ok
+    if subscriber = Subscriber.create(SubscriberParams.build(params))
+      render json: 'OK', status: :ok
+    else
+      render_json_errors(subscriber.errors, :unprocessable_entity)
+    end
   end
 
   class SubscriberParams

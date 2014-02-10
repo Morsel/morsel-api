@@ -17,6 +17,18 @@ describe 'Users API' do
       expect(json_data['photos']).to be_nil
       expect_nil_json_keys(json_data, %w(password encrypted_password))
     end
+
+    context 'performance' do
+      before do
+        require 'benchmark'
+      end
+
+      it 'takes time' do
+        Benchmark.realtime { post('/users', format: :json, user: { email: 'foo@bar.com', password: 'password',
+                                                                   first_name: 'Foo', last_name: 'Bar', username: 'foobar',
+                                                                   bio: 'Foo to the Stars' }) }.should < 0.75
+      end
+    end
   end
 
   describe 'POST /users/sign_in sessions#create' do
@@ -33,6 +45,16 @@ describe 'Users API' do
       expect(json_data['sign_in_count']).to eq(1)
       expect_nil_json_keys(json_data, %w(password encrypted_password))
     end
+
+    context 'performance' do
+      before do
+        require 'benchmark'
+      end
+
+      it 'takes time' do
+        Benchmark.realtime { post('/users/sign_in', format: :json, user: { email: user.email, password: 'password' }) }.should < 1.25
+      end
+    end
   end
 
   # Undocumented method
@@ -47,6 +69,16 @@ describe 'Users API' do
       expect(response).to be_success
 
       expect(json_data.count).to eq(3)
+    end
+
+    context 'performance' do
+      before do
+        require 'benchmark'
+      end
+
+      it 'takes time' do
+        Benchmark.realtime { get('/users', api_key: User.first.id, format: :json) }.should < 0.1
+      end
     end
   end
 
@@ -76,6 +108,16 @@ describe 'Users API' do
       expect(json_data['draft_count']).to eq(user_with_posts.morsels.drafts.count)
     end
 
+    context 'performance' do
+      before do
+        require 'benchmark'
+      end
+
+      it 'takes time' do
+        Benchmark.realtime { get("/users/#{user_with_posts.id}", api_key: user_with_posts.id, format: :json) }.should < 0.5
+      end
+    end
+
     context 'username passed instead of id' do
       it 'returns the User' do
         get "/users/#{user_with_posts.username}", api_key: user_with_posts.id, format: :json
@@ -91,6 +133,16 @@ describe 'Users API' do
 
         expect(json_data['like_count']).to eq(number_of_morsel_likes)
         expect(json_data['morsel_count']).to eq(user_with_posts.morsels.count)
+      end
+
+      context 'performance' do
+        before do
+          require 'benchmark'
+        end
+
+        it 'takes time' do
+          Benchmark.realtime { get("/users/#{user_with_posts.username}", api_key: user_with_posts.id, format: :json) }.should < 0.5
+        end
       end
     end
 
@@ -111,6 +163,16 @@ describe 'Users API' do
         expect(photos['_80x80']).to_not be_nil
         expect(photos['_40x40']).to_not be_nil
       end
+
+      context 'performance' do
+        before do
+          require 'benchmark'
+        end
+
+        it 'takes time' do
+          Benchmark.realtime { get("/users/#{user_with_posts.id}", api_key: user_with_posts.id, format: :json) }.should < 0.5
+        end
+      end
     end
 
     context 'has a Morsel draft' do
@@ -126,6 +188,16 @@ describe 'Users API' do
         expect(response).to be_success
 
         expect(json_data['draft_count']).to eq(1)
+      end
+
+      context 'performance' do
+        before do
+          require 'benchmark'
+        end
+
+        it 'takes time' do
+          Benchmark.realtime { get("/users/#{user_with_posts.id}", api_key: user_with_posts.id, format: :json) }.should < 0.5
+        end
       end
     end
   end
