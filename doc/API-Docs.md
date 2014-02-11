@@ -640,8 +640,8 @@ __Example "data" Response__ (Array of Posts)
         "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
       },
       "title": "Backend Chef at Morsel",
-      "twitter_username": "martytrzpit"
-      "facebook_uid": null,
+      "twitter_username": "martytrzpit",
+      "facebook_uid": null
     },
     "morsels":[
       {
@@ -682,8 +682,8 @@ __Example "data" Response__ (Array of Posts)
         "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
       },
       "title": "Backend Chef at Morsel",
-      "twitter_username": "martytrzpit"
-      "facebook_uid": null,
+      "twitter_username": "martytrzpit",
+      "facebook_uid": null
     },
     "morsels":[
       {
@@ -724,8 +724,8 @@ __Example "data" Response__ (Array of Posts)
         "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
       },
       "title": "Backend Chef at Morsel",
-      "twitter_username": "martytrzpit"
-      "facebook_uid": null,
+      "twitter_username": "martytrzpit",
+      "facebook_uid": null
     },
     "morsels":[
       {
@@ -766,8 +766,8 @@ __Example "data" Response__ (Array of Posts)
         "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
       },
       "title": "Backend Chef at Morsel",
-      "twitter_username": "martytrzpit"
-      "facebook_uid": null,
+      "twitter_username": "martytrzpit",
+      "facebook_uid": null
     },
     "morsels":[
       {
@@ -808,8 +808,8 @@ __Example "data" Response__ (Array of Posts)
         "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
       },
       "title": "Bob Dole at Bob Dole",
-      "twitter_username": null
-      "facebook_uid": null,
+      "twitter_username": null,
+      "facebook_uid": null
     },
     "morsels":[
       {
@@ -864,7 +864,7 @@ __Example "data" Response__ (Post)
     },
     "title": "Backend Chef at Morsel"
     "twitter_username": "martytrzpit",
-    "facebook_uid": null,
+    "facebook_uid": null
   },
   "morsels":[
     {
@@ -943,8 +943,8 @@ __Example "data" Response__ (Post with Appended Morsel)
       "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
     },
     "title": "Backend Chef at Morsel",
-    "twitter_username": "martytrzpit"
-    "facebook_uid": null,
+    "twitter_username": "martytrzpit",
+    "facebook_uid": null
   },
   "morsels":[
     {
