@@ -1,4 +1,4 @@
-class UserWithAuthTokenSerializer < UserSerializer
+class UserWithAuthTokenSerializer < UserWithPrivateAttributesSerializer
   attributes :auth_token
 
   def auth_token

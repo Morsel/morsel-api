@@ -130,6 +130,17 @@ class User < ActiveRecord::Base
     twitter_authorization.name if authorized_with_twitter?
   end
 
+  def photos_hash
+    if photo_url.present?
+      {
+        _40x40: photo_url(:_40x40),
+        _72x72: photo_url(:_72x72),
+        _80x80: photo_url(:_80x80),
+        _144x144: photo_url(:_144x144)
+      }
+    end
+  end
+
   private
 
   def ensure_authentication_token

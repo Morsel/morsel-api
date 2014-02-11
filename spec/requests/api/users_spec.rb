@@ -64,7 +64,7 @@ describe 'Users API' do
     end
 
     it 'returns a list of Users' do
-      get '/users', api_key: User.first.id, format: :json
+      get '/users', api_key: api_key_for_user(User.first), format: :json
 
       expect(response).to be_success
 
@@ -77,7 +77,7 @@ describe 'Users API' do
       end
 
       it 'takes time' do
-        Benchmark.realtime { get('/users', api_key: User.first.id, format: :json) }.should < 0.1
+        Benchmark.realtime { get('/users', api_key: api_key_for_user(User.first), format: :json) }.should < 0.1
       end
     end
   end
@@ -92,7 +92,7 @@ describe 'Users API' do
     end
 
     it 'returns the User' do
-      get "/users/#{user_with_posts.id}", api_key: user_with_posts.id, format: :json
+      get "/users/#{user_with_posts.id}", api_key: api_key_for_user(user_with_posts), format: :json
 
       expect(response).to be_success
 
@@ -114,13 +114,13 @@ describe 'Users API' do
       end
 
       it 'takes time' do
-        Benchmark.realtime { get("/users/#{user_with_posts.id}", api_key: user_with_posts.id, format: :json) }.should < 0.5
+        Benchmark.realtime { get("/users/#{user_with_posts.id}", api_key: api_key_for_user(user_with_posts), format: :json) }.should < 0.5
       end
     end
 
     context 'username passed instead of id' do
       it 'returns the User' do
-        get "/users/#{user_with_posts.username}", api_key: user_with_posts.id, format: :json
+        get "/users/#{user_with_posts.username}", api_key: api_key_for_user(user_with_posts), format: :json
 
         expect(response).to be_success
 
@@ -141,7 +141,7 @@ describe 'Users API' do
         end
 
         it 'takes time' do
-          Benchmark.realtime { get("/users/#{user_with_posts.username}", api_key: user_with_posts.id, format: :json) }.should < 0.5
+          Benchmark.realtime { get("/users/#{user_with_posts.username}", api_key: api_key_for_user(user_with_posts), format: :json) }.should < 0.5
         end
       end
     end
@@ -153,7 +153,7 @@ describe 'Users API' do
       end
 
       it 'returns the User with the appropriate image sizes' do
-        get "/users/#{user_with_posts.id}", api_key: user_with_posts.id, format: :json
+        get "/users/#{user_with_posts.id}", api_key: api_key_for_user(user_with_posts), format: :json
 
         expect(response).to be_success
 
@@ -170,7 +170,7 @@ describe 'Users API' do
         end
 
         it 'takes time' do
-          Benchmark.realtime { get("/users/#{user_with_posts.id}", api_key: user_with_posts.id, format: :json) }.should < 0.5
+          Benchmark.realtime { get("/users/#{user_with_posts.id}", api_key: api_key_for_user(user_with_posts), format: :json) }.should < 0.5
         end
       end
     end
@@ -183,7 +183,7 @@ describe 'Users API' do
       end
 
       it 'returns 1 for draft_count' do
-        get "/users/#{user_with_posts.id}", api_key: user_with_posts.id, format: :json
+        get "/users/#{user_with_posts.id}", api_key: api_key_for_user(user_with_posts), format: :json
 
         expect(response).to be_success
 
@@ -196,7 +196,7 @@ describe 'Users API' do
         end
 
         it 'takes time' do
-          Benchmark.realtime { get("/users/#{user_with_posts.id}", api_key: user_with_posts.id, format: :json) }.should < 0.5
+          Benchmark.realtime { get("/users/#{user_with_posts.id}", api_key: api_key_for_user(user_with_posts), format: :json) }.should < 0.5
         end
       end
     end
@@ -208,7 +208,7 @@ describe 'Users API' do
     it 'updates the User' do
       new_first_name = 'Bob'
 
-      put "/users/#{turd_ferg.id}", api_key: turd_ferg.id, format: :json, user: { first_name: new_first_name }
+      put "/users/#{turd_ferg.id}", api_key: api_key_for_user(turd_ferg), format: :json, user: { first_name: new_first_name }
 
       expect(response).to be_success
 
@@ -221,7 +221,7 @@ describe 'Users API' do
     let(:user_with_posts) { FactoryGirl.create(:user_with_posts) }
 
     it 'returns all of the User\'s  Posts' do
-      get "/users/#{user_with_posts.id}/posts", api_key: user_with_posts.id, format: :json
+      get "/users/#{user_with_posts.id}/posts", api_key: api_key_for_user(user_with_posts), format: :json
 
       expect(response).to be_success
 
@@ -230,7 +230,7 @@ describe 'Users API' do
 
     context 'username passed instead of id' do
       it 'returns all of the User\'s  Posts' do
-        get "/users/#{user_with_posts.username}/posts", api_key: user_with_posts.id, format: :json
+        get "/users/#{user_with_posts.username}/posts", api_key: api_key_for_user(user_with_posts), format: :json
 
         expect(response).to be_success
 
@@ -240,7 +240,7 @@ describe 'Users API' do
 
     context 'include_drafts=true included in parameters' do
       it 'returns all of the User\'s  Posts including Morsel drafts' do
-        get "/users/#{user_with_posts.id}/posts", api_key: user_with_posts.id,
+        get "/users/#{user_with_posts.id}/posts", api_key: api_key_for_user(user_with_posts),
                                                   format: :json,
                                                   include_drafts: true
 
@@ -255,7 +255,7 @@ describe 'Users API' do
     let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
 
     it 'returns the User\'s Authorizations' do
-      get "/users/#{turd_ferg.id}/authorizations", api_key: turd_ferg.id, format: :json
+      get "/users/#{turd_ferg.id}/authorizations", api_key: api_key_for_user(turd_ferg), format: :json
 
       expect(response).to be_success
     end
@@ -277,7 +277,7 @@ describe 'Users API' do
         twitter_user.stub(:screen_name).and_return(dummy_screen_name)
         twitter_user.stub(:url).and_return("https://twitter.com/#{dummy_screen_name}")
 
-        post "/users/#{turd_ferg.id}/authorizations", api_key: turd_ferg.id,
+        post "/users/#{turd_ferg.id}/authorizations", api_key: api_key_for_user(turd_ferg),
                                                       provider: 'twitter',
                                                       token: dummy_token,
                                                       secret: dummy_secret,
@@ -311,7 +311,7 @@ describe 'Users API' do
 
         client.stub(:get_object).and_return(facebook_user)
 
-        post "/users/#{turd_ferg.id}/authorizations", api_key: turd_ferg.id,
+        post "/users/#{turd_ferg.id}/authorizations", api_key: api_key_for_user(turd_ferg),
                                                       provider: 'facebook',
                                                       token: dummy_token,
                                                       format: :json

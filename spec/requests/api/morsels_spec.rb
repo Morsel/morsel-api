@@ -7,7 +7,7 @@ describe 'Morsels API' do
     let(:existing_post) { FactoryGirl.create(:post) }
 
     it 'creates a Morsel' do
-      post '/morsels',  api_key: turd_ferg.id,
+      post '/morsels',  api_key: api_key_for_user(turd_ferg),
                         format: :json,
                         morsel: {
                           description: 'It\'s not a toomarh!',
@@ -27,7 +27,7 @@ describe 'Morsels API' do
 
     context 'post_id included in parameters' do
       it 'appends the Morsel to the Post' do
-        post '/morsels',  api_key: turd_ferg.id,
+        post '/morsels',  api_key: api_key_for_user(turd_ferg),
                           format: :json,
                           morsel: { description: 'On Top of the World.' },
                           post_id: existing_post.id
@@ -44,7 +44,7 @@ describe 'Morsels API' do
         let(:post_with_morsels) { FactoryGirl.create(:post_with_morsels) }
 
         it 'changes the sort_order' do
-          post '/morsels',  api_key: turd_ferg.id,
+          post '/morsels',  api_key: api_key_for_user(turd_ferg),
                             format: :json,
                             morsel: { description: 'Parabol.' },
                             post_id: post_with_morsels.id,
@@ -62,7 +62,7 @@ describe 'Morsels API' do
     context 'post_title included in parameters' do
       let(:expected_title) { 'Symphony of Destruction' }
       it 'changes the post_title' do
-        post '/morsels',  api_key: turd_ferg.id,
+        post '/morsels',  api_key: api_key_for_user(turd_ferg),
                           format: :json,
                           morsel: { description: 'Explooooooooooooooodes-aaah' },
                           post_title: expected_title
@@ -92,7 +92,7 @@ describe 'Morsels API' do
 
         client.stub(:put_connections).and_return('id' => '12345_67890')
 
-        post '/morsels',  api_key: user_with_facebook_authorization.id,
+        post '/morsels',  api_key: api_key_for_user(user_with_facebook_authorization),
                           format: :json,
                           morsel: { description: 'The Fresh Prince of Bel Air' },
                           post_to_facebook: true
@@ -115,7 +115,7 @@ describe 'Morsels API' do
         Twitter::Client.stub(:new).and_return(client)
         client.stub(:update).and_return(tweet)
 
-        post '/morsels',  api_key: user_with_twitter_authorization.id,
+        post '/morsels',  api_key: api_key_for_user(user_with_twitter_authorization),
                           format: :json,
                           morsel: { description: 'D.A.N.C.E.' },
                           post_to_twitter: true
@@ -128,7 +128,7 @@ describe 'Morsels API' do
 
     context 'draft set to true' do
       it 'should return draft set to true' do
-        post '/morsels',  api_key: turd_ferg.id,
+        post '/morsels',  api_key: api_key_for_user(turd_ferg),
                           format: :json,
                           morsel: { description: 'Mnemic', draft: true }
 
@@ -147,13 +147,14 @@ describe 'Morsels API' do
     let(:morsel) { FactoryGirl.create(:morsel) }
 
     it 'returns the Morsel' do
-      get "/morsels/#{morsel.id}", api_key: turd_ferg.id, format: :json
+      get "/morsels/#{morsel.id}", api_key: api_key_for_user(turd_ferg), format: :json
 
       expect(response).to be_success
 
-      expect_json_keys(json_data, morsel, %w(id description creator_id draft))
+      expect_json_keys(json_data, morsel, %w(id description creator_id))
       expect(json_data['liked']).to be_false
       expect(json_data['photos']).to_not be_nil
+      expect(json_data['draft']).to be_nil
     end
 
     context 'has a photo' do
@@ -163,7 +164,7 @@ describe 'Morsels API' do
       end
 
       it 'returns the User with the appropriate image sizes' do
-        get "/morsels/#{morsel.id}", api_key: turd_ferg.id, format: :json
+        get "/morsels/#{morsel.id}", api_key: api_key_for_user(turd_ferg), format: :json
 
         expect(response).to be_success
 
@@ -182,7 +183,7 @@ describe 'Morsels API' do
       end
 
       it 'returns the Morsel with Comments' do
-        get "/morsels/#{morsel.id}", api_key: turd_ferg.id, format: :json
+        get "/morsels/#{morsel.id}", api_key: api_key_for_user(turd_ferg), format: :json
 
         expect(response).to be_success
 
@@ -199,7 +200,7 @@ describe 'Morsels API' do
     let(:new_description) { 'The proof is in the puddin' }
 
     it 'updates the Morsel' do
-      put "/morsels/#{existing_morsel.id}", api_key: turd_ferg.id,
+      put "/morsels/#{existing_morsel.id}", api_key: api_key_for_user(turd_ferg),
                                             format: :json,
                                             morsel: { description: new_description }
 
@@ -214,7 +215,7 @@ describe 'Morsels API' do
       let(:last_morsel) { post_with_morsels_and_creator_and_draft.morsels.last }
 
       it 'changes the sort_order' do
-        put "/morsels/#{last_morsel.id}", api_key: turd_ferg.id,
+        put "/morsels/#{last_morsel.id}", api_key: api_key_for_user(turd_ferg),
                                           format: :json,
                                           morsel: { description: 'Just like a bus route.' },
                                           post_id: post_with_morsels_and_creator_and_draft.id,
@@ -233,7 +234,7 @@ describe 'Morsels API' do
     let(:existing_morsel) { FactoryGirl.create(:morsel) }
 
     it 'soft deletes the Morsel' do
-      delete "/morsels/#{existing_morsel.id}", api_key: turd_ferg.id, format: :json
+      delete "/morsels/#{existing_morsel.id}", api_key: api_key_for_user(turd_ferg), format: :json
 
       expect(response).to be_success
       expect(Morsel.where(id: existing_morsel.id)).to be_empty
@@ -244,7 +245,7 @@ describe 'Morsels API' do
     let(:morsel_with_creator_and_comments) { FactoryGirl.create(:morsel_with_creator_and_comments) }
 
     it 'returns a list of Comments for the Morsel' do
-      get "/morsels/#{morsel_with_creator_and_comments.id}/comments", api_key: turd_ferg.id, format: :json
+      get "/morsels/#{morsel_with_creator_and_comments.id}/comments", api_key: api_key_for_user(turd_ferg), format: :json
 
       expect(response).to be_success
 
@@ -256,7 +257,7 @@ describe 'Morsels API' do
     let(:existing_morsel) { FactoryGirl.create(:morsel) }
 
     it 'creates a Comment for the Morsel' do
-      post "/morsels/#{existing_morsel.id}/comments", api_key: turd_ferg.id,
+      post "/morsels/#{existing_morsel.id}/comments", api_key: api_key_for_user(turd_ferg),
                                                       format: :json,
                                                       comment: {
                                                         description: 'Drop it like it\'s hot.' }
@@ -281,7 +282,7 @@ describe 'Morsels API' do
       end
 
       it 'soft deletes the Comment' do
-        delete "/comments/#{existing_comment.id}", api_key: turd_ferg.id, format: :json
+        delete "/comments/#{existing_comment.id}", api_key: api_key_for_user(turd_ferg), format: :json
 
         expect(response).to be_success
         expect(Comment.where(id: existing_comment.id)).to be_empty
@@ -295,7 +296,7 @@ describe 'Morsels API' do
       end
 
       it 'soft deletes the Comment' do
-        delete "/comments/#{existing_comment.id}", api_key: turd_ferg.id, format: :json
+        delete "/comments/#{existing_comment.id}", api_key: api_key_for_user(turd_ferg), format: :json
 
         expect(response).to be_success
         expect(Comment.where(id: existing_comment.id)).to be_empty
@@ -304,7 +305,7 @@ describe 'Morsels API' do
 
     context 'current_user is not the Comment or Morsel creator' do
       it 'does NOT soft delete the Comment' do
-        delete "/comments/#{existing_comment.id}", api_key: turd_ferg.id, format: :json
+        delete "/comments/#{existing_comment.id}", api_key: api_key_for_user(turd_ferg), format: :json
 
         expect(response).to_not be_success
         expect(Comment.where(id: existing_comment.id)).to_not be_empty
