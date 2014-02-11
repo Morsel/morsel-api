@@ -4,10 +4,12 @@ class RegistrationsController < Devise::RegistrationsController
   include JSONEnvelopable
 
   def create
-    @user = User.new(UsersController::UserParams.build(params))
-    unless @user.save
+    user = User.new(UsersController::UserParams.build(params))
+    unless user.save
       warden.custom_failure!
-      render_json_errors(@user.errors, :unprocessable_entity)
+      render_json_errors(user.errors, :unprocessable_entity)
+    else
+      custom_respond_with user, serializer: UserWithAuthTokenSerializer
     end
   end
 end

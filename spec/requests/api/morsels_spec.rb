@@ -78,7 +78,6 @@ describe 'Morsels API' do
 
     context 'post_to_facebook included in parameters' do
       let(:user_with_facebook_authorization) { FactoryGirl.create(:user_with_facebook_authorization) }
-      let(:expected_fb_post_url) { 'https://facebook.com/12345_67890' }
 
       it 'posts to Facebook' do
         dummy_name = 'Facebook User'
@@ -101,8 +100,6 @@ describe 'Morsels API' do
         expect(response).to be_success
 
         expect(json_data['id']).to_not be_nil
-
-        expect(json_data['fb_post_url']).to eq(expected_fb_post_url)
       end
     end
 
@@ -126,8 +123,6 @@ describe 'Morsels API' do
         expect(response).to be_success
 
         expect(json_data['id']).to_not be_nil
-
-        expect(json_data['tweet_url']).to eq(expected_tweet_url)
       end
     end
 
@@ -215,21 +210,21 @@ describe 'Morsels API' do
     end
 
     context 'post_id and sort_order included in parameters' do
-      let(:post_with_morsels) { FactoryGirl.create(:post_with_morsels) }
-      let(:last_morsel) { post_with_morsels.morsels.last }
+      let(:post_with_morsels_and_creator_and_draft) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
+      let(:last_morsel) { post_with_morsels_and_creator_and_draft.morsels.last }
 
       it 'changes the sort_order' do
         put "/morsels/#{last_morsel.id}", api_key: turd_ferg.id,
                                           format: :json,
                                           morsel: { description: 'Just like a bus route.' },
-                                          post_id: post_with_morsels.id,
+                                          post_id: post_with_morsels_and_creator_and_draft.id,
                                           sort_order: 1
 
         expect(response).to be_success
 
         expect(json_data['id']).to_not be_nil
 
-        expect(post_with_morsels.morsel_ids.first).to eq(json_data['id'])
+        expect(post_with_morsels_and_creator_and_draft.morsel_ids.first).to eq(json_data['id'])
       end
     end
   end

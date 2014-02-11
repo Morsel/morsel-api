@@ -21,13 +21,6 @@ class MorselPost < ActiveRecord::Base
   validates :morsel_id,  uniqueness: { scope: :post_id }
   validates :sort_order, uniqueness: { scope: :post_id }
 
-  def self.increment_sort_order_for_post_id(post_id, starting_sort_order = 0)
-    MorselPost
-      .where(post_id: post_id)
-      .where('sort_order >= ?', starting_sort_order)
-      .update_all('sort_order = sort_order + 1')
-  end
-
   private
 
   def ensure_sort_order

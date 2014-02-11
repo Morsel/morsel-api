@@ -14,6 +14,7 @@ RAILS_ENV=development
 PORT=3000
 
 MORSEL_WEB_URL=https://eatmorsel.com
+PROFILER_PASSWORD=
 
 DEVELOPER_EMAIL=turdferg@eatmorsel.com
 

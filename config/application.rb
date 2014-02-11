@@ -25,7 +25,10 @@ module MorselApp
       end
     end
 
+    config.middleware.use ::Rack::PerftoolsProfiler, bundler: true, password: ENV['PROFILER_PASSWORD']
+
     config.autoload_paths += Dir[File.join(Rails.root, 'lib', 'core_ext', '*.rb')].each { |l| require l }
+    config.autoload_paths += Dir[File.join(Rails.root, 'lib', 'responders', '*.rb')].each { |l| require l }
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

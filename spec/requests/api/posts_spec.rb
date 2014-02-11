@@ -18,6 +18,28 @@ describe 'Posts API' do
       expect(json_data.first['morsels'].count).to eq(3)
     end
 
+    context 'performance' do
+      before do
+        require 'benchmark'
+      end
+
+      it 'should take time' do
+        Benchmark.realtime { get('/posts', api_key: turd_ferg.id, format: :json) }.should < 0.5
+      end
+
+      context 'twenty Posts' do
+        before do
+          20.times { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
+        end
+
+        it 'should take time' do
+          Benchmark.realtime {
+            get '/posts', api_key: turd_ferg.id, format: :json
+          }.should < 1.0
+        end
+      end
+    end
+
     context 'user_id included in parameters' do
       let(:post_with_morsels_and_creator_and_draft) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
 
@@ -34,6 +56,28 @@ describe 'Posts API' do
 
         json_data.each do |morsel_json|
           expect(morsel_json['creator_id']).to eq(creator_id)
+        end
+      end
+
+      context 'performance' do
+        before do
+          require 'benchmark'
+        end
+
+        it 'should take time' do
+          Benchmark.realtime { get('/posts', api_key: turd_ferg.id, format: :json) }.should < 0.5
+        end
+
+        context 'twenty Posts' do
+          before do
+            20.times { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
+          end
+
+          it 'should take time' do
+            Benchmark.realtime {
+              get '/posts', api_key: turd_ferg.id, format: :json
+            }.should < 1.25
+          end
         end
       end
     end
@@ -101,18 +145,18 @@ describe 'Posts API' do
 
   describe 'POST /posts/{:post_id}/append posts#append' do
     let(:existing_post) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
-    let(:morsel) { FactoryGirl.create(:morsel) }
+    let(:morsel_with_creator) { FactoryGirl.create(:morsel_with_creator) }
 
     it 'appends the Morsel to the Post' do
       post "/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
                                                 format: :json,
-                                                morsel_id: morsel.id
+                                                morsel_id: morsel_with_creator.id
 
       expect(response).to be_success
 
       expect(json_data['id']).to eq(existing_post.id)
 
-      expect(existing_post.morsels).to include(morsel)
+      expect(existing_post.morsels).to include(morsel_with_creator)
 
       expect(json_data['morsels'].count).to eq(4)
     end
@@ -139,7 +183,7 @@ describe 'Posts API' do
       it 'changes the sort_order' do
         post "/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
                                                   format: :json,
-                                                  morsel_id: morsel.id,
+                                                  morsel_id: morsel_with_creator.id,
                                                   sort_order: 1
 
         expect(response).to be_success
@@ -155,13 +199,13 @@ describe 'Posts API' do
         post "/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
                                                   format: :json,
                                                   include_drafts: true,
-                                                  morsel_id: morsel.id
+                                                  morsel_id: morsel_with_creator.id
 
         expect(response).to be_success
 
         expect(json_data['id']).to eq(existing_post.id)
 
-        expect(existing_post.morsels).to include(morsel)
+        expect(existing_post.morsels).to include(morsel_with_creator)
 
         expect(json_data['morsels'].count).to eq(5)
       end

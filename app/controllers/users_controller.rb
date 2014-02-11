@@ -2,17 +2,23 @@ class UsersController < ApiController
   respond_to :json
 
   def index
-    @users = User.all
+    custom_respond_with User.all
   end
 
   def show
-    @user = User.find_by_id_or_username(params[:user_id_or_username])
-    raise ActiveRecord::RecordNotFound if @user.nil?
+    user = User.includes(:authorizations, :posts, :morsels).find_by_id_or_username(params[:user_id_or_username])
+    raise ActiveRecord::RecordNotFound if user.nil?
+
+    custom_respond_with user, serializer: UserWithLikeAndMorselCountSerializer
   end
 
   def update
-    @user = User.find(params[:id])
-    @user.update_attributes(UserParams.build(params))
+    user = User.find(params[:id])
+    if user.update_attributes(UserParams.build(params))
+      custom_respond_with user, serializer: UserWithLikeAndMorselCountSerializer
+    else
+      render_json_errors(user.errors, :unprocessable_entity)
+    end
   end
 
   class UserParams

@@ -29,7 +29,7 @@ class Authorization < ActiveRecord::Base
   validates :user, presence: true
   validates_associated :user
 
-  def self.build_authorization(provider, user, token, secret = nil)
+  def self.create_authorization(provider, user, token, secret = nil)
     authorization = user.authorizations.build(provider: provider,
                                               token: token,
                                               secret: secret,

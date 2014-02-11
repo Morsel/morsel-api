@@ -21,6 +21,10 @@ guard 'rails_best_practices' do
   watch(%r{^app/(.+)\.rb$})
 end
 
+guard 'delayed', environment: 'development', command: 'bin/delayed_job' do
+  watch(%r{^app/(.+)\.rb})
+end
+
 guard 'spork', rspec_env: { RAILS_ENV: 'test' } do
   watch(%r{^config/initializers/.+\.rb$})
   watch('config/application.rb')
