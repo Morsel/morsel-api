@@ -67,6 +67,19 @@ class Morsel < ActiveRecord::Base
     "#{Settings.morsel.web_url}/#{creator.username}/#{post.id}/#{post.cached_slug}/#{post.morsels.find_index(self) + 1}"
   end
 
+  def photos_hash
+    if photo_url.present?
+      {
+        _104x104: photo_url(:_104x104),
+        _208x208: photo_url(:_208x208),
+        _320x214: photo_url(:_320x214),
+        _640x428: photo_url(:_640x428),
+        _640x640: photo_url(:_640x640)
+      }
+    end
+  end
+
+
   private
 
   def description_or_photo_present?

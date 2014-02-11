@@ -9,7 +9,7 @@ describe 'Posts API' do
     end
 
     it 'returns a list of Posts' do
-      get '/posts', api_key: turd_ferg.id, format: :json
+      get '/posts', api_key: api_key_for_user(turd_ferg), format: :json
 
       expect(response).to be_success
 
@@ -24,7 +24,7 @@ describe 'Posts API' do
       end
 
       it 'should take time' do
-        Benchmark.realtime { get('/posts', api_key: turd_ferg.id, format: :json) }.should < 0.5
+        Benchmark.realtime { get('/posts', api_key: api_key_for_user(turd_ferg), format: :json) }.should < 0.5
       end
 
       context 'twenty Posts' do
@@ -34,8 +34,8 @@ describe 'Posts API' do
 
         it 'should take time' do
           Benchmark.realtime {
-            get '/posts', api_key: turd_ferg.id, format: :json
-          }.should < 1.0
+            get '/posts', api_key: api_key_for_user(turd_ferg), format: :json
+          }.should < 1.25
         end
       end
     end
@@ -44,7 +44,7 @@ describe 'Posts API' do
       let(:post_with_morsels_and_creator_and_draft) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
 
       it 'returns all Posts for user_id' do
-        get '/posts', api_key: turd_ferg.id,
+        get '/posts', api_key: api_key_for_user(turd_ferg),
                       user_id_or_username: post_with_morsels_and_creator_and_draft.creator.id,
                       format: :json
 
@@ -65,7 +65,7 @@ describe 'Posts API' do
         end
 
         it 'should take time' do
-          Benchmark.realtime { get('/posts', api_key: turd_ferg.id, format: :json) }.should < 0.5
+          Benchmark.realtime { get('/posts', api_key: api_key_for_user(turd_ferg), format: :json) }.should < 0.5
         end
 
         context 'twenty Posts' do
@@ -75,7 +75,7 @@ describe 'Posts API' do
 
           it 'should take time' do
             Benchmark.realtime {
-              get '/posts', api_key: turd_ferg.id, format: :json
+              get '/posts', api_key: api_key_for_user(turd_ferg), format: :json
             }.should < 1.25
           end
         end
@@ -84,7 +84,7 @@ describe 'Posts API' do
 
     context 'include_drafts=true included in parameters' do
       it 'returns all Posts including Morsel drafts' do
-        get '/posts', api_key: turd_ferg.id,
+        get '/posts', api_key: api_key_for_user(turd_ferg),
                       format: :json,
                       include_drafts: true
 
@@ -101,7 +101,7 @@ describe 'Posts API' do
     let(:post_with_morsels_and_creator_and_draft) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
 
     it 'returns the Post' do
-      get "/posts/#{post_with_morsels_and_creator_and_draft.id}", api_key: turd_ferg.id, format: :json
+      get "/posts/#{post_with_morsels_and_creator_and_draft.id}", api_key: api_key_for_user(turd_ferg), format: :json
 
       expect(response).to be_success
 
@@ -114,7 +114,7 @@ describe 'Posts API' do
     context 'include_drafts=true included in parameters' do
       let(:post_with_morsels_and_creator_and_draft) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
       it 'returns the Post including Morsel drafts' do
-        get "/posts/#{post_with_morsels_and_creator_and_draft.id}", api_key: turd_ferg.id,
+        get "/posts/#{post_with_morsels_and_creator_and_draft.id}", api_key: api_key_for_user(turd_ferg),
                                                                     format: :json,
                                                                     include_drafts: true
 
@@ -132,7 +132,7 @@ describe 'Posts API' do
     let(:new_title) { 'Shy Ronnie 2: Ronnie & Clyde' }
 
     it 'updates the Post' do
-      put "/posts/#{existing_post.id}", api_key: turd_ferg.id,
+      put "/posts/#{existing_post.id}", api_key: api_key_for_user(turd_ferg),
                                         format: :json,
                                         post: { title: new_title }
 
@@ -148,7 +148,7 @@ describe 'Posts API' do
     let(:morsel_with_creator) { FactoryGirl.create(:morsel_with_creator) }
 
     it 'appends the Morsel to the Post' do
-      post "/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
+      post "/posts/#{existing_post.id}/append", api_key: api_key_for_user(turd_ferg),
                                                 format: :json,
                                                 morsel_id: morsel_with_creator.id
 
@@ -165,7 +165,7 @@ describe 'Posts API' do
       let(:morsel_in_existing_post) { existing_post.morsels.first }
 
       it 'returns an error' do
-        post "/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
+        post "/posts/#{existing_post.id}/append", api_key: api_key_for_user(turd_ferg),
                                                   format: :json,
                                                   morsel_id: morsel_in_existing_post.id
 
@@ -181,7 +181,7 @@ describe 'Posts API' do
       let(:existing_post) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
 
       it 'changes the sort_order' do
-        post "/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
+        post "/posts/#{existing_post.id}/append", api_key: api_key_for_user(turd_ferg),
                                                   format: :json,
                                                   morsel_id: morsel_with_creator.id,
                                                   sort_order: 1
@@ -196,7 +196,7 @@ describe 'Posts API' do
 
     context 'include_drafts=true included in parameters' do
       it 'appends the Morsel to the Post and includes drafts in the response' do
-        post "/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
+        post "/posts/#{existing_post.id}/append", api_key: api_key_for_user(turd_ferg),
                                                   format: :json,
                                                   include_drafts: true,
                                                   morsel_id: morsel_with_creator.id
@@ -217,7 +217,7 @@ describe 'Posts API' do
     let(:morsel_in_existing_post) { existing_post.morsels.first }
 
     it 'unappends the Morsel from the Post' do
-      delete "/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
+      delete "/posts/#{existing_post.id}/append", api_key: api_key_for_user(turd_ferg),
                                                   format: :json,
                                                   morsel_id: morsel_in_existing_post.id
 
@@ -229,7 +229,7 @@ describe 'Posts API' do
     context 'relationship not found' do
       let(:morsel) { FactoryGirl.create(:morsel) }
       it 'returns an error' do
-        delete "/posts/#{existing_post.id}/append", api_key: turd_ferg.id,
+        delete "/posts/#{existing_post.id}/append", api_key: api_key_for_user(turd_ferg),
                                                     format: :json,
                                                     morsel_id: morsel.id
 

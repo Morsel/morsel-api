@@ -3,10 +3,11 @@ class PostSerializer < ActiveModel::Serializer
              :title,
              :creator_id,
              :created_at,
-             :slug,
-             :morsels
+             :slug
 
   has_one :creator
+
+  has_many :morsels
 
   def slug
     object.cached_slug

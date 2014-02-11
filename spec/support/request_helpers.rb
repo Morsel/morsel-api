@@ -23,5 +23,9 @@ module Requests
         expect(json[key]).to be_nil
       end
     end
+
+    def api_key_for_user(user)
+      "#{user.id}:#{user.authentication_token}"
+    end
   end
 end

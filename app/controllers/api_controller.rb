@@ -19,29 +19,19 @@ class ApiController < ActionController::Base
 
   # api_key is expected to be in the format: "#{user.id}:#{user.authentication_token}"
   def authenticate_user_from_token!
-    # !!!: for now we only auth on user_id exists
-    user_id  = params[:api_key].presence
-    user = user_id && User.find(user_id)
+    api_key  = params[:api_key].presence
+    split_token = api_key.split(':')
+    unauthorized_token and return unless split_token.length == 2
 
-    if user
+    user = api_key && User.find(split_token[0])
+
+    if user && Devise.secure_compare(user.authentication_token, api_key.split(':')[1])
       sign_in user, store: false, bypass: true
+      # sign_in user, store: false  # Require token for every request
     else
       unauthorized_token
       return
     end
-
-    # api_key  = params[:api_key].presence
-    # split_token = api_key.split(':')
-    # unauthorized_token and return unless split_token.length == 2
-
-    # user = api_key && User.find(split_token[0])
-
-    # if user && Devise.secure_compare(user.authentication_token, api_key.split(':')[1])
-    #   sign_in user, store: false  # Require token for every request
-    # else
-    #   unauthorized_token
-    #   return
-    # end
   end
 
   def record_not_found(error)
