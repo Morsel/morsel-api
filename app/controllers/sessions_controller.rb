@@ -1,5 +1,4 @@
 class SessionsController < Devise::SessionsController
-  layout 'api'
   include JSONEnvelopable
   prepend_before_filter :require_no_authentication, only: [:create]
 
