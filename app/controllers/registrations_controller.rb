@@ -1,5 +1,4 @@
 class RegistrationsController < Devise::RegistrationsController
-  layout 'api'
   respond_to :json
   include JSONEnvelopable
 
