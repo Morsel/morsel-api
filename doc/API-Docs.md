@@ -50,14 +50,14 @@
     - [User (w/ Auth Token)](#user-w-auth-token)
 
 
-## Overview
-### URI Structure
+# Overview
+## URI Structure
 All Morsel API requests start with the URL for the API host. The next segment of the URI path depends on the type of request.
 
-### Versioning
+## Versioning
 Versioning will be part of the HTTP HEADER instead of the URL. We'll worry about it when we get to that point.
 
-### Response Format
+## Response Format
 The API returns a JSON-encoded object (content-type: application/json) that wraps the response data with extra information such as errors and other metadata.
 
 So if you request a user: ```/users/1```
@@ -96,7 +96,7 @@ expect to get an array of resources in return:
   }]
 ```
 
-### Errors
+## Errors
 
 Errors are returned as a dictionary in ```errors```. Each key represents the resource the error originated from or 'api' if none is specified
 ```json
@@ -118,7 +118,7 @@ Errors are returned as a dictionary in ```errors```. Each key represents the res
 }
 ```
 
-### About the API Documentation
+## About the API Documentation
 __URI Conventions__
 
 | Notation            | Meaning       | Example  |
@@ -127,19 +127,19 @@ __URI Conventions__
 | Square brackets []  | Optional Item | API_HOST/user/{user_id}/posts[/type] <br /><i>Specifying a Post type is optional (NOTE: This is just an example).</i> |
 
 
-## Authentication
+# Authentication
 The API uses two different levels of authentication, depending on the method.
 
 1. __None:__ No authentication. Anybody can query the method.
 2. __API key:__ Requires an API key. User API keys are in the following format: {user.id}:{user.auth_token} Example: api_key=3:25TLfL6tvc_Qzx52Zh9q
 
 
-## User Methods
+# User Methods
 
-### POST ```/users``` - Create a new User
+## POST ```/users``` - Create a new User
 Creates a new User and returns an authentication_token
 
-__Request__
+### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
@@ -152,55 +152,58 @@ __Request__
 | user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
 | user[bio] | String | The bio for the new User. Maximum 255 characters. | | |
 
-__Response__
+### Response
 
 | __data__ |
 | -------- |
 | Created [User (w/ Auth Token)](#user-w-auth-token) |
 
-***
+<br />
+<br />
 
-### POST ```/users/sign_in``` - User Authentication
+## POST ```/users/sign_in``` - User Authentication
 Authenticates a User and returns an authentication_token
 
-__Request__
+### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | user[email] | String | The email address for the User | | X |
 | user[password] | String | The password for the User. Minimum 8 characters. | | X |
 
-__Response__
+### Response
 
 | __data__ |
 | -------- |
 | Authenticated [User (w/ Auth Token)](#user-w-auth-token) |
 
-__Unique Errors__
+### Unique Errors
 
 | Message | Status | Description |
 | ------- | ------ | ----------- |
 | __Invalid email or password__ | 401 (Unauthorized) or 422 (Unprocessable Entity) | The email or password specified are invalid |
 
-***
+<br />
+<br />
 
-### GET ```/users/{user_id|user_username}``` - User
+## GET ```/users/{user_id|user_username}``` - User
 Returns the User with the specified ```user_id``` or ```user_username```
 NOTE: In MTP, this will return the User's Posts and their Morsels. After that we'll need to use pagination since there may be too many Posts and Morsels to return in a response.
 
-__Response__
+### Response
 
 | Condition | __data__ |
 | --------- | -------- |
 | Authenticated User's ID or Username | [User (w/ Private Attributes)](#user-w-private-attributes) |
 | Everyone Else | [User](#user) |
 
-***
+<br />
+<br />
 
-### PUT ```/users/{user_id}``` - Update User
+## PUT ```/users/{user_id}``` - Update User
 Updates the User with the specified ```user_id```
 
-__Request__
+### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
@@ -213,34 +216,36 @@ __Request__
 | user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
 | user[bio] | String | The bio for the new User. Maximum 255 characters | | |
 
-__Response__
+### Response
 
 | Condition | __data__ |
 | --------- | -------- |
 | Authenticated User's ID or Username | Updated [User (w/ Private Attributes)](#user-w-private-attributes) |
 | Everyone Else | Updated [User](#user) |
 
-***
+<br />
+<br />
 
-### GET ```/users/{user_id|user_username}/posts``` - User Posts
+## GET ```/users/{user_id|user_username}/posts``` - User Posts
 Returns the Posts for the User with the specified ```user_id``` or ```user_username```.
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
 
-__Response__
+### Response
 
 | __data__ |
 | -------- |
 | Array of [Post](#post) |
 
-***
+<br />
+<br />
 
-### POST ```/users/{user_id}/authorizations``` - Create User Authorizations
+## POST ```/users/{user_id}/authorizations``` - Create User Authorizations
 Creates a new User authorization
 
-__Request__
+### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
@@ -248,32 +253,34 @@ __Request__
 | authorization[token] | String | The User's Access Token for the service. | | X |
 | authorization[secret] | String | The User's Access Token Secret for the service. Only required for Twitter. | | Twitter |
 
-__Response__
+### Response
 
 | __data__ |
 | -------- |
 | Created [Authorization](#authorization) |
 
-***
+<br />
+<br />
 
-### GET ```/users/{user_id}/authorizations``` - User Authorizations
+## GET ```/users/{user_id}/authorizations``` - User Authorizations
 Returns the User's authorizations
 
-__Response__
+### Response
 
 | __data__ |
 | -------- |
 | Array of [Authorization](#authorization) |
 
-***
+<br />
+<br />
 
 
-## Morsel Methods
+# Morsel Methods
 
-### POST ```/morsels``` - Create a new Morsel
+## POST ```/morsels``` - Create a new Morsel
 Created a new Morsel for the current User. Optionally append a Morsel to the Post with the specified ```post_id```
 
-__Request__
+### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
@@ -286,7 +293,7 @@ __Request__
 | post_to_facebook | Boolean | Post to the current_user's Facebook wall with the Post's title and Morsel description (if they exist) along with a link to the Morsel. | false | |
 | post_to_twitter | Boolean | Send a Tweet from the current_user with the Post's title and Morsel description (if they exist) along with a link to the Morsel. If the title and description are too long they will be truncated to allow enough room for the links. | false | |
 
-__Response__
+### Response
 
 | Condition | __data__ |
 | --------- | -------- |
@@ -295,23 +302,25 @@ __Response__
 | Authenticated && Appended to Post | Created [Morsel (Authenticated w/ Post)](#morsel-authenticated-w-post) |
 | Default | Created [Morsel](#morsel) |
 
-***
+<br />
+<br />
 
-### GET ```/morsels/{morsel_id}``` - Morsel
+## GET ```/morsels/{morsel_id}``` - Morsel
 Returns Morsel with the specified ```morsel_id```
 
-__Response__
+### Response
 
 | __data__ |
 | -------- |
 | [Morsel (Authenticated w/ Comments)](#morsel-authenticated-w-comments) |
 
-***
+<br />
+<br />
 
-### PUT ```/morsels/{morsel_id}``` - Update Morsel
+## PUT ```/morsels/{morsel_id}``` - Update Morsel
 Updates the Morsel with the specified ```morsel_id```
 
-__Request__
+### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
@@ -321,174 +330,184 @@ __Request__
 | sort_order | Number | Changes the ```sort_order``` of a Post when combined with ```post_id```. | | |
 | morsel[draft] | Boolean | Set to true if the Morsel is a draft | false | |
 
-__Response__
+### Response
 
 | Condition | __data__ |
 | --------- | -------- |
 | Post ID Included | Updated [Morsel (Authenticated w/ Post)](#morsel-authenticated-w-post) |
 | Default | Updated [Morsel (Authenticated w/ Comments)](#morsel-authenticated-w-comments) |
 
-***
+<br />
+<br />
 
-### DELETE ```/morsels/{morsel_id}``` - Delete Morsel
+## DELETE ```/morsels/{morsel_id}``` - Delete Morsel
 Deletes the Morsel with the specified ```morsel_id```.
 
-__Response__
+### Response
 
 | Status Code |
 | ----------- |
 |         200 |
 
-***
+<br />
+<br />
 
-### POST ```/morsels/{morsel_id}/like``` - Like Morsel
+## POST ```/morsels/{morsel_id}/like``` - Like Morsel
 Likes the Morsel with the specified ```morsel_id``` for the authenticated User
 
-__Response__
+### Response
 
 | Status Code |
 | ----------- |
 |         200 |
 
-__Unique Errors__
+### Unique Errors
 
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
 | __Already liked__ | 400 (Bad Request) | The Morsel is already liked by the User |
 
-***
+<br />
+<br />
 
-### DELETE ```/morsels/{morsel_id}/like``` - Unlike Morsel
+## DELETE ```/morsels/{morsel_id}/like``` - Unlike Morsel
 Unlikes the Morsel with the specified ```morsel_id``` for the authenticated User
 
-__Response__
+### Response
 
 | Status Code |
 | ----------- |
 |         200 |
 
-__Unique Errors__
+### Unique Errors
 
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
 | __Not liked__ | 404 (Not Found) | The Morsel is not liked by the User |
 
-***
+<br />
+<br />
 
-### POST ```/morsels/{morsel_id}/comments``` - Create Comment
+## POST ```/morsels/{morsel_id}/comments``` - Create Comment
 Create a Comment for the Morsel with the specified ```morsel_id```
 
-__Request__
+### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | comment[description] | String | The description for the Comment | | |
 
-__Response__
+### Response
 
 | __data__ |
 | -------- |
 | Created [Comment](#comment) |
 
-__Unique Errors__
+### Unique Errors
 
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
 | __Morsel not found__ | 404 (Not Found) | The Morsel could not be found |
 
-***
+<br />
+<br />
 
-### GET ```/morsels/{morsel_id}/comments``` - Morsel Comments
+## GET ```/morsels/{morsel_id}/comments``` - Morsel Comments
 List the Comments for the Morsel with the specified ```morsel_id```
 
-__Response__
+### Response
 
 | __data__ |
 | -------- |
 | Array of [Comment](#comment) |
 
-__Unique Errors__
+### Unique Errors
 
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
 | __Morsel not found__ | 404 (Not Found) | The Morsel could not be found |
 
-***
+<br />
+<br />
 
-### DELETE ```/comments/{comment_id}``` - Delete Comment
+## DELETE ```/comments/{comment_id}``` - Delete Comment
 Deletes the Comment with the specified ```comment_id``` if the authenticated User is the Comment or Morsel Creator
 
-__Response__
+### Response
 
 | Status Code |
 | ----------- |
 |         200 |
 
-__Unique Errors__
+### Unique Errors
 
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
 | __Comment not found__ | 404 (Not Found) | The Comment could not be found |
 | __Forbidden__ | 403 (Forbidden) | The Authenticated User is not authorized to delete the Comment |
 
-***
+<br />
+<br />
 
 
-## Post Methods
+# Post Methods
 
-### GET ```/posts``` - Posts
+## GET ```/posts``` - Posts
 Returns the Posts for all Users.
 
-__Request__
+### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
 
-__Response__
+### Response
 
 | __data__ |
 | -------- |
 | Array of [Post](#post) |
 
-***
+<br />
+<br />
 
-### GET ```/posts/{post_id}``` -  Post
+## GET ```/posts/{post_id}``` -  Post
 Returns the Post with the specified ```post_id```
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
 
-__Response__
+### Response
 
 | __data__ |
 | -------- |
 | [Post](#post) |
 
-***
+<br />
+<br />
 
-### PUT ```/posts/{post_id}``` - Update Post
+## PUT ```/posts/{post_id}``` - Update Post
 Updates the Post with the specified ```post_id```
 
-__Request__
+### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | post[title]         | String  | The title for the Post. Changing this will change the slug. | | |
 
-__Response__
+### Response
 
 | __data__ |
 | -------- |
 | Updated [Post](#post) |
 
-***
+<br />
+<br />
 
-### POST ```/posts/{post_id}/append``` - Append Morsel to Post
+## POST ```/posts/{post_id}/append``` - Append Morsel to Post
 Appends a Morsel with the specified ```morsel_id``` to the Post with the specified ```post_id```
 
-__Request__
+### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
@@ -496,50 +515,52 @@ __Request__
 | sort_order         | Number  | The ```sort_order``` for the Morsel in the Post | end of Post | |
 | include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
 
-__Response__
+### Response
 
 | __data__ |
 | -------- |
 | Updated [Post](#post) |
 
-__Unique Errors__
+### Unique Errors
 
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
 | __Relationship already exists__ | 400 (Bad Request) | The Morsel is already appended to the Post |
 
-***
+<br />
+<br />
 
-### DELETE ```/posts/{post_id}/append``` - Detach Morsel from Post
+## DELETE ```/posts/{post_id}/append``` - Detach Morsel from Post
 Detaches the Morsel with the specified ```morsel_id``` from the Post with the specified ```post_id```
 
-__Request__
+### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | morsel_id         | Number  | ID of the Morsel to detach | | x |
 
-__Response__
+### Response
 
 | Status Code |
 | ----------- |
 |         200 |
 
-__Unique Errors__
+### Unique Errors
 
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
 | __Relationship not found__ | 404 (Not Found) | The Morsel is not appended to the Post |
 
-***
+<br />
+<br />
 
 
-## Subscriber Methods
+# Subscriber Methods
 
-### POST ```/subscribers``` - Create a new Subscriber
+## POST ```/subscribers``` - Create a new Subscriber
 Creates a new Subscriber
 
-__Request__
+### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
@@ -549,20 +570,21 @@ __Request__
 | subscriber[role] | String | The role of the subscriber. Currently only 'chef' is expected | | |
 | subscriber[user_id] | String | The ID of the User who referred the User | | |
 
-__Response__
+### Response
 
 | Status Code |
 | ----------- |
 |         200 |
 
-***
+<br />
+<br />
 
 
-## Response Objects
+# Response Objects
 
-### Authorization Objects
+## Authorization Objects
 
-#### Authorization
+### Authorization
 
 ```json
 {
@@ -577,9 +599,9 @@ __Response__
 }
 ```
 
-### Comment Objects
+## Comment Objects
 
-#### Comment
+### Comment
 
 ```json
 {
@@ -591,9 +613,9 @@ __Response__
 }
 ```
 
-### Morsel Objects
+## Morsel Objects
 
-#### Morsel
+### Morsel
 
 ```json
   {
@@ -611,7 +633,7 @@ __Response__
   }
 ```
 
-#### Morsel (w/ Post)
+### Morsel (w/ Post)
 post_id exists
 
 ```json
@@ -633,7 +655,7 @@ post_id exists
   }
 ```
 
-#### Morsel (Authenticated)
+### Morsel (Authenticated)
 api_key exists
 
 ```json
@@ -654,7 +676,7 @@ api_key exists
   }
 ```
 
-#### Morsel (Authenticated w/ Post)
+### Morsel (Authenticated w/ Post)
 api_key && post_id exist
 
 ```json
@@ -678,7 +700,7 @@ api_key && post_id exist
   }
 ```
 
-#### Morsel (Authenticated w/ Comments)
+### Morsel (Authenticated w/ Comments)
 ditto as w/ Post if post_id exists
 
 ```json
@@ -712,9 +734,9 @@ ditto as w/ Post if post_id exists
   }
 ```
 
-### Post Objects
+## Post Objects
 
-#### Post
+### Post
 
 ```json
 {
@@ -759,9 +781,9 @@ ditto as w/ Post if post_id exists
 ```
 
 
-### User Objects
+## User Objects
 
-#### User
+### User
 
 ```json
 {
@@ -781,7 +803,7 @@ ditto as w/ Post if post_id exists
 }
 ```
 
-#### User (w/ Private Attributes)
+### User (w/ Private Attributes)
 You'll only see these if the api_key matches the User you're looking up
 
 ```json
@@ -808,7 +830,7 @@ You'll only see these if the api_key matches the User you're looking up
 }
 ```
 
-#### User (w/ Auth Token)
+### User (w/ Auth Token)
 Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```auth_token```
 
 ```json
