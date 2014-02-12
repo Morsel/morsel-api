@@ -20,6 +20,8 @@ class ApiController < ActionController::Base
   # api_key is expected to be in the format: "#{user.id}:#{user.authentication_token}"
   def authenticate_user_from_token!
     api_key  = params[:api_key].presence
+    unauthorized_token and return if api_key == nil
+
     split_token = api_key.split(':')
     unauthorized_token and return unless split_token.length == 2
 
