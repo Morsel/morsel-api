@@ -31,6 +31,23 @@
   - [DELETE ```/posts/{post_id}/append``` - Detach Morsel from Post](#delete-postspost_idappend---detach-morsel-from-post)
 - [Subscriber Methods](#subscriber-methods)
   - [POST ```/subscribers``` - Create a new Subscriber](#post-subscribers---create-a-new-subscriber)
+- [Response Objects](#response-objects)
+  - [Authorization Objects](#authorization-objects)
+    - [Authorization](#authorization)
+  - [Comment Objects](#comment-objects)
+    - [Comment](#comment)
+  - [Morsel Objects](#morsel-objects)
+    - [Morsel](#morsel)
+    - [Morsel (w/ Post)](#morsel-w-post)
+    - [Morsel (Authenticated)](#morsel-authenticated)
+    - [Morsel (Authenticated w/ Post)](#morsel-authenticated-w-post)
+    - [Morsel (Authenticated w/ Comments)](#morsel-authenticated-w-comments)
+  - [Post Objects](#post-objects)
+    - [Post](#post)
+  - [User Objects](#user-objects)
+    - [User](#user)
+    - [User (w/ Private Attributes)](#user-w-private-attributes)
+    - [User (w/ Auth Token)](#user-w-auth-token)
 
 
 ## Overview
@@ -116,7 +133,6 @@ The API uses two different levels of authentication, depending on the method.
 2. __API key:__ Requires an API key. User API keys are in the following format: {user.id}:{user.auth_token} Example: api_key=3:25TLfL6tvc_Qzx52Zh9q
 
 
-
 ## User Methods
 
 ### POST ```/users``` - Create a new User
@@ -135,34 +151,13 @@ __Request__
 | user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
 | user[bio] | String | The bio for the new User. Maximum 255 characters. | | |
 
-__Example "data" Response__ (Created User)
+__Response__
 
-```json
-{
-  "id": 3,
-  "email": "turdferg@eatmorsel.com",
-  "username": "turdferg",
-  "first_name": null,
-  "last_name": null,
-  "sign_in_count": 0,
-  "created_at": "2014-01-07T18:35:57.877Z",
-  "photos": {
-    "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-  },
-  "title": "Executive Chef at Jeopardy",
-  "twitter_username": null,
-  "facebook_uid": "1234567890",
-  "bio": "I like turtles",
-  "like_count": 0,
-  "morsel_count": 1,
-  "draft_count": 0,
-  "auth_token": "25TLfL6tvc_Qzx52Zh9q"
-}
-```
+| __data__ |
+| -------- |
+| Created [User (w/ Auth Token)](#user-w-auth-token) |
 
+***
 
 ### POST ```/users/sign_in``` - User Authentication
 Authenticates a User and returns an authentication_token
@@ -174,32 +169,11 @@ __Request__
 | user[email] | String | The email address for the User | | X |
 | user[password] | String | The password for the User. Minimum 8 characters. | | X |
 
-__Example "data" Response__ (User)
+__Response__
 
-```json
-{
-  "id": 3,
-  "email": "turdferg@eatmorsel.com",
-  "first_name": null,
-  "last_name": null,
-  "sign_in_count": 1,
-  "created_at": "2014-01-07T18:35:57.877Z",
-  "photos": {
-    "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-  },
-  "title": "Executive Chef at Jeopardy",
-  "twitter_username": null,
-  "facebook_uid": "1234567890",
-  "bio": "I like turtles",
-  "like_count": 0,
-  "morsel_count": 1,
-  "draft_count": 0,
-  "auth_token": "25TLfL6tvc_Qzx52Zh9q"
-}
-```
+| __data__ |
+| -------- |
+| Authenticated [User (w/ Auth Token)](#user-w-auth-token) |
 
 __Unique Errors__
 
@@ -207,37 +181,20 @@ __Unique Errors__
 | ------- | ------ | ----------- |
 | __Invalid email or password__ | 401 (Unauthorized) or 422 (Unprocessable Entity) | The email or password specified are invalid |
 
+***
 
 ### GET ```/users/{user_id|user_username}``` - User
 Returns the User with the specified ```user_id``` or ```user_username```
 NOTE: In MTP, this will return the User's Posts and their Morsels. After that we'll need to use pagination since there may be too many Posts and Morsels to return in a response.
 
-__Example "data" Response__ (User)
+__Response__
 
-```json
-{
-  "id": 3,
-  "username": "turdferg",
-  "first_name": "Turd",
-  "last_name": "Ferguson",
-  "sign_in_count": 1,
-  "created_at": "2014-01-07T18:35:57.877Z",
-  "photos": {
-    "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-  },
-  "title": "Executive Chef at Jeopardy",
-  "twitter_username": null,
-  "facebook_uid": null,
-  "bio": "I like turtles",
-  "like_count": 0,
-  "morsel_count": 1,
-  "draft_count": 0
-}
-```
+| Condition | __data__ |
+| --------- | -------- |
+| Authenticated User's ID or Username | [User (w/ Private Attributes)](#user-w-private-attributes) |
+| Everyone Else | [User](#user) |
 
+***
 
 ### PUT ```/users/{user_id}``` - Update User
 Updates the User with the specified ```user_id```
@@ -255,33 +212,14 @@ __Request__
 | user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
 | user[bio] | String | The bio for the new User. Maximum 255 characters | | |
 
-__Example "data" Response__ (Updated User)
+__Response__
 
-```json
-{
-  "id": 3,
-  "email": "turdferg@eatmorsel.com",
-  "username": "turdferg",
-  "first_name": "Turd",
-  "last_name": "Ferguson",
-  "sign_in_count": 1,
-  "created_at": "2014-01-07T18:35:57.877Z",
-  "photos": {
-    "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-  },
-  "title": "Executive Chef at Jeopardy",
-  "twitter_username": null,
-  "facebook_uid": "1234567890",
-  "bio": "I like turtles",
-  "like_count": 0,
-  "morsel_count": 1,
-  "draft_count": 0
-}
-```
+| Condition | __data__ |
+| --------- | -------- |
+| Authenticated User's ID or Username | Updated [User (w/ Private Attributes)](#user-w-private-attributes) |
+| Everyone Else | Updated [User](#user) |
 
+***
 
 ### GET ```/users/{user_id|user_username}/posts``` - User Posts
 Returns the Posts for the User with the specified ```user_id``` or ```user_username```.
@@ -290,57 +228,13 @@ Returns the Posts for the User with the specified ```user_id``` or ```user_usern
 | ------------------- | ------- | ----------- | ------- | --------- |
 | include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
 
-__Example "data" Response__ (Array of Posts)
+__Response__
 
-```json
-[
-  {
-    "id": 2,
-    "title": null,
-    "slug": null,
-    "creator_id": 1,
-    "created_at": "2014-01-07T16:34:44.862Z",
-    "morsels": [
-      {
-        "id": 2,
-        "description": null,
-        "url": "http://eatmorsel.com/marty/1/butter/1",
-        "photos": null,
-        "creator_id": 1,
-        "created_at": "2014-01-07T16:34:43.071Z",
-        "liked": false,
-        "draft": false
-      }
-    ]
-  },
-  {
-    "id": 1,
-    "title": null,
-    "slug": null,
-    "creator_id": 1,
-    "created_at": "2014-01-07T16:34:28.012Z",
-    "morsels": [
-      {
-        "id": 1,
-        "description": "Some other description!!!!213@!#!@$%",
-        "url": "http://eatmorsel.com/marty/1/butter/1",
-        "photos": {
-          "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
-        },
-        "creator_id": 1,
-        "created_at": "2014-01-07T16:34:27.938Z",
-        "liked": true,
-        "draft": true
-      }
-    ]
-  }
-]
-```
+| __data__ |
+| -------- |
+| Array of [Post](#post) |
 
+***
 
 ### POST ```/users/{user_id}/authorizations``` - Create User Authorizations
 Creates a new User authorization
@@ -353,49 +247,24 @@ __Request__
 | authorization[token] | String | The User's Access Token for the service. | | X |
 | authorization[secret] | String | The User's Access Token Secret for the service. Only required for Twitter. | | Twitter |
 
-__Example "data" Response__ (Authorization)
+__Response__
 
-```json
-{
-  "id": 1,
-  "provider": "twitter",
-  "uid": "12345",
-  "user_id": 3,
-  "token": "25T-LfL6tvc_Qzx52Zh9q",
-  "secret": "25fqrG3214ojivxCq",
-  "name": "eatmorsel",
-  "link": "https://twitter.com/eatmorsel"
-}
-```
+| __data__ |
+| -------- |
+| Created [Authorization](#authorization) |
 
+***
 
 ### GET ```/users/{user_id}/authorizations``` - User Authorizations
 Returns the User's authorizations
 
-__Example "data" Response__ (Array of Authorizations)
+__Response__
 
-```json
-[{
-  "id": 1,
-  "provider": "facebook",
-  "uid": "1249832184",
-  "user_id": 3,
-  "token": "25T-Cac6vtt_QzgfrZh9q",
-  "secret": null,
-  "name": "Turd Ferguson",
-  "link": "https://facebook.com/turd.ferguson"
-}, {
-  "id": 2,
-  "provider": "twitter",
-  "uid": "12345",
-  "user_id": 3,
-  "token": "25T-LfL6tvc_Qzx52Zh9q",
-  "secret": "25fqrG3214ojivxCq",
-  "name": "eatmorsel",
-  "link": "https://twitter.com/eatmorsel"
-}]
-```
+| __data__ |
+| -------- |
+| Array of [Authorization](#authorization) |
 
+***
 
 
 ## Morsel Methods
@@ -416,64 +285,27 @@ __Request__
 | post_to_facebook | Boolean | Post to the current_user's Facebook wall with the Post's title and Morsel description (if they exist) along with a link to the Morsel. | false | |
 | post_to_twitter | Boolean | Send a Tweet from the current_user with the Post's title and Morsel description (if they exist) along with a link to the Morsel. If the title and description are too long they will be truncated to allow enough room for the links. | false | |
 
-__Example "data" Response__ (Created Morsel)
+__Response__
 
-```json
-{
-  "id": 4,
-  "description": "This is a description!",
-  "url": "http://eatmorsel.com/marty/1/butter/1",
-  "photos": {
-    "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-    "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-    "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-    "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
-  },
-  "creator_id": 1,
-  "created_at": "2014-01-07T18:37:19.661Z",
-  "post_id": 4,
-  "liked": false,
-  "draft": false
-}
-```
+| Condition | __data__ |
+| --------- | -------- |
+| Authenticated | Created [Morsel (Authenticated)](#morsel-authenticated) |
+| Appended to Post | Created [Morsel (w/ Post)](#morsel-w-post) |
+| Authenticated && Appended to Post | Created [Morsel (Authenticated w/ Post)](#morsel-authenticated-w-post) |
+| Default | Created [Morsel](#morsel) |
+
+***
 
 ### GET ```/morsels/{morsel_id}``` - Morsel
 Returns Morsel with the specified ```morsel_id```
 
-__Example "data" Response__ (Morsel)
+__Response__
 
-```json
-{
-  "id": 4,
-  "description": "This is a description!",
-  "url": "http://eatmorsel.com/marty/1/butter/1",
-  "photos": {
-    "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-    "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-    "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-    "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
-  },
-  "creator_id": 1,
-  "created_at": "2014-01-07T18:37:19.661Z",
-  "liked": false,
-  "draft": false,
-  "comments": [{
-    "id": 4,
-    "description": "Your dish sucks bro!",
-    "creator_id": 1,
-    "morsel_id": 5,
-    "created_at": "2014-01-07T18:37:19.661Z"
-  }, {
-    "id": 7,
-    "description": "Worst dish, eva.",
-    "creator_id": 2,
-    "morsel_id": 5,
-    "created_at": "2014-01-07T18:38:13.855Z"
-  }]
+| __data__ |
+| -------- |
+| [Morsel (Authenticated w/ Comments)](#morsel-authenticated-w-comments) |
 
-}
-```
-
+***
 
 ### PUT ```/morsels/{morsel_id}``` - Update Morsel
 Updates the Morsel with the specified ```morsel_id```
@@ -488,37 +320,34 @@ __Request__
 | sort_order | Number | Changes the ```sort_order``` of a Post when combined with ```post_id```. | | |
 | morsel[draft] | Boolean | Set to true if the Morsel is a draft | false | |
 
-__Example "data" Response__ (Updated Morsel)
+__Response__
 
-```json
-{
-  "id": 4,
-  "description": "This is a modified description!",
-  "url": "http://eatmorsel.com/marty/1/butter/1",
-  "photos": {
-    "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-    "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-    "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-    "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
-  },
-  "creator_id": 1,
-  "created_at": "2014-01-07T18:37:19.661Z",
-  "liked": false,
-  "draft": false
-}
-```
+| Condition | __data__ |
+| --------- | -------- |
+| Post ID Included | Updated [Morsel (Authenticated w/ Post)](#morsel-authenticated-w-post) |
+| Default | Updated [Morsel (Authenticated w/ Comments)](#morsel-authenticated-w-comments) |
 
+***
 
 ### DELETE ```/morsels/{morsel_id}``` - Delete Morsel
 Deletes the Morsel with the specified ```morsel_id```.
 
-__Example Response__ (HTTP Status Code 200 on success)
+__Response__
 
+| Status Code |
+| ----------- |
+|         200 |
+
+***
 
 ### POST ```/morsels/{morsel_id}/like``` - Like Morsel
 Likes the Morsel with the specified ```morsel_id``` for the authenticated User
 
-__Example Response__ (HTTP Status Code 200 on success)
+__Response__
+
+| Status Code |
+| ----------- |
+|         200 |
 
 __Unique Errors__
 
@@ -526,11 +355,16 @@ __Unique Errors__
 | ------- | ------ |  ----------- |
 | __Already liked__ | 400 (Bad Request) | The Morsel is already liked by the User |
 
+***
 
 ### DELETE ```/morsels/{morsel_id}/like``` - Unlike Morsel
 Unlikes the Morsel with the specified ```morsel_id``` for the authenticated User
 
-__Example Response__ (HTTP Status Code 200 on success)
+__Response__
+
+| Status Code |
+| ----------- |
+|         200 |
 
 __Unique Errors__
 
@@ -538,6 +372,7 @@ __Unique Errors__
 | ------- | ------ |  ----------- |
 | __Not liked__ | 404 (Not Found) | The Morsel is not liked by the User |
 
+***
 
 ### POST ```/morsels/{morsel_id}/comments``` - Create Comment
 Create a Comment for the Morsel with the specified ```morsel_id```
@@ -548,53 +383,45 @@ __Request__
 | ------------------- | ------- | ----------- | ------- | --------- |
 | comment[description] | String | The description for the Comment | | |
 
-__Example "data" Response__ (Created Comment)
+__Response__
 
-```json
-{
-  "id": 4,
-  "description": "Your dish sucks bro!",
-  "creator_id": 1,
-  "morsel_id": 5
-  "created_at": "2014-01-07T18:37:19.661Z",
-}
-```
+| __data__ |
+| -------- |
+| Created [Comment](#comment) |
+
+__Unique Errors__
 
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
 | __Morsel not found__ | 404 (Not Found) | The Morsel could not be found |
 
+***
 
 ### GET ```/morsels/{morsel_id}/comments``` - Morsel Comments
 List the Comments for the Morsel with the specified ```morsel_id```
 
-__Example "data" Response__ (Array of Comments)
+__Response__
 
-```json
-[{
-  "id": 4,
-  "description": "Your dish sucks bro!",
-  "creator_id": 1,
-  "morsel_id": 5,
-  "created_at": "2014-01-07T18:37:19.661Z"
-}, {
-  "id": 7,
-  "description": "Worst dish, eva.",
-  "creator_id": 2,
-  "morsel_id": 5,
-  "created_at": "2014-01-07T18:38:13.855Z"
-}]
-```
+| __data__ |
+| -------- |
+| Array of [Comment](#comment) |
+
+__Unique Errors__
 
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
 | __Morsel not found__ | 404 (Not Found) | The Morsel could not be found |
 
+***
 
 ### DELETE ```/comments/{comment_id}``` - Delete Comment
 Deletes the Comment with the specified ```comment_id``` if the authenticated User is the Comment or Morsel Creator
 
-__Example Response__ (HTTP Status Code 200 on success)
+__Response__
+
+| Status Code |
+| ----------- |
+|         200 |
 
 __Unique Errors__
 
@@ -603,6 +430,7 @@ __Unique Errors__
 | __Comment not found__ | 404 (Not Found) | The Comment could not be found |
 | __Forbidden__ | 403 (Forbidden) | The Authenticated User is not authorized to delete the Comment |
 
+***
 
 
 ## Post Methods
@@ -616,222 +444,13 @@ __Request__
 | ------------------- | ------- | ----------- | ------- | --------- |
 | include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
 
-__Example "data" Response__ (Array of Posts)
+__Response__
 
-```json
-[
-  {
-    "id":1,
-    "title":null,
-    "slug": null,
-    "creator_id":1,
-    "created_at":"2014-01-07T16:34:28.012Z",
-    "creator": {
-      "id": 1,
-      "username": "marty",
-      "first_name": "Marty",
-      "last_name": "Trzpit",
-      "sign_in_count": 1,
-      "created_at": "2014-01-06T12:30:32.533Z",
-      "photos": {
-        "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-      },
-      "title": "Backend Chef at Morsel",
-      "twitter_username": "martytrzpit",
-      "facebook_uid": null
-    },
-    "morsels":[
-      {
-        "id":1,
-        "description":"Some other description!!!!213@!#!@$%",
-        "url": "http://eatmorsel.com/marty/1/butter/1",
-        "photos": {
-          "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
-        },
-        "creator_id":1,
-        "created_at":"2014-01-07T16:34:27.938Z",
-        "liked": true,
-        "draft": false
-      }
-    ]
-  },
-  {
-    "id":2,
-    "title":null,
-    "slug": null,
-    "creator_id":1,
-    "created_at":"2014-01-07T16:34:44.862Z",
-    "creator": {
-      "id": 1,
-      "username": "marty",
-      "first_name": "Marty",
-      "last_name": "Trzpit",
-      "sign_in_count": 1,
-      "created_at": "2014-01-06T12:30:32.533Z",
-      "photos": {
-        "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-      },
-      "title": "Backend Chef at Morsel",
-      "twitter_username": "martytrzpit",
-      "facebook_uid": null
-    },
-    "morsels":[
-      {
-        "id":2,
-        "description":null,
-        "url": "http://eatmorsel.com/marty/1/butter/1",
-        "photos": {
-          "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
-        },
-        "creator_id":1,
-        "created_at":"2014-01-07T16:34:43.071Z",
-        "liked": false,
-        "draft": false
-      }
-    ]
-  },
-  {
-    "id":3,
-    "title":null,
-    "slug": null,
-    "creator_id":1,
-    "created_at":"2014-01-07T18:09:10.996Z",
-    "creator": {
-      "id": 1,
-      "username": "marty",
-      "first_name": "Marty",
-      "last_name": "Trzpit",
-      "sign_in_count": 1,
-      "created_at": "2014-01-06T12:30:32.533Z",
-      "photos": {
-        "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-      },
-      "title": "Backend Chef at Morsel",
-      "twitter_username": "martytrzpit",
-      "facebook_uid": null
-    },
-    "morsels":[
-      {
-        "id":3,
-        "description":null,
-        "url": "http://eatmorsel.com/marty/1/butter/1",
-        "photos": {
-          "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
-        },
-        "creator_id":1,
-        "created_at":"2014-01-07T18:09:10.145Z",
-        "liked": false,
-        "draft": false
-      }
-    ]
-  },
-  {
-    "id":4,
-    "title":null,
-    "slug": null,
-    "creator_id":1,
-    "created_at":"2014-01-07T18:37:20.544Z",
-    "creator": {
-      "id": 1,
-      "username": "marty",
-      "first_name": "Marty",
-      "last_name": "Trzpit",
-      "sign_in_count": 1,
-      "created_at": "2014-01-06T12:30:32.533Z",
-      "photos": {
-        "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-      },
-      "title": "Backend Chef at Morsel",
-      "twitter_username": "martytrzpit",
-      "facebook_uid": null
-    },
-    "morsels":[
-      {
-        "id":4,
-        "description":"This is a modified description!",
-        "url": "http://eatmorsel.com/marty/1/butter/1",
-        "photos": {
-          "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
-        },
-        "creator_id":1,
-        "created_at":"2014-01-07T18:37:19.661Z",
-        "liked": false,
-        "draft": false
-      }
-    ]
-  },
-  {
-    "id":5,
-    "title":null,
-    "slug": null,
-    "creator_id":2,
-    "created_at":"2014-01-07T19:11:33.937Z",
-    "creator": {
-      "id": 2,
-      "username": "viagra_bob",
-      "first_name": "Bob",
-      "last_name": "Dole",
-      "sign_in_count": 23,
-      "created_at": "2014-01-03T11:12:52.763Z",
-      "photos": {
-        "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-      },
-      "title": "Bob Dole at Bob Dole",
-      "twitter_username": null,
-      "facebook_uid": null
-    },
-    "morsels":[
-      {
-        "id":5,
-        "description":"Here's a nice picture of tacos",
-        "url": "http://eatmorsel.com/marty/1/butter/1",
-        "photos": {
-          "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-          "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
-        },
-        "creator_id":2,
-        "created_at":"2014-01-07T19:11:33.929Z",
-        "liked": false,
-        "draft": false
-      }
-    ]
-  }
-]
-```
+| __data__ |
+| -------- |
+| Array of [Post](#post) |
+
+***
 
 ### GET ```/posts/{post_id}``` -  Post
 Returns the Post with the specified ```post_id```
@@ -840,52 +459,13 @@ Returns the Post with the specified ```post_id```
 | ------------------- | ------- | ----------- | ------- | --------- |
 | include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
 
-__Example "data" Response__ (Post)
+__Response__
 
-```json
-{
-  "id": 4,
-  "title": null,
-  "slug": null,
-  "creator_id": 1,
-  "created_at": "2014-01-03T22:31:47.113Z"
-  "creator": {
-    "id": 1,
-    "username": "marty",
-    "first_name": "Marty",
-    "last_name": "Trzpit",
-    "sign_in_count": 1,
-    "created_at": "2014-01-06T12:30:32.533Z",
-    "photos": {
-      "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-    },
-    "title": "Backend Chef at Morsel"
-    "twitter_username": "martytrzpit",
-    "facebook_uid": null
-  },
-  "morsels":[
-    {
-      "id":4,
-      "description":"This is a modified description!",
-      "url": "http://eatmorsel.com/marty/1/butter/1",
-      "photos": {
-        "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-        "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-        "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-        "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
-      },
-      "creator_id":1,
-      "created_at":"2014-01-07T18:37:19.661Z",
-      "liked": false,
-      "draft": false
-    }
-  ]
-}
-```
+| __data__ |
+| -------- |
+| [Post](#post) |
 
+***
 
 ### PUT ```/posts/{post_id}``` - Update Post
 Updates the Post with the specified ```post_id```
@@ -896,18 +476,13 @@ __Request__
 | ------------------- | ------- | ----------- | ------- | --------- |
 | post[title]         | String  | The title for the Post. Changing this will change the slug. | | |
 
-__Example "data" Response__ (Updated Post)
+__Response__
 
-```json
-{
-  "id": 4,
-  "title": "Look ma! A Title!",
-  "slug": "look-ma-a-title",
-  "creator_id": 1,
-  "created_at": "2014-01-03T22:31:47.113Z"
-}
-```
+| __data__ |
+| -------- |
+| Updated [Post](#post) |
 
+***
 
 ### POST ```/posts/{post_id}/append``` - Append Morsel to Post
 Appends a Morsel with the specified ```morsel_id``` to the Post with the specified ```post_id```
@@ -920,66 +495,11 @@ __Request__
 | sort_order         | Number  | The ```sort_order``` for the Morsel in the Post | end of Post | |
 | include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
 
-__Example "data" Response__ (Post with Appended Morsel)
+__Response__
 
-```json
-{
-  "id": 4,
-  "title": null,
-  "slug": null,
-  "creator_id": 1,
-  "created_at": "2014-01-03T22:31:47.113Z"
-  "creator": {
-    "id": 1,
-    "username": "marty",
-    "first_name": "Marty",
-    "last_name": "Trzpit",
-    "sign_in_count": 1,
-    "created_at": "2014-01-06T12:30:32.533Z",
-    "photos": {
-      "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-    },
-    "title": "Backend Chef at Morsel",
-    "twitter_username": "martytrzpit",
-    "facebook_uid": null
-  },
-  "morsels":[
-    {
-      "id":4,
-      "description":"This is a modified description!",
-      "url": "http://eatmorsel.com/marty/1/butter/1",
-      "photos": {
-        "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-        "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-        "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-        "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
-      },
-      "creator_id":1,
-      "created_at":"2014-01-07T18:37:19.661Z",
-      "liked": false,
-      "draft": false
-    },
-    {
-      "id":7,
-      "description":"I got appended!",
-      "url": "http://eatmorsel.com/marty/1/butter/1",
-      "photos": {
-        "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-        "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-        "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-        "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
-      },
-      "creator_id":1,
-      "created_at":"2014-03-09T18:37:19.661Z",
-      "liked": false,
-      "draft": false
-    }
-  ]
-}
-```
+| __data__ |
+| -------- |
+| Updated [Post](#post) |
 
 __Unique Errors__
 
@@ -987,6 +507,7 @@ __Unique Errors__
 | ------- | ------ |  ----------- |
 | __Relationship already exists__ | 400 (Bad Request) | The Morsel is already appended to the Post |
 
+***
 
 ### DELETE ```/posts/{post_id}/append``` - Detach Morsel from Post
 Detaches the Morsel with the specified ```morsel_id``` from the Post with the specified ```post_id```
@@ -997,7 +518,11 @@ __Request__
 | ------------------- | ------- | ----------- | ------- | --------- |
 | morsel_id         | Number  | ID of the Morsel to detach | | x |
 
-__Example Response__ (HTTP Status Code 200 on success)
+__Response__
+
+| Status Code |
+| ----------- |
+|         200 |
 
 __Unique Errors__
 
@@ -1005,6 +530,7 @@ __Unique Errors__
 | ------- | ------ |  ----------- |
 | __Relationship not found__ | 404 (Not Found) | The Morsel is not appended to the Post |
 
+***
 
 
 ## Subscriber Methods
@@ -1022,4 +548,289 @@ __Request__
 | subscriber[role] | String | The role of the subscriber. Currently only 'chef' is expected | | |
 | subscriber[user_id] | String | The ID of the User who referred the User | | |
 
-__Example Response__ (HTTP Status Code 200 on success)
+__Response__
+
+| Status Code |
+| ----------- |
+|         200 |
+
+***
+
+
+## Response Objects
+
+### Authorization Objects
+
+#### Authorization
+
+```json
+{
+  "id": 1,
+  "provider": "twitter",
+  "uid": "12345",
+  "user_id": 3,
+  "token": "123-aB32C$F21gR1",
+  "secret": "25fqrG3214ovvasCq",
+  "name": "eatmorsel",
+  "link": "https://twitter.com/eatmorsel"
+}
+```
+
+### Comment Objects
+
+#### Comment
+
+```json
+{
+  "id": 4,
+  "description": "Wow! Are those Swedish Fish caviar???!?!?!one!?!11!?1?!",
+  "creator_id": 1,
+  "morsel_id": 5,
+  "created_at": "2014-01-07T18:37:19.661Z"
+}
+```
+
+### Morsel Objects
+
+#### Morsel
+
+```json
+  {
+    "id": 2,
+    "description": null,
+    "creator_id": 1,
+    "created_at": "2014-01-07T16:34:43.071Z",
+    "photos": {
+      "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+    }
+  }
+```
+
+#### Morsel (w/ Post)
+post_id exists
+
+```json
+  {
+    "id": 2,
+    "description": null,
+    "creator_id": 1,
+    "created_at": "2014-01-07T16:34:43.071Z",
+    "photos": {
+      "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+    },
+    "post_id": 4,
+    "sort_order": 1,
+    "url": "http://eatmorsel.com/marty/1-butter/1"
+  }
+```
+
+#### Morsel (Authenticated)
+api_key exists
+
+```json
+  {
+    "id": 2,
+    "description": null,
+    "creator_id": 1,
+    "created_at": "2014-01-07T16:34:43.071Z",
+    "photos": {
+      "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+    },
+    "liked": false,
+    "draft": false
+  }
+```
+
+#### Morsel (Authenticated w/ Post)
+api_key && post_id exist
+
+```json
+  {
+    "id": 2,
+    "description": null,
+    "creator_id": 1,
+    "created_at": "2014-01-07T16:34:43.071Z",
+    "photos": {
+      "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+    },
+    "post_id": 4,
+    "sort_order": 1,
+    "url": "http://eatmorsel.com/marty/1-butter/1",
+    "liked": false,
+    "draft": false
+  }
+```
+
+#### Morsel (Authenticated w/ Comments)
+ditto as w/ Post if post_id exists
+
+```json
+  {
+    "id": 2,
+    "description": null,
+    "creator_id": 1,
+    "created_at": "2014-01-07T16:34:43.071Z",
+    "photos": {
+      "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+    },
+    "liked": false,
+    "draft": false,
+    "comments": [{
+      "id": 4,
+      "description": "Wow! Are those Swedish Fish caviar???!?!?!one!?!11!?1?!",
+      "creator_id": 1,
+      "morsel_id": 5,
+      "created_at": "2014-01-07T18:37:19.661Z"
+    }, {
+      "id": 7,
+      "description": "Fuck yeah!",
+      "creator_id": 2,
+      "morsel_id": 5,
+      "created_at": "2014-01-07T18:38:13.855Z"
+    }]
+  }
+```
+
+### Post Objects
+
+#### Post
+
+```json
+{
+  "id": 4,
+  "title": "Butter Rocks!",
+  "creator_id": 3,
+  "created_at": "2014-01-07T16:34:44.862Z",
+  "slug": "butter-rocks",
+  "creator": {
+    "id": 3,
+    "username": "turdferg",
+    "first_name": "Turd",
+    "last_name": "Ferguson",
+    "created_at": "2014-01-07T18:35:57.877Z",
+    "title": "Executive Chef at Jeopardy",
+    "bio": "Suck It, Trebek",
+    "photos": {
+      "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+      "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+      "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+      "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+    }
+  },
+  "morsels": [
+    {
+      "id": 2,
+      "description": null,
+      "creator_id": 3,
+      "created_at": "2014-01-07T16:34:43.071Z",
+      "photos": {
+        "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+        "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+        "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+        "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+        "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+      },
+      "sort_order": 1,
+      "url": "http://eatmorsel.com/turdferg/4-butter-rocks/1"
+    }
+  ]
+}
+```
+
+
+### User Objects
+
+#### User
+
+```json
+{
+  "id": 3,
+  "username": "turdferg",
+  "first_name": "Turd",
+  "last_name": "Ferguson",
+  "created_at": "2014-01-07T18:35:57.877Z",
+  "title": "Executive Chef at Jeopardy",
+  "bio": "Suck It, Trebek",
+  "photos": {
+    "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+  }
+}
+```
+
+#### User (w/ Private Attributes)
+You'll only see these if the api_key matches the User you're looking up
+
+```json
+{
+  "id": 3,
+  "username": "turdferg",
+  "first_name": "Turd",
+  "last_name": "Ferguson",
+  "created_at": "2014-01-07T18:35:57.877Z",
+  "title": "Executive Chef at Jeopardy",
+  "bio": "Suck It, Trebek",
+  "photos": {
+    "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+  },
+  "draft_count": 0,
+  "like_count": 3,
+  "morsel_count": 1,
+  "sign_in_count": 1,
+  "facebook_uid": "1234567890",
+  "twitter_username": "morsel_marty"
+}
+```
+
+#### User (w/ Auth Token)
+Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```auth_token```
+
+```json
+{
+  "id": 3,
+  "username": "turdferg",
+  "first_name": "Turd",
+  "last_name": "Ferguson",
+  "created_at": "2014-01-07T18:35:57.877Z",
+  "title": "Executive Chef at Jeopardy",
+  "bio": "Suck It, Trebek",
+  "photos": {
+    "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+  },
+  "auth_token": "butt-sack",
+  "draft_count": 0,
+  "like_count": 3,
+  "morsel_count": 1,
+  "sign_in_count": 1,
+  "facebook_uid": "1234567890",
+  "twitter_username": "morsel_marty"
+}
+```
