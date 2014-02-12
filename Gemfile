@@ -19,6 +19,7 @@ gem 'devise', "~> 3.2.2"
 gem 'delayed_job_active_record'
 # gem 'doorkeeper', '~> 0.7.0'
 # gem 'formtastic'
+gem "hirefire-resource"
 gem 'jbuilder', '~> 1.2'
 gem 'jquery-rails'
 gem "koala", "~> 1.8.0rc1"
@@ -80,6 +81,6 @@ group :test do
   gem 'email_spec'
 end
 
-group :production do
+group :production, :staging do
   gem 'rails_12factor'
 end
