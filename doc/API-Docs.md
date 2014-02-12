@@ -81,6 +81,7 @@ expect to get a user resource in return:
 if you make a call for a user's posts: ```users/1/posts```
 expect to get an array of resources in return:
 ```json
+{
   "meta": {
     "status": 200,
     "message": "OK"
