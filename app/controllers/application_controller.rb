@@ -6,6 +6,6 @@ class ApplicationController < ActionController::Base
   before_filter :authenticate_user!
 
   def authenticate_admin_user!
-    redirect_to home_path unless current_user.admin?
+    redirect_to sign_in_path unless current_user.admin?
   end
 end
