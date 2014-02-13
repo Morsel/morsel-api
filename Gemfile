@@ -16,7 +16,6 @@ gem "carrierwave", "~> 0.9.0"
 gem 'carrierwave-aws'
 gem 'carrierwave_backgrounder'
 gem 'devise', "~> 3.2.2"
-gem 'delayed_job_active_record'
 # gem 'doorkeeper', '~> 0.7.0'
 # gem 'formtastic'
 gem "hirefire-resource"
@@ -33,6 +32,7 @@ gem 'rolify'
 gem 'rollbar'
 gem 'sass-rails', '~> 4.0.0'
 gem 'settingslogic'
+gem 'sidekiq'
 gem 'slim-rails'
 gem 'slugged', '~> 2.0'
 gem 'turbolinks'
@@ -62,7 +62,7 @@ group :development, :test do
   gem "fuubar", "~> 1.3.2"
   gem 'guard-brakeman'
   gem 'guard-bundler'
-  gem 'guard-delayed', github: 'machinespit/guard-delayed'
+  gem 'guard-sidekiq'
   gem 'guard-rails'
   gem 'guard-rails_best_practices'
   gem 'guard-rspec'
