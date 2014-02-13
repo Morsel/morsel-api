@@ -3,7 +3,7 @@ class StatusController < ApplicationController
   include JSONEnvelopable
 
   def index
-    TestWorker.perform_async('testing') if params[:test_worker]
+    TestWorker.perform_async(params[:test_worker]) if params[:test_worker]
     respond_to do |format|
       format.html { render(text: response.message) }
       format.json { render_json(nil, response.status) }

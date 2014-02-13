@@ -132,6 +132,21 @@ class User < ActiveRecord::Base
     end
   end
 
+  def facebook_client
+    Koala::Facebook::API.new(facebook_authorization.token) if authorized_with_facebook?
+  end
+
+  def twitter_client
+    if authorized_with_twitter?
+      Twitter::REST::Client.new do |config|
+        config.consumer_key = Settings.twitter.consumer_key
+        config.consumer_secret = Settings.twitter.consumer_secret
+        config.access_token = twitter_authorization.token
+        config.access_token_secret = twitter_authorization.secret
+      end
+    end
+  end
+
   private
 
   def ensure_authentication_token
@@ -150,21 +165,6 @@ class User < ActiveRecord::Base
       self.photo_content_type = photo.file.content_type
       self.photo_file_size = photo.file.size
       self.photo_updated_at = Time.now
-    end
-  end
-
-  def facebook_client
-    Koala::Facebook::API.new(facebook_authorization.token) if authorized_with_facebook?
-  end
-
-  def twitter_client
-    if authorized_with_twitter?
-      Twitter::REST::Client.new do |config|
-        config.consumer_key = Settings.twitter.consumer_key
-        config.consumer_secret = Settings.twitter.consumer_secret
-        config.access_token = twitter_authorization.token
-        config.access_token_secret = twitter_authorization.secret
-      end
     end
   end
 end
