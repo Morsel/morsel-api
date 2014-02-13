@@ -1,5 +1,12 @@
+require 'sidekiq/web'
+
 MorselApp::Application.routes.draw do
-  root to: 'home#index'
+  root to: 'status#index'
+  get 'status' => 'status#index'
+
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
 
   ActiveAdmin.routes(self)
 
