@@ -51,7 +51,7 @@ class PostsController < ApiController
 
     post = Post.find(params[:id])
     if post.morsels.include? morsel
-      if post.morsels.delete(morsel)
+      if post.morsels.destroy(morsel)
         render json: 'OK', status: :ok
       else
         render_json_errors(post.errors, :unprocessable_entity)

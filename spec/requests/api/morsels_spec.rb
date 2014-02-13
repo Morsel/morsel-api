@@ -214,18 +214,40 @@ describe 'Morsels API' do
       let(:post_with_morsels_and_creator_and_draft) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
       let(:last_morsel) { post_with_morsels_and_creator_and_draft.morsels.last }
 
-      it 'changes the sort_order' do
-        put "/morsels/#{last_morsel.id}", api_key: api_key_for_user(turd_ferg),
-                                          format: :json,
-                                          morsel: { description: 'Just like a bus route.' },
-                                          post_id: post_with_morsels_and_creator_and_draft.id,
-                                          sort_order: 1
+      context 'Morsel belongs to the Post' do
+        it 'changes the sort_order' do
+          put "/morsels/#{last_morsel.id}", api_key: api_key_for_user(turd_ferg),
+                                            format: :json,
+                                            morsel: { description: 'Just like a bus route.' },
+                                            post_id: post_with_morsels_and_creator_and_draft.id,
+                                            sort_order: 1
 
-        expect(response).to be_success
+          expect(response).to be_success
 
-        expect(json_data['id']).to_not be_nil
+          expect(json_data['id']).to_not be_nil
 
-        expect(post_with_morsels_and_creator_and_draft.morsel_ids.first).to eq(json_data['id'])
+          expect(post_with_morsels_and_creator_and_draft.morsel_ids.first).to eq(json_data['id'])
+        end
+      end
+
+      context 'Morsel does NOT belong to the Post' do
+        let(:different_post) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
+        it 'changes the Morsel\'s Post and removes it from the previous one' do
+          put "/morsels/#{last_morsel.id}", api_key: api_key_for_user(turd_ferg),
+                                            format: :json,
+                                            morsel: { description: 'I should be on a different Post.' },
+                                            post_id: post_with_morsels_and_creator_and_draft.id,
+                                            new_post_id: different_post.id
+
+          expect(response).to be_success
+
+          expect(json_data['id']).to_not be_nil
+
+          expect(different_post.morsel_ids.last).to eq(json_data['id'])
+
+          # Morsel should no longer be associated with the original Post
+          expect(post_with_morsels_and_creator_and_draft.morsels).to_not include(last_morsel)
+        end
       end
     end
   end

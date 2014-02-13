@@ -329,6 +329,7 @@ Updates the Morsel with the specified ```morsel_id```
 | post_id | Number | Changes the ```sort_order``` of a Post when combined with ```sort_order```. | | |
 | sort_order | Number | Changes the ```sort_order``` of a Post when combined with ```post_id```. | | |
 | morsel[draft] | Boolean | Set to true if the Morsel is a draft | false | |
+| new_post_id | Number | Associates the Morsel to the Post with ID ```new_post_id``` and removes the previous relationship | | |
 
 ### Response
 

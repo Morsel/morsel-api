@@ -39,11 +39,30 @@ class MorselsController < ApiController
     morsel = Morsel.find(params[:id])
 
     if morsel.update_attributes(MorselParams.build(params))
-      if params[:post_id].present? && params[:sort_order].present?
+      if params[:post_id].present?
         post = Post.find(params[:post_id])
-        post.set_sort_order_for_morsel(morsel.id, params[:sort_order])
 
-        custom_respond_with morsel, post: post
+        if params[:new_post_id].present?
+          new_post = Post.find(params[:new_post_id])
+          if new_post.morsels.include? morsel
+            # Already exists
+            render_json_errors({ relationship: ['already exists'] }, :bad_request)
+          else
+            if new_post.morsels << morsel
+              new_post.set_sort_order_for_morsel(morsel.id, params[:sort_order]) if params[:sort_order].present?
+
+              # Delete the Relationship from the old post
+              morsel.morsel_posts.where(post_id: post.id).destroy_all
+
+              custom_respond_with morsel, post: new_post, include_drafts: (params[:include_drafts] == 'true')
+            else
+              render_json_errors(new_post.errors, :unprocessable_entity)
+            end
+          end
+        else
+          post.set_sort_order_for_morsel(morsel.id, params[:sort_order]) if params[:sort_order].present?
+          custom_respond_with morsel, post: post, include_drafts: (params[:include_drafts] == 'true')
+        end
       else
         custom_respond_with morsel
       end

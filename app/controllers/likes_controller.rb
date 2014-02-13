@@ -15,7 +15,7 @@ class LikesController < ApiController
   def destroy
     morsel = Morsel.find(params[:morsel_id])
     if morsel.likers.include? current_user
-      if morsel.likers.delete(current_user)
+      if morsel.likers.destroy(current_user)
         render json: 'OK', status: :ok
       else
         render_json_errors(morsel.errors, :unprocessable_entity)
