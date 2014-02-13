@@ -60,8 +60,6 @@ class MorselsController < ApiController
             end
           end
         else
-          # sfasdfa
-
           post.set_sort_order_for_morsel(morsel.id, params[:sort_order]) if params[:sort_order].present?
           custom_respond_with morsel, post: post, include_drafts: (params[:include_drafts] == 'true')
         end
