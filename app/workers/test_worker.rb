@@ -2,6 +2,6 @@ class TestWorker
   include Sidekiq::Worker
 
   def perform(message)
-    puts message
+    puts "#{message}"
   end
 end
