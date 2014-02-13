@@ -29,10 +29,8 @@ class ApiController < ActionController::Base
 
     if user && Devise.secure_compare(user.authentication_token, api_key.split(':')[1])
       sign_in user, store: false, bypass: true
-      # sign_in user, store: false  # Require token for every request
     else
-      unauthorized_token
-      return
+      unauthorized_token and return
     end
   end
 
