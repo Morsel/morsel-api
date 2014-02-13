@@ -9,6 +9,5 @@ class SocialWorker
     when :twitter
       user.twitter_client.update(message)
     end
-    end
   end
 end
