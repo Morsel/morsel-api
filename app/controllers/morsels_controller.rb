@@ -22,8 +22,8 @@ class MorselsController < ApiController
       post.set_sort_order_for_morsel(morsel.id, params[:sort_order]) if params[:sort_order].present?
       post.save!
 
-      current_user.delay(queue: 'social').post_to_facebook(morsel.facebook_message(post)) if params[:post_to_facebook]
-      current_user.delay(queue: 'social').post_to_twitter(morsel.twitter_message(post)) if params[:post_to_twitter]
+      current_user.post_to_facebook(morsel.facebook_message(post)) if params[:post_to_facebook]
+      current_user.post_to_twitter(morsel.twitter_message(post)) if params[:post_to_twitter]
 
       custom_respond_with morsel, post: post
     else

@@ -16,15 +16,6 @@ GIT
       ransack (~> 1.0)
       sass-rails
 
-GIT
-  remote: git://github.com/machinespit/guard-delayed.git
-  revision: d7bb1b89263b321917fb0084fbd255cf90c556a1
-  specs:
-    guard-delayed (0.2.2)
-      daemons
-      delayed_job
-      guard (> 0.3)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -122,7 +113,7 @@ GEM
     coffee-script-source (1.6.3)
     colored (1.2)
     columnize (0.3.6)
-    daemons (1.1.9)
+    connection_pool (1.2.0)
     database_cleaner (1.0.1)
     debug_inspector (0.0.2)
     debugger (1.6.5)
@@ -131,11 +122,6 @@ GEM
       debugger-ruby_core_source (~> 1.3.1)
     debugger-linecache (1.2.0)
     debugger-ruby_core_source (1.3.1)
-    delayed_job (4.0.0)
-      activesupport (>= 3.0, < 4.1)
-    delayed_job_active_record (4.0.0)
-      activerecord (>= 3.0, < 4.1)
-      delayed_job (>= 3.0, < 4.1)
     descendants_tracker (0.0.3)
     devise (3.2.2)
       bcrypt-ruby (~> 3.0)
@@ -197,6 +183,9 @@ GEM
       rubocop (~> 0.10)
     guard-shell (0.6.0)
       guard (>= 1.1.0)
+    guard-sidekiq (0.0.11)
+      guard (>= 1.1)
+      sidekiq
     guard-spork (1.5.0)
       childprocess (>= 0.2.3)
       guard (>= 1.1)
@@ -328,6 +317,9 @@ GEM
     rb-fsevent (0.9.3)
     rb-inotify (0.9.3)
       ffi (>= 0.5.0)
+    redis (3.0.7)
+    redis-namespace (1.4.1)
+      redis (~> 3.0.4)
     require_all (1.3.2)
     responders (1.0.0)
       railties (>= 3.2, < 5)
@@ -367,6 +359,12 @@ GEM
       sprockets-rails (~> 2.0.0)
     settingslogic (2.0.9)
     sexp_processor (4.4.1)
+    sidekiq (2.17.4)
+      celluloid (>= 0.15.2)
+      connection_pool (>= 1.0.0)
+      json
+      redis (>= 3.0.6)
+      redis-namespace (>= 1.3.1)
     simple_oauth (0.2.0)
     simplecov (0.8.2)
       docile (~> 1.1.0)
@@ -454,7 +452,6 @@ DEPENDENCIES
   codeclimate-test-reporter
   coffee-rails (~> 4.0.0)
   database_cleaner (= 1.0.1)
-  delayed_job_active_record
   devise (~> 3.2.2)
   dotenv-rails
   email_spec
@@ -463,12 +460,12 @@ DEPENDENCIES
   fuubar (~> 1.3.2)
   guard-brakeman
   guard-bundler
-  guard-delayed!
   guard-rails
   guard-rails_best_practices
   guard-rspec
   guard-rubocop
   guard-shell
+  guard-sidekiq
   guard-spork (= 1.5.0)
   hirefire-resource
   jbuilder (~> 1.2)
@@ -498,6 +495,7 @@ DEPENDENCIES
   rspec-rails
   sass-rails (~> 4.0.0)
   settingslogic
+  sidekiq
   slim-rails
   slugged (~> 2.0)
   spork-rails (= 4.0.0)

@@ -21,10 +21,6 @@ guard 'rails_best_practices' do
   watch(%r{^app/(.+)\.rb$})
 end
 
-guard 'delayed', environment: 'development', command: 'bin/delayed_job' do
-  watch(%r{^app/(.+)\.rb})
-end
-
 guard 'spork', rspec_env: { RAILS_ENV: 'test' } do
   watch(%r{^config/initializers/.+\.rb$})
   watch('config/application.rb')
@@ -52,7 +48,7 @@ guard 'rspec', cmd: 'bundle exec rspec --drb --format Fuubar --color', all_after
   watch('app/controllers/application_controller.rb')  { "spec/requests" }
 end
 
-guard 'brakeman', :run_on_start => true do
+guard 'brakeman', run_on_start: true do
   watch(%r{^app/.+\.(erb|haml|rhtml|rb)$})
   watch(%r{^config/.+\.rb$})
   watch(%r{^lib/.+\.rb$})
@@ -62,4 +58,8 @@ end
 guard :shell do
   watch(%r{^Gemfile|Gemfile.lock$}) { system('bundle-audit')}
   watch('db/schema.rb') { system('rake annotate')}
+end
+
+guard 'sidekiq', environment: 'development' do
+  watch(%r{^workers/(.+)\.rb$})
 end

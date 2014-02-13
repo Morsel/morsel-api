@@ -92,14 +92,17 @@ describe 'Morsels API' do
 
         client.stub(:put_connections).and_return('id' => '12345_67890')
 
-        post '/morsels',  api_key: api_key_for_user(user_with_facebook_authorization),
-                          format: :json,
-                          morsel: { description: 'The Fresh Prince of Bel Air' },
-                          post_to_facebook: true
+        expect {
+          post '/morsels',  api_key: api_key_for_user(user_with_facebook_authorization),
+                            format: :json,
+                            morsel: { description: 'The Fresh Prince of Bel Air' },
+                            post_to_facebook: true
+        }.to change(SocialWorker.jobs, :size).by(1)
 
         expect(response).to be_success
 
         expect(json_data['id']).to_not be_nil
+
       end
     end
 
@@ -115,10 +118,12 @@ describe 'Morsels API' do
         Twitter::Client.stub(:new).and_return(client)
         client.stub(:update).and_return(tweet)
 
-        post '/morsels',  api_key: api_key_for_user(user_with_twitter_authorization),
-                          format: :json,
-                          morsel: { description: 'D.A.N.C.E.' },
-                          post_to_twitter: true
+        expect {
+          post '/morsels',  api_key: api_key_for_user(user_with_twitter_authorization),
+                            format: :json,
+                            morsel: { description: 'D.A.N.C.E.' },
+                            post_to_twitter: true
+        }.to change(SocialWorker.jobs, :size).by(1)
 
         expect(response).to be_success
 

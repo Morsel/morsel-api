@@ -94,15 +94,11 @@ class User < ActiveRecord::Base
   end
 
   def authorized_with_facebook?
-    facebook_authorizations.present?
+    facebook_authorization && facebook_authorization.token.present?
   end
 
   def post_to_facebook(message)
-    if facebook_client.present?
-      facebook_client.put_connections('me', 'feed', message: message)
-    else
-      nil
-    end
+    SocialWorker.perform_async(:facebook, id, message) if authorized_with_facebook?
   end
 
   def facebook_uid
@@ -114,16 +110,11 @@ class User < ActiveRecord::Base
   end
 
   def authorized_with_twitter?
-    twitter_authorization.present?
+    twitter_authorization && twitter_authorization.token.present?
   end
 
   def post_to_twitter(message)
-    if twitter_client.present?
-      twitter_client.update(message)
-    else
-      nil
-      # TODO: throw an error
-    end
+    SocialWorker.perform_async(:twitter, id, message) if authorized_with_twitter?
   end
 
   def twitter_username
@@ -163,23 +154,17 @@ class User < ActiveRecord::Base
   end
 
   def facebook_client
-    if authorized_with_facebook? && facebook_authorization.token.present?
-      Koala::Facebook::API.new(facebook_authorization.token)
-    else
-      nil
-    end
+    Koala::Facebook::API.new(facebook_authorization.token) if authorized_with_facebook?
   end
 
   def twitter_client
-    if authorized_with_twitter? && twitter_authorization.token.present?
+    if authorized_with_twitter?
       Twitter::REST::Client.new do |config|
         config.consumer_key = Settings.twitter.consumer_key
         config.consumer_secret = Settings.twitter.consumer_secret
         config.access_token = twitter_authorization.token
         config.access_token_secret = twitter_authorization.secret
       end
-    else
-      nil
     end
   end
 end
