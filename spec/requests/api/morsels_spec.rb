@@ -255,6 +255,61 @@ describe 'Morsels API' do
         end
       end
     end
+
+    context 'post_to_facebook included in parameters' do
+      let(:user_with_facebook_authorization) { FactoryGirl.create(:user_with_facebook_authorization) }
+
+      it 'posts to Facebook' do
+        dummy_name = 'Facebook User'
+
+        facebook_user = double('Hash')
+        facebook_user.stub(:[]).with('id').and_return('12345_67890')
+        facebook_user.stub(:[]).with('name').and_return(dummy_name)
+
+        client = double('Koala::Facebook::API')
+
+        Koala::Facebook::API.stub(:new).and_return(client)
+
+        client.stub(:put_connections).and_return('id' => '12345_67890')
+
+        expect {
+          post '/morsels',  api_key: api_key_for_user(user_with_facebook_authorization),
+                            format: :json,
+                            morsel: { description: 'The Fresh Prince of Bel Air' },
+                            post_to_facebook: true
+        }.to change(SocialWorker.jobs, :size).by(1)
+
+        expect(response).to be_success
+
+        expect(json_data['id']).to_not be_nil
+
+      end
+    end
+
+    context 'post_to_twitter included in parameters' do
+      let(:user_with_twitter_authorization) { FactoryGirl.create(:user_with_twitter_authorization) }
+      let(:expected_tweet_url) { "https://twitter.com/#{user_with_twitter_authorization.username}/status/12345" }
+
+      it 'posts a Tweet' do
+        client = double('Twitter::REST::Client')
+        tweet = double('Twitter::Tweet')
+        tweet.stub(:url).and_return(expected_tweet_url)
+
+        Twitter::Client.stub(:new).and_return(client)
+        client.stub(:update).and_return(tweet)
+
+        expect {
+          post '/morsels',  api_key: api_key_for_user(user_with_twitter_authorization),
+                            format: :json,
+                            morsel: { description: 'D.A.N.C.E.' },
+                            post_to_twitter: true
+        }.to change(SocialWorker.jobs, :size).by(1)
+
+        expect(response).to be_success
+
+        expect(json_data['id']).to_not be_nil
+      end
+    end
   end
 
   describe 'DELETE /morsels/{:morsel_id} morsels#destroy' do

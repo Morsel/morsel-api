@@ -290,8 +290,8 @@ Created a new Morsel for the current User. Optionally append a Morsel to the Pos
 | post_id | Number | The ID of the Post to append this Morsel to. If none is specified, a new Post will be created for this Morsel. | | |
 | post_title | String | If a Post already exists, renames the title to this. Otherwise sets the title for the new Post to this. | | |
 | sort_order | Number | The ```sort_order``` for the Morsel in the Post. Requires ```post_id``` | end of Post | |
-| post_to_facebook | Boolean | Post to the current_user's Facebook wall with the Post's title and Morsel description (if they exist) along with a link to the Morsel. | false | |
-| post_to_twitter | Boolean | Send a Tweet from the current_user with the Post's title and Morsel description (if they exist) along with a link to the Morsel. If the title and description are too long they will be truncated to allow enough room for the links. | false | |
+| post_to_facebook | Boolean | Post to the current_user's Facebook wall with the Post's title and Morsel description (if they exist) along with a link to the Morsel. __Requires a ```post_id```.__ | false | |
+| post_to_twitter | Boolean | Send a Tweet from the current_user with the Post's title and Morsel description (if they exist) along with a link to the Morsel. If the title and description are too long they will be truncated to allow enough room for the links. __Requires a ```post_id```.__ | false | |
 
 ### Response
 
@@ -330,6 +330,8 @@ Updates the Morsel with the specified ```morsel_id```
 | sort_order | Number | Changes the ```sort_order``` of a Post when combined with ```post_id```. | | |
 | morsel[draft] | Boolean | Set to true if the Morsel is a draft | false | |
 | new_post_id | Number | Associates the Morsel to the Post with ID ```new_post_id``` and removes the previous relationship | | |
+| post_to_facebook | Boolean | Post to the current_user's Facebook wall with the Post's title and Morsel description (if they exist) along with a link to the Morsel. __Requires a ```post_id``` or ```new_post_id```.__ | false | |
+| post_to_twitter | Boolean | Send a Tweet from the current_user with the Post's title and Morsel description (if they exist) along with a link to the Morsel. If the title and description are too long they will be truncated to allow enough room for the links. __Requires a ```post_id``` or ```new_post_id```.__ | false | |
 
 ### Response
 
