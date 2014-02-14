@@ -54,6 +54,9 @@ class MorselsController < ApiController
               # Delete the Relationship from the old post
               morsel.morsel_posts.where(post_id: post.id).destroy_all
 
+              current_user.post_to_facebook(morsel.facebook_message(new_post)) if params[:post_to_facebook]
+              current_user.post_to_twitter(morsel.twitter_message(new_post)) if params[:post_to_twitter]
+
               custom_respond_with morsel, post: new_post, include_drafts: (params[:include_drafts] == 'true')
             else
               render_json_errors(new_post.errors, :unprocessable_entity)
@@ -61,6 +64,10 @@ class MorselsController < ApiController
           end
         else
           post.set_sort_order_for_morsel(morsel.id, params[:sort_order]) if params[:sort_order].present?
+
+          current_user.post_to_facebook(morsel.facebook_message(post)) if params[:post_to_facebook]
+          current_user.post_to_twitter(morsel.twitter_message(post)) if params[:post_to_twitter]
+
           custom_respond_with morsel, post: post, include_drafts: (params[:include_drafts] == 'true')
         end
       else
