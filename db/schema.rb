@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140213013731) do
+ActiveRecord::Schema.define(version: 20140214005019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,6 +96,7 @@ ActiveRecord::Schema.define(version: 20140213013731) do
     t.datetime "updated_at"
     t.integer  "creator_id"
     t.string   "cached_slug"
+    t.datetime "deleted_at"
   end
 
   add_index "posts", ["cached_slug"], name: "index_posts_on_cached_slug", using: :btree
