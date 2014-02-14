@@ -70,7 +70,7 @@ describe Morsel do
     let(:first_morsel) { post_with_morsels_and_creator_and_draft.morsels.first }
     subject(:url) { first_morsel.url(post_with_morsels_and_creator_and_draft) }
 
-    it { should eq("https://test.eatmorsel.com/#{first_morsel.creator.username}/#{post_with_morsels_and_creator_and_draft.id}/#{post_with_morsels_and_creator_and_draft.cached_slug}/1") }
+    it { should eq("https://test.eatmorsel.com/#{first_morsel.creator.username}/#{post_with_morsels_and_creator_and_draft.id}-#{post_with_morsels_and_creator_and_draft.cached_slug}/1") }
   end
 
   describe '#facebook_message' do
