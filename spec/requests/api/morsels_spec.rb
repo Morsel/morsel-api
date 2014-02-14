@@ -333,6 +333,47 @@ describe 'Morsels API' do
     end
   end
 
+  describe 'POST /morsels/{:morsel_id}/like' do
+    let(:morsel) { FactoryGirl.create(:morsel) }
+
+    it 'likes the Morsel for current_user' do
+      post "/morsels/#{morsel.id}/like", api_key: api_key_for_user(turd_ferg), format: :json
+
+      expect(response).to be_success
+      expect(response.status).to eq(200)
+      expect(morsel.likers).to include(turd_ferg)
+    end
+
+    context 'current_user already likes the Morsel' do
+      before do
+        morsel.likers << turd_ferg
+      end
+
+      it 'returns an error' do
+        post "/morsels/#{morsel.id}/like", api_key: api_key_for_user(turd_ferg), format: :json
+
+        expect(response).to_not be_success
+        expect(response.status).to eq(400)
+        expect(json_errors['like'].first).to eq('already exists')
+      end
+    end
+
+    context 'current_user has liked then unliked the Morsel' do
+      before do
+        morsel.likers << turd_ferg
+        morsel.likers.destroy(turd_ferg)
+      end
+
+      it 'likes the Morsel for the current_user' do
+        post "/morsels/#{morsel.id}/like", api_key: api_key_for_user(turd_ferg), format: :json
+
+        expect(response).to be_success
+        expect(response.status).to eq(200)
+        expect(morsel.likers).to include(turd_ferg)
+      end
+    end
+  end
+
   describe 'GET /morsels/{:morsel_id}/comments comments#index' do
     let(:morsel_with_creator_and_comments) { FactoryGirl.create(:morsel_with_creator_and_comments) }
 
