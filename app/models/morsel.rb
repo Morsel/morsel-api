@@ -32,11 +32,11 @@ class Morsel < ActiveRecord::Base
   include PhotoUploadable
 
   mount_uploader :photo, MorselPhotoUploader
-  # process_in_background :photo
 
   scope :drafts, -> { where(draft: true) }
   scope :published, -> { where(draft: false) }
 
+  after_destroy :release_posts
   before_save :update_photo_attributes
 
   validate :description_or_photo_present?
@@ -86,6 +86,12 @@ class Morsel < ActiveRecord::Base
     if description.blank? && (photo.blank? && photo_url.blank?)
       errors.add(:base, 'Description or photo is required.')
       return false
+    end
+  end
+
+  def release_posts
+    posts.each do |p|
+      p.destroy if p.morsels.empty?
     end
   end
 end

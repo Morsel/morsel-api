@@ -321,6 +321,16 @@ describe 'Morsels API' do
       expect(response).to be_success
       expect(Morsel.where(id: existing_morsel.id)).to be_empty
     end
+
+    context 'Morsels in a Post' do
+      let(:existing_post) { FactoryGirl.create(:post_with_morsels) }
+
+      it 'soft deletes the Post if all Morsels are deleted' do
+        expect(Post.where(id: existing_post.id)).to_not be_empty
+        existing_post.morsels.each(&:destroy)
+        expect(Post.where(id: existing_post.id)).to be_empty
+      end
+    end
   end
 
   describe 'GET /morsels/{:morsel_id}/comments comments#index' do

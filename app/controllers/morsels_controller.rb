@@ -52,7 +52,7 @@ class MorselsController < ApiController
               new_post.set_sort_order_for_morsel(morsel.id, params[:sort_order]) if params[:sort_order].present?
 
               # Delete the Relationship from the old post
-              morsel.morsel_posts.where(post_id: post.id).destroy_all
+              morsel.posts.destroy(post)
 
               current_user.post_to_facebook(morsel.facebook_message(new_post)) if params[:post_to_facebook]
               current_user.post_to_twitter(morsel.twitter_message(new_post)) if params[:post_to_twitter]

@@ -67,7 +67,6 @@ class User < ActiveRecord::Base
   include PhotoUploadable
 
   mount_uploader :photo, UserPhotoUploader
-  # process_in_background :photo
 
   def self.find_by_id_or_username(id_or_username)
     if id_or_username.to_i > 0
