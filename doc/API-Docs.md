@@ -368,7 +368,7 @@ Likes the Morsel with the specified ```morsel_id``` for the authenticated User
 
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
-| __Already liked__ | 400 (Bad Request) | The Morsel is already liked by the User |
+| __Already exists__ | 400 (Bad Request) | The Morsel is already liked by the User |
 
 <br />
 <br />
