@@ -216,7 +216,7 @@ Authenticates a User and returns an authentication_token
 
 ## GET ```/users/{user_id|user_username}``` - User
 Returns the User with the specified ```user_id``` or ```user_username```
-NOTE: In MTP, this will return the User's Posts and their Morsels. After that we'll need to use pagination since there may be too many Posts and Morsels to return in a response.
+NOTE: This currently returns the User's Posts and Morsels. It's highly inefficient so the returning of Posts and Morsels in this call will be deprecated soon.
 
 ### Response
 
