@@ -35,7 +35,7 @@ class ApiController < ActionController::Base
   end
 
   def pagination_count
-    params[:count] || 20
+    params[:count] || Settings.pagination_default_count || 20
   end
 
   def record_not_found(error)
