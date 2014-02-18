@@ -23,22 +23,22 @@
 FactoryGirl.define do
   factory :authorization do
     link 'link'
-    uid '1234567890'
+    uid { Faker::Lorem.characters(10) }
     association :user
 
     factory :facebook_authorization do
       provider 'facebook'
       name 'facebook.user'
       link 'facebook.com/facebook.user'
-      token 'f4c3b00k-t0k3n'
+      token { Faker::Lorem.characters(20) }
     end
 
     factory :twitter_authorization do
       provider 'twitter'
       name 'twitter_screen_name'
       link 'twitter.com/twitter_screen_name'
-      token 'tw1tt3r-t0k3n'
-      secret 'sup3rs3cr3t'
+      token { Faker::Lorem.characters(20) }
+      secret { Faker::Lorem.characters(20) }
     end
   end
 end

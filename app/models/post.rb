@@ -22,6 +22,8 @@ class Post < ActiveRecord::Base
   has_many :morsel_posts
   has_many :morsels, -> { order('morsel_posts.sort_order ASC') }, through: :morsel_posts
 
+  include TimelinePaginateable
+
   def set_sort_order_for_morsel(morsel_id, new_sort_order)
     morsel_posts_to_increment = morsel_posts.where('sort_order >= ?', new_sort_order)
     morsel_posts_to_increment.update_all('sort_order = sort_order + 1')

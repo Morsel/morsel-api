@@ -18,6 +18,64 @@ describe 'Posts API' do
       expect(json_data.first['morsels'].count).to eq(3)
     end
 
+    context 'pagination' do
+      before do
+        30.times { FactoryGirl.create(:post_with_creator) }
+      end
+
+      describe 'max_id' do
+        it 'returns results up to and including max_id' do
+          expected_count = rand(3..6)
+          max_id = Post.first.id + expected_count - 1
+          get '/posts', api_key: api_key_for_user(turd_ferg),
+                        max_id: max_id,
+                        format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+          expect(json_data.first['id']).to eq(max_id)
+        end
+      end
+
+      describe 'since_id' do
+        it 'returns results since since_id' do
+          expected_count = rand(3..6)
+          since_id = Post.last.id - expected_count
+          get '/posts', api_key: api_key_for_user(turd_ferg),
+                        since_id: since_id,
+                        format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+          expect(json_data.last['id']).to eq(since_id + 1)
+        end
+      end
+
+      describe 'count' do
+        it 'defaults to 20' do
+          get '/posts', api_key: api_key_for_user(turd_ferg),
+                        format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(20)
+        end
+
+        it 'limits the result' do
+          expected_count = rand(3..6)
+          get '/posts', api_key: api_key_for_user(turd_ferg),
+                        count: expected_count,
+                        format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+        end
+      end
+    end
+
     context 'performance' do
       before do
         require 'benchmark'
@@ -35,7 +93,7 @@ describe 'Posts API' do
         it 'should take time' do
           Benchmark.realtime {
             get '/posts', api_key: api_key_for_user(turd_ferg), format: :json
-          }.should < 1.25
+          }.should < 1.5
         end
       end
     end

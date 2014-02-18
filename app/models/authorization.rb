@@ -19,6 +19,8 @@
 #
 
 class Authorization < ActiveRecord::Base
+  include TimelinePaginateable
+
   belongs_to :user
 
   validates :provider,  allow_blank: false,
