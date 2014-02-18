@@ -18,6 +18,10 @@ FactoryGirl.define do
   factory :post do
     title { Faker::Lorem.sentence(rand(2..5)) }
 
+    factory :post_with_creator, class: Post do
+      association(:creator, factory: :user)
+    end
+
     factory :post_with_morsels, class: Post do
       ignore do
         morsels_count 3

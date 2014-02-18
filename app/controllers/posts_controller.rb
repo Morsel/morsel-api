@@ -4,11 +4,21 @@ class PostsController < ApiController
 
   def index
     if params[:user_id_or_username].blank?
-      posts = Post.includes(:morsel_posts, :morsels, :creator).where('creator_id > 0')
+      posts = Post.includes(:morsel_posts, :morsels, :creator)
+                  .since(params[:since_id])
+                  .max(params[:max_id])
+                  .where('creator_id > 0')
+                  .limit(pagination_count)
+                  .order('id DESC')
     else
-      user = User.includes(posts: [:morsel_posts, :morsels]).find_by_id_or_username(params[:user_id_or_username])
+      user = User.find_by_id_or_username(params[:user_id_or_username])
       raise ActiveRecord::RecordNotFound if user.nil?
-      posts = user.posts
+      posts = Post.includes(:morsel_posts, :morsels, :creator)
+                  .since(params[:since_id])
+                  .max(params[:max_id])
+                  .where('creator_id = ?', user.id)
+                  .limit(pagination_count)
+                  .order('id DESC')
     end
 
     custom_respond_with posts, include_drafts: (params[:include_drafts] == 'true')

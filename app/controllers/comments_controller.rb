@@ -20,12 +20,13 @@ class CommentsController < ApiController
   end
 
   def index
-    morsel = Morsel.find(params[:morsel_id])
-    if morsel.present?
-      custom_respond_with morsel.comments
-    else
-      render_json_errors({ morsel: ['not found'] }, :not_found)
-    end
+    comments = Comment.since(params[:since_id])
+                      .max(params[:max_id])
+                      .where(morsel_id: params[:morsel_id])
+                      .limit(pagination_count)
+                      .order('id DESC')
+
+    custom_respond_with comments
   end
 
   def destroy

@@ -15,11 +15,12 @@ class AuthorizationsController < ApiController
   end
 
   def index
-    if params[:user_id].blank?
-      authorizations = current_user.authorizations
-    else
-      authorizations = Authorization.where(user_id: params[:user_id])
-    end
+    user_id = params[:user_id] || current_user.id
+    authorizations = Authorization.since(params[:since_id])
+                                  .max(params[:max_id])
+                                  .where(user_id: user_id)
+                                  .limit(pagination_count)
+                                  .order('id DESC')
 
     custom_respond_with authorizations
   end

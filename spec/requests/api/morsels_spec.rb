@@ -384,6 +384,69 @@ describe 'Morsels API' do
 
       expect(json_data.count).to eq(2)
     end
+
+    context 'pagination' do
+      before do
+        30.times do
+          comment = FactoryGirl.create(:comment)
+          comment.morsel = morsel_with_creator_and_comments
+          comment.save
+        end
+      end
+
+      describe 'max_id' do
+        it 'returns results up to and including max_id' do
+          expected_count = rand(3..6)
+          max_id = Comment.first.id + expected_count - 1
+          get "/morsels/#{morsel_with_creator_and_comments.id}/comments", api_key: api_key_for_user(turd_ferg),
+                                                                          max_id: max_id,
+                                                                          format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+          expect(json_data.first['id']).to eq(max_id)
+        end
+      end
+
+      describe 'since_id' do
+        it 'returns results since since_id' do
+          expected_count = rand(3..6)
+          since_id = Comment.last.id - expected_count
+          get "/morsels/#{morsel_with_creator_and_comments.id}/comments", api_key: api_key_for_user(turd_ferg),
+                                                                          since_id: since_id,
+                                                                          format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+          expect(json_data.last['id']).to eq(since_id + 1)
+        end
+      end
+
+      describe 'count' do
+        it 'defaults to 20' do
+          get "/morsels/#{morsel_with_creator_and_comments.id}/comments", api_key: api_key_for_user(turd_ferg),
+                                                                          format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(20)
+        end
+
+        it 'limits the result' do
+          expected_count = rand(3..6)
+          get "/morsels/#{morsel_with_creator_and_comments.id}/comments", api_key: api_key_for_user(turd_ferg),
+                                                                          count: expected_count,
+                                                                          format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+        end
+      end
+    end
+
   end
 
   describe 'POST /morsels/{:morsel_id}/comments comments#create' do

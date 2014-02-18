@@ -34,6 +34,10 @@ class ApiController < ActionController::Base
     end
   end
 
+  def pagination_count
+    params[:count] || 20
+  end
+
   def record_not_found(error)
     render_json_errors({ record: ['not found'] }, :not_found)
   end

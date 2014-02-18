@@ -3,8 +3,10 @@
   - [Versioning](#versioning)
   - [Response Format](#response-format)
   - [Errors](#errors)
+  - [Pagination](#pagination)
   - [About the API Documentation](#about-the-api-documentation)
 - [Authentication](#authentication)
+- [Constants](#constants)
 - [User Methods](#user-methods)
   - [POST ```/users``` - Create a new User](#post-users---create-a-new-user)
   - [POST ```/users/sign_in``` - User Authentication](#post-userssign_in---user-authentication)
@@ -118,6 +120,28 @@ Errors are returned as a dictionary in ```errors```. Each key represents the res
 }
 ```
 
+## Pagination
+
+The API uses a pagination method similar to how Facebook and Twitter do. For a nice post about why and how it works, check out this [link](https://dev.twitter.com/docs/working-with-timelines). You'll use ```max_id``` OR ```since_id``` per API call, don't combine them as the API will ignore it.
+
+### Example
+
+#### Getting the recent Posts:
+Make a call to the API: ```/posts.json?api_key=whatever&count=10```
+The API responds with the 10 most recent Posts, let's say their id's are from 100-91.
+
+#### Getting a next set of Posts going back:
+Based on the previous results, you want to get Posts that are older than id 91 (the lowest/oldest id). So you'll want to set a ```max_id``` parameter to that id - 1 (```max_id``` is inclusive, meaning it will include the Post with the id passed in the results, which in this case would duplicate a Post). So set ```max_id``` to 91-1, 90.
+Make a call to the API: ```/posts.json?api_key=whatever&count=10&max_id=90```
+The API responds with the next 10 Posts, in this case their id's are from 90-81.
+And repeat this process as you go further back until you get no results (or ```max_id``` < 1).
+
+#### Getting a set of Posts going forward (new Posts):
+Apps like Facebook and Twitter will show a floating message while you're scrolling through a list telling you that X new Posts have been added to the top of your feed.
+We can achieve the same thing by sending a call to the API every once awhile asking for any new Posts since the most recent one you have. To do this, you'll set a ```since_id``` parameter (which is not inclusive) to the id of the most recent Post. Continuing the example, this would be ```since_id``` = 100.
+Make a call to the API: ```/posts.json?api_key=whatever&count=10&since_id=100```
+The API responds with any new Posts since the Post with id = 100. So if there were three new Posts added, it would return Posts with id's from 101-103.
+
 ## About the API Documentation
 __URI Conventions__
 
@@ -133,6 +157,10 @@ The API uses two different levels of authentication, depending on the method.
 1. __None:__ No authentication. Anybody can query the method.
 2. __API key:__ Requires an API key. User API keys are in the following format: {user.id}:{user.auth_token} Example: api_key=3:25TLfL6tvc_Qzx52Zh9q
 
+# Constants
+```
+TIMELINE_DEFAULT_LIMIT = 20
+```
 
 # User Methods
 
@@ -188,7 +216,7 @@ Authenticates a User and returns an authentication_token
 
 ## GET ```/users/{user_id|user_username}``` - User
 Returns the User with the specified ```user_id``` or ```user_username```
-NOTE: In MTP, this will return the User's Posts and their Morsels. After that we'll need to use pagination since there may be too many Posts and Morsels to return in a response.
+NOTE: This currently returns the User's Posts and Morsels. It's highly inefficient so the returning of Posts and Morsels in this call will be deprecated soon.
 
 ### Response
 
@@ -229,9 +257,14 @@ Updates the User with the specified ```user_id```
 ## GET ```/users/{user_id|user_username}/posts``` - User Posts
 Returns the Posts for the User with the specified ```user_id``` or ```user_username```.
 
+### Request
+
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Posts up to and including this ```id``` | | |
+| since_id | Number | Return Posts since this ```id``` | | |
 
 ### Response
 
@@ -264,6 +297,14 @@ Creates a new User authorization
 
 ## GET ```/users/{user_id}/authorizations``` - User Authorizations
 Returns the User's authorizations
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Authorizations up to and including this ```id``` | | |
+| since_id | Number | Return Authorizations since this ```id``` | | |
 
 ### Response
 
@@ -418,17 +459,19 @@ Create a Comment for the Morsel with the specified ```morsel_id```
 ## GET ```/morsels/{morsel_id}/comments``` - Morsel Comments
 List the Comments for the Morsel with the specified ```morsel_id```
 
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Comments up to and including this ```id``` | | |
+| since_id | Number | Return Comments since this ```id``` | | |
+
 ### Response
 
 | __data__ |
 | -------- |
 | Array of [Comment](#comment) |
-
-### Unique Errors
-
-| Message | Status | Description |
-| ------- | ------ |  ----------- |
-| __Morsel not found__ | 404 (Not Found) | The Morsel could not be found |
 
 <br />
 <br />
@@ -463,6 +506,9 @@ Returns the Posts for all Users.
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Posts up to and including this ```id``` | | |
+| since_id | Number | Return Posts since this ```id``` | | |
 
 ### Response
 
