@@ -383,6 +383,10 @@ describe 'Morsels API' do
       expect(response).to be_success
 
       expect(json_data.count).to eq(2)
+
+      first_comment = json_data.first
+      expect(first_comment['creator']).to_not be_nil
+      expect(first_comment['morsel_id']).to eq(morsel_with_creator_and_comments.id)
     end
 
     context 'pagination' do
@@ -464,7 +468,9 @@ describe 'Morsels API' do
 
       new_comment = Comment.find(json_data['id'])
       expect_json_keys(json_data, new_comment, %w(id description))
-      expect(json_data['creator_id']).to eq(new_comment.user.id)
+
+      expect(json_data['creator']).to_not be_nil
+      expect(json_data['creator']['id']).to eq(turd_ferg.id)
       expect(json_data['morsel_id']).to eq(new_comment.morsel.id)
     end
   end

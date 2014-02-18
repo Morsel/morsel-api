@@ -2,14 +2,21 @@ class CommentSerializer < ActiveModel::Serializer
   attributes :id,
              :description,
              :created_at,
-             :creator_id,
-             :morsel_id
-
-  def creator_id
-    object.user.id
-  end
+             :morsel_id,
+             :creator
 
   def morsel_id
     object.morsel.id
+  end
+
+  def creator
+    user = object.user
+    {
+      :id => user.id,
+      :first_name => user.first_name,
+      :last_name => user.last_name,
+      :username => user.username,
+      :photos => user.photos_hash
+    }
   end
 end
