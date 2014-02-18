@@ -656,7 +656,18 @@ Creates a new Subscriber
 {
   "id": 4,
   "description": "Wow! Are those Swedish Fish caviar???!?!?!one!?!11!?1?!",
-  "creator_id": 1,
+  "creator": {
+    "id": 1,
+    "username": "marty",
+    "first_name": "Marty",
+    "last_name": "Trzpit",
+    "photos": {
+      "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg",
+      "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg",
+      "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg",
+      "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg"
+    }
+  },
   "morsel_id": 5,
   "created_at": "2014-01-07T18:37:19.661Z"
 }
@@ -770,13 +781,35 @@ ditto as w/ Post if post_id exists
     "comments": [{
       "id": 4,
       "description": "Wow! Are those Swedish Fish caviar???!?!?!one!?!11!?1?!",
-      "creator_id": 1,
+      "creator": {
+        "id": 1,
+        "username": "marty",
+        "first_name": "Marty",
+        "last_name": "Trzpit",
+        "photos": {
+          "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg",
+          "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg",
+          "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg",
+          "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg"
+        }
+      },
       "morsel_id": 5,
       "created_at": "2014-01-07T18:37:19.661Z"
     }, {
       "id": 7,
       "description": "Fuck yeah!",
-      "creator_id": 2,
+      "creator": {
+        "id": 3,
+        "username": "turdferg",
+        "first_name": "Turd",
+        "last_name": "Ferguson",
+        "photos": {
+          "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+          "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+          "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+          "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+        }
+      },
       "morsel_id": 5,
       "created_at": "2014-01-07T18:38:13.855Z"
     }]
