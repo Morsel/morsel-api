@@ -2,10 +2,13 @@ require 'spec_helper'
 
 describe 'Posts API' do
   let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
+  let(:morsels_count) { 4 }
 
   describe 'GET /posts posts#index' do
+    let(:posts_count) { 3 }
+
     before do
-      4.times { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
+      posts_count.times { FactoryGirl.create(:post_with_morsels_and_creator, morsels_count: morsels_count) }
     end
 
     it 'returns a list of Posts' do
@@ -13,9 +16,9 @@ describe 'Posts API' do
 
       expect(response).to be_success
 
-      expect(json_data.count).to eq(4)
+      expect(json_data.count).to eq(posts_count)
 
-      expect(json_data.first['morsels'].count).to eq(3)
+      expect(json_data.first['morsels'].count).to eq(morsels_count)
     end
 
     context 'pagination' do
@@ -87,10 +90,10 @@ describe 'Posts API' do
 
       context 'twenty Posts' do
         before do
-          20.times { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
+          20.times { FactoryGirl.create(:post_with_morsels_and_creator) }
         end
 
-        it 'should take time' do
+        it 'should take more time' do
           Benchmark.realtime {
             get '/posts', api_key: api_key_for_user(turd_ferg), format: :json
           }.should < 1.5
@@ -99,18 +102,18 @@ describe 'Posts API' do
     end
 
     context 'user_id included in parameters' do
-      let(:post_with_morsels_and_creator_and_draft) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
+      let(:post_with_morsels_and_creator) { FactoryGirl.create(:post_with_morsels_and_creator) }
 
       it 'returns all Posts for user_id' do
         get '/posts', api_key: api_key_for_user(turd_ferg),
-                      user_id_or_username: post_with_morsels_and_creator_and_draft.creator.id,
+                      user_id_or_username: post_with_morsels_and_creator.creator.id,
                       format: :json
 
         expect(response).to be_success
 
         expect(json_data.count).to eq(1)
 
-        creator_id = post_with_morsels_and_creator_and_draft.creator.id
+        creator_id = post_with_morsels_and_creator.creator.id
 
         json_data.each do |morsel_json|
           expect(morsel_json['creator_id']).to eq(creator_id)
@@ -128,10 +131,10 @@ describe 'Posts API' do
 
         context 'twenty Posts' do
           before do
-            20.times { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
+            20.times { FactoryGirl.create(:post_with_morsels_and_creator) }
           end
 
-          it 'should take time' do
+          it 'should take more time' do
             Benchmark.realtime {
               get '/posts', api_key: api_key_for_user(turd_ferg), format: :json
             }.should < 1.25
@@ -148,29 +151,29 @@ describe 'Posts API' do
 
         expect(response).to be_success
 
-        expect(json_data.count).to eq(4)
+        expect(json_data.count).to eq(posts_count)
 
-        expect(json_data.first['morsels'].count).to eq(4)
+        expect(json_data.first['morsels'].count).to eq(morsels_count)
       end
     end
   end
 
   describe 'GET /posts posts#show' do
-    let(:post_with_morsels_and_creator_and_draft) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
+    let(:post_with_morsels_and_creator) { FactoryGirl.create(:post_with_morsels_and_creator, morsels_count: morsels_count) }
 
     it 'returns the Post' do
-      get "/posts/#{post_with_morsels_and_creator_and_draft.id}", api_key: api_key_for_user(turd_ferg), format: :json
+      get "/posts/#{post_with_morsels_and_creator.id}", api_key: api_key_for_user(turd_ferg), format: :json
 
       expect(response).to be_success
 
-      expect_json_keys(json_data, post_with_morsels_and_creator_and_draft, %w(id title creator_id))
-      expect(json_data['slug']).to eq(post_with_morsels_and_creator_and_draft.cached_slug)
+      expect_json_keys(json_data, post_with_morsels_and_creator, %w(id title creator_id))
+      expect(json_data['slug']).to eq(post_with_morsels_and_creator.cached_slug)
 
-      expect(json_data['morsels'].count).to eq(3)
+      expect(json_data['morsels'].count).to eq(morsels_count)
     end
 
     context 'include_drafts=true included in parameters' do
-      let(:post_with_morsels_and_creator_and_draft) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
+      let(:post_with_morsels_and_creator_and_draft) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft, morsels_count: morsels_count) }
       it 'returns the Post including Morsel drafts' do
         get "/posts/#{post_with_morsels_and_creator_and_draft.id}", api_key: api_key_for_user(turd_ferg),
                                                                     format: :json,
@@ -180,13 +183,13 @@ describe 'Posts API' do
 
         expect_json_keys(json_data, post_with_morsels_and_creator_and_draft, %w(id title creator_id))
         expect(json_data['slug']).to eq(post_with_morsels_and_creator_and_draft.cached_slug)
-        expect(json_data['morsels'].count).to eq(4)
+        expect(json_data['morsels'].count).to eq(morsels_count + 1)
       end
     end
   end
 
   describe 'PUT /posts/{:post_id} posts#update' do
-    let(:existing_post) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
+    let(:existing_post) { FactoryGirl.create(:post_with_morsels_and_creator) }
     let(:new_title) { 'Shy Ronnie 2: Ronnie & Clyde' }
 
     it 'updates the Post' do
@@ -202,7 +205,7 @@ describe 'Posts API' do
   end
 
   describe 'POST /posts/{:post_id}/append posts#append' do
-    let(:existing_post) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
+    let(:existing_post) { FactoryGirl.create(:post_with_morsels_and_creator, morsels_count: morsels_count) }
     let(:morsel_with_creator) { FactoryGirl.create(:morsel_with_creator) }
 
     it 'appends the Morsel to the Post' do
@@ -216,7 +219,7 @@ describe 'Posts API' do
 
       expect(existing_post.morsels).to include(morsel_with_creator)
 
-      expect(json_data['morsels'].count).to eq(4)
+      expect(json_data['morsels'].count).to eq(morsels_count + 1)
     end
 
     context 'relationship already exists' do
@@ -236,7 +239,7 @@ describe 'Posts API' do
     end
 
     context 'sort_order included in parameters' do
-      let(:existing_post) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
+      let(:existing_post) { FactoryGirl.create(:post_with_morsels_and_creator) }
 
       it 'changes the sort_order' do
         post "/posts/#{existing_post.id}/append", api_key: api_key_for_user(turd_ferg),
@@ -265,13 +268,13 @@ describe 'Posts API' do
 
         expect(existing_post.morsels).to include(morsel_with_creator)
 
-        expect(json_data['morsels'].count).to eq(5)
+        expect(json_data['morsels'].count).to eq(morsels_count + 1)
       end
     end
   end
 
   describe 'DELETE posts/{:post_id}/append posts#unappend' do
-    let(:existing_post) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
+    let(:existing_post) { FactoryGirl.create(:post_with_morsels_and_creator) }
     let(:morsel_in_existing_post) { existing_post.morsels.first }
 
     it 'unappends the Morsel from the Post' do

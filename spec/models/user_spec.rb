@@ -58,7 +58,6 @@ describe User do
 
   its(:twitter_authorization) { should be_nil }
   its(:authorized_with_twitter?) { should be_false }
-  its(:twitter_client) { should be_nil }
   its(:twitter_username) { should be_nil }
   its(:facebook_uid) { should be_nil }
 
@@ -195,7 +194,7 @@ describe User do
 
   context 'Authorizations' do
     context 'Facebook' do
-      subject(:user_with_facebook_authorization) { FactoryGirl.create(:user_with_facebook_authorization) }
+      subject(:user_with_facebook_authorization) { UserSocialClientsDecorator.new(FactoryGirl.create(:user_with_facebook_authorization)) }
 
       its(:facebook_authorizations) { should_not be_empty }
 
@@ -218,7 +217,7 @@ describe User do
     end
 
     context 'Twitter' do
-      subject(:user_with_twitter_authorization) { FactoryGirl.create(:user_with_twitter_authorization) }
+      subject(:user_with_twitter_authorization) { UserSocialClientsDecorator.new(FactoryGirl.create(:user_with_twitter_authorization)) }
 
       its(:twitter_authorizations) { should_not be_empty }
 

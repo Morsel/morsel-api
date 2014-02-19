@@ -54,8 +54,9 @@ Spork.prefork do
     config.include Requests::JsonHelpers, type: :request
 
     config.before(:suite) do
-      DatabaseCleaner.strategy = :transaction
       DatabaseCleaner.clean_with(:truncation)
+
+      DatabaseCleaner.strategy = :transaction
     end
 
     config.before(:each) do

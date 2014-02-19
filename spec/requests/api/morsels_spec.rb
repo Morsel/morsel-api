@@ -2,6 +2,103 @@ require 'spec_helper'
 
 describe 'Morsels API' do
   let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
+  let(:morsels_count) { 4 }
+
+  describe 'GET /feed morsels#index' do
+    let(:posts_count) { 3 }
+
+    before do
+      posts_count.times { FactoryGirl.create(:post_with_morsels_and_creator, morsels_count: morsels_count) }
+    end
+
+    it 'returns the authenticated User\'s Feed' do
+      get '/feed', api_key: api_key_for_user(turd_ferg),
+                   format: :json
+
+      expect(response).to be_success
+
+      first_morsel = json_data.first
+
+      expect(first_morsel['liked']).to be_false
+      expect(first_morsel['in_progression']).to be_true
+
+      expect(first_morsel['creator']).to_not be_nil
+      expect(first_morsel['post']).to_not be_nil
+    end
+
+    context 'drafts' do
+      before do
+        rand(3..6).times { FactoryGirl.create(:morsel_draft) }
+      end
+
+      it 'should NOT include drafts' do
+        get '/feed', api_key: api_key_for_user(turd_ferg),
+                     format: :json
+
+        expect(response).to be_success
+
+        expect(json_data.count).to eq(posts_count * morsels_count)
+      end
+    end
+
+    context 'pagination' do
+      before do
+        30.times { FactoryGirl.create(:post_with_morsels_and_creator) }
+      end
+
+      describe 'max_id' do
+        it 'returns results up to and including max_id' do
+          expected_count = rand(3..6)
+          max_id = Morsel.first.id + expected_count - 1
+          get '/feed', api_key: api_key_for_user(turd_ferg),
+                       max_id: max_id,
+                       format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+          expect(json_data.first['id']).to eq(max_id)
+        end
+      end
+
+      describe 'since_id' do
+        it 'returns results since since_id' do
+          expected_count = rand(3..6)
+          since_id = Morsel.last.id - expected_count
+          get '/feed', api_key: api_key_for_user(turd_ferg),
+                       since_id: since_id,
+                       format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+          expect(json_data.last['id']).to eq(since_id + 1)
+        end
+      end
+
+      describe 'count' do
+        it 'defaults to 20' do
+          get '/feed', api_key: api_key_for_user(turd_ferg),
+                       format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(20)
+        end
+
+        it 'limits the result' do
+          expected_count = rand(3..6)
+          get '/feed', api_key: api_key_for_user(turd_ferg),
+                       count: expected_count,
+                       format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+        end
+      end
+    end
+  end
 
   describe 'POST /morsels morsels#create' do
     let(:existing_post) { FactoryGirl.create(:post) }
@@ -21,6 +118,7 @@ describe 'Morsels API' do
       new_morsel = Morsel.find json_data['id']
       expect_json_keys(json_data, new_morsel, %w(id description creator_id))
       expect(json_data['photos']).to_not be_nil
+      expect(json_data['published_at']).to_not be_nil
 
       expect(new_morsel.posts).to_not include(existing_post)
     end
@@ -141,6 +239,7 @@ describe 'Morsels API' do
 
         expect(json_data['id']).to_not be_nil
         expect(json_data['draft']).to be_true
+        expect(json_data['published_at']).to be_nil
 
         new_morsel = Morsel.find json_data['id']
         expect(new_morsel.draft).to be_true
@@ -216,32 +315,32 @@ describe 'Morsels API' do
     end
 
     context 'post_id and sort_order included in parameters' do
-      let(:post_with_morsels_and_creator_and_draft) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
-      let(:last_morsel) { post_with_morsels_and_creator_and_draft.morsels.last }
+      let(:post_with_morsels_and_creator) { FactoryGirl.create(:post_with_morsels_and_creator) }
+      let(:last_morsel) { post_with_morsels_and_creator.morsels.last }
 
       context 'Morsel belongs to the Post' do
         it 'changes the sort_order' do
           put "/morsels/#{last_morsel.id}", api_key: api_key_for_user(turd_ferg),
                                             format: :json,
                                             morsel: { description: 'Just like a bus route.' },
-                                            post_id: post_with_morsels_and_creator_and_draft.id,
+                                            post_id: post_with_morsels_and_creator.id,
                                             sort_order: 1
 
           expect(response).to be_success
 
           expect(json_data['id']).to_not be_nil
 
-          expect(post_with_morsels_and_creator_and_draft.morsel_ids.first).to eq(json_data['id'])
+          expect(post_with_morsels_and_creator.morsel_ids.first).to eq(json_data['id'])
         end
       end
 
       context 'Morsel does NOT belong to the Post' do
-        let(:different_post) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft) }
+        let(:different_post) { FactoryGirl.create(:post_with_morsels_and_creator) }
         it 'changes the Morsel\'s Post and removes it from the previous one' do
           put "/morsels/#{last_morsel.id}", api_key: api_key_for_user(turd_ferg),
                                             format: :json,
                                             morsel: { description: 'I should be on a different Post.' },
-                                            post_id: post_with_morsels_and_creator_and_draft.id,
+                                            post_id: post_with_morsels_and_creator.id,
                                             new_post_id: different_post.id
 
           expect(response).to be_success
@@ -251,7 +350,7 @@ describe 'Morsels API' do
           expect(different_post.morsel_ids.last).to eq(json_data['id'])
 
           # Morsel should no longer be associated with the original Post
-          expect(post_with_morsels_and_creator_and_draft.morsels).to_not include(last_morsel)
+          expect(post_with_morsels_and_creator.morsels).to_not include(last_morsel)
         end
       end
     end

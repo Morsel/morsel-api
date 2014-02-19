@@ -28,7 +28,7 @@ class Post < ActiveRecord::Base
     morsel_posts_to_increment = morsel_posts.where('sort_order >= ?', new_sort_order)
     morsel_posts_to_increment.update_all('sort_order = sort_order + 1')
 
-    morsel_post = morsel_posts.where(post_id: id, morsel_id: morsel_id).first
+    morsel_post = morsel_posts.find_by(post_id: id, morsel_id: morsel_id)
     morsel_post.sort_order = new_sort_order
     morsel_post.save
   end
