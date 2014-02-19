@@ -1,6 +1,17 @@
 class MorselsController < ApiController
   respond_to :json
 
+  # feed
+  def index
+    morsels = Morsel.feed
+                    .since(params[:since_id])
+                    .max(params[:max_id])
+                    .limit(pagination_count)
+                    .order('id DESC')
+
+    custom_respond_with morsels, each_serializer: MorselForFeedSerializer
+  end
+
   def create
     # TODO: Cyclomatic complexity for create is too high
     morsel_params = MorselParams.build(params)

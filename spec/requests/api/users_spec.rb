@@ -59,8 +59,9 @@ describe 'Users API' do
 
   # Undocumented method
   describe 'GET /users users#index' do
+    let(:users_count) { 3 }
     before do
-      3.times { FactoryGirl.create(:user) }
+      users_count.times { FactoryGirl.create(:user) }
     end
 
     it 'returns a list of Users' do
@@ -68,7 +69,7 @@ describe 'Users API' do
 
       expect(response).to be_success
 
-      expect(json_data.count).to eq(3)
+      expect(json_data.count).to eq(users_count)
     end
 
     context 'performance' do

@@ -3,6 +3,7 @@ class MorselSerializer < ActiveModel::Serializer
              :description,
              :creator_id,
              :created_at,
+             :published_at,
              :photos
 
   def attributes

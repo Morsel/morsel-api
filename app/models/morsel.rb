@@ -30,19 +30,22 @@ class Morsel < ActiveRecord::Base
   has_many :posts, through: :morsel_posts
 
   include PhotoUploadable
+  include TimelinePaginateable
 
   mount_uploader :photo, MorselPhotoUploader
 
   scope :drafts, -> { where(draft: true) }
   scope :published, -> { where(draft: false) }
+  scope :feed, -> { includes(:creator, :morsel_posts, :posts).where(draft: false) }
 
   after_destroy :release_posts
-  before_save :update_photo_attributes
+  before_save :update_photo_attributes,
+              :update_published_at_if_necessary
 
   validate :description_or_photo_present?
 
   def sort_order_for_post_id(post_id)
-    morsel_posts.where(post_id: post_id).first.sort_order
+    morsel_posts.find_by(post_id: post_id).sort_order
   end
 
   def facebook_message(post)
@@ -93,5 +96,9 @@ class Morsel < ActiveRecord::Base
     posts.each do |p|
       p.destroy if p.morsels.empty?
     end
+  end
+
+  def update_published_at_if_necessary
+    self.published_at = DateTime.now if self.published_at.blank? && !self.draft
   end
 end

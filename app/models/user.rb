@@ -70,9 +70,9 @@ class User < ActiveRecord::Base
 
   def self.find_by_id_or_username(id_or_username)
     if id_or_username.to_i > 0
-      where(id: id_or_username).first
+      find_by(id: id_or_username)
     else
-      where('lower(username) = lower(?)', id_or_username).first
+      find_by('lower(username) = lower(?)', id_or_username)
     end
   end
 
@@ -131,21 +131,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def facebook_client
-    Koala::Facebook::API.new(facebook_authorization.token) if authorized_with_facebook?
-  end
-
-  def twitter_client
-    if authorized_with_twitter?
-      Twitter::REST::Client.new do |config|
-        config.consumer_key = Settings.twitter.consumer_key
-        config.consumer_secret = Settings.twitter.consumer_secret
-        config.access_token = twitter_authorization.token
-        config.access_token_secret = twitter_authorization.secret
-      end
-    end
-  end
-
   private
 
   def ensure_authentication_token
@@ -155,7 +140,7 @@ class User < ActiveRecord::Base
   def generate_authentication_token
     loop do
       token = Devise.friendly_token
-      break token unless User.where(authentication_token: token).first
+      break token unless User.find_by(authentication_token: token)
     end
   end
 

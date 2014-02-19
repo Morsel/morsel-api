@@ -32,6 +32,8 @@ describe Morsel do
   it { should respond_to(:morsel_posts) }
   it { should respond_to(:posts) }
 
+  it { should respond_to(:published_at) }
+
   it { should be_valid }
 
   describe 'description and photo are missing' do
@@ -39,6 +41,27 @@ describe Morsel do
 
     it { should_not be_valid }
   end
+
+  describe 'published_at' do
+    it 'should set published_at on save' do
+      expect(morsel.published_at).to be_nil
+      morsel.save
+      expect(morsel.published_at).to_not be_nil
+    end
+
+    context 'draft' do
+      before do
+        morsel.draft = true
+      end
+
+      it 'should NOT set published_at on save' do
+        expect(morsel.published_at).to be_nil
+        morsel.save
+        expect(morsel.published_at).to be_nil
+      end
+    end
+  end
+
 
   describe 'changing the sort_order in a post' do
     subject(:post_with_morsels) { FactoryGirl.create(:post_with_morsels) }

@@ -7,6 +7,7 @@
   - [About the API Documentation](#about-the-api-documentation)
 - [Authentication](#authentication)
 - [Constants](#constants)
+- [Feed Methods](#feed-methods)
 - [User Methods](#user-methods)
   - [POST ```/users``` - Create a new User](#post-users---create-a-new-user)
   - [POST ```/users/sign_in``` - User Authentication](#post-userssign_in---user-authentication)
@@ -40,6 +41,7 @@
     - [Comment](#comment)
   - [Morsel Objects](#morsel-objects)
     - [Morsel](#morsel)
+    - [Morsel (for Feed)](#morsel-for-feed)
     - [Morsel (w/ Post)](#morsel-w-post)
     - [Morsel (Authenticated)](#morsel-authenticated)
     - [Morsel (Authenticated w/ Post)](#morsel-authenticated-w-post)
@@ -162,6 +164,21 @@ The API uses two different levels of authentication, depending on the method.
 TIMELINE_DEFAULT_LIMIT = 20
 ```
 
+# Feed Methods
+
+## GET ```/feed``` - Feed
+Returns the Feed for the authenticated User. The Feed consists of Morsels that aren't drafts sorted by their published_at date, with the most recent one's appearing first.
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [Morsel (for Feed)](#morsel-for-feed) |
+
+<br />
+<br />
+
+
 # User Methods
 
 ## POST ```/users``` - Create a new User
@@ -216,7 +233,6 @@ Authenticates a User and returns an authentication_token
 
 ## GET ```/users/{user_id|user_username}``` - User
 Returns the User with the specified ```user_id``` or ```user_username```
-NOTE: This currently returns the User's Posts and Morsels. It's highly inefficient so the returning of Posts and Morsels in this call will be deprecated soon.
 
 ### Response
 
@@ -689,6 +705,44 @@ Creates a new Subscriber
       "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+    }
+  }
+```
+
+### Morsel (for Feed)
+
+```json
+  {
+    "id": 2,
+    "description": null,
+    "created_at": "2014-01-07T16:34:43.071Z",
+    "published_at": "2014-01-07T16:34:43.071Z",
+    "photos": {
+      "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
+      "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+    },
+    "in_progression": false,
+    "liked": false,
+    "creator": {
+      "id": 3,
+      "username": "turdferg",
+      "first_name": "Turd",
+      "last_name": "Ferguson",
+      "photos": {
+        "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+        "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+        "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+        "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+      }
+    },
+    "post": {
+      "id": 4,
+      "title": "Butter Rocks!",
+      "slug": "butter-rocks"
+      "created_at": "2014-01-07T16:34:44.862Z",
     }
   }
 ```
