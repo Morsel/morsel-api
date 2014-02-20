@@ -130,6 +130,12 @@ describe 'Users API' do
       expect(json_data['draft_count']).to eq(user_with_posts.morsels.drafts.count)
     end
 
+    it 'should be public' do
+      get "/users/#{user_with_posts.id}", format: :json
+
+      expect(response).to be_success
+    end
+
     context 'performance' do
       before do
         require 'benchmark'
