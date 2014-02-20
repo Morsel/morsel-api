@@ -8,6 +8,7 @@
 - [Authentication](#authentication)
 - [Constants](#constants)
 - [Feed Methods](#feed-methods)
+  - [GET ```/feed``` - Feed](#get-feed--feed)
 - [User Methods](#user-methods)
   - [POST ```/users``` - Create a new User](#post-users---create-a-new-user)
   - [POST ```/users/sign_in``` - User Authentication](#post-userssign_in---user-authentication)
@@ -15,6 +16,7 @@
   - [GET ```/users/{user_id|user_username}``` - User](#get-usersuser_iduser_username---user)
   - [PUT ```/users/{user_id}``` - Update User](#put-usersuser_id---update-user)
   - [GET ```/users/{user_id|user_username}/posts``` - User Posts](#get-usersuser_iduser_usernameposts---user-posts)
+  - [GET ```/users/{user_id|user_username}/feed``` - User Feed](#get-usersuser_iduser_usernamefeed---user-feed)
   - [POST ```/users/authorizations``` - Create User Authorizations](#post-usersauthorizations---create-user-authorizations)
   - [GET ```/users/{user_id}/authorizations``` - User Authorizations](#get-usersuser_idauthorizations---user-authorizations)
 - [Morsel Methods](#morsel-methods)
@@ -170,6 +172,14 @@ TIMELINE_DEFAULT_LIMIT = 20
 ## GET ```/feed``` - Feed
 Returns the Feed for the authenticated User. The Feed consists of Morsels that aren't drafts sorted by their published_at date, with the most recent one's appearing first.
 
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Morsels up to and including this ```id``` | | |
+| since_id | Number | Return Morsels since this ```id``` | | |
+
 ### Response
 
 | __data__ |
@@ -300,6 +310,27 @@ Returns the Posts for the User with the specified ```user_id``` or ```user_usern
 | __data__ |
 | -------- |
 | Array of [Post](#post) |
+
+<br />
+<br />
+
+## GET ```/users/{user_id|user_username}/feed``` - User Feed
+Returns the Feed for the User with the specified ```user_id``` or ```user_username```.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| include_drafts | Boolean | Set to true to include Morsel drafts | false | |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Morsels up to and including this ```id``` | | |
+| since_id | Number | Return Morsels since this ```id``` | | |
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [Morsel (for Feed)](#morsel-for-feed) |
 
 <br />
 <br />

@@ -1,5 +1,5 @@
 class PostsController < ApiController
-  skip_before_filter :authenticate_user_from_token!, only: [:show]
+  skip_before_filter :authenticate_user_from_token!, only: [:index, :show]
   respond_to :json
 
   def index
@@ -7,7 +7,6 @@ class PostsController < ApiController
       posts = Post.includes(:morsel_posts, :morsels, :creator)
                   .since(params[:since_id])
                   .max(params[:max_id])
-                  .where('creator_id > 0')
                   .limit(pagination_count)
                   .order('id DESC')
     else

@@ -37,7 +37,7 @@ class Morsel < ActiveRecord::Base
 
   scope :drafts, -> { where(draft: true) }
   scope :published, -> { where(draft: false) }
-  scope :feed, -> { includes(:creator, :morsel_posts, :posts).where(draft: false) }
+  scope :feed, -> { includes(:creator, :morsel_posts, :posts) }
 
   after_destroy :release_posts
   before_save :update_photo_attributes,

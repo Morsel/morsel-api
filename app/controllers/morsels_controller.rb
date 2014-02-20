@@ -1,13 +1,36 @@
 class MorselsController < ApiController
+  skip_before_filter :authenticate_user_from_token!, only: [:index]
   respond_to :json
 
   # feed
   def index
-    morsels = Morsel.feed
-                    .since(params[:since_id])
-                    .max(params[:max_id])
-                    .limit(pagination_count)
-                    .order('id DESC')
+    if params[:user_id_or_username].blank?
+      morsels = Morsel.feed
+                      .published
+                      .since(params[:since_id])
+                      .max(params[:max_id])
+                      .limit(pagination_count)
+                      .order('published_at DESC')
+    else
+      user = User.find_by_id_or_username(params[:user_id_or_username])
+      raise ActiveRecord::RecordNotFound if user.nil?
+      if params[:include_drafts].blank?
+        morsels = Morsel.feed
+                        .published
+                        .since(params[:since_id])
+                        .max(params[:max_id])
+                        .where('creator_id = ?', user.id)
+                        .limit(pagination_count)
+                        .order('id DESC')
+      else
+        morsels = Morsel.feed
+                        .since(params[:since_id])
+                        .max(params[:max_id])
+                        .where('creator_id = ?', user.id)
+                        .limit(pagination_count)
+                        .order('id DESC')
+      end
+    end
 
     custom_respond_with morsels, each_serializer: MorselForFeedSerializer
   end

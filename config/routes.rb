@@ -29,6 +29,7 @@ MorselApp::Application.routes.draw do
     resources :comments, only: [:create, :index]
   end
   get 'feed' => 'morsels#index'
+  get 'users/:user_id_or_username/feed' => 'morsels#index'
   resources :comments, only: [:destroy]
 
   post 'morsels/:morsel_id/like', to: 'likes#create'
