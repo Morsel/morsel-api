@@ -23,6 +23,7 @@
 - [Morsel Methods](#morsel-methods)
   - [POST ```/morsels``` - Create a new Morsel](#post-morsels---create-a-new-morsel)
   - [GET ```/morsels/{morsel_id}``` - Morsel](#get-morselsmorsel_id---morsel)
+  - [GET ```/morsels/drafts``` - Morsel Drafts](#get-morselsdrafts---morsel-drafts)
   - [PUT ```/morsels/{morsel_id}``` - Update Morsel](#put-morselsmorsel_id---update-morsel)
   - [DELETE ```/morsels/{morsel_id}``` - Delete Morsel](#delete-morselsmorsel_id---delete-morsel)
   - [POST ```/morsels/{morsel_id}/like``` - Like Morsel](#post-morselsmorsel_idlike---like-morsel)
@@ -322,7 +323,6 @@ Returns the Posts for the User with the specified ```user_id``` or ```user_usern
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
 | max_id | Number | Return Posts up to and including this ```id``` | | |
 | since_id | Number | Return Posts since this ```id``` | | |
@@ -343,7 +343,6 @@ Returns the Feed for the User with the specified ```user_id``` or ```user_userna
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| include_drafts | Boolean | Set to true to include Morsel drafts | false | |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
 | max_id | Number | Return Morsels up to and including this ```id``` | | |
 | since_id | Number | Return Morsels since this ```id``` | | |
@@ -436,6 +435,26 @@ Returns Morsel with the specified ```morsel_id```
 | __data__ |
 | -------- |
 | [Morsel (Authenticated w/ Comments)](#morsel-authenticated-w-comments) |
+
+<br />
+<br />
+
+GET ```/morsels/drafts``` - Morsel Drafts
+Returns the Morsel Drafts for the authenticated User sorted by their updated_at, with the most recent one's appearing first.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Morsels up to and including this ```id``` | | |
+| since_id | Number | Return Morsels since this ```id``` | | |
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [Morsel (for Feed)](#morsel-for-feed) |
 
 <br />
 <br />
@@ -587,7 +606,6 @@ Returns the Posts for all Users.
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
 | max_id | Number | Return Posts up to and including this ```id``` | | |
 | since_id | Number | Return Posts since this ```id``` | | |
@@ -606,7 +624,6 @@ Returns the Post with the specified ```post_id```
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
 
 ### Response
 
@@ -644,7 +661,6 @@ Appends a Morsel with the specified ```morsel_id``` to the Post with the specifi
 | ------------------- | ------- | ----------- | ------- | --------- |
 | morsel_id         | Number  | ID of the Morsel to append | | x |
 | sort_order         | Number  | The ```sort_order``` for the Morsel in the Post | end of Post | |
-| include_drafts | Boolean | Set to true to return all Morsel drafts | false | |
 
 ### Response
 
@@ -790,6 +806,7 @@ Creates a new Subscriber
       "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
     },
+    "draft": false,
     "in_progression": false,
     "liked": false,
     "creator": {

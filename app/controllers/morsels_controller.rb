@@ -14,22 +14,13 @@ class MorselsController < ApiController
     else
       user = User.find_by_id_or_username(params[:user_id_or_username])
       raise ActiveRecord::RecordNotFound if user.nil?
-      if params[:include_drafts].blank?
-        morsels = Morsel.feed
-                        .published
-                        .since(params[:since_id])
-                        .max(params[:max_id])
-                        .where('creator_id = ?', user.id)
-                        .limit(pagination_count)
-                        .order('id DESC')
-      else
-        morsels = Morsel.feed
-                        .since(params[:since_id])
-                        .max(params[:max_id])
-                        .where('creator_id = ?', user.id)
-                        .limit(pagination_count)
-                        .order('id DESC')
-      end
+      morsels = Morsel.feed
+                      .published
+                      .since(params[:since_id])
+                      .max(params[:max_id])
+                      .where('creator_id = ?', user.id)
+                      .limit(pagination_count)
+                      .order('published_at DESC')
     end
 
     custom_respond_with morsels, each_serializer: MorselForFeedSerializer
@@ -83,7 +74,7 @@ class MorselsController < ApiController
               current_user.post_to_facebook(morsel.facebook_message(new_post)) if params[:post_to_facebook]
               current_user.post_to_twitter(morsel.twitter_message(new_post)) if params[:post_to_twitter]
 
-              custom_respond_with morsel, post: new_post, include_drafts: (params[:include_drafts] == 'true')
+              custom_respond_with morsel, post: new_post
             else
               render_json_errors(new_post.errors)
             end
@@ -94,7 +85,7 @@ class MorselsController < ApiController
           current_user.post_to_facebook(morsel.facebook_message(post)) if params[:post_to_facebook]
           current_user.post_to_twitter(morsel.twitter_message(post)) if params[:post_to_twitter]
 
-          custom_respond_with morsel, post: post, include_drafts: (params[:include_drafts] == 'true')
+          custom_respond_with morsel, post: new_post
         end
       else
         custom_respond_with morsel
@@ -111,6 +102,18 @@ class MorselsController < ApiController
     else
       render_json_errors(morsel.errors)
     end
+  end
+
+  def drafts
+    morsels = Morsel.feed
+                    .drafts
+                    .since(params[:since_id])
+                    .max(params[:max_id])
+                    .where('creator_id = ?', current_user.id)
+                    .limit(pagination_count)
+                    .order('updated_at DESC')
+
+    custom_respond_with morsels, each_serializer: MorselForFeedSerializer
   end
 
   class MorselParams

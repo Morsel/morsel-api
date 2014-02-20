@@ -14,10 +14,6 @@ class PostSerializer < ActiveModel::Serializer
   end
 
   def morsels
-    if @options[:include_drafts]
-      object.morsels
-    else
-      object.morsels.published
-    end
+    object.morsels.published
   end
 end

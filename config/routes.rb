@@ -17,31 +17,36 @@ MorselApp::Application.routes.draw do
               }
 
   resources :users, only: [:index, :update] do
+    collection do
+      post 'authorizations' => 'authorizations#create'
+      get 'checkusername(/:username)' => 'users#checkusername'
+      get 'me' => 'users#me'
+      get ':user_id_or_username' => 'users#show'
+      get ':user_id_or_username/posts' => 'posts#index'
+      get ':user_id_or_username/feed' => 'morsels#index'
+    end
     resources :authorizations, only: [:index]
   end
 
-  post 'users/authorizations' => 'authorizations#create'
-  get 'users/checkusername(/:username)' => 'users#checkusername'
-  get 'users/me' => 'users#me'
-  get 'users/:user_id_or_username' => 'users#show'
-  get 'users/:user_id_or_username/posts' => 'posts#index'
-
   resources :morsels, only: [:create, :show, :update, :destroy] do
+    collection do
+      get 'drafts' => 'morsels#drafts'
+    end
     resources :comments, only: [:create, :index]
   end
   get 'feed' => 'morsels#index'
-  get 'users/:user_id_or_username/feed' => 'morsels#index'
-  resources :comments, only: [:destroy]
-
   post 'morsels/:morsel_id/like', to: 'likes#create'
   delete 'morsels/:morsel_id/like', to: 'likes#destroy'
 
+  resources :comments, only: [:destroy]
+
   resources :posts, only: [:index, :show, :update] do
+    collection do
+      post ':id/append', to: 'posts#append'
+      delete ':id/append', to: 'posts#unappend'
+    end
     resources :morsels, only: [:update, :destroy]
   end
-
-  post 'posts/:id/append', to: 'posts#append'
-  delete 'posts/:id/append', to: 'posts#unappend'
 
   resources :subscribers, only: [:create]
 end
