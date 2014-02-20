@@ -21,6 +21,34 @@ describe 'Users API' do
     end
   end
 
+  describe 'GET /users/checkusername' do
+    let(:user) { FactoryGirl.create(:user) }
+
+    it 'returns true if the username does exist' do
+      get '/users/checkusername', username: user.username, format: :json
+
+      expect(response).to be_success
+
+      expect(json_data).to eq('true')
+    end
+
+    it 'returns false if the username does NOT exist' do
+      get '/users/checkusername', username: 'not_a_username', format: :json
+
+      expect(response).to be_success
+
+      expect(json_data).to eq('false')
+    end
+
+    it 'can also accept username in the URL' do
+      get "/users/checkusername/#{user.username}", format: :json
+
+      expect(response).to be_success
+
+      expect(json_data).to eq('true')
+    end
+  end
+
   describe 'POST /users registrations#create' do
     it 'creates a new User' do
       post '/users', format: :json, user: { email: 'foo@bar.com', password: 'password',

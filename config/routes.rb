@@ -21,6 +21,7 @@ MorselApp::Application.routes.draw do
   end
 
   post 'users/authorizations' => 'authorizations#create'
+  get 'users/checkusername(/:username)' => 'users#checkusername'
   get 'users/me' => 'users#me'
   get 'users/:user_id_or_username' => 'users#show'
   get 'users/:user_id_or_username/posts' => 'posts#index'

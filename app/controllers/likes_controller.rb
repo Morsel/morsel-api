@@ -8,7 +8,7 @@ class LikesController < ApiController
     )
 
     if create_like.valid?
-      render json: 'OK', status: :ok
+      render_json 'OK'
     else
       render_json_errors(create_like.errors)
     end
@@ -21,7 +21,7 @@ class LikesController < ApiController
     )
 
     if destroy_like.valid?
-      render json: 'OK', status: :ok
+      render_json 'OK'
     else
       render_json_errors(destroy_like.errors)
     end

@@ -1,5 +1,5 @@
 class UsersController < ApiController
-  skip_before_filter :authenticate_user_from_token!, only: [:show]
+  skip_before_filter :authenticate_user_from_token!, only: [:show, :checkusername]
   respond_to :json
 
   def index
@@ -8,6 +8,18 @@ class UsersController < ApiController
 
   def me
     custom_respond_with current_user, serializer: UserWithPrivateAttributesSerializer
+  end
+
+  def checkusername
+    check_username_exists = CheckUsernameExists.run(
+      username: params[:username]
+    )
+
+    if check_username_exists.valid?
+      render_json "#{check_username_exists.result}"
+    else
+      render_json_errors check_username_exists.errors
+    end
   end
 
   def show
