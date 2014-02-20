@@ -452,8 +452,8 @@ describe 'Morsels API' do
         post "/morsels/#{morsel.id}/like", api_key: api_key_for_user(turd_ferg), format: :json
 
         expect(response).to_not be_success
-        expect(response.status).to eq(400)
-        expect(json_errors['like'].first).to eq('already exists')
+        expect(response.status).to eq(422)
+        expect(json_errors['morsel'].first).to eq('already liked')
       end
     end
 
@@ -469,6 +469,33 @@ describe 'Morsels API' do
         expect(response).to be_success
         expect(response.status).to eq(200)
         expect(morsel.likers).to include(turd_ferg)
+      end
+    end
+  end
+
+  describe 'DELETE /morsels/{:morsel_id}/like likes#destroy' do
+    let(:morsel) { FactoryGirl.create(:morsel) }
+
+    context 'current_user has liked Morsel' do
+      before do
+        morsel.likers << turd_ferg
+      end
+
+      it 'soft deletes the Like' do
+        delete "/morsels/#{morsel.id}/like", api_key: api_key_for_user(turd_ferg), format: :json
+
+        expect(response).to be_success
+        expect(morsel.likers).to_not include(turd_ferg)
+      end
+    end
+
+    context 'current_user has NOT liked Morsel' do
+      it 'does NOT soft delete the Comment' do
+        delete "/morsels/#{morsel.id}/like", api_key: api_key_for_user(turd_ferg), format: :json
+
+        expect(response).to_not be_success
+        expect(response.status).to eq(422)
+        expect(json_errors['morsel'].first).to eq('not liked')
       end
     end
   end
@@ -571,6 +598,17 @@ describe 'Morsels API' do
       expect(json_data['creator']).to_not be_nil
       expect(json_data['creator']['id']).to eq(turd_ferg.id)
       expect(json_data['morsel_id']).to eq(new_comment.morsel.id)
+    end
+
+    context 'missing Morsel' do
+      it 'should fail' do
+        post '/morsels/0/comments', api_key: api_key_for_user(turd_ferg),
+                                    format: :json,
+                                    comment: {
+                                      description: 'Drop it like it\'s hot.' }
+
+        expect(response).to_not be_success
+      end
     end
   end
 

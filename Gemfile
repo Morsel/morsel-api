@@ -7,6 +7,7 @@ gem 'puma'
 gem 'rails', '4.0.2'
 gem 'pg'
 
+gem 'active_interaction', '~> 1.0'
 gem 'active_model_serializers'
 gem 'activeadmin', github: 'gregbell/active_admin'
 gem 'bootstrap-sass', '>= 3.0.0.0'

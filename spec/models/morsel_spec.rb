@@ -17,6 +17,7 @@
 # **`photo_updated_at`**    | `datetime`         |
 # **`deleted_at`**          | `datetime`         |
 # **`draft`**               | `boolean`          | `default(FALSE), not null`
+# **`published_at`**        | `datetime`         |
 #
 
 require 'spec_helper'
@@ -61,7 +62,6 @@ describe Morsel do
       end
     end
   end
-
 
   describe 'changing the sort_order in a post' do
     subject(:post_with_morsels) { FactoryGirl.create(:post_with_morsels) }

@@ -2,27 +2,28 @@ class LikesController < ApiController
   respond_to :json
 
   def create
-    morsel = Morsel.find(params[:morsel_id])
-    if morsel.likers.include? current_user
-      render_json_errors({ like: ['already exists'] }, :bad_request)
-    elsif morsel.likers << current_user
+    create_like = CreateLike.run(
+      morsel: Morsel.find(params[:morsel_id]),
+      user: current_user
+    )
+
+    if create_like.valid?
       render json: 'OK', status: :ok
     else
-      render_json_errors(morsel.errors, :unprocessable_entity)
+      render_json_errors(create_like.errors)
     end
   end
 
   def destroy
-    morsel = Morsel.find(params[:morsel_id])
-    if morsel.likers.include? current_user
-      if morsel.likers.destroy(current_user)
-        render json: 'OK', status: :ok
-      else
-        render_json_errors(morsel.errors, :unprocessable_entity)
-      end
+    destroy_like = DestroyLike.run(
+      morsel: Morsel.find(params[:morsel_id]),
+      user: current_user
+    )
 
+    if destroy_like.valid?
+      render json: 'OK', status: :ok
     else
-      render_json_errors({ like: ['not found'] }, :not_found)
+      render_json_errors(destroy_like.errors)
     end
   end
 end

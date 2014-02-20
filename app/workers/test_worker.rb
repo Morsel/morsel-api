@@ -2,7 +2,7 @@ class TestWorker
   include Sidekiq::Worker
 
   def perform(message)
-    puts "#{message}"
+    Rails.logger.info "#{message}"
     if message.start_with? 'error'
       begin
         raise message

@@ -2,20 +2,16 @@ class CommentsController < ApiController
   respond_to :json
 
   def create
-    morsel = Morsel.find(params[:morsel_id])
-    if morsel.present?
-      comment = Comment.new(CommentParams.build(params))
+    create_comment = CreateComment.run(
+      description: CommentParams.build(params)[:description],
+      morsel: Morsel.find(params[:morsel_id]),
+      user: current_user
+    )
 
-      comment.user = current_user
-      comment.morsel = morsel
-
-      if comment.save
-        custom_respond_with comment
-      else
-        render_json_errors(comment.errors, :unprocessable_entity)
-      end
+    if create_comment.valid?
+      custom_respond_with create_comment.result
     else
-      render_json_errors({ morsel: ['not found'] }, :not_found)
+      render_json_errors(create_comment.errors)
     end
   end
 
@@ -30,19 +26,15 @@ class CommentsController < ApiController
   end
 
   def destroy
-    comment = Comment.find(params[:id])
-    if comment.present?
-      if current_user.can_delete_comment?(comment)
-        if comment.destroy
-          render json: 'OK', status: :ok
-        else
-          render_json_errors(comment.errors, :unprocessable_entity)
-        end
-      else
-        render_json_errors({ api: ['forbidden'] }, :forbidden)
-      end
+    destroy_comment = DestroyComment.run(
+      comment: Comment.find(params[:id]),
+      user: current_user
+    )
+
+    if destroy_comment.valid?
+      render json: 'OK', status: :ok
     else
-      render_json_errors({ comment: ['not found'] }, :not_found)
+      render_json_errors(destroy_comment.errors)
     end
   end
 

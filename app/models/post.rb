@@ -12,6 +12,7 @@
 # **`updated_at`**   | `datetime`         |
 # **`creator_id`**   | `integer`          |
 # **`cached_slug`**  | `string(255)`      |
+# **`deleted_at`**   | `datetime`         |
 #
 
 class Post < ActiveRecord::Base

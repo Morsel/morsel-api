@@ -24,21 +24,21 @@ class MorselForFeedSerializer < ActiveModel::Serializer
   def creator
     user = object.creator
     {
-      :id => user.id,
-      :username => user.username,
-      :first_name => user.first_name,
-      :last_name => user.last_name,
-      :photos => user.photos_hash
+      id: user.id,
+      username: user.username,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      photos: user.photos_hash
     }
   end
 
   def post
     post = object.posts.first
     {
-      :id => post.id,
-      :title => post.title,
-      :slug => post.cached_slug,
-      :created_at => post.created_at
+      id: post.id,
+      title: post.title,
+      slug: post.cached_slug,
+      created_at: post.created_at
     }
   end
 end

@@ -6,10 +6,10 @@
 #
 # Name              | Type               | Attributes
 # ----------------- | ------------------ | ---------------------------
-# **`id`**          | `integer`          | `not null, primary key`
 # **`morsel_id`**   | `integer`          |
 # **`post_id`**     | `integer`          |
 # **`sort_order`**  | `integer`          |
+# **`id`**          | `integer`          | `not null, primary key`
 #
 
 class MorselPost < ActiveRecord::Base

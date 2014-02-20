@@ -34,7 +34,7 @@ class PostsController < ApiController
     if post.update_attributes(PostParams.build(params))
       custom_respond_with post, include_drafts: (params[:include_drafts] == 'true')
     else
-      render_json_errors(post.errors, :unprocessable_entity)
+      render_json_errors(post.errors)
     end
   end
 
@@ -51,7 +51,7 @@ class PostsController < ApiController
 
         custom_respond_with post, include_drafts: (params[:include_drafts] == 'true')
       else
-        render_json_errors(post.errors, :unprocessable_entity)
+        render_json_errors(post.errors)
       end
     end
   end
@@ -64,7 +64,7 @@ class PostsController < ApiController
       if post.morsels.destroy(morsel)
         render json: 'OK', status: :ok
       else
-        render_json_errors(post.errors, :unprocessable_entity)
+        render_json_errors(post.errors)
       end
     else
       render_json_errors({ relationship: ['not found'] }, :not_found)

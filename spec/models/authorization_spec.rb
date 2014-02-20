@@ -21,11 +21,7 @@
 require 'spec_helper'
 
 describe Authorization do
-  before do
-    @authorization = FactoryGirl.build(:facebook_authorization)
-  end
-
-  subject { @authorization }
+  subject(:authorization) { FactoryGirl.build(:facebook_authorization) }
 
   it { should respond_to(:provider) }
   it { should respond_to(:uid) }
@@ -39,37 +35,49 @@ describe Authorization do
 
   describe 'provider' do
     context 'does not exist' do
-      before { @authorization.provider = nil }
+      before { authorization.provider = nil }
       it { should_not be_valid }
     end
 
     context 'is blank' do
-      before { @authorization.provider = '' }
+      before { authorization.provider = '' }
       it { should_not be_valid }
     end
 
     context 'is not a valid provider' do
-      before { @authorization.provider = 'taco_bell' } # Be sure to change this if Taco Bell becomes an OAuth2 provider
+      before { authorization.provider = 'taco_bell' } # Be sure to change this if Taco Bell becomes an OAuth2 provider
       it { should_not be_valid }
+    end
+  end
+
+  describe 'secret' do
+    context 'does not exist' do
+      before { authorization.secret = nil }
+      it { should be_valid }
+
+      context 'Twitter' do
+        before { authorization.provider = 'twitter' }
+        it { should_not be_valid }
+      end
     end
   end
 
   describe 'token' do
     context 'does not exist' do
-      before { @authorization.token = nil }
+      before { authorization.token = nil }
       it { should_not be_valid }
     end
   end
 
   describe 'uid' do
     context 'does not exist' do
-      before { @authorization.uid = nil }
+      before { authorization.uid = nil }
       it { should_not be_valid }
     end
 
     context 'is not unique' do
       before do
-        authorization_with_same_uid = @authorization.dup
+        authorization_with_same_uid = authorization.dup
         authorization_with_same_uid.save
       end
       it { should_not be_valid }
@@ -78,12 +86,7 @@ describe Authorization do
 
   describe 'user' do
     context 'does not exist' do
-      before { @authorization.user = nil }
-      it { should_not be_valid }
-    end
-
-    context 'is not valid' do
-      before { @authorization.user.email = nil }
+      before { authorization.user = nil }
       it { should_not be_valid }
     end
   end

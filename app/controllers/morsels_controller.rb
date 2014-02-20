@@ -13,32 +13,24 @@ class MorselsController < ApiController
   end
 
   def create
-    # TODO: Cyclomatic complexity for create is too high
     morsel_params = MorselParams.build(params)
 
-    morsel = current_user.morsels.build(morsel_params)
+    create_morsel = CreateMorsel.run(
+      description: morsel_params[:description],
+      draft: morsel_params[:draft],
+      uploaded_photo_hash: CreateMorselUploadedPhotoHash.hash(morsel_params[:photo]),
+      user: current_user,
+      post_id: params[:post_id],
+      post_title: params[:post_title],
+      sort_order: params[:sort_order],
+      post_to_facebook: params[:post_to_facebook],
+      post_to_twitter: params[:post_to_twitter]
+    )
 
-    if morsel.save
-      if params[:post_id].present?
-        post = Post.find(params[:post_id])
-      else
-        # If a post is not specified for this Morsel, create a new one
-        post = Post.new
-        post.creator = current_user
-      end
-
-      post.title = params[:post_title] if params[:post_title].present?
-
-      post.morsels.push(morsel)
-      post.set_sort_order_for_morsel(morsel.id, params[:sort_order]) if params[:sort_order].present?
-      post.save!
-
-      current_user.post_to_facebook(morsel.facebook_message(post)) if params[:post_to_facebook]
-      current_user.post_to_twitter(morsel.twitter_message(post)) if params[:post_to_twitter]
-
-      custom_respond_with morsel, post: post
+    if create_morsel.valid?
+      custom_respond_with create_morsel.result[:morsel], post: create_morsel.result[:post]
     else
-      render_json_errors(morsel.errors, :unprocessable_entity)
+      render_json_errors create_morsel.errors
     end
   end
 
@@ -70,7 +62,7 @@ class MorselsController < ApiController
 
               custom_respond_with morsel, post: new_post, include_drafts: (params[:include_drafts] == 'true')
             else
-              render_json_errors(new_post.errors, :unprocessable_entity)
+              render_json_errors(new_post.errors)
             end
           end
         else
@@ -85,7 +77,7 @@ class MorselsController < ApiController
         custom_respond_with morsel
       end
     else
-      render_json_errors(morsel.errors, :unprocessable_entity)
+      render_json_errors(morsel.errors)
     end
   end
 
@@ -94,7 +86,7 @@ class MorselsController < ApiController
     if morsel.destroy
       render json: 'OK', status: :ok
     else
-      render_json_errors(morsel.errors, :unprocessable_entity)
+      render_json_errors(morsel.errors)
     end
   end
 

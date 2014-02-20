@@ -1,6 +1,26 @@
 require 'spec_helper'
 
 describe 'Users API' do
+  describe 'GET /users/me' do
+    let(:user) { FactoryGirl.create(:user) }
+
+    it 'returns the authenticated User' do
+      get '/users/me', api_key: api_key_for_user(user), format: :json
+
+      expect(response).to be_success
+
+      expect(json_data['id']).to eq(user.id)
+    end
+
+    context 'invalid api_key' do
+      it 'returns an unauthorized error' do
+        get '/users/me', api_key: '1:234567890', format: :json
+
+        expect(response).to_not be_success
+      end
+    end
+  end
+
   describe 'POST /users registrations#create' do
     it 'creates a new User' do
       post '/users', format: :json, user: { email: 'foo@bar.com', password: 'password',
@@ -26,7 +46,8 @@ describe 'Users API' do
       it 'takes time' do
         Benchmark.realtime { post('/users', format: :json, user: { email: 'foo@bar.com', password: 'password',
                                                                    first_name: 'Foo', last_name: 'Bar', username: 'foobar',
-                                                                   bio: 'Foo to the Stars' }) }.should < 0.75
+                                                                   bio: 'Foo to the Stars' })
+        }.should < 0.75
       end
     end
   end
@@ -392,7 +413,7 @@ describe 'Users API' do
     end
   end
 
-  describe 'POST /users/{:user_id}/authorizations' do
+  describe 'POST /users/authorizations' do
     let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
 
     context 'Twitter' do
@@ -408,11 +429,11 @@ describe 'Users API' do
         twitter_user.stub(:screen_name).and_return(dummy_screen_name)
         twitter_user.stub(:url).and_return("https://twitter.com/#{dummy_screen_name}")
 
-        post "/users/#{turd_ferg.id}/authorizations", api_key: api_key_for_user(turd_ferg),
-                                                      provider: 'twitter',
-                                                      token: dummy_token,
-                                                      secret: dummy_secret,
-                                                      format: :json
+        post '/users/authorizations', api_key: api_key_for_user(turd_ferg),
+                                      provider: 'twitter',
+                                      token: dummy_token,
+                                      secret: dummy_secret,
+                                      format: :json
 
         expect(response).to be_success
 
@@ -442,10 +463,10 @@ describe 'Users API' do
 
         client.stub(:get_object).and_return(facebook_user)
 
-        post "/users/#{turd_ferg.id}/authorizations", api_key: api_key_for_user(turd_ferg),
-                                                      provider: 'facebook',
-                                                      token: dummy_token,
-                                                      format: :json
+        post '/users/authorizations', api_key: api_key_for_user(turd_ferg),
+                                      provider: 'facebook',
+                                      token: dummy_token,
+                                      format: :json
 
         expect(response).to be_success
 

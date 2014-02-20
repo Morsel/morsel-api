@@ -5,6 +5,10 @@ class UsersController < ApiController
     custom_respond_with User.all
   end
 
+  def me
+    custom_respond_with current_user, serializer: UserWithPrivateAttributesSerializer
+  end
+
   def show
     user = User.includes(:authorizations, :posts, :morsels).find_by_id_or_username(params[:user_id_or_username])
     raise ActiveRecord::RecordNotFound if user.nil?
@@ -17,7 +21,7 @@ class UsersController < ApiController
     if user.update_attributes(UserParams.build(params))
       custom_respond_with user, serializer: UserWithPrivateAttributesSerializer
     else
-      render_json_errors(user.errors, :unprocessable_entity)
+      render_json_errors(user.errors)
     end
   end
 

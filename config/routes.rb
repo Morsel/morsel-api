@@ -17,8 +17,11 @@ MorselApp::Application.routes.draw do
               }
 
   resources :users, only: [:index, :update] do
-    resources :authorizations, only: [:create, :index]
+    resources :authorizations, only: [:index]
   end
+
+  post 'users/authorizations' => 'authorizations#create'
+  get 'users/me' => 'users#me'
   get 'users/:user_id_or_username' => 'users#show'
   get 'users/:user_id_or_username/posts' => 'posts#index'
 

@@ -19,18 +19,14 @@ class ApiController < ActionController::Base
 
   # api_key is expected to be in the format: "#{user.id}:#{user.authentication_token}"
   def authenticate_user_from_token!
-    api_key  = params[:api_key].presence
-    unauthorized_token and return if api_key == nil
+    authenticate_user = AuthenticateUser.run(
+      api_key: params[:api_key]
+    )
 
-    split_token = api_key.split(':')
-    unauthorized_token and return unless split_token.length == 2
-
-    user = api_key && User.find(split_token[0])
-
-    if user && Devise.secure_compare(user.authentication_token, api_key.split(':')[1])
-      sign_in user, store: false, bypass: true
+    if authenticate_user.valid?
+      sign_in authenticate_user.result, store: false, bypass: true
     else
-      unauthorized_token and return
+      unauthorized_token
     end
   end
 
