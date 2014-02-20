@@ -26,7 +26,7 @@ module JSONEnvelopable
       render_json_envelope(data, nil, http_status)
     end
 
-    def render_json_errors(errors, http_status)
+    def render_json_errors(errors, http_status = :unprocessable_entity)
       render_json_envelope(nil, errors, http_status)
     end
 

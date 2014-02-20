@@ -1,3 +1,13 @@
+AllCops:
+  Excludes:
+    - db/**
+    - config/**
+    - script/**
+    - spec/**
+
+CyclomaticComplexity:
+  Max: 10
+
 Documentation:
   Enabled: false
 
@@ -10,14 +20,11 @@ HandleExceptions:
 LineLength:
   Enabled: false
 
-NumericLiterals:
-  Enabled: false
-
 MethodLength:
   Enabled: false
 
-AllCops:
-  Excludes:
-    - db/**
-    - config/**
-    - script/**
+NumericLiterals:
+  Enabled: false
+
+SignalException:
+  Enabled: false

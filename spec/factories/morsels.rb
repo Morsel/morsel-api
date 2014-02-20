@@ -17,6 +17,7 @@
 # **`photo_updated_at`**    | `datetime`         |
 # **`deleted_at`**          | `datetime`         |
 # **`draft`**               | `boolean`          | `default(FALSE), not null`
+# **`published_at`**        | `datetime`         |
 #
 
 # Read about factories at https://github.com/thoughtbot/factory_girl

@@ -76,10 +76,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def can_delete_comment?(comment)
-    comment.user == self || comment.morsel.creator == self
-  end
-
   def morsel_likes_for_my_morsels_by_others_count
     Like.where(morsel_id: morsel_ids).count
   end

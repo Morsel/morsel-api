@@ -11,10 +11,11 @@
 - [User Methods](#user-methods)
   - [POST ```/users``` - Create a new User](#post-users---create-a-new-user)
   - [POST ```/users/sign_in``` - User Authentication](#post-userssign_in---user-authentication)
+  - [GET ```/users/me``` - Me](#get-usersme--me)
   - [GET ```/users/{user_id|user_username}``` - User](#get-usersuser_iduser_username---user)
   - [PUT ```/users/{user_id}``` - Update User](#put-usersuser_id---update-user)
   - [GET ```/users/{user_id|user_username}/posts``` - User Posts](#get-usersuser_iduser_usernameposts---user-posts)
-  - [POST ```/users/{user_id}/authorizations``` - Create User Authorizations](#post-usersuser_idauthorizations---create-user-authorizations)
+  - [POST ```/users/authorizations``` - Create User Authorizations](#post-usersauthorizations---create-user-authorizations)
   - [GET ```/users/{user_id}/authorizations``` - User Authorizations](#get-usersuser_idauthorizations---user-authorizations)
 - [Morsel Methods](#morsel-methods)
   - [POST ```/morsels``` - Create a new Morsel](#post-morsels---create-a-new-morsel)
@@ -231,6 +232,18 @@ Authenticates a User and returns an authentication_token
 <br />
 <br />
 
+## GET ```/users/me``` - Me
+Returns the authenticated User
+
+### Response
+
+| __data__ |
+| -------- |
+| [User (w/ Private Attributes)](#user-w-private-attributes) |
+
+<br />
+<br />
+
 ## GET ```/users/{user_id|user_username}``` - User
 Returns the User with the specified ```user_id``` or ```user_username```
 
@@ -291,8 +304,8 @@ Returns the Posts for the User with the specified ```user_id``` or ```user_usern
 <br />
 <br />
 
-## POST ```/users/{user_id}/authorizations``` - Create User Authorizations
-Creates a new User authorization
+## POST ```/users/authorizations``` - Create User Authorizations
+Creates a new Authorization for the authenticated User
 
 ### Request
 

@@ -17,6 +17,7 @@
 # **`photo_updated_at`**    | `datetime`         |
 # **`deleted_at`**          | `datetime`         |
 # **`draft`**               | `boolean`          | `default(FALSE), not null`
+# **`published_at`**        | `datetime`         |
 #
 
 class Morsel < ActiveRecord::Base
@@ -82,7 +83,6 @@ class Morsel < ActiveRecord::Base
     end
   end
 
-
   private
 
   def description_or_photo_present?
@@ -99,6 +99,6 @@ class Morsel < ActiveRecord::Base
   end
 
   def update_published_at_if_necessary
-    self.published_at = DateTime.now if self.published_at.blank? && !self.draft
+    self.published_at = DateTime.now if published_at.blank? && !draft
   end
 end
