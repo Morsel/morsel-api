@@ -13,6 +13,7 @@
   - [POST ```/users``` - Create a new User](#post-users---create-a-new-user)
   - [POST ```/users/sign_in``` - User Authentication](#post-userssign_in---user-authentication)
   - [GET ```/users/me``` - Me](#get-usersme--me)
+  - [GET ```/users/checkusername``` - Check Username](#get-userscheckusername--check-username)
   - [GET ```/users/{user_id|user_username}``` - User](#get-usersuser_iduser_username---user)
   - [PUT ```/users/{user_id}``` - Update User](#put-usersuser_id---update-user)
   - [GET ```/users/{user_id|user_username}/posts``` - User Posts](#get-usersuser_iduser_usernameposts---user-posts)
@@ -250,6 +251,27 @@ Returns the authenticated User
 | __data__ |
 | -------- |
 | [User (w/ Private Attributes)](#user-w-private-attributes) |
+
+<br />
+<br />
+
+## GET ```/users/checkusername``` - Check Username
+Returns ```true``` if the username already exists, otherwise ```false```.
+Also aliased as: ```/users/checkusername/:username```
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| username | String | The username to check | | X |
+
+### Response
+
+| Condition | __data__ |
+| --------- | -------- |
+| Username does exist | true |
+| Username does NOT exist | false |
+| Username is invalid | Errors |
 
 <br />
 <br />

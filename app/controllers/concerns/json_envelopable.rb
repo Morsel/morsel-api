@@ -22,7 +22,7 @@ module JSONEnvelopable
       }
     end
 
-    def render_json(data, http_status)
+    def render_json(data, http_status = :ok)
       render_json_envelope(data, nil, http_status)
     end
 

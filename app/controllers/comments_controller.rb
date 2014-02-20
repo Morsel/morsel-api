@@ -33,7 +33,7 @@ class CommentsController < ApiController
     )
 
     if destroy_comment.valid?
-      render json: 'OK', status: :ok
+      render_json 'OK'
     else
       render_json_errors(destroy_comment.errors)
     end
