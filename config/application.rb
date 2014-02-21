@@ -29,6 +29,7 @@ module MorselApp
 
     config.autoload_paths += Dir[File.join(Rails.root, 'lib', 'core_ext', '*.rb')].each { |l| require l }
     config.autoload_paths += Dir[File.join(Rails.root, 'lib', 'responders', '*.rb')].each { |l| require l }
+    config.autoload_paths += Dir[File.join(Rails.root, 'lib', '*.rb')].each { |l| require l }
     config.autoload_paths += Dir[File.join(Rails.root, 'app', 'models', 'decorators', '*.rb')].each { |l| require l }
 
     # Settings in config/environments/* take precedence over those specified here.

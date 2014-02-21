@@ -142,6 +142,10 @@ describe User do
       it { should_not be_valid }
     end
 
+    context 'reserved path' do
+      before { user.username = ReservedPaths.non_username_paths.sample }
+      it { should_not be_valid }
+    end
   end
 
   describe 'password' do

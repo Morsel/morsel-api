@@ -1,8 +1,9 @@
 require 'sidekiq/web'
 
 MorselApp::Application.routes.draw do
-  root to: 'status#index'
-  get 'status' => 'status#index'
+  root to: 'status#show'
+  get 'status' => 'status#show'
+  get 'configuration' => 'configuration#show'
 
   authenticate :user, lambda { |u| u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
