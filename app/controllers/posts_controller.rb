@@ -20,18 +20,18 @@ class PostsController < ApiController
                   .order('id DESC')
     end
 
-    custom_respond_with posts, include_drafts: (params[:include_drafts] == 'true')
+    custom_respond_with posts
   end
 
   def show
-    custom_respond_with Post.includes(:morsel_posts, :morsels, :creator).find(params[:id]), include_drafts: (params[:include_drafts] == 'true')
+    custom_respond_with Post.includes(:morsel_posts, :morsels, :creator).find(params[:id])
   end
 
   def update
     post = Post.includes(:morsel_posts, :morsels, :creator).find(params[:id])
 
     if post.update_attributes(PostParams.build(params))
-      custom_respond_with post, include_drafts: (params[:include_drafts] == 'true')
+      custom_respond_with post
     else
       render_json_errors(post.errors)
     end
@@ -48,7 +48,7 @@ class PostsController < ApiController
       if post.morsels << morsel
         post.set_sort_order_for_morsel(morsel.id, params[:sort_order]) if params[:sort_order].present?
 
-        custom_respond_with post, include_drafts: (params[:include_drafts] == 'true')
+        custom_respond_with post
       else
         render_json_errors(post.errors)
       end

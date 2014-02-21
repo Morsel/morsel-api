@@ -79,7 +79,7 @@ describe 'Posts API' do
       end
     end
 
-    context 'performance' do
+    context 'performance', performance: true do
       before do
         require 'benchmark'
       end
@@ -120,7 +120,7 @@ describe 'Posts API' do
         end
       end
 
-      context 'performance' do
+      context 'performance', performance: true do
         before do
           require 'benchmark'
         end
@@ -142,20 +142,6 @@ describe 'Posts API' do
         end
       end
     end
-
-    context 'include_drafts=true included in parameters' do
-      it 'returns all Posts including Morsel drafts' do
-        get '/posts', api_key: api_key_for_user(turd_ferg),
-                      format: :json,
-                      include_drafts: true
-
-        expect(response).to be_success
-
-        expect(json_data.count).to eq(posts_count)
-
-        expect(json_data.first['morsels'].count).to eq(morsels_count)
-      end
-    end
   end
 
   describe 'GET /posts posts#show' do
@@ -170,21 +156,6 @@ describe 'Posts API' do
       expect(json_data['slug']).to eq(post_with_morsels_and_creator.cached_slug)
 
       expect(json_data['morsels'].count).to eq(morsels_count)
-    end
-
-    context 'include_drafts=true included in parameters' do
-      let(:post_with_morsels_and_creator_and_draft) { FactoryGirl.create(:post_with_morsels_and_creator_and_draft, morsels_count: morsels_count) }
-      it 'returns the Post including Morsel drafts' do
-        get "/posts/#{post_with_morsels_and_creator_and_draft.id}", api_key: api_key_for_user(turd_ferg),
-                                                                    format: :json,
-                                                                    include_drafts: true
-
-        expect(response).to be_success
-
-        expect_json_keys(json_data, post_with_morsels_and_creator_and_draft, %w(id title creator_id))
-        expect(json_data['slug']).to eq(post_with_morsels_and_creator_and_draft.cached_slug)
-        expect(json_data['morsels'].count).to eq(morsels_count + 1)
-      end
     end
   end
 
@@ -252,23 +223,6 @@ describe 'Posts API' do
         expect(json_data['id']).to_not be_nil
 
         expect(existing_post.morsel_ids.first).to eq(json_data['morsels'].first['id'])
-      end
-    end
-
-    context 'include_drafts=true included in parameters' do
-      it 'appends the Morsel to the Post and includes drafts in the response' do
-        post "/posts/#{existing_post.id}/append", api_key: api_key_for_user(turd_ferg),
-                                                  format: :json,
-                                                  include_drafts: true,
-                                                  morsel_id: morsel_with_creator.id
-
-        expect(response).to be_success
-
-        expect(json_data['id']).to eq(existing_post.id)
-
-        expect(existing_post.morsels).to include(morsel_with_creator)
-
-        expect(json_data['morsels'].count).to eq(morsels_count + 1)
       end
     end
   end

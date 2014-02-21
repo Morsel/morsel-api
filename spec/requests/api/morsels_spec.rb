@@ -153,16 +153,6 @@ describe 'Morsels API' do
 
         expect(json_data.count).to eq(user_morsels_count)
       end
-
-      it 'should include drafts if include_drafts=true' do
-        get "/users/#{turd_ferg.id}/feed", api_key: api_key_for_user(turd_ferg),
-                                           include_drafts: true,
-                                           format: :json
-
-        expect(response).to be_success
-
-        expect(json_data.count).to eq(user_morsels_count + morsel_draft_count)
-      end
     end
 
     context 'pagination' do
@@ -778,6 +768,94 @@ describe 'Morsels API' do
 
         expect(response).to_not be_success
         expect(Comment.where(id: existing_comment.id)).to_not be_empty
+      end
+    end
+  end
+
+  describe 'GET /morsels/drafts morsels#drafts' do
+    let(:posts_count) { 3 }
+    let(:morsel_draft_count) { rand(3..6) }
+
+    before do
+      posts_count.times { FactoryGirl.create(:post_with_morsels_and_creator, morsels_count: morsels_count) }
+      some_post = FactoryGirl.create(:post, creator: turd_ferg)
+      morsel_draft_count.times { FactoryGirl.create(:morsel_draft, creator: turd_ferg, posts: [some_post]) }
+    end
+
+    it 'returns the authenticated User\'s Morsel Drafts' do
+      get '/morsels/drafts', api_key: api_key_for_user(turd_ferg),
+                             format: :json
+
+      expect(response).to be_success
+      expect(json_data.count).to eq(morsel_draft_count)
+
+      first_morsel = json_data.first
+
+      expect(first_morsel['draft']).to be_true
+
+      expect(first_morsel['liked']).to be_false
+      expect(first_morsel['in_progression']).to_not be_nil
+
+      expect(first_morsel['creator']).to_not be_nil
+      expect(first_morsel['post']).to_not be_nil
+    end
+
+    context 'pagination' do
+      before do
+        some_post = FactoryGirl.create(:post, creator: turd_ferg)
+        30.times { FactoryGirl.create(:morsel_draft, creator: turd_ferg, posts: [some_post]) }
+      end
+
+      describe 'max_id' do
+        it 'returns results up to and including max_id' do
+          expected_count = rand(3..6)
+          max_id = Morsel.where(creator_id: turd_ferg.id, draft: true).order('id ASC').first.id + expected_count - 1
+          get '/morsels/drafts', api_key: api_key_for_user(turd_ferg),
+                                 max_id: max_id,
+                                 format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+          expect(json_data.first['id']).to eq(max_id)
+        end
+      end
+
+      describe 'since_id' do
+        it 'returns results since since_id' do
+          expected_count = rand(3..6)
+          since_id = Morsel.last.id - expected_count
+          get '/morsels/drafts', api_key: api_key_for_user(turd_ferg),
+                                 since_id: since_id,
+                                 format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+          expect(json_data.last['id']).to eq(since_id + 1)
+        end
+      end
+
+      describe 'count' do
+        it 'defaults to 20' do
+          get '/morsels/drafts', api_key: api_key_for_user(turd_ferg),
+                                 format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(20)
+        end
+
+        it 'limits the result' do
+          expected_count = rand(3..6)
+          get '/morsels/drafts', api_key: api_key_for_user(turd_ferg),
+                                 count: expected_count,
+                                 format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+        end
       end
     end
   end

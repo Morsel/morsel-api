@@ -66,7 +66,7 @@ describe 'Users API' do
       expect_nil_json_keys(json_data, %w(password encrypted_password))
     end
 
-    context 'performance' do
+    context 'performance', performance: true do
       before do
         require 'benchmark'
       end
@@ -95,7 +95,7 @@ describe 'Users API' do
       expect_nil_json_keys(json_data, %w(password encrypted_password))
     end
 
-    context 'performance' do
+    context 'performance', performance: true do
       before do
         require 'benchmark'
       end
@@ -121,7 +121,7 @@ describe 'Users API' do
       expect(json_data.count).to eq(users_count)
     end
 
-    context 'performance' do
+    context 'performance', performance: true do
       before do
         require 'benchmark'
       end
@@ -164,7 +164,7 @@ describe 'Users API' do
       expect(response).to be_success
     end
 
-    context 'performance' do
+    context 'performance', performance: true do
       before do
         require 'benchmark'
       end
@@ -191,7 +191,7 @@ describe 'Users API' do
         expect(json_data['morsel_count']).to eq(user_with_posts.morsels.count)
       end
 
-      context 'performance' do
+      context 'performance', performance: true do
         before do
           require 'benchmark'
         end
@@ -220,7 +220,7 @@ describe 'Users API' do
         expect(photos['_40x40']).to_not be_nil
       end
 
-      context 'performance' do
+      context 'performance', performance: true do
         before do
           require 'benchmark'
         end
@@ -246,7 +246,7 @@ describe 'Users API' do
         expect(json_data['draft_count']).to eq(1)
       end
 
-      context 'performance' do
+      context 'performance', performance: true do
         before do
           require 'benchmark'
         end
@@ -349,18 +349,6 @@ describe 'Users API' do
     context 'username passed instead of id' do
       it 'returns all of the User\'s  Posts' do
         get "/users/#{user_with_posts.username}/posts", api_key: api_key_for_user(user_with_posts), format: :json
-
-        expect(response).to be_success
-
-        expect(json_data.count).to eq(user_with_posts.posts.count)
-      end
-    end
-
-    context 'include_drafts=true included in parameters' do
-      it 'returns all of the User\'s  Posts including Morsel drafts' do
-        get "/users/#{user_with_posts.id}/posts", api_key: api_key_for_user(user_with_posts),
-                                                  format: :json,
-                                                  include_drafts: true
 
         expect(response).to be_success
 
