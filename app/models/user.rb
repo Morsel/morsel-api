@@ -62,7 +62,8 @@ class User < ActiveRecord::Base
             format: { with: /\A[a-zA-Z][A-Za-z0-9_]+$\z/ },
             length: { maximum: 15 },
             presence: true,
-            uniqueness: { case_sensitive: false }
+            uniqueness: { case_sensitive: false },
+            exclusion: ReservedPaths.non_username_paths
 
   include PhotoUploadable
 

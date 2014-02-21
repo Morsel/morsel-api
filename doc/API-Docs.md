@@ -39,6 +39,9 @@
   - [DELETE ```/posts/{post_id}/append``` - Detach Morsel from Post](#delete-postspost_idappend---detach-morsel-from-post)
 - [Subscriber Methods](#subscriber-methods)
   - [POST ```/subscribers``` - Create a new Subscriber](#post-subscribers---create-a-new-subscriber)
+- [Misc Methods](#misc-methods)
+  - [GET ```/status``` - Status](#get-status---status)
+  - [GET ```/configuration``` - Configuration](#get-configuration---configuration)
 - [Response Objects](#response-objects)
   - [Authorization Objects](#authorization-objects)
     - [Authorization](#authorization)
@@ -57,6 +60,8 @@
     - [User](#user)
     - [User (w/ Private Attributes)](#user-w-private-attributes)
     - [User (w/ Auth Token)](#user-w-auth-token)
+  - [Misc Objects](#misc-objects)
+    - [Configuration](#configuration)
 
 
 # Overview
@@ -727,6 +732,32 @@ Creates a new Subscriber
 <br />
 
 
+# Misc Methods
+
+## GET ```/status``` - Status
+Used by third-party services to ping the API.
+
+### Response
+
+| Status Code |
+| ----------- |
+|         200 |
+
+<br />
+<br />
+
+## GET ```/configuration``` - Configuration
+
+### Response
+
+| __data__ |
+| -------- |
+| [Configuration](#configuration) |
+
+<br />
+<br />
+
+
 # Response Objects
 
 ## Authorization Objects
@@ -1074,5 +1105,103 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
   "sign_in_count": 1,
   "facebook_uid": "1234567890",
   "twitter_username": "morsel_marty"
+}
+```
+
+## Misc Objects
+
+### Configuration
+
+```json
+{
+  "non_username_paths": [
+    "about",
+    "account",
+    "accounts",
+    "activity",
+    "admin",
+    "all",
+    "announcements",
+    "anywhere",
+    "apps",
+    "auth",
+    "badges",
+    "bar",
+    "blog",
+    "business",
+    "buttons",
+    "chef",
+    "city",
+    "contact",
+    "contacts",
+    "devices",
+    "direct_messages",
+    "download",
+    "downloads",
+    "eatmorsel",
+    "faq",
+    "favorites",
+    "feed",
+    "find_users",
+    "followers",
+    "following",
+    "friend_request",
+    "friendrequest",
+    "friends",
+    "goodies",
+    "help",
+    "home",
+    "how",-it-works
+    "im_account",
+    "inbox",
+    "invitations",
+    "invite",
+    "jobs",
+    "join",
+    "kitchen",
+    "list",
+    "login",
+    "logo",
+    "logout",
+    "me",
+    "media",
+    "media_signup",
+    "mentions",
+    "messages",
+    "morsel",
+    "notifications",
+    "oauth",
+    "password",
+    "positions",
+    "post",
+    "press",
+    "privacy",
+    "products",
+    "public_timeline",
+    "replies",
+    "restaurant",
+    "rules",
+    "saved_searches",
+    "search",
+    "sent",
+    "settings",
+    "share",
+    "signin",
+    "signup",
+    "similar_to",
+    "sitemap",
+    "statistics",
+    "tag",
+    "team",
+    "terms",
+    "tos",
+    "translate",
+    "trends",
+    "user",
+    "users",
+    "welcome",
+    "who_to_follow",
+    "widgets"
+  ]
 }
 ```

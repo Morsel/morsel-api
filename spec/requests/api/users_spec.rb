@@ -47,6 +47,17 @@ describe 'Users API' do
 
       expect(json_data).to eq('true')
     end
+
+    context 'username is a reserved path' do
+      let(:sample_reserved_path) { ReservedPaths.non_username_paths.sample }
+      it 'returns true to say the username already exists' do
+        get '/users/checkusername', username: sample_reserved_path, format: :json
+
+        expect(response).to be_success
+
+        expect(json_data).to eq('true')
+      end
+    end
   end
 
   describe 'POST /users registrations#create' do
