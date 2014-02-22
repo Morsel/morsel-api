@@ -1,5 +1,4 @@
 class ConfigurationController < ApiController
-
   def show
     render_json(json)
   end

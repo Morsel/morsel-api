@@ -128,6 +128,20 @@ class User < ActiveRecord::Base
     end
   end
 
+  def full_name
+    if first_name && last_name
+      "#{first_name} #{last_name}"
+    elsif first_name
+      "#{first_name}"
+    elsif last_name
+      "#{last_name}"
+    end
+  end
+
+  def send_reserved_username_email
+    EmailWorker.perform_async(id)
+  end
+
   private
 
   def ensure_authentication_token

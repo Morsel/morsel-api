@@ -1,6 +1,7 @@
 module ReservedPaths
   def self.non_username_paths
-    %w(about
+    %w(
+      about
       account
       accounts
       activity
