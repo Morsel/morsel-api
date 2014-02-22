@@ -1,5 +1,5 @@
 class CommentsController < ApiController
-  skip_before_filter :authenticate_user_from_token!, only: [:index]
+  PUBLIC_ACTIONS = [:index]
   respond_to :json
 
   def create

@@ -17,16 +17,24 @@ class ApiController < ActionController::Base
 
   private
 
+  PUBLIC_ACTIONS = []
+
   # api_key is expected to be in the format: "#{user.id}:#{user.authentication_token}"
   def authenticate_user_from_token!
-    authenticate_user = AuthenticateUser.run(
-      api_key: params[:api_key]
-    )
+    if params[:api_key].present?
+      authenticate_user = AuthenticateUser.run(
+        api_key: params[:api_key]
+      )
 
-    if authenticate_user.valid?
-      sign_in authenticate_user.result, store: false, bypass: true
+      if authenticate_user.valid?
+        sign_in authenticate_user.result, store: false, bypass: true
+      else
+        unauthorized_token
+      end
+    elsif PUBLIC_ACTIONS.include? params[:action]
+      true
     else
-      unauthorized_token
+      false
     end
   end
 

@@ -21,6 +21,20 @@ describe 'Posts API' do
       expect(json_data.first['morsels'].count).to eq(morsels_count)
     end
 
+    it 'returns liked for each Morsel' do
+      get '/posts', api_key: api_key_for_user(turd_ferg), format: :json
+
+      expect(response).to be_success
+      first_morsel = json_data.first['morsels'].first
+      expect(first_morsel['liked']).to_not be_nil
+    end
+
+    it 'should be public' do
+      get '/posts', format: :json
+
+      expect(response).to be_success
+    end
+
     context 'pagination' do
       before do
         30.times { FactoryGirl.create(:post_with_creator) }
@@ -156,6 +170,12 @@ describe 'Posts API' do
       expect(json_data['slug']).to eq(post_with_morsels_and_creator.cached_slug)
 
       expect(json_data['morsels'].count).to eq(morsels_count)
+    end
+
+    it 'should be public' do
+      get "/posts/#{post_with_morsels_and_creator.id}", format: :json
+
+      expect(response).to be_success
     end
   end
 

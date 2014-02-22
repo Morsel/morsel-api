@@ -1,5 +1,5 @@
 class PostsController < ApiController
-  skip_before_filter :authenticate_user_from_token!, only: [:index, :show]
+  PUBLIC_ACTIONS = [:index, :show]
   respond_to :json
 
   def index
