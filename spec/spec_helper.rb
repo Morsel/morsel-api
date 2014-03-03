@@ -15,6 +15,7 @@ Spork.prefork do
   require 'rspec/autorun'
   require 'factory_girl'
   require 'sidekiq/testing'
+  require 'mandrill_mailer/offline'
 
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
@@ -61,6 +62,7 @@ Spork.prefork do
 
     config.before(:each) do
       DatabaseCleaner.start
+      MandrillMailer.deliveries.clear
     end
 
     config.after(:each) do

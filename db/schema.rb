@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140218212136) do
+ActiveRecord::Schema.define(version: 20140227191832) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,6 +56,18 @@ ActiveRecord::Schema.define(version: 20140218212136) do
   end
 
   add_index "comments", ["user_id", "morsel_id"], name: "index_comments_on_user_id_and_morsel_id", using: :btree
+
+  create_table "emails", force: true do |t|
+    t.string   "class_name"
+    t.string   "template_name"
+    t.string   "from_email"
+    t.string   "from_name"
+    t.boolean  "stop_sending",  default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "emails", ["class_name"], name: "index_emails_on_class_name", unique: true, using: :btree
 
   create_table "likes", force: true do |t|
     t.integer  "user_id"

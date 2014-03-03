@@ -31,7 +31,7 @@ guard 'spork', rspec_env: { RAILS_ENV: 'test' } do
   watch('spec/spec_helper.rb') { :rspec }
 end
 
-guard 'rspec', cmd: 'bundle exec rspec --drb --format Fuubar --color', all_after_pass: true, all_on_start: true, failed_mode: :keep do
+guard 'rspec', cmd: 'bundle exec rspec --drb --format Fuubar --color', all_after_pass: false, all_on_start: true, failed_mode: :keep do
   watch(%r{^app/(.*)(\.erb|\.haml)$})                 { |m| "spec/#{m[1]}#{m[2]}_spec.rb" }
   watch(%r{^app/(.+)\.rb$})                           { |m| "spec/#{m[1]}_spec.rb" }
 

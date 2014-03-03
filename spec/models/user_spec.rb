@@ -242,4 +242,49 @@ describe User do
       end
     end
   end
+
+  describe '#send_reserved_username_email' do
+    before do
+      user.save
+    end
+
+    it 'creates the EmailWorker job' do
+      expect {
+        user.send_reserved_username_email
+      }.to change(EmailWorker.jobs, :size).by(1)
+    end
+
+    it 'sends the Username Reserved email' do
+      Sidekiq::Testing.inline! { user.send_reserved_username_email }
+      mail = MandrillMailer.deliveries.first
+      username_reserved_email = Emails::UsernameReservedEmail.email(user)
+
+      expect(mail).to_not be_nil
+      expect(mail.message['from_email']).to eq('support@eatmorsel.com')
+      expect(mail.message['from_name']).to eq('Morsel')
+
+      expect(mail.template_name).to eq(username_reserved_email.template_name)
+      expect(mail.message['to'].first[:email]).to eq(user.email)
+      expect(mail.message['to'].first[:name]).to eq(user.full_name)
+      expect(mail.message['from_email']).to eq(username_reserved_email.from_email)
+      expect(mail.message['from_name']).to eq(username_reserved_email.from_name)
+
+      vars = mail.message['global_merge_vars'].map { |v| { v['name'] => v['content'] }}.reduce(Hash.new, :merge)
+      %w(subject teaser title subtitle body reason).each do |key|
+        expect(vars["email_#{key}".to_sym]).to eq(username_reserved_email.send(key))
+      end
+      expect(vars[:current_year]).to eq(Time.now.year)
+    end
+
+    context 'stop_sending? is set to true' do
+      it 'does NOT send the Username Reserved email' do
+        username_reserved_email = Emails::UsernameReservedEmail.email(user)
+        username_reserved_email.stop_sending = true
+        username_reserved_email.save
+
+        Sidekiq::Testing.inline! { user.send_reserved_username_email }
+        expect(MandrillMailer.deliveries).to be_empty
+      end
+    end
+  end
 end

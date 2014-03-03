@@ -1,7 +1,7 @@
-developer:
-  email: <%= ENV['DEVELOPER_EMAIL'] %>
+developer_email: <%= ENV['DEVELOPER_EMAIL'] %>
 morsel:
   web_url: <%= ENV['MORSEL_WEB_URL'] %>
+pagination_default_count: <%= ENV['PAGINATION_DEFAULT_COUNT'] %>
 aws:
   credentials:
     access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
@@ -11,7 +11,9 @@ aws:
 facebook:
   app_id: <%= ENV['FACEBOOK_APP_ID'] %>
   app_secret: <%= ENV['FACEBOOK_APP_SECRET'] %>
-pagination_default_count: <%= ENV['PAGINATION_DEFAULT_COUNT'] %>
+mandrill:
+  api_key: <%= ENV['MANDRILL_API_KEY'] %>
+  user_name: <%= ENV['MANDRILL_USER_NAME'] %>
 new_relic:
   app_name: <%= ENV['NEW_RELIC_APP_NAME'] %>
   license_key: <%= ENV['NEW_RELIC_LICENSE_KEY'] %>

@@ -33,12 +33,13 @@ module JSONEnvelopable
     def render_json_envelope(data, errors = nil, http_status = :ok)
       status_code = Rack::Utils.status_code(http_status)
       render json: {
-        meta: {
-          status: status_code,
-          message: Rack::Utils::HTTP_STATUS_CODES[status_code],
-        },
-        errors: errors,
-        data: data
-        }, status: http_status
+              meta: {
+                status: status_code,
+                message: Rack::Utils::HTTP_STATUS_CODES[status_code],
+              },
+              errors: errors,
+              data: data
+              },
+             status: http_status
     end
 end

@@ -23,6 +23,7 @@ gem "hirefire-resource"
 gem 'jbuilder', '~> 1.2'
 gem 'jquery-rails'
 gem "koala", "~> 1.8.0rc1"
+gem "mandrill_mailer", "~> 0.4.3"
 gem 'mime-types'
 gem 'mini_magick'
 gem 'newrelic_rpm'
