@@ -49,7 +49,7 @@ class MorselsController < ApiController
   end
 
   def show
-    custom_respond_with Morsel.find(params[:id]), serializer: MorselWithCommentsSerializer
+    custom_respond_with Morsel.find(params[:id])
   end
 
   def update

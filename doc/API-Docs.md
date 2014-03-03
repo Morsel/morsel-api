@@ -53,7 +53,6 @@
     - [Morsel (w/ Post)](#morsel-w-post)
     - [Morsel (Authenticated)](#morsel-authenticated)
     - [Morsel (Authenticated w/ Post)](#morsel-authenticated-w-post)
-    - [Morsel (Authenticated w/ Comments)](#morsel-authenticated-w-comments)
   - [Post Objects](#post-objects)
     - [Post](#post)
   - [User Objects](#user-objects)
@@ -439,7 +438,7 @@ Returns Morsel with the specified ```morsel_id```
 
 | __data__ |
 | -------- |
-| [Morsel (Authenticated w/ Comments)](#morsel-authenticated-w-comments) |
+| [Morsel (Authenticated)](#morsel-authenticated) |
 
 <br />
 <br />
@@ -485,7 +484,7 @@ Updates the Morsel with the specified ```morsel_id```
 | Condition | __data__ |
 | --------- | -------- |
 | Post ID Included | Updated [Morsel (Authenticated w/ Post)](#morsel-authenticated-w-post) |
-| Default | Updated [Morsel (Authenticated w/ Comments)](#morsel-authenticated-w-comments) |
+| Default | Updated [Morsel (Authenticated)](#morsel-authenticated) |
 
 <br />
 <br />
@@ -925,62 +924,6 @@ api_key && post_id exist
     "url": "http://eatmorsel.com/marty/1-butter/1",
     "liked": false,
     "draft": false
-  }
-```
-
-### Morsel (Authenticated w/ Comments)
-ditto as w/ Post if post_id exists
-
-```json
-  {
-    "id": 2,
-    "description": null,
-    "creator_id": 1,
-    "created_at": "2014-01-07T16:34:43.071Z",
-    "photos": {
-      "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
-    },
-    "liked": false,
-    "draft": false,
-    "comments": [{
-      "id": 4,
-      "description": "Wow! Are those Swedish Fish caviar???!?!?!one!?!11!?1?!",
-      "creator": {
-        "id": 1,
-        "username": "marty",
-        "first_name": "Marty",
-        "last_name": "Trzpit",
-        "photos": {
-          "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg",
-          "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg",
-          "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg",
-          "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg"
-        }
-      },
-      "morsel_id": 5,
-      "created_at": "2014-01-07T18:37:19.661Z"
-    }, {
-      "id": 7,
-      "description": "Fuck yeah!",
-      "creator": {
-        "id": 3,
-        "username": "turdferg",
-        "first_name": "Turd",
-        "last_name": "Ferguson",
-        "photos": {
-          "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-          "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-          "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-          "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-        }
-      },
-      "morsel_id": 5,
-      "created_at": "2014-01-07T18:38:13.855Z"
-    }]
   }
 ```
 

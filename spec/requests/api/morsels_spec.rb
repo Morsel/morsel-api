@@ -394,23 +394,6 @@ describe 'Morsels API' do
         expect(photos['_104x104']).to_not be_nil
       end
     end
-
-    context 'has Comments' do
-      before do
-        2.times { FactoryGirl.create(:comment, morsel: morsel) }
-      end
-
-      it 'returns the Morsel with Comments' do
-        get "/morsels/#{morsel.id}", api_key: api_key_for_user(turd_ferg), format: :json
-
-        expect(response).to be_success
-
-        expect_json_keys(json_data, morsel, %w(id description creator_id))
-        expect(json_data['liked']).to be_false
-
-        expect(json_data['comments']).to_not be_empty
-      end
-    end
   end
 
   describe 'PUT /morsels/{:morsel_id} morsels#update' do
