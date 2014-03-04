@@ -29,8 +29,10 @@ class UsersController < ApiController
     )
 
     if reserve_username.valid?
-      create_user_event(:reserved_username, reserve_username.result.id)
-      render_json({ user_id: "#{reserve_username.result.id}" })
+      user = reserve_username.result
+      create_user_event(:reserved_username, user.id)
+      user.send_reserved_username_email
+      render_json({ user_id: "#{user.id}" })
     else
       render_json_errors reserve_username.errors
     end

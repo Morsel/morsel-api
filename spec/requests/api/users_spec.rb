@@ -78,6 +78,14 @@ describe 'Users API' do
       expect(user.active).to eq(false)
     end
 
+    it 'sends an email' do
+      expect{
+        Sidekiq::Testing.inline! {
+          post '/users/reserveusername', email: fake_email, username: fake_username, format: :json
+        }
+      }.to change(MandrillMailer.deliveries, :count).by(1)
+    end
+
     it 'creates a user_event' do
       expect {
         post '/users/reserveusername', email: fake_email,
