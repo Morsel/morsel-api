@@ -32,9 +32,13 @@
 # **`uid`**                     | `string(255)`      |
 # **`username`**                | `string(255)`      |
 # **`bio`**                     | `string(255)`      |
+# **`active`**                  | `boolean`          | `default(TRUE)`
+# **`verified_at`**             | `datetime`         |
+# **`type`**                    | `string(255)`      | `default("User")`
 #
 
 class User < ActiveRecord::Base
+  include Authority::UserAbilities
   rolify
 
   devise :database_authenticatable, :registerable, :rememberable, :trackable, :validatable

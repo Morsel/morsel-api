@@ -1,5 +1,5 @@
 class UsersController < ApiController
-  skip_before_filter :authenticate_user_from_token!, only: [:show, :checkusername]
+  skip_before_filter :authenticate_user_from_token!, only: [:show, :checkusername, :reserveusername, :setrole]
   respond_to :json
 
   def index
@@ -19,6 +19,33 @@ class UsersController < ApiController
       render_json "#{check_username_exists.result}"
     else
       render_json_errors check_username_exists.errors
+    end
+  end
+
+  def reserveusername
+    reserve_username = ReserveUsername.run(
+      username: params[:username],
+      email: params[:email]
+    )
+
+    if reserve_username.valid?
+      create_user_event(:reserved_username, reserve_username.result.id)
+      render_json({ user_id: "#{reserve_username.result.id}" })
+    else
+      render_json_errors reserve_username.errors
+    end
+  end
+
+  def updaterole
+    update_user_role = UpdateUserRole.run(
+      user_id: params[:user_id],
+      role: params[:role]
+    )
+
+    if update_user_role.valid?
+      render_json 'OK'
+    else
+      render_json_errors update_user_role.errors
     end
   end
 

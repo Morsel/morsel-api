@@ -7,6 +7,7 @@ class ApiController < ActionController::Base
 
   before_filter :authenticate_user_from_token!
   include JSONEnvelopable
+  include UserEventCreator
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from ActionController::ParameterMissing, with: :parameter_missing
