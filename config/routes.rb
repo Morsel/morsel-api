@@ -21,6 +21,8 @@ MorselApp::Application.routes.draw do
     collection do
       post 'authorizations' => 'authorizations#create'
       get 'checkusername(/:username)' => 'users#checkusername'
+      post 'reserveusername(/:username)' => 'users#reserveusername'
+      put ':user_id/updaterole' => 'users#updaterole'
       get 'me' => 'users#me'
       get ':user_id_or_username' => 'users#show'
       get ':user_id_or_username/posts' => 'posts#index'

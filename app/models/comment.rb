@@ -16,7 +16,10 @@
 #
 
 class Comment < ActiveRecord::Base
+  include Authority::Abilities
+  self.authorizer_name = 'CommentAuthorizer'
   acts_as_paranoid
+  resourcify
 
   belongs_to :user
   belongs_to :morsel

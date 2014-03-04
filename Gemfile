@@ -10,9 +10,9 @@ gem 'pg'
 gem 'active_interaction', '~> 1.0'
 gem 'active_model_serializers'
 gem 'activeadmin', github: 'gregbell/active_admin'
+gem "authority", "~> 2.9.0"
 gem 'bootstrap-sass', '>= 3.0.0.0'
 gem 'coffee-rails', '~> 4.0.0'
-gem 'cancan'
 gem "carrierwave", "~> 0.9.0"
 gem 'carrierwave-aws'
 gem 'carrierwave_backgrounder'

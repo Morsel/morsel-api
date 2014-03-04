@@ -32,6 +32,9 @@
 # **`uid`**                     | `string(255)`      |
 # **`username`**                | `string(255)`      |
 # **`bio`**                     | `string(255)`      |
+# **`active`**                  | `boolean`          | `default(TRUE)`
+# **`verified_at`**             | `datetime`         |
+# **`type`**                    | `string(255)`      | `default("User")`
 #
 
 require 'spec_helper'

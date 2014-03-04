@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'Users API' do
-  describe 'GET /users/me' do
+  describe 'GET /users/me users#me' do
     let(:user) { FactoryGirl.create(:user) }
 
     it 'returns the authenticated User' do
@@ -21,7 +21,7 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /users/checkusername' do
+  describe 'GET /users/checkusername users#checkusername' do
     let(:user) { FactoryGirl.create(:user) }
 
     it 'returns true if the username does exist' do
@@ -60,10 +60,68 @@ describe 'Users API' do
     end
   end
 
+  describe 'POST /users/reserveusername users#reserveusername' do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:fake_email) { Faker::Internet.email }
+    let(:fake_username) { "user_#{Faker::Lorem.characters(10)}" }
+
+    it 'creates a user with the specified username and email' do
+      post '/users/reserveusername', email: fake_email, username: fake_username, format: :json
+
+      expect(response).to be_success
+      expect(json_data['user_id']).to_not be_nil
+
+      user = User.find(json_data['user_id'])
+      expect(user).to_not be_nil
+      expect(user.email).to eq(fake_email)
+      expect(user.username).to eq(fake_username)
+      expect(user.active).to eq(false)
+    end
+
+    it 'creates a user_event' do
+      expect {
+        post '/users/reserveusername', email: fake_email,
+                                       username: fake_username,
+                                       __utmz: {
+                                        source: 'taco'
+                                       },
+                                       client: {
+                                        device: 'rspec',
+                                        version: '1.2.3'
+                                       },
+                                       format: :json
+      }.to change(UserEvent, :count).by(1)
+
+      user_event = UserEvent.last
+      expect(user_event.name).to eq('reserved_username')
+      expect(user_event.user_id).to_not be_nil
+      expect(user_event.__utmz['source']).to eq('taco')
+      expect(user_event.client_device).to eq('rspec')
+      expect(user_event.client_version).to eq('1.2.3')
+    end
+  end
+
+  describe 'PUT /users/:user_id/updaterole users#updaterole' do
+    let(:user) { FactoryGirl.create(:user) }
+
+    it 'sets the Role for the specified User' do
+      put "/users/#{user.id}/updaterole", role: 'writer', format: :json
+      expect(response).to be_success
+      expect(User.find(user.id).type).to eq('Writer')
+    end
+
+    context 'invalid role passed' do
+      it 'throws an error' do
+        put "/users/#{user.id}/updaterole", role: 'butt', format: :json
+        expect(response).to_not be_success
+      end
+    end
+  end
+
   describe 'POST /users registrations#create' do
     it 'creates a new User' do
-      post '/users', format: :json, user: { email: 'foo@bar.com', password: 'password',
-                                            first_name: 'Foo', last_name: 'Bar', username: 'foobar',
+      post '/users', format: :json, user: { email: Faker::Internet.email, password: 'password',
+                                            first_name: 'Foo', last_name: 'Bar', username: "user_#{Faker::Lorem.characters(10)}",
                                             bio: 'Foo to the Stars' }
 
       expect(response).to be_success
@@ -75,6 +133,30 @@ describe 'Users API' do
       expect(json_data['auth_token']).to eq(new_user.authentication_token)
       expect(json_data['photos']).to be_nil
       expect_nil_json_keys(json_data, %w(password encrypted_password))
+    end
+
+    it 'creates a user_event' do
+      expect {
+        post '/users', user: { email: Faker::Internet.email, password: 'password',
+                        first_name: 'Foo', last_name: 'Bar', username: "user_#{Faker::Lorem.characters(10)}",
+                        bio: 'Foo to the Stars'
+                       },
+                       __utmz: {
+                        source: 'grande'
+                       },
+                       client: {
+                        device: 'rspec',
+                        version: '1.2.3'
+                       },
+                       format: :json
+      }.to change(UserEvent, :count).by(1)
+
+      user_event = UserEvent.last
+      expect(user_event.name).to eq('created_account')
+      expect(user_event.user_id).to_not be_nil
+      expect(user_event.__utmz['source']).to eq('grande')
+      expect(user_event.client_device).to eq('rspec')
+      expect(user_event.client_version).to eq('1.2.3')
     end
 
     context 'performance', performance: true do

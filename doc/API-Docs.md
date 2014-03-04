@@ -14,6 +14,8 @@
   - [POST ```/users/sign_in``` - User Authentication](#post-userssign_in---user-authentication)
   - [GET ```/users/me``` - Me](#get-usersme---me)
   - [GET ```/users/checkusername``` - Check Username](#get-userscheckusername---check-username)
+  - [POST ```/users/reserveusername``` - Reserve Username](#post-usersreserveusername---reserve-username)
+  - [PUT ```/users/{user_id}/updaterole``` - Update Role](#put-usersuser_idupdaterole---update-role)
   - [GET ```/users/{user_id|user_username}``` - User](#get-usersuser_iduser_username---user)
   - [PUT ```/users/{user_id}``` - Update User](#put-usersuser_id---update-user)
   - [GET ```/users/{user_id|user_username}/posts``` - User Posts](#get-usersuser_iduser_usernameposts---user-posts)
@@ -213,6 +215,7 @@ Creates a new User and returns an authentication_token
 | user[title] | String | The title for the new User. In MTP this includes "at <Restaurant>" | | |
 | user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
 | user[bio] | String | The bio for the new User. Maximum 255 characters. | | |
+| __utmz | Hash | Google Analytics information to pass to the server | | |
 
 ### Response
 
@@ -277,6 +280,46 @@ Also aliased as: ```/users/checkusername/:username```
 | Username does exist | true |
 | Username does NOT exist | false |
 | Username is invalid | Errors |
+
+<br />
+<br />
+
+## POST ```/users/reserveusername``` - Reserve Username
+Returns the user_id if the user is successfully created, otherwise an error.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| username | String | The username reserve | | X |
+| email | String | The email associated with the username | | X |
+| __utmz | Hash | Google Analytics information to pass to the server | | |
+
+### Response
+
+| Condition | __data__ |
+| --------- | -------- |
+| User created | ```{user_id: USER_ID}``` |
+| Username or Email is invalid | Errors |
+
+<br />
+<br />
+
+## PUT ```/users/{user_id}/updaterole``` - Update Role
+Updates the type ('role') of the User with the specified user_id
+Returns the user_id if the user is successfully created, otherwise an error.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| role | String | The User's role. Currently the only valid values are 'chef', 'diner', and 'writer'. | | X |
+
+### Response
+
+| Status Code |
+| ----------- |
+|         200 |
 
 <br />
 <br />
