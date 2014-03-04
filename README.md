@@ -5,8 +5,8 @@ Morsel API
 [![Code Climate](https://codeclimate.com/repos/52b35105f3ea0062e700353a/badges/ff8fda8c47176e04cee8/gpa.png)](https://codeclimate.com/repos/52b35105f3ea0062e700353a/feed)
 
 The API for Morsel (https://api.eatmorsel.com)
-Valid endpoints available in the [API Docs](doc/API-Docs.md).
-User Events can be found in the [User Events] doc(doc/User-Events.md).
+Valid endpoints available in [API Docs](doc/API-Docs.md).
+User Events can be found in [User Events](doc/User-Events.md).
 
 ## Environment Variables
 
