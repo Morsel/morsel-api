@@ -35,6 +35,7 @@
 # **`active`**                  | `boolean`          | `default(TRUE)`
 # **`verified_at`**             | `datetime`         |
 # **`type`**                    | `string(255)`      | `default("User")`
+# **`unsubscribed`**            | `boolean`          | `default(FALSE)`
 #
 
 # Read about factories at https://github.com/thoughtbot/factory_girl

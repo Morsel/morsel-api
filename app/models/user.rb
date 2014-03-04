@@ -35,6 +35,7 @@
 # **`active`**                  | `boolean`          | `default(TRUE)`
 # **`verified_at`**             | `datetime`         |
 # **`type`**                    | `string(255)`      | `default("User")`
+# **`unsubscribed`**            | `boolean`          | `default(FALSE)`
 #
 
 class User < ActiveRecord::Base
@@ -143,7 +144,7 @@ class User < ActiveRecord::Base
   end
 
   def send_reserved_username_email
-    EmailWorker.perform_async(id)
+    EmailWorker.perform_async(id) unless unsubscribed?
   end
 
   private

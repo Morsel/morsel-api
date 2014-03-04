@@ -1,5 +1,5 @@
 class UsersController < ApiController
-  skip_before_filter :authenticate_user_from_token!, only: [:show, :checkusername, :reserveusername, :setrole]
+  skip_before_filter :authenticate_user_from_token!, only: [:show, :checkusername, :reserveusername, :setrole, :unsubscribe]
   respond_to :json
 
   def index
@@ -64,6 +64,18 @@ class UsersController < ApiController
       custom_respond_with user, serializer: UserWithPrivateAttributesSerializer
     else
       render_json_errors(user.errors)
+    end
+  end
+
+  def unsubscribe
+    unsubscribe_user = UnsubscribeUser.run(
+      email: params[:email]
+    )
+
+    if unsubscribe_user.valid?
+      render_json 'OK'
+    else
+      render_json_errors unsubscribe_user.errors
     end
   end
 

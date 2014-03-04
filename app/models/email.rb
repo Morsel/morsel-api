@@ -73,7 +73,8 @@ class Email < ActiveRecord::Base
         email_subtitle: subtitle,
         email_body: body,
         current_year: Time.now.year,
-        email_reason: reason
+        email_reason: reason,
+        unsub: "#{Settings.morsel.web_url}/unsubscribe"
       },
       metadata: {
         email_id: id,

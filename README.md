@@ -15,6 +15,7 @@ User Events can be found in [User Events](doc/User-Events.md).
 RACK_ENV=development
 PORT=3000
 
+MORSEL_API_URL=https://api.eatmorsel.com
 MORSEL_WEB_URL=https://eatmorsel.com
 PROFILER_PASSWORD=
 

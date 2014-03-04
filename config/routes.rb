@@ -24,6 +24,8 @@ MorselApp::Application.routes.draw do
       post 'reserveusername(/:username)' => 'users#reserveusername'
       put ':user_id/updaterole' => 'users#updaterole'
       get 'me' => 'users#me'
+      post 'unsubscribe' => 'users#unsubscribe'
+
       get ':user_id_or_username' => 'users#show'
       get ':user_id_or_username/posts' => 'posts#index'
       get ':user_id_or_username/feed' => 'morsels#index'

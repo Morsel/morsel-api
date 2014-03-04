@@ -35,6 +35,7 @@
 # **`active`**                  | `boolean`          | `default(TRUE)`
 # **`verified_at`**             | `datetime`         |
 # **`type`**                    | `string(255)`      | `default("User")`
+# **`unsubscribed`**            | `boolean`          | `default(FALSE)`
 #
 
 class Diner < User

@@ -35,6 +35,7 @@
 # **`active`**                  | `boolean`          | `default(TRUE)`
 # **`verified_at`**             | `datetime`         |
 # **`type`**                    | `string(255)`      | `default("User")`
+# **`unsubscribed`**            | `boolean`          | `default(FALSE)`
 #
 
 require 'spec_helper'
@@ -285,6 +286,16 @@ describe User do
         username_reserved_email.stop_sending = true
         username_reserved_email.save
 
+        Sidekiq::Testing.inline! { user.send_reserved_username_email }
+        expect(MandrillMailer.deliveries).to be_empty
+      end
+    end
+
+    context 'user is unsubscribed' do
+      before do
+        user.unsubscribed = true
+      end
+      it 'does NOT send the Username Reserved email' do
         Sidekiq::Testing.inline! { user.send_reserved_username_email }
         expect(MandrillMailer.deliveries).to be_empty
       end
