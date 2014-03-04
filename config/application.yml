@@ -1,5 +1,6 @@
 developer_email: <%= ENV['DEVELOPER_EMAIL'] %>
 morsel:
+  api_url: <%= ENV['MORSEL_API_URL'] %>
   web_url: <%= ENV['MORSEL_WEB_URL'] %>
 pagination_default_count: <%= ENV['PAGINATION_DEFAULT_COUNT'] %>
 aws:

@@ -13,6 +13,7 @@
   - [POST ```/users``` - Create a new User](#post-users---create-a-new-user)
   - [POST ```/users/sign_in``` - User Authentication](#post-userssign_in---user-authentication)
   - [GET ```/users/me``` - Me](#get-usersme---me)
+  - [POST ```/users/unsubscribe``` - Unsubscribe](#post-usersunsubscribe---unsubscribe)
   - [GET ```/users/checkusername``` - Check Username](#get-userscheckusername---check-username)
   - [POST ```/users/reserveusername``` - Reserve Username](#post-usersreserveusername---reserve-username)
   - [PUT ```/users/{user_id}/updaterole``` - Update Role](#put-usersuser_idupdaterole---update-role)
@@ -259,6 +260,24 @@ Returns the authenticated User
 | __data__ |
 | -------- |
 | [User (w/ Private Attributes)](#user-w-private-attributes) |
+
+<br />
+<br />
+
+## POST ```/users/unsubscribe``` - Unsubscribe
+Unsubscribes the User with the specified user_id from all emails
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| email | String | The email address for the User | | X |
+
+### Response
+
+| Status Code |
+| ----------- |
+|         200 |
 
 <br />
 <br />

@@ -16,6 +16,7 @@ module ReservedPaths
       blog
       business
       buttons
+      checkusername
       chef
       city
       contact
@@ -83,6 +84,7 @@ module ReservedPaths
       tos
       translate
       trends
+      unsubscribe
       user
       users
       welcome

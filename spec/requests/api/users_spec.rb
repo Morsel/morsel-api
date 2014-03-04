@@ -605,4 +605,16 @@ describe 'Users API' do
       end
     end
   end
+
+  describe 'GET /users/unsubscribe users#unsubscribe' do
+    let(:user) { FactoryGirl.create(:user) }
+
+    it 'unsubscribes the user' do
+      expect(user.unsubscribed).to be_false
+      post '/users/unsubscribe', email: user.email
+      expect(response).to be_success
+      user.reload
+      expect(user.unsubscribed).to be_true
+    end
+  end
 end
