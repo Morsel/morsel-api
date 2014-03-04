@@ -31,6 +31,16 @@ describe Post do
 
   its(:morsels) { should be_empty }
 
+  describe 'title' do
+    context 'greater than 50 characters' do
+      before do
+        post.title = Faker::Lorem.characters(51)
+      end
+
+      it { should_not be_valid }
+    end
+  end
+
   context 'persisted' do
     before { post.save }
 

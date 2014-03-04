@@ -17,7 +17,7 @@
 
 FactoryGirl.define do
   factory :post do
-    title { Faker::Lorem.sentence(rand(2..5)) }
+    title { Faker::Lorem.sentence(rand(2..4)) }
 
     factory :post_with_creator, class: Post do
       association(:creator, factory: :user)

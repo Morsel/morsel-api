@@ -23,6 +23,9 @@ class Post < ActiveRecord::Base
   has_many :morsel_posts
   has_many :morsels, -> { order('morsel_posts.sort_order ASC') }, through: :morsel_posts
 
+  validates :title,
+            length: { maximum: 50 }
+
   include TimelinePaginateable
 
   def set_sort_order_for_morsel(morsel_id, new_sort_order)
