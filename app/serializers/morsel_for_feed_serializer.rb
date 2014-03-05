@@ -2,9 +2,7 @@ class MorselForFeedSerializer < ActiveModel::Serializer
   attributes :id,
              :description,
              :created_at,
-             :published_at,
              :photos,
-             :draft,
              :in_progression,
              :liked,
              :creator,
@@ -15,7 +13,7 @@ class MorselForFeedSerializer < ActiveModel::Serializer
   end
 
   def in_progression
-    object.posts.first.morsels.published.count > 1
+    object.posts.first.morsels.count > 1
   end
 
   def liked

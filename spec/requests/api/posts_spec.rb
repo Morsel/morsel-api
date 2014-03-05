@@ -35,6 +35,21 @@ describe 'Posts API' do
       expect(response).to be_success
     end
 
+    context 'has drafts' do
+      before do
+        rand(3..6).times { FactoryGirl.create(:draft_post_with_morsels_and_creator) }
+      end
+
+      it 'should NOT include drafts' do
+        get '/posts', api_key: api_key_for_user(turd_ferg),
+                      format: :json
+
+        expect(response).to be_success
+
+        expect(json_data.count).to eq(posts_count)
+      end
+    end
+
     context 'pagination' do
       before do
         30.times { FactoryGirl.create(:post_with_creator) }
@@ -273,6 +288,88 @@ describe 'Posts API' do
 
         expect(json_data).to be_nil
         expect(json_errors['relationship'].first).to eq('not found')
+      end
+    end
+  end
+
+  describe 'GET /posts/drafts posts#drafts' do
+    let(:posts_count) { 3 }
+    let(:draft_posts_count) { rand(3..6) }
+
+    before do
+      posts_count.times { FactoryGirl.create(:post_with_morsels_and_creator, morsels_count: morsels_count) }
+      draft_posts_count.times { FactoryGirl.create(:draft_post_with_morsels_and_creator, creator: turd_ferg) }
+    end
+
+    it 'returns the authenticated User\'s Post Drafts' do
+      get '/posts/drafts', api_key: api_key_for_user(turd_ferg),
+                           format: :json
+
+      expect(response).to be_success
+      expect(json_data.count).to eq(draft_posts_count)
+
+      first_post = json_data.first
+
+      expect(first_post['draft']).to be_true
+
+      expect(first_post['creator']).to_not be_nil
+    end
+
+    context 'pagination' do
+      before do
+        30.times { FactoryGirl.create(:draft_post_with_morsels_and_creator, creator: turd_ferg) }
+      end
+
+      describe 'max_id' do
+        it 'returns results up to and including max_id' do
+          expected_count = rand(3..6)
+          max_id = Post.where(creator_id: turd_ferg.id, draft: true).order('id ASC').first.id + expected_count - 1
+          get '/posts/drafts', api_key: api_key_for_user(turd_ferg),
+                               max_id: max_id,
+                               format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+          expect(json_data.first['id']).to eq(max_id)
+        end
+      end
+
+      describe 'since_id' do
+        it 'returns results since since_id' do
+          expected_count = rand(3..6)
+          since_id = Post.last.id - expected_count
+          get '/posts/drafts', api_key: api_key_for_user(turd_ferg),
+                               since_id: since_id,
+                               format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+          expect(json_data.last['id']).to eq(since_id + 1)
+        end
+      end
+
+      describe 'count' do
+        it 'defaults to 20' do
+          get '/posts/drafts', api_key: api_key_for_user(turd_ferg),
+                               format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(20)
+        end
+
+        it 'limits the result' do
+          expected_count = rand(3..6)
+          get '/posts/drafts', api_key: api_key_for_user(turd_ferg),
+                               count: expected_count,
+                               format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+        end
       end
     end
   end

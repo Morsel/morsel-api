@@ -3,7 +3,6 @@ class MorselSerializer < ActiveModel::Serializer
              :description,
              :creator_id,
              :created_at,
-             :published_at,
              :photos
 
   def attributes
@@ -17,7 +16,6 @@ class MorselSerializer < ActiveModel::Serializer
 
     if current_user.present?
       data[:liked] = current_user.likes?(object)
-      data[:draft] = object.draft if current_user == object.creator
     end
     data
   end

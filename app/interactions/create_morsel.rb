@@ -10,8 +10,6 @@ class CreateMorsel < ActiveInteraction::Base
     file :tempfile, default: nil
   end
 
-  boolean :draft, default: false
-
   integer :post_id, default: nil
   string :post_title, default: nil
   integer :sort_order, default: nil
@@ -26,7 +24,6 @@ class CreateMorsel < ActiveInteraction::Base
     morsel = user.morsels.build(
       description: description,
       photo: photo,
-      draft: draft
     )
 
     if morsel.save

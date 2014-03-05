@@ -34,24 +34,20 @@ MorselApp::Application.routes.draw do
   end
 
   resources :morsels, only: [:create, :show, :update, :destroy] do
-    collection do
-      get 'drafts' => 'morsels#drafts'
-    end
     resources :comments, only: [:create, :index]
   end
   get 'feed' => 'morsels#index'
-  post 'morsels/:morsel_id/like', to: 'likes#create'
-  delete 'morsels/:morsel_id/like', to: 'likes#destroy'
+  post 'morsels/:morsel_id/like' => 'likes#create'
+  delete 'morsels/:morsel_id/like' => 'likes#destroy'
 
   resources :comments, only: [:destroy]
 
   resources :posts, only: [:index, :show, :update] do
     collection do
-      post ':id/append', to: 'posts#append'
-      delete ':id/append', to: 'posts#unappend'
+      get 'drafts' => 'posts#drafts'
+      post ':id/append' => 'posts#append'
+      delete ':id/append' => 'posts#unappend'
     end
     resources :morsels, only: [:update, :destroy]
   end
-
-  resources :subscribers, only: [:create]
 end

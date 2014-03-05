@@ -26,7 +26,6 @@
 - [Morsel Methods](#morsel-methods)
   - [POST ```/morsels``` - Create a new Morsel](#post-morsels---create-a-new-morsel)
   - [GET ```/morsels/{morsel_id}``` - Morsel](#get-morselsmorsel_id---morsel)
-  - [GET ```/morsels/drafts``` - Morsel Drafts](#get-morselsdrafts---morsel-drafts)
   - [PUT ```/morsels/{morsel_id}``` - Update Morsel](#put-morselsmorsel_id---update-morsel)
   - [DELETE ```/morsels/{morsel_id}``` - Delete Morsel](#delete-morselsmorsel_id---delete-morsel)
   - [POST ```/morsels/{morsel_id}/like``` - Like Morsel](#post-morselsmorsel_idlike---like-morsel)
@@ -36,12 +35,11 @@
   - [DELETE ```/comments/{comment_id}``` - Delete Comment](#delete-commentscomment_id---delete-comment)
 - [Post Methods](#post-methods)
   - [GET ```/posts``` - Posts](#get-posts---posts)
+  - [GET ```/posts/drafts``` - Post Drafts](#get-postsdrafts---post-drafts)
   - [GET ```/posts/{post_id}``` - Post](#get-postspost_id---post)
   - [PUT ```/posts/{post_id}``` - Update Post](#put-postspost_id---update-post)
   - [POST ```/posts/{post_id}/append``` - Append Morsel to Post](#post-postspost_idappend---append-morsel-to-post)
   - [DELETE ```/posts/{post_id}/append``` - Detach Morsel from Post](#delete-postspost_idappend---detach-morsel-from-post)
-- [Subscriber Methods](#subscriber-methods)
-  - [POST ```/subscribers``` - Create a new Subscriber](#post-subscribers---create-a-new-subscriber)
 - [Misc Methods](#misc-methods)
   - [GET ```/status``` - Status](#get-status---status)
   - [GET ```/configuration``` - Configuration](#get-configuration---configuration)
@@ -179,7 +177,7 @@ TIMELINE_DEFAULT_LIMIT = 20
 # Feed Methods
 
 ## GET ```/feed``` - Feed
-Returns the Feed for the authenticated User. The Feed consists of Morsels that aren't drafts sorted by their published_at date, with the most recent one's appearing first.
+Returns the Feed for the authenticated User. The Feed consists of Morsels sorted by their created_at date, with the most recent one's appearing first.
 
 ### Request
 
@@ -505,26 +503,6 @@ Returns Morsel with the specified ```morsel_id```
 <br />
 <br />
 
-GET ```/morsels/drafts``` - Morsel Drafts
-Returns the Morsel Drafts for the authenticated User sorted by their updated_at, with the most recent one's appearing first.
-
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Morsels up to and including this ```id``` | | |
-| since_id | Number | Return Morsels since this ```id``` | | |
-
-### Response
-
-| __data__ |
-| -------- |
-| Array of [Morsel (for Feed)](#morsel-for-feed) |
-
-<br />
-<br />
-
 ## PUT ```/morsels/{morsel_id}``` - Update Morsel
 Updates the Morsel with the specified ```morsel_id```
 
@@ -685,6 +663,26 @@ Returns the Posts for all Users.
 <br />
 <br />
 
+GET ```/posts/drafts``` - Post Drafts
+Returns the Post Drafts for the authenticated User sorted by their updated_at, with the most recent one's appearing first.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Posts up to and including this ```id``` | | |
+| since_id | Number | Return Posts since this ```id``` | | |
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [Post](#post) |
+
+<br />
+<br />
+
 ## GET ```/posts/{post_id}``` -  Post
 Returns the Post with the specified ```post_id```
 
@@ -763,31 +761,6 @@ Detaches the Morsel with the specified ```morsel_id``` from the Post with the sp
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
 | __Relationship not found__ | 404 (Not Found) | The Morsel is not appended to the Post |
-
-<br />
-<br />
-
-
-# Subscriber Methods
-
-## POST ```/subscribers``` - Create a new Subscriber
-Creates a new Subscriber
-
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| subscriber[email] | String | The email address for the new Subscriber | | X |
-| subscriber[url] | String | The URL of the page on Morsel | | |
-| subscriber[source_url] | String | The URL of the page that referred to URL | | |
-| subscriber[role] | String | The role of the subscriber. Currently only 'chef' is expected | | |
-| subscriber[user_id] | String | The ID of the User who referred the User | | |
-
-### Response
-
-| Status Code |
-| ----------- |
-|         200 |
 
 <br />
 <br />
@@ -890,7 +863,6 @@ Used by third-party services to ping the API.
     "id": 2,
     "description": null,
     "created_at": "2014-01-07T16:34:43.071Z",
-    "published_at": "2014-01-07T16:34:43.071Z",
     "photos": {
       "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -898,7 +870,6 @@ Used by third-party services to ping the API.
       "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
     },
-    "draft": false,
     "in_progression": false,
     "liked": false,
     "creator": {
@@ -961,7 +932,6 @@ api_key exists
       "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
     },
     "liked": false,
-    "draft": false
   }
 ```
 
@@ -985,7 +955,6 @@ api_key && post_id exist
     "sort_order": 1,
     "url": "http://eatmorsel.com/marty/1-butter/1",
     "liked": false,
-    "draft": false
   }
 ```
 
@@ -1000,6 +969,8 @@ api_key && post_id exist
   "creator_id": 3,
   "created_at": "2014-01-07T16:34:44.862Z",
   "slug": "butter-rocks",
+  "draft": false,
+  "published_at": "2014-01-07T16:34:44.862Z",
   "creator": {
     "id": 3,
     "username": "turdferg",
@@ -1135,6 +1106,7 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
     "blog",
     "business",
     "buttons",
+    "checkusername",
     "chef",
     "city",
     "contact",
@@ -1202,6 +1174,7 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
     "tos",
     "translate",
     "trends",
+    "unsubscribe",
     "user",
     "users",
     "welcome",

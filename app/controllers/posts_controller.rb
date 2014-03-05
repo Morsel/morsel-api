@@ -5,6 +5,7 @@ class PostsController < ApiController
   def index
     if params[:user_id_or_username].blank?
       posts = Post.includes(:morsel_posts, :morsels, :creator)
+                  .published
                   .since(params[:since_id])
                   .max(params[:max_id])
                   .limit(pagination_count)
@@ -13,6 +14,7 @@ class PostsController < ApiController
       user = User.find_by_id_or_username(params[:user_id_or_username])
       raise ActiveRecord::RecordNotFound if user.nil?
       posts = Post.includes(:morsel_posts, :morsels, :creator)
+                  .published
                   .since(params[:since_id])
                   .max(params[:max_id])
                   .where('creator_id = ?', user.id)
@@ -70,9 +72,21 @@ class PostsController < ApiController
     end
   end
 
+  def drafts
+    posts = Post.includes(:morsel_posts, :morsels, :creator)
+                  .drafts
+                  .since(params[:since_id])
+                  .max(params[:max_id])
+                  .where('creator_id = ?', current_user.id)
+                  .limit(pagination_count)
+                  .order('updated_at DESC')
+
+    custom_respond_with posts
+  end
+
   class PostParams
     def self.build(params)
-      params.require(:post).permit(:title)
+      params.require(:post).permit(:title, :draft)
     end
   end
 end

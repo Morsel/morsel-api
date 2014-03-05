@@ -16,8 +16,6 @@
 # **`photo_file_size`**     | `string(255)`      |
 # **`photo_updated_at`**    | `datetime`         |
 # **`deleted_at`**          | `datetime`         |
-# **`draft`**               | `boolean`          | `default(FALSE), not null`
-# **`published_at`**        | `datetime`         |
 #
 
 class Morsel < ActiveRecord::Base
@@ -36,13 +34,10 @@ class Morsel < ActiveRecord::Base
 
   mount_uploader :photo, MorselPhotoUploader
 
-  scope :drafts, -> { where(draft: true) }
-  scope :published, -> { where(draft: false) }
   scope :feed, -> { includes(:creator, :morsel_posts, :posts) }
 
   after_destroy :release_posts
-  before_save :update_photo_attributes,
-              :update_published_at_if_necessary
+  before_save :update_photo_attributes
 
   validate :description_or_photo_present?
 
@@ -97,9 +92,5 @@ class Morsel < ActiveRecord::Base
     posts.each do |p|
       p.destroy if p.morsels.empty?
     end
-  end
-
-  def update_published_at_if_necessary
-    self.published_at = DateTime.now if published_at.blank? && !draft
   end
 end
