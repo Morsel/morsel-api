@@ -6,21 +6,19 @@ class MorselsController < ApiController
   def index
     if params[:user_id_or_username].blank?
       morsels = Morsel.feed
-                      .published
                       .since(params[:since_id])
                       .max(params[:max_id])
                       .limit(pagination_count)
-                      .order('published_at DESC')
+                      .order('created_at DESC')
     else
       user = User.find_by_id_or_username(params[:user_id_or_username])
       raise ActiveRecord::RecordNotFound if user.nil?
       morsels = Morsel.feed
-                      .published
                       .since(params[:since_id])
                       .max(params[:max_id])
                       .where('creator_id = ?', user.id)
                       .limit(pagination_count)
-                      .order('published_at DESC')
+                      .order('created_at DESC')
     end
 
     custom_respond_with morsels, each_serializer: MorselForFeedSerializer
@@ -31,7 +29,6 @@ class MorselsController < ApiController
 
     create_morsel = CreateMorsel.run(
       description: morsel_params[:description],
-      draft: morsel_params[:draft],
       uploaded_photo_hash: CreateMorselUploadedPhotoHash.hash(morsel_params[:photo]),
       user: current_user,
       post_id: params[:post_id],
@@ -104,21 +101,9 @@ class MorselsController < ApiController
     end
   end
 
-  def drafts
-    morsels = Morsel.feed
-                    .drafts
-                    .since(params[:since_id])
-                    .max(params[:max_id])
-                    .where('creator_id = ?', current_user.id)
-                    .limit(pagination_count)
-                    .order('updated_at DESC')
-
-    custom_respond_with morsels, each_serializer: MorselForFeedSerializer
-  end
-
   class MorselParams
     def self.build(params)
-      params.require(:morsel).permit(:description, :photo, :draft)
+      params.require(:morsel).permit(:description, :photo)
     end
   end
 end

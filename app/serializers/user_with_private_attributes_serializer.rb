@@ -15,6 +15,6 @@ class UserWithPrivateAttributesSerializer < UserSerializer
   end
 
   def draft_count
-    object.morsels.drafts.count
+    object.posts.drafts.count
   end
 end

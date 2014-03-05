@@ -4,15 +4,17 @@
 #
 # ### Columns
 #
-# Name               | Type               | Attributes
-# ------------------ | ------------------ | ---------------------------
-# **`id`**           | `integer`          | `not null, primary key`
-# **`title`**        | `string(255)`      |
-# **`created_at`**   | `datetime`         |
-# **`updated_at`**   | `datetime`         |
-# **`creator_id`**   | `integer`          |
-# **`cached_slug`**  | `string(255)`      |
-# **`deleted_at`**   | `datetime`         |
+# Name                | Type               | Attributes
+# ------------------- | ------------------ | ---------------------------
+# **`id`**            | `integer`          | `not null, primary key`
+# **`title`**         | `string(255)`      |
+# **`created_at`**    | `datetime`         |
+# **`updated_at`**    | `datetime`         |
+# **`creator_id`**    | `integer`          |
+# **`cached_slug`**   | `string(255)`      |
+# **`deleted_at`**    | `datetime`         |
+# **`draft`**         | `boolean`          | `default(FALSE), not null`
+# **`published_at`**  | `datetime`         |
 #
 
 require 'spec_helper'
@@ -26,6 +28,8 @@ describe Post do
   it { should respond_to(:creator) }
   it { should respond_to(:morsel_posts) }
   it { should respond_to(:morsels) }
+  it { should respond_to(:draft) }
+  it { should respond_to(:published_at) }
 
   it { should be_valid }
 
@@ -38,6 +42,26 @@ describe Post do
       end
 
       it { should_not be_valid }
+    end
+  end
+
+  describe 'published_at' do
+    it 'should set published_at on save' do
+      expect(post.published_at).to be_nil
+      post.save
+      expect(post.published_at).to_not be_nil
+    end
+
+    context 'draft' do
+      before do
+        post.draft = true
+      end
+
+      it 'should NOT set published_at on save' do
+        expect(post.published_at).to be_nil
+        post.save
+        expect(post.published_at).to be_nil
+      end
     end
   end
 

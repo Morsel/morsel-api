@@ -3,6 +3,8 @@ class PostSerializer < ActiveModel::Serializer
              :title,
              :creator_id,
              :created_at,
+             :published_at,
+             :draft,
              :slug
 
   has_one :creator
@@ -14,6 +16,6 @@ class PostSerializer < ActiveModel::Serializer
   end
 
   def morsels
-    object.morsels.published
+    object.morsels.order('morsel_posts.sort_order ASC')
   end
 end

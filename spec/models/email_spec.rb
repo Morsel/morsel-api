@@ -54,7 +54,8 @@ describe Email do
                                       :email_subtitle=>nil,
                                       :email_body=>nil,
                                       :current_year=>Time.now.year,
-                                      :email_reason=>nil
+                                      :email_reason=>nil,
+                                      :unsub=>"https://test.eatmorsel.com/unsubscribe"
                                     },
                                     :metadata=> {
                                       :email_id=>email.id,
@@ -99,7 +100,8 @@ describe Emails::UsernameReservedEmail do
                                       :email_subtitle=>nil,
                                       :email_body=>nil,
                                       :current_year=>Time.now.year,
-                                      :email_reason=>nil
+                                      :email_reason=>nil,
+                                      :unsub=>"https://test.eatmorsel.com/unsubscribe"
                                     },
                                     :metadata=> {
                                       :email_id=>email.id,

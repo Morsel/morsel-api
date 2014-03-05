@@ -256,7 +256,7 @@ describe 'Users API' do
 
       expect(json_data['like_count']).to eq(number_of_morsel_likes)
       expect(json_data['morsel_count']).to eq(user_with_posts.morsels.count)
-      expect(json_data['draft_count']).to eq(user_with_posts.morsels.drafts.count)
+      expect(json_data['draft_count']).to eq(user_with_posts.posts.drafts.count)
     end
 
     it 'should be public' do
@@ -332,11 +332,9 @@ describe 'Users API' do
       end
     end
 
-    context 'has a Morsel draft' do
+    context 'has a Post draft' do
       before do
-        first_morsel = user_with_posts.morsels.first
-        first_morsel.draft = true
-        first_morsel.save
+        user_with_posts.posts.first.update(draft: true)
       end
 
       it 'returns 1 for draft_count' do
