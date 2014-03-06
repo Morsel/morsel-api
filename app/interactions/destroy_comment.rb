@@ -3,15 +3,16 @@ class DestroyComment < ActiveInteraction::Base
 
   validates :comment, presence: true
   validates :user, presence: true
-  validate :user_is_comment_or_morsel_creator
+  validate :user_can_delete_comment?
 
   def execute
     comment.destroy
+    errors.merge!(comment.errors)
   end
 
   private
 
-  def user_is_comment_or_morsel_creator
-    errors.add(:user, 'not authorized to delete comment') if comment.user != user && comment.morsel.creator != user
+  def user_can_delete_comment?
+    errors.add(:user, 'not authorized to delete comment') unless user.can_delete? comment
   end
 end

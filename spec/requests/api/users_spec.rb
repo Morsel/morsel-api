@@ -76,6 +76,7 @@ describe 'Users API' do
       expect(user.email).to eq(fake_email)
       expect(user.username).to eq(fake_username)
       expect(user.active).to eq(false)
+      expect(user.current_sign_in_ip).to_not be_nil
     end
 
     it 'sends an email' do
@@ -107,6 +108,24 @@ describe 'Users API' do
       expect(user_event.client_device).to eq('rspec')
       expect(user_event.client_version).to eq('1.2.3')
     end
+
+    context 'email already registered' do
+      it 'returns an error' do
+        post '/users/reserveusername', email: user.email, username: fake_username, format: :json
+
+        expect(response).to_not be_success
+        expect(json_errors['email'].first).to eq('has already been taken')
+      end
+    end
+
+    context 'username already registered' do
+      it 'returns an error' do
+        post '/users/reserveusername', email: fake_email, username: user.username, format: :json
+
+        expect(response).to_not be_success
+        expect(json_errors['username'].first).to eq('has already been taken')
+      end
+    end
   end
 
   describe 'PUT /users/:user_id/updaterole users#updaterole' do
@@ -115,7 +134,7 @@ describe 'Users API' do
     it 'sets the Role for the specified User' do
       put "/users/#{user.id}/updaterole", role: 'writer', format: :json
       expect(response).to be_success
-      expect(User.find(user.id).type).to eq('Writer')
+      expect(User.find(user.id).industry).to eq('writer')
     end
 
     context 'invalid role passed' do
@@ -386,7 +405,7 @@ describe 'Users API' do
     context 'pagination' do
       before do
         30.times do
-          p = FactoryGirl.create(:post)
+          p = FactoryGirl.create(:post_with_creator)
           p.creator = user_with_posts
           p.save
         end
@@ -535,7 +554,7 @@ describe 'Users API' do
   end
 
   describe 'POST /users/authorizations' do
-    let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
+    let(:chef) { FactoryGirl.create(:chef) }
 
     context 'Twitter' do
       it 'creates a new Twitter authorization' do
@@ -550,7 +569,7 @@ describe 'Users API' do
         twitter_user.stub(:screen_name).and_return(dummy_screen_name)
         twitter_user.stub(:url).and_return("https://twitter.com/#{dummy_screen_name}")
 
-        post '/users/authorizations', api_key: api_key_for_user(turd_ferg),
+        post '/users/authorizations', api_key: api_key_for_user(chef),
                                       provider: 'twitter',
                                       token: dummy_token,
                                       secret: dummy_secret,
@@ -562,11 +581,11 @@ describe 'Users API' do
         expect(json_data['provider']).to eq('twitter')
         expect(json_data['secret']).to eq(dummy_secret)
         expect(json_data['token']).to eq(dummy_token)
-        expect(json_data['user_id']).to eq(turd_ferg.id)
+        expect(json_data['user_id']).to eq(chef.id)
         expect(json_data['name']).to eq(dummy_screen_name)
 
-        expect(turd_ferg.twitter_authorizations.count).to eq(1)
-        expect(turd_ferg.twitter_username).to eq(dummy_screen_name)
+        expect(chef.twitter_authorizations.count).to eq(1)
+        expect(chef.twitter_username).to eq(dummy_screen_name)
       end
     end
 
@@ -584,7 +603,7 @@ describe 'Users API' do
 
         client.stub(:get_object).and_return(facebook_user)
 
-        post '/users/authorizations', api_key: api_key_for_user(turd_ferg),
+        post '/users/authorizations', api_key: api_key_for_user(chef),
                                       provider: 'facebook',
                                       token: dummy_token,
                                       format: :json
@@ -595,11 +614,11 @@ describe 'Users API' do
         expect(json_data['provider']).to eq('facebook')
         expect(json_data['secret']).to be_nil
         expect(json_data['token']).to eq(dummy_token)
-        expect(json_data['user_id']).to eq(turd_ferg.id)
+        expect(json_data['user_id']).to eq(chef.id)
         expect(json_data['name']).to eq(dummy_name)
 
-        expect(turd_ferg.facebook_authorizations.count).to eq(1)
-        expect(turd_ferg.facebook_uid).to eq(dummy_fb_uid)
+        expect(chef.facebook_authorizations.count).to eq(1)
+        expect(chef.facebook_uid).to eq(dummy_fb_uid)
       end
     end
   end

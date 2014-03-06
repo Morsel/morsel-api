@@ -19,7 +19,9 @@
 #
 
 class Authorization < ActiveRecord::Base
+  include Authority::Abilities
   include TimelinePaginateable
+  include UserCreatable
 
   belongs_to :user
 

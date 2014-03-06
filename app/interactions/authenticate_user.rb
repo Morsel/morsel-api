@@ -11,7 +11,7 @@ class AuthenticateUser < ActiveInteraction::Base
     if user && Devise.secure_compare(user.authentication_token, split_key[1])
       user
     else
-      user.errors.add(:api_token, 'unauthorized')
+      errors.add(:api_token, 'unauthorized')
     end
   end
 

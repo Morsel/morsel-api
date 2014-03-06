@@ -32,7 +32,8 @@ class UsersController < ApiController
       user = reserve_username.result
       create_user_event(:reserved_username, user.id)
       user.send_reserved_username_email
-      render_json({ user_id: "#{user.id}" })
+      sign_in user, store: false
+      render_json(user_id: "#{user.id}")
     else
       render_json_errors reserve_username.errors
     end

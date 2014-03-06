@@ -14,9 +14,8 @@ class MorselSerializer < ActiveModel::Serializer
       data[:url] = object.url(post)
     end
 
-    if current_user.present?
-      data[:liked] = current_user.likes?(object)
-    end
+    data[:liked] = current_user.likes?(object) if current_user.present?
+
     data
   end
 

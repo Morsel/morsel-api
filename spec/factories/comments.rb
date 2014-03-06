@@ -19,6 +19,6 @@ FactoryGirl.define do
   factory :comment do
     description { Faker::Lorem.sentence(rand(5..100)) }
     association(:user)
-    association(:morsel)
+    association(:morsel, factory: :morsel_with_creator)
   end
 end

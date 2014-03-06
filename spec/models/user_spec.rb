@@ -198,11 +198,42 @@ describe User do
   context 'persisted' do
     before { user.save }
     its(:authentication_token) { should_not be_nil }
+
+    describe 'admin' do
+      context 'is true' do
+        before { user.update(admin: true) }
+        it 'adds the :admin role' do
+          expect(user.has_role?(:admin)).to be_true
+        end
+        it 'removed the :admin role if admin is set to false' do
+          user.update(admin: false)
+          expect(user.has_role?(:admin)).to be_false
+        end
+      end
+    end
+
+    describe 'industry' do
+      context 'chef' do
+        before { user.update(industry: 'chef') }
+        it 'adds the :chef role' do
+          expect(user.has_role?(:chef)).to be_true
+        end
+      end
+
+      context 'writer' do
+        before do
+          user.update(industry: 'writer')
+        end
+        it 'adds the :media role' do
+          expect(user.has_role?(:media)).to be_true
+        end
+      end
+    end
   end
 
   context 'Authorizations' do
     context 'Facebook' do
-      subject(:user_with_facebook_authorization) { UserSocialClientsDecorator.new(FactoryGirl.create(:user_with_facebook_authorization)) }
+      subject(:chef_with_facebook_authorization) { UserSocialClientsDecorator.new(FactoryGirl.create(:chef_with_facebook_authorization)) }
 
       its(:facebook_authorizations) { should_not be_empty }
 
@@ -218,14 +249,14 @@ describe User do
           end
 
           it 'should take time' do
-            Benchmark.realtime { user_with_facebook_authorization.facebook_uid }.should < 0.25
+            Benchmark.realtime { chef_with_facebook_authorization.facebook_uid }.should < 0.25
           end
         end
       end
     end
 
     context 'Twitter' do
-      subject(:user_with_twitter_authorization) { UserSocialClientsDecorator.new(FactoryGirl.create(:user_with_twitter_authorization)) }
+      subject(:chef_with_twitter_authorization) { UserSocialClientsDecorator.new(FactoryGirl.create(:chef_with_twitter_authorization)) }
 
       its(:twitter_authorizations) { should_not be_empty }
 
@@ -240,7 +271,7 @@ describe User do
           end
 
           it 'should take time' do
-            Benchmark.realtime { user_with_twitter_authorization.twitter_username }.should < 0.25
+            Benchmark.realtime { chef_with_twitter_authorization.twitter_username }.should < 0.25
           end
         end
       end

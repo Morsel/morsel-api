@@ -15,10 +15,15 @@
 #
 
 class Like < ActiveRecord::Base
+  include Authority::Abilities
+  include UserCreatable
+
   acts_as_paranoid
 
   belongs_to :morsel
   belongs_to :user
+
+  self.authorizer_name = 'LikeAuthorizer'
 
   validates :user_id, uniqueness: { scope: [:deleted_at, :morsel_id] }
 end
