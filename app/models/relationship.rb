@@ -14,4 +14,6 @@
 #
 
 class Relationship < ActiveRecord::Base
+  include Authority::Abilities
+  # TODO: Eventually use UserCreatable to track who created the Relationship
 end

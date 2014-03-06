@@ -18,12 +18,13 @@ class CreateMorsel < ActiveInteraction::Base
   boolean :post_to_twitter, default: false
 
   validates :user, presence: true
+  validate :user_can_create_morsel?
 
   def execute
     photo = ActionDispatch::Http::UploadedFile.new(uploaded_photo_hash) if uploaded_photo_hash
     morsel = user.morsels.build(
       description: description,
-      photo: photo,
+      photo: photo
     )
 
     if morsel.save
@@ -45,10 +46,18 @@ class CreateMorsel < ActiveInteraction::Base
       end
     end
 
+    errors.merge!(morsel.errors)
+
     {
       morsel: morsel,
       post: post
     }
+  end
+
+  private
+
+  def user_can_create_morsel?
+    errors.add(:user, 'not authorized to create Morsel') unless user.can_create? Morsel
   end
 end
 

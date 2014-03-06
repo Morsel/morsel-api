@@ -4,7 +4,7 @@ ruby '2.0.0'
 #ruby-gemset=morsel
 
 gem 'puma'
-gem 'rails', '4.0.2'
+gem 'rails', '4.0.3'
 gem 'pg'
 
 gem 'active_interaction', '~> 1.0'

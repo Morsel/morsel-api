@@ -20,6 +20,10 @@
 
 class Morsel < ActiveRecord::Base
   include Authority::Abilities
+  include PhotoUploadable
+  include TimelinePaginateable
+  include UserCreatable
+
   acts_as_paranoid
 
   belongs_to :creator, class_name: 'User', foreign_key: 'creator_id'
@@ -29,15 +33,11 @@ class Morsel < ActiveRecord::Base
   has_many :morsel_posts
   has_many :posts, through: :morsel_posts
 
-  include PhotoUploadable
-  include TimelinePaginateable
-
   mount_uploader :photo, MorselPhotoUploader
 
   scope :feed, -> { includes(:creator, :morsel_posts, :posts) }
 
   after_destroy :release_posts
-  before_save :update_photo_attributes
 
   validate :description_or_photo_present?
 

@@ -41,13 +41,29 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
-  factory :user, aliases: [:creator] do
+  factory :user do
     email { Faker::Internet.email }
     username { "user_#{Faker::Lorem.characters(10)}" }
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
     password 'password'
     bio 'Hi! I like turtles!'
+
+    factory :chef, class: User do
+      industry 'chef'
+
+      factory :chef_with_facebook_authorization do
+        after(:create) do |chef|
+          create_list(:facebook_authorization, 1, user: chef)
+        end
+      end
+
+      factory :chef_with_twitter_authorization do
+        after(:create) do |chef|
+          create_list(:twitter_authorization, 1, user: chef)
+        end
+      end
+    end
 
     factory :user_with_posts do
       ignore do
@@ -56,18 +72,6 @@ FactoryGirl.define do
 
       after(:create) do |user, evaluator|
         create_list(:post_with_morsels, evaluator.posts_count, creator: user)
-      end
-    end
-
-    factory :user_with_facebook_authorization do
-      after(:create) do |user|
-        create_list(:facebook_authorization, 1, user: user)
-      end
-    end
-
-    factory :user_with_twitter_authorization do
-      after(:create) do |user|
-        create_list(:twitter_authorization, 1, user: user)
       end
     end
   end

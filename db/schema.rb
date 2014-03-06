@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140304225600) do
+ActiveRecord::Schema.define(version: 20140305205327) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -146,19 +146,6 @@ ActiveRecord::Schema.define(version: 20140304225600) do
   add_index "slugs", ["scope", "slug", "created_at"], name: "index_slugs_on_scope_and_slug_and_created_at", using: :btree
   add_index "slugs", ["scope", "slug"], name: "index_slugs_on_scope_and_slug", using: :btree
 
-  create_table "subscribers", force: true do |t|
-    t.string   "email"
-    t.string   "url"
-    t.string   "source_url"
-    t.string   "role"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "user_id"
-  end
-
-  add_index "subscribers", ["email"], name: "index_subscribers_on_email", using: :btree
-  add_index "subscribers", ["user_id"], name: "index_subscribers_on_user_id", using: :btree
-
   create_table "user_events", force: true do |t|
     t.integer  "user_id"
     t.string   "name"
@@ -173,12 +160,12 @@ ActiveRecord::Schema.define(version: 20140304225600) do
   add_index "user_events", ["user_id"], name: "index_user_events_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                  default: "",     null: false
-    t.string   "encrypted_password",     default: "",     null: false
+    t.string   "email",                  default: "",    null: false
+    t.string   "encrypted_password",     default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,      null: false
+    t.integer  "sign_in_count",          default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -187,7 +174,7 @@ ActiveRecord::Schema.define(version: 20140304225600) do
     t.datetime "updated_at"
     t.string   "first_name"
     t.string   "last_name"
-    t.boolean  "admin",                  default: false,  null: false
+    t.boolean  "admin",                  default: false, null: false
     t.string   "authentication_token"
     t.string   "photo"
     t.string   "photo_content_type"
@@ -200,7 +187,7 @@ ActiveRecord::Schema.define(version: 20140304225600) do
     t.string   "bio"
     t.boolean  "active",                 default: true
     t.datetime "verified_at"
-    t.string   "type",                   default: "User"
+    t.string   "industry"
     t.boolean  "unsubscribed",           default: false
   end
 

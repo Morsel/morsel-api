@@ -277,11 +277,11 @@ describe 'Posts API' do
     end
 
     context 'relationship not found' do
-      let(:morsel) { FactoryGirl.create(:morsel) }
+      let(:morsel_with_creator) { FactoryGirl.create(:morsel_with_creator) }
       it 'returns an error' do
         delete "/posts/#{existing_post.id}/append", api_key: api_key_for_user(turd_ferg),
                                                     format: :json,
-                                                    morsel_id: morsel.id
+                                                    morsel_id: morsel_with_creator.id
 
         expect(response).to_not be_success
         expect(response.status).to eq(404)

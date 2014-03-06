@@ -17,12 +17,13 @@
 
 class Comment < ActiveRecord::Base
   include Authority::Abilities
-  self.authorizer_name = 'CommentAuthorizer'
+  include TimelinePaginateable
+  include UserCreatable
+
   acts_as_paranoid
-  resourcify
 
   belongs_to :user
   belongs_to :morsel
 
-  include TimelinePaginateable
+  self.authorizer_name = 'CommentAuthorizer'
 end

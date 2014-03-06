@@ -3,6 +3,7 @@ class CreateAuthorization < ActiveInteraction::Base
 
   string :provider, :token
   string :secret, default: nil
+  validate :user_can_create_authorization?
 
   def execute
     authorization = user.authorizations.build(provider: provider,
@@ -16,10 +17,16 @@ class CreateAuthorization < ActiveInteraction::Base
       build_twitter_attributes(authorization)
     end
 
+    errors.merge!(authorization.errors)
+
     authorization
   end
 
   private
+
+  def user_can_create_authorization?
+    errors.add(:user, 'not authorized to create authorization') unless user.can_create? Authorization
+  end
 
   def build_facebook_attributes(authorization)
     facebook_user = Koala::Facebook::API.new(token).get_object('me')

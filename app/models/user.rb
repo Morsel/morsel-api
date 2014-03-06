@@ -40,13 +40,14 @@
 
 class User < ActiveRecord::Base
   include Authority::UserAbilities
+  include PhotoUploadable
   rolify
 
   devise :database_authenticatable, :registerable, :rememberable, :trackable, :validatable
   # :recoverable
 
   before_save :ensure_authentication_token
-  before_save :update_photo_attributes
+  after_save :ensure_role
 
   has_many :authorizations
   has_many :comments, through: :morsels
@@ -63,14 +64,16 @@ class User < ActiveRecord::Base
   has_many :morsels, foreign_key: :creator_id
   has_many :posts, foreign_key: :creator_id
 
+  scope :chefs, -> { where(industry: 'chef') }
+  scope :writers, -> { where(industry: 'writer') }
+  scope :diners, -> { where(industry: 'diner') }
+
   validates :username,
             format: { with: /\A[a-zA-Z][A-Za-z0-9_]+$\z/ },
             length: { maximum: 15 },
             presence: true,
             uniqueness: { case_sensitive: false },
             exclusion: ReservedPaths.non_username_paths
-
-  include PhotoUploadable
 
   mount_uploader :photo, UserPhotoUploader
 
@@ -160,11 +163,18 @@ class User < ActiveRecord::Base
     end
   end
 
-  def update_photo_attributes
-    if photo.present? && photo_changed?
-      self.photo_content_type = photo.file.content_type
-      self.photo_file_size = photo.file.size
-      self.photo_updated_at = Time.now
+  def ensure_role
+    case industry
+    when 'chef'
+      add_role(:chef)
+    when 'writer'
+      add_role(:media)
+    end
+
+    if admin
+      add_role(:admin)
+    else
+      remove_role(:admin)
     end
   end
 end

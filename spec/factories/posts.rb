@@ -27,6 +27,7 @@ FactoryGirl.define do
     end
 
     factory :post_with_morsels, class: Post do
+      association(:creator, factory: :user)
       ignore do
         morsels_count 3
       end
@@ -36,8 +37,6 @@ FactoryGirl.define do
       end
 
       factory :post_with_morsels_and_creator, class: Post do
-        association(:creator, factory: :user)
-
         factory :draft_post_with_morsels_and_creator, class: Post do
           draft true
         end

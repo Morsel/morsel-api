@@ -12,6 +12,8 @@ class UpdateUserRole < ActiveInteraction::Base
             presence: true
 
   def execute
-    User.find(user_id).update(type: role.capitalize)
+    user = User.find(user_id)
+    user.update(industry: role)
+    errors.merge!(user.errors)
   end
 end

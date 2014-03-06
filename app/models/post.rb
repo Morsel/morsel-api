@@ -18,6 +18,10 @@
 #
 
 class Post < ActiveRecord::Base
+  include Authority::Abilities
+  include TimelinePaginateable
+  include UserCreatable
+
   acts_as_paranoid
   is_sluggable :title
 
@@ -32,8 +36,6 @@ class Post < ActiveRecord::Base
 
   scope :drafts, -> { where(draft: true) }
   scope :published, -> { where(draft: false) }
-
-  include TimelinePaginateable
 
   def set_sort_order_for_morsel(morsel_id, new_sort_order)
     morsel_posts_to_increment = morsel_posts.where('sort_order >= ?', new_sort_order)
