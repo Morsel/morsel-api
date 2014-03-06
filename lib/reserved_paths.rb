@@ -19,6 +19,8 @@ module ReservedPaths
       checkusername
       chef
       city
+      claim
+      claimed
       contact
       contacts
       devices
