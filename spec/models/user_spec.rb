@@ -34,7 +34,7 @@
 # **`bio`**                     | `string(255)`      |
 # **`active`**                  | `boolean`          | `default(TRUE)`
 # **`verified_at`**             | `datetime`         |
-# **`type`**                    | `string(255)`      | `default("User")`
+# **`industry`**                | `string(255)`      |
 # **`unsubscribed`**            | `boolean`          | `default(FALSE)`
 #
 
@@ -182,16 +182,6 @@ describe User do
       it 'returns the total number of Likes for my Morsels' do
         expect(user_with_posts.morsel_likes_for_my_morsels_by_others_count).to eq(number_of_morsel_likes)
       end
-
-      context 'performance' do
-        before do
-          require 'benchmark'
-        end
-
-        it 'should take time' do
-          Benchmark.realtime { user_with_posts.morsel_likes_for_my_morsels_by_others_count }.should < 0.02
-        end
-      end
     end
   end
 
@@ -220,9 +210,9 @@ describe User do
         end
       end
 
-      context 'writer' do
+      context 'media' do
         before do
-          user.update(industry: 'writer')
+          user.update(industry: 'media')
         end
         it 'adds the :media role' do
           expect(user.has_role?(:media)).to be_true
@@ -241,18 +231,6 @@ describe User do
       its(:authorized_with_facebook?) { should be_true }
       its(:facebook_client) { should_not be_nil }
       its(:facebook_uid) { should_not be_nil }
-
-      describe 'facebook_uid' do
-        context 'performance' do
-          before do
-            require 'benchmark'
-          end
-
-          it 'should take time' do
-            Benchmark.realtime { chef_with_facebook_authorization.facebook_uid }.should < 0.25
-          end
-        end
-      end
     end
 
     context 'Twitter' do
@@ -264,17 +242,6 @@ describe User do
       its(:authorized_with_twitter?) { should be_true }
       its(:twitter_client) { should_not be_nil }
       its(:twitter_username) { should_not be_nil }
-      describe 'twitter_username' do
-        context 'performance' do
-          before do
-            require 'benchmark'
-          end
-
-          it 'should take time' do
-            Benchmark.realtime { chef_with_twitter_authorization.twitter_username }.should < 0.25
-          end
-        end
-      end
     end
   end
 

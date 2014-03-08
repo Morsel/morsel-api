@@ -36,7 +36,9 @@ FactoryGirl.define do
         create_list(:morsel, evaluator.morsels_count, posts: [post], creator: post.creator)
       end
 
+      # deprecated
       factory :post_with_morsels_and_creator, class: Post do
+        # not deprecated
         factory :draft_post_with_morsels_and_creator, class: Post do
           draft true
         end

@@ -128,18 +128,18 @@ describe 'Users API' do
     end
   end
 
-  describe 'PUT /users/:user_id/updaterole users#updaterole' do
+  describe 'PUT /users/:user_id/updateindustry users#updateindustry' do
     let(:user) { FactoryGirl.create(:user) }
 
-    it 'sets the Role for the specified User' do
-      put "/users/#{user.id}/updaterole", role: 'writer', format: :json
+    it 'sets the industry for the specified User' do
+      put "/users/#{user.id}/updateindustry", industry: 'media', format: :json
       expect(response).to be_success
-      expect(User.find(user.id).industry).to eq('writer')
+      expect(User.find(user.id).industry).to eq('media')
     end
 
-    context 'invalid role passed' do
+    context 'invalid industry passed' do
       it 'throws an error' do
-        put "/users/#{user.id}/updaterole", role: 'butt', format: :json
+        put "/users/#{user.id}/updateindustry", role: 'butt', format: :json
         expect(response).to_not be_success
       end
     end

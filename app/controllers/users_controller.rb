@@ -39,16 +39,16 @@ class UsersController < ApiController
     end
   end
 
-  def updaterole
-    update_user_role = UpdateUserRole.run(
+  def updateindustry
+    update_user_industry = UpdateUserIndustry.run(
       user_id: params[:user_id],
-      role: params[:role]
+      industry: params[:industry]
     )
 
-    if update_user_role.valid?
+    if update_user_industry.valid?
       render_json 'OK'
     else
-      render_json_errors update_user_role.errors
+      render_json_errors update_user_industry.errors
     end
   end
 

@@ -22,7 +22,7 @@ MorselApp::Application.routes.draw do
       post 'authorizations' => 'authorizations#create'
       get 'checkusername(/:username)' => 'users#checkusername'
       post 'reserveusername(/:username)' => 'users#reserveusername'
-      put ':user_id/updaterole' => 'users#updaterole'
+      put ':user_id/updateindustry' => 'users#updateindustry'
       get 'me' => 'users#me'
       post 'unsubscribe' => 'users#unsubscribe'
 
@@ -42,7 +42,7 @@ MorselApp::Application.routes.draw do
 
   resources :comments, only: [:destroy]
 
-  resources :posts, only: [:index, :show, :update] do
+  resources :posts, only: [:create, :index, :show, :update] do
     collection do
       get 'drafts' => 'posts#drafts'
       post ':id/append' => 'posts#append'

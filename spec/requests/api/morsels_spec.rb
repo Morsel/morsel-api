@@ -192,7 +192,8 @@ describe 'Morsels API' do
                         morsel: {
                           description: 'It\'s not a toomarh!',
                           photo: Rack::Test::UploadedFile.new(
-                            File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))) }
+                            File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))) },
+                        post_title: 'Some title'
 
       expect(response).to be_success
 
@@ -238,6 +239,38 @@ describe 'Morsels API' do
 
           expect(post_with_morsels.morsel_ids.first).to eq(json_data['id'])
         end
+
+        describe '213 sort_order scenario' do
+          context 'Morsels are created and attached to the same Post with sort_orders 2,1,3' do
+            let(:existing_post) { FactoryGirl.create(:post_with_creator) }
+            let(:descriptions) { [ 'Should be first', 'Should be second', 'Should be third'] }
+
+            before do
+              post '/morsels',  api_key: api_key_for_user(chef),
+                                format: :json,
+                                morsel: { description: descriptions[1] },
+                                post_id: existing_post.id,
+                                sort_order: 2
+
+              post '/morsels',  api_key: api_key_for_user(chef),
+                                format: :json,
+                                morsel: { description: descriptions[0] },
+                                post_id: existing_post.id,
+                                sort_order: 1
+
+              post '/morsels',  api_key: api_key_for_user(chef),
+                                format: :json,
+                                morsel: { description: descriptions[2] },
+                                post_id: existing_post.id,
+                                sort_order: 3
+            end
+            it 'returns them in the correct order' do
+              expect(existing_post.morsels.map { |m| m.morsel_posts.first.sort_order }).to eq([1, 2, 3])
+              expect(existing_post.morsels.map { |m| m.description }).to eq(descriptions)
+            end
+          end
+        end
+
       end
     end
 
@@ -278,7 +311,8 @@ describe 'Morsels API' do
           post '/morsels',  api_key: api_key_for_user(chef_with_facebook_authorization),
                             format: :json,
                             morsel: { description: 'The Fresh Prince of Bel Air' },
-                            post_to_facebook: true
+                            post_to_facebook: true,
+                            post_title: 'Some title'
         }.to change(SocialWorker.jobs, :size).by(1)
 
         expect(response).to be_success
@@ -304,7 +338,8 @@ describe 'Morsels API' do
           post '/morsels',  api_key: api_key_for_user(chef_with_twitter_authorization),
                             format: :json,
                             morsel: { description: 'D.A.N.C.E.' },
-                            post_to_twitter: true
+                            post_to_twitter: true,
+                            post_title: 'Some title'
         }.to change(SocialWorker.jobs, :size).by(1)
 
         expect(response).to be_success
@@ -424,7 +459,8 @@ describe 'Morsels API' do
           post '/morsels',  api_key: api_key_for_user(chef_with_facebook_authorization),
                             format: :json,
                             morsel: { description: 'The Fresh Prince of Bel Air' },
-                            post_to_facebook: true
+                            post_to_facebook: true,
+                            post_title: 'Some title'
         }.to change(SocialWorker.jobs, :size).by(1)
 
         expect(response).to be_success
@@ -450,7 +486,8 @@ describe 'Morsels API' do
           post '/morsels',  api_key: api_key_for_user(chef_with_twitter_authorization),
                             format: :json,
                             morsel: { description: 'D.A.N.C.E.' },
-                            post_to_twitter: true
+                            post_to_twitter: true,
+                            post_title: 'Some title'
         }.to change(SocialWorker.jobs, :size).by(1)
 
         expect(response).to be_success

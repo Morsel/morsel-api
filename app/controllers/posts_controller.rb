@@ -25,6 +25,19 @@ class PostsController < ApiController
     custom_respond_with posts
   end
 
+  def create
+    create_post = CreatePost.run(
+      params: PostParams.build(params),
+      user: current_user
+    )
+
+    if create_post.valid?
+      custom_respond_with create_post.result
+    else
+      render_json_errors create_post.errors
+    end
+  end
+
   def show
     custom_respond_with Post.includes(:morsel_posts, :morsels, :creator).find(params[:id])
   end
@@ -47,9 +60,9 @@ class PostsController < ApiController
       # Already exists
       render_json_errors({ relationship: ['already exists'] }, :bad_request)
     else
-      if post.morsels << morsel
-        post.set_sort_order_for_morsel(morsel.id, params[:sort_order]) if params[:sort_order].present?
+      morsel_post = MorselPost.create(morsel: morsel, post: post, sort_order: params[:sort_order].presence)
 
+      if morsel_post.valid?
         custom_respond_with post
       else
         render_json_errors(post.errors)

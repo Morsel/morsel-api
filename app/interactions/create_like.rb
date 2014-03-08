@@ -3,7 +3,7 @@ class CreateLike < ActiveInteraction::Base
 
   validates :morsel, presence: true
   validates :user, presence: true
-  validate :user_can_create_like?
+  validate { errors.add(:user, 'not authorized to create Like') unless user.can_create?(Like) }
   validate :user_has_not_liked_morsel_already
 
   def execute
@@ -11,10 +11,6 @@ class CreateLike < ActiveInteraction::Base
   end
 
   private
-
-  def user_can_create_like?
-    errors.add(:user, 'not authorized to like') unless user.can_create? Like
-  end
 
   def user_has_not_liked_morsel_already
     errors.add(:morsel, 'already liked') if morsel.likers.include? user

@@ -4,7 +4,7 @@ class CreateComment < ActiveInteraction::Base
 
   validates :morsel, presence: true
   validates :user, presence: true
-  validate :user_can_create_comment?
+  validate { errors.add(:user, 'not authorized to create Comment') unless user.can_create?(Comment) }
 
   def execute
     comment = Comment.create(
@@ -16,11 +16,5 @@ class CreateComment < ActiveInteraction::Base
     errors.merge!(comment.errors)
 
     comment
-  end
-
-  private
-
-  def user_can_create_comment?
-    errors.add(:user, 'not authorized to comment') unless user.can_create? Comment
   end
 end
