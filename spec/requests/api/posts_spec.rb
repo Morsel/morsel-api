@@ -113,10 +113,6 @@ describe 'Posts API' do
         require 'benchmark'
       end
 
-      it 'should take time' do
-        Benchmark.realtime { get('/posts', api_key: api_key_for_user(turd_ferg), format: :json) }.should < 0.5
-      end
-
       context 'twenty Posts' do
         before do
           20.times { FactoryGirl.create(:post_with_morsels_and_creator) }
@@ -169,6 +165,48 @@ describe 'Posts API' do
             }.should < 1.25
           end
         end
+      end
+    end
+  end
+
+  describe 'POST /morsels morsels#create' do
+    let(:chef) { FactoryGirl.create(:chef) }
+    let(:expected_title) { 'Bake Sale!' }
+
+    it 'creates a Post' do
+      post '/posts',  api_key: api_key_for_user(chef),
+                      format: :json,
+                      post: {
+                        title: expected_title
+                      }
+
+      expect(response).to be_success
+
+      expect(json_data['id']).to_not be_nil
+
+      new_post = Post.find json_data['id']
+      expect_json_keys(json_data, new_post, %w(id title creator_id))
+      expect(json_data['title']).to eq(expected_title)
+      expect(new_post.draft).to be_false
+    end
+
+    context 'draft is set to true' do
+      it 'creates a draft Post' do
+        post '/posts',  api_key: api_key_for_user(chef),
+                        format: :json,
+                        post: {
+                          title: expected_title,
+                          draft: true
+                        }
+
+        expect(response).to be_success
+
+        expect(json_data['id']).to_not be_nil
+
+        new_post = Post.find json_data['id']
+        expect_json_keys(json_data, new_post, %w(id title creator_id))
+        expect(json_data['title']).to eq(expected_title)
+        expect(new_post.draft).to be_true
       end
     end
   end

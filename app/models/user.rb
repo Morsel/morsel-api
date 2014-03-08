@@ -34,7 +34,7 @@
 # **`bio`**                     | `string(255)`      |
 # **`active`**                  | `boolean`          | `default(TRUE)`
 # **`verified_at`**             | `datetime`         |
-# **`type`**                    | `string(255)`      | `default("User")`
+# **`industry`**                | `string(255)`      |
 # **`unsubscribed`**            | `boolean`          | `default(FALSE)`
 #
 
@@ -63,10 +63,6 @@ class User < ActiveRecord::Base
   has_many :likes
   has_many :morsels, foreign_key: :creator_id
   has_many :posts, foreign_key: :creator_id
-
-  scope :chefs, -> { where(industry: 'chef') }
-  scope :writers, -> { where(industry: 'writer') }
-  scope :diners, -> { where(industry: 'diner') }
 
   validates :username,
             format: { with: /\A[a-zA-Z][A-Za-z0-9_]+$\z/ },
@@ -167,7 +163,7 @@ class User < ActiveRecord::Base
     case industry
     when 'chef'
       add_role(:chef)
-    when 'writer'
+    when 'media'
       add_role(:media)
     end
 

@@ -34,7 +34,7 @@
 # **`bio`**                     | `string(255)`      |
 # **`active`**                  | `boolean`          | `default(TRUE)`
 # **`verified_at`**             | `datetime`         |
-# **`type`**                    | `string(255)`      | `default("User")`
+# **`industry`**                | `string(255)`      |
 # **`unsubscribed`**            | `boolean`          | `default(FALSE)`
 #
 

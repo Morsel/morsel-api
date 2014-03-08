@@ -1,7 +1,9 @@
 class CreateMorsel < ActiveInteraction::Base
   model   :user
 
-  string  :description, default: nil
+  hash :params do
+    string  :description, default: nil
+  end
 
   hash :uploaded_photo_hash, default: nil do
     string :type, default: nil
@@ -11,19 +13,18 @@ class CreateMorsel < ActiveInteraction::Base
   end
 
   integer :post_id, default: nil
-  string :post_title, default: nil
+  string  :post_title, default: nil
   integer :sort_order, default: nil
-
   boolean :post_to_facebook, default: false
   boolean :post_to_twitter, default: false
 
   validates :user, presence: true
-  validate :user_can_create_morsel?
+  validate { errors.add(:user, 'not authorized to create Morsel') unless user.can_create?(Morsel) }
 
   def execute
     photo = ActionDispatch::Http::UploadedFile.new(uploaded_photo_hash) if uploaded_photo_hash
     morsel = user.morsels.build(
-      description: description,
+      description: params[:description],
       photo: photo
     )
 
@@ -35,8 +36,7 @@ class CreateMorsel < ActiveInteraction::Base
 
       post.title = post_title if post_title
 
-      post.morsels.push morsel
-      post.set_sort_order_for_morsel(morsel.id, sort_order) if sort_order
+      MorselPost.create(morsel: morsel, post: post, sort_order: sort_order.presence)
 
       if post.save
         user.post_to_facebook(morsel.facebook_message(post)) if post_to_facebook
@@ -52,12 +52,6 @@ class CreateMorsel < ActiveInteraction::Base
       morsel: morsel,
       post: post
     }
-  end
-
-  private
-
-  def user_can_create_morsel?
-    errors.add(:user, 'not authorized to create Morsel') unless user.can_create? Morsel
   end
 end
 

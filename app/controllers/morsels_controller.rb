@@ -28,7 +28,7 @@ class MorselsController < ApiController
     morsel_params = MorselParams.build(params)
 
     create_morsel = CreateMorsel.run(
-      description: morsel_params[:description],
+      params: morsel_params,
       uploaded_photo_hash: CreateMorselUploadedPhotoHash.hash(morsel_params[:photo]),
       user: current_user,
       post_id: params[:post_id],
@@ -62,9 +62,9 @@ class MorselsController < ApiController
             # Already exists
             render_json_errors({ relationship: ['already exists'] }, :bad_request)
           else
-            if new_post.morsels << morsel
-              new_post.set_sort_order_for_morsel(morsel.id, params[:sort_order]) if params[:sort_order].present?
+            morsel_post = MorselPost.create(morsel: morsel, post: new_post, sort_order: params[:sort_order].presence)
 
+            if morsel_post
               # Delete the Relationship from the old post
               morsel.posts.destroy(post)
 
@@ -77,12 +77,12 @@ class MorselsController < ApiController
             end
           end
         else
-          post.set_sort_order_for_morsel(morsel.id, params[:sort_order]) if params[:sort_order].present?
+          MorselPost.find_by(morsel: morsel, post: post).update(sort_order: params[:sort_order]) if params[:sort_order].present?
 
           current_user.post_to_facebook(morsel.facebook_message(post)) if params[:post_to_facebook]
           current_user.post_to_twitter(morsel.twitter_message(post)) if params[:post_to_twitter]
 
-          custom_respond_with morsel, post: new_post
+          custom_respond_with morsel, post: post
         end
       else
         custom_respond_with morsel

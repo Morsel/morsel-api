@@ -16,7 +16,7 @@
   - [POST ```/users/unsubscribe``` - Unsubscribe](#post-usersunsubscribe---unsubscribe)
   - [GET ```/users/checkusername``` - Check Username](#get-userscheckusername---check-username)
   - [POST ```/users/reserveusername``` - Reserve Username](#post-usersreserveusername---reserve-username)
-  - [PUT ```/users/{user_id}/updaterole``` - Update Role](#put-usersuser_idupdaterole---update-role)
+  - [PUT ```/users/{user_id}/updateindustry``` - Update Industry](#put-usersuser_idupdateindustry---update-industry)
   - [GET ```/users/{user_id|user_username}``` - User](#get-usersuser_iduser_username---user)
   - [PUT ```/users/{user_id}``` - Update User](#put-usersuser_id---update-user)
   - [GET ```/users/{user_id|user_username}/posts``` - User Posts](#get-usersuser_iduser_usernameposts---user-posts)
@@ -34,6 +34,7 @@
   - [GET ```/morsels/{morsel_id}/comments``` - Morsel Comments](#get-morselsmorsel_idcomments---morsel-comments)
   - [DELETE ```/comments/{comment_id}``` - Delete Comment](#delete-commentscomment_id---delete-comment)
 - [Post Methods](#post-methods)
+  - [POST ```/posts``` - Create a new Post](#post-posts---create-a-new-post)
   - [GET ```/posts``` - Posts](#get-posts---posts)
   - [GET ```/posts/drafts``` - Post Drafts](#get-postsdrafts---post-drafts)
   - [GET ```/posts/{post_id}``` - Post](#get-postspost_id---post)
@@ -62,6 +63,8 @@
     - [User (w/ Auth Token)](#user-w-auth-token)
   - [Misc Objects](#misc-objects)
     - [Configuration](#configuration)
+- [Notes](#notes)
+  - [sort_order](#sort_order)
 
 
 # Overview
@@ -322,15 +325,15 @@ Returns the user_id if the user is successfully created, otherwise an error.
 <br />
 <br />
 
-## PUT ```/users/{user_id}/updaterole``` - Update Role
-Updates the type ('role') of the User with the specified user_id
+## PUT ```/users/{user_id}/updateindustry``` - Update Industry
+Updates the type ('industry') of the User with the specified user_id
 Returns the user_id if the user is successfully created, otherwise an error.
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| role | String | The User's role. Currently the only valid values are 'chef', 'diner', and 'writer'. | | X |
+| industry | String | The User's industry. Currently the only valid values are 'chef', 'diner', and 'media'. | | X |
 
 ### Response
 
@@ -642,6 +645,25 @@ Deletes the Comment with the specified ```comment_id``` if the authenticated Use
 
 
 # Post Methods
+
+## POST ```/posts``` - Create a new Post
+Creates a new Post for the current User.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| post[title] | String | The title for the new Post | | x |
+| post[draft] | Boolean | Set to true if the Post is a draft | false | |
+
+### Response
+
+| __data__ |
+| -------- |
+| Created [Post](#post) |
+
+<br />
+<br />
 
 ## GET ```/posts``` - Posts
 Returns the Posts for all Users.
@@ -1087,90 +1109,14 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
 ## Misc Objects
 
 ### Configuration
+NOTE: "non_username_paths" is just a sample of the real list, for an up to date list of these reserved usernames, see NOTE: [lib/reserved_paths.rb](../lib/reserved_paths.rb)
+
 
 ```json
 {
   "non_username_paths": [
     "about",
     "account",
-    "accounts",
-    "activity",
-    "admin",
-    "all",
-    "announcements",
-    "anywhere",
-    "apps",
-    "auth",
-    "badges",
-    "bar",
-    "blog",
-    "business",
-    "buttons",
-    "checkusername",
-    "chef",
-    "city",
-    "contact",
-    "contacts",
-    "devices",
-    "direct_messages",
-    "download",
-    "downloads",
-    "eatmorsel",
-    "faq",
-    "favorites",
-    "feed",
-    "find_users",
-    "followers",
-    "following",
-    "friend_request",
-    "friendrequest",
-    "friends",
-    "goodies",
-    "help",
-    "home",
-    "how",-it-works
-    "im_account",
-    "inbox",
-    "invitations",
-    "invite",
-    "jobs",
-    "join",
-    "kitchen",
-    "list",
-    "login",
-    "logo",
-    "logout",
-    "me",
-    "media",
-    "media_signup",
-    "mentions",
-    "messages",
-    "morsel",
-    "notifications",
-    "oauth",
-    "password",
-    "positions",
-    "post",
-    "press",
-    "privacy",
-    "products",
-    "public_timeline",
-    "replies",
-    "restaurant",
-    "rules",
-    "saved_searches",
-    "search",
-    "sent",
-    "settings",
-    "share",
-    "signin",
-    "signup",
-    "similar_to",
-    "sitemap",
-    "statistics",
-    "tag",
-    "team",
-    "terms",
     "tos",
     "translate",
     "trends",
@@ -1182,4 +1128,25 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
     "widgets"
   ]
 }
+```
+
+## Notes
+
+### sort_order
+`sort_order` is a property of the MorselPost relationship that determines what the order of a Morsel is within a Post. `sort_order` is not guaranteed to always be 1,2,3, etc. However, it can always be guaranteed to be in the correct sequential order (e.g. 3,6,8).
+
+Several things can determine the value of `sort_order` depending on how it is passed. Assuming we're creating a Morsel and appending it to a Post:
+```
+  if sort_order is passed
+    if sort_order is already taken by another Morsel in that post
+      increment the sort_order of every morsel with a sort_order >= passed_sort_order
+      sort_order = passed_sort_order
+    else
+      sort_order = passed_sort_order
+
+  if no sort_order is passed
+    if post already has Morsels
+      sort_order = post.morsels.maximum(sort_order) + 1
+    else
+      sort_order = 1
 ```

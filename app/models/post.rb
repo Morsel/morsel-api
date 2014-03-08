@@ -32,19 +32,11 @@ class Post < ActiveRecord::Base
   before_save :update_published_at_if_necessary
 
   validates :title,
+            presence: true,
             length: { maximum: 50 }
 
   scope :drafts, -> { where(draft: true) }
   scope :published, -> { where(draft: false) }
-
-  def set_sort_order_for_morsel(morsel_id, new_sort_order)
-    morsel_posts_to_increment = morsel_posts.where('sort_order >= ?', new_sort_order)
-    morsel_posts_to_increment.update_all('sort_order = sort_order + 1')
-
-    morsel_post = morsel_posts.find_by(post_id: id, morsel_id: morsel_id)
-    morsel_post.sort_order = new_sort_order
-    morsel_post.save
-  end
 
   private
 

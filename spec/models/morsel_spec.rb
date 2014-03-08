@@ -42,7 +42,7 @@ describe Morsel do
     subject(:post_with_morsels) { FactoryGirl.create(:post_with_morsels) }
     subject(:first_morsel) { post_with_morsels.morsels.first }
     before do
-      post_with_morsels.set_sort_order_for_morsel(first_morsel.id, 2)
+      MorselPost.find_by(post: post_with_morsels, morsel: first_morsel).update(sort_order: 2)
     end
 
     it 'increments the sort_order for all Morsels after new sort_order' do
