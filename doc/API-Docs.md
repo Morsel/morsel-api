@@ -65,7 +65,8 @@
     - [Configuration](#configuration)
 - [Notes](#notes)
   - [sort_order](#sort_order)
-
+  - [Hacks](#hacks)
+    - [Morsel's post_id and sort_order](#morsels-post_id-and-sort_order)
 
 # Overview
 ## URI Structure
@@ -1157,3 +1158,8 @@ Several things can determine the value of `sort_order` depending on how it is pa
     else
       sort_order = 1
 ```
+
+### Hacks
+
+#### Morsel's post_id and sort_order
+Since we had originally planned the Morsels/Posts to be a many-to-many relationship (to allow things like 'forking' easily), any Morsel response from the API that includes and Post information will look to the Morsel's last Post. (MorselSerializer#attributes)
