@@ -3,6 +3,7 @@ class PostSerializer < ActiveModel::Serializer
              :title,
              :creator_id,
              :created_at,
+             :updated_at,
              :published_at,
              :draft,
              :slug
