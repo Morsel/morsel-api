@@ -8,7 +8,8 @@ class MorselSerializer < ActiveModel::Serializer
 
   def attributes
     data = super
-    post = @options[:post]
+    # HACK: Eventually when we/if we do many-to-many Morsel/Posts, this will screw things up.
+    post = object.posts.last
     if post.present?
       data[:post_id] = post.id
       data[:sort_order] = object.sort_order_for_post_id(post.id)
