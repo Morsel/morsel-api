@@ -363,6 +363,16 @@ describe 'Posts API' do
       expect(first_post['creator']).to_not be_nil
     end
 
+    it 'returns post_id, sort_order, and url for each Morsel' do
+      get '/posts', api_key: api_key_for_user(turd_ferg), format: :json
+
+      expect(response).to be_success
+      first_morsel = json_data.first['morsels'].first
+      expect(first_morsel['post_id']).to_not be_nil
+      expect(first_morsel['sort_order']).to_not be_nil
+      expect(first_morsel['url']).to_not be_nil
+    end
+
     context 'pagination' do
       before do
         30.times { FactoryGirl.create(:draft_post_with_morsels_and_creator, creator: turd_ferg) }

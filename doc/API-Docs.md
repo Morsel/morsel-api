@@ -686,7 +686,7 @@ Returns the Posts for all Users.
 <br />
 <br />
 
-GET ```/posts/drafts``` - Post Drafts
+## GET ```/posts/drafts``` - Post Drafts
 Returns the Post Drafts for the authenticated User sorted by their updated_at, with the most recent one's appearing first.
 
 ### Request

@@ -413,8 +413,21 @@ describe 'Morsels API' do
           expect(response).to be_success
 
           expect(json_data['id']).to_not be_nil
-
           expect(post_with_morsels_and_creator.morsel_ids.first).to eq(json_data['id'])
+        end
+
+        it 'touches the posts' do
+          put "/morsels/#{last_morsel.id}", api_key: api_key_for_user(chef),
+                                            format: :json,
+                                            morsel: { description: 'Just like a bus route.' },
+                                            post_id: post_with_morsels_and_creator.id
+
+          expect(response).to be_success
+
+          expect(json_data['id']).to_not be_nil
+
+          post_with_morsels_and_creator.reload
+          expect(post_with_morsels_and_creator.updated_at.to_datetime.to_f).to be >= last_morsel.updated_at.to_datetime.to_f
         end
       end
 

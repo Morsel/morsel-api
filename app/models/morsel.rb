@@ -37,6 +37,7 @@ class Morsel < ActiveRecord::Base
 
   scope :feed, -> { includes(:creator, :morsel_posts, :posts) }
 
+  after_save :update_posts_updated_at
   after_destroy :release_posts
 
   validate :description_or_photo_present?
@@ -86,6 +87,11 @@ class Morsel < ActiveRecord::Base
       errors.add(:base, 'Description or photo is required.')
       return false
     end
+  end
+
+  def update_posts_updated_at
+    # Faster than doing posts.each(&:touch)
+    posts.update_all(updated_at: updated_at) if updated_at
   end
 
   def release_posts
