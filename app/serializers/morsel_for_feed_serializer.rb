@@ -2,6 +2,7 @@ class MorselForFeedSerializer < ActiveModel::Serializer
   attributes :id,
              :description,
              :created_at,
+             :updated_at,
              :photos,
              :in_progression,
              :liked,

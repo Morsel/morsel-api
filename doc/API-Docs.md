@@ -868,6 +868,7 @@ Used by third-party services to ping the API.
     "description": null,
     "creator_id": 1,
     "created_at": "2014-01-07T16:34:43.071Z",
+    "updated_at": "2014-01-07T16:34:43.071Z",
     "photos": {
       "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -885,6 +886,7 @@ Used by third-party services to ping the API.
     "id": 2,
     "description": null,
     "created_at": "2014-01-07T16:34:43.071Z",
+    "updated_at": "2014-01-07T16:34:43.071Z",
     "photos": {
       "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -924,6 +926,7 @@ post_id exists
     "description": null,
     "creator_id": 1,
     "created_at": "2014-01-07T16:34:43.071Z",
+    "updated_at": "2014-01-07T16:34:43.071Z",
     "photos": {
       "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -946,6 +949,7 @@ api_key exists
     "description": null,
     "creator_id": 1,
     "created_at": "2014-01-07T16:34:43.071Z",
+    "updated_at": "2014-01-07T16:34:43.071Z",
     "photos": {
       "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -966,6 +970,7 @@ api_key && post_id exist
     "description": null,
     "creator_id": 1,
     "created_at": "2014-01-07T16:34:43.071Z",
+    "updated_at": "2014-01-07T16:34:43.071Z",
     "photos": {
       "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -990,6 +995,7 @@ api_key && post_id exist
   "title": "Butter Rocks!",
   "creator_id": 3,
   "created_at": "2014-01-07T16:34:44.862Z",
+  "updated_at": "2014-01-07T16:34:44.862Z",
   "slug": "butter-rocks",
   "draft": false,
   "published_at": "2014-01-07T16:34:44.862Z",
@@ -999,6 +1005,7 @@ api_key && post_id exist
     "first_name": "Turd",
     "last_name": "Ferguson",
     "created_at": "2014-01-07T18:35:57.877Z",
+    "updated_at": "2014-01-07T18:35:57.877Z",
     "title": "Executive Chef at Jeopardy",
     "bio": "Suck It, Trebek",
     "photos": {
