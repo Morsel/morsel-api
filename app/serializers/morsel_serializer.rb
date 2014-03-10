@@ -5,7 +5,8 @@ class MorselSerializer < ActiveModel::Serializer
              :updated_at,
              :created_at,
              :nonce,
-             :photos
+             :photos,
+             :photo_processing
 
   def attributes
     data = super

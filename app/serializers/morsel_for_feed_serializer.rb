@@ -5,6 +5,7 @@ class MorselForFeedSerializer < ActiveModel::Serializer
              :updated_at,
              :nonce,
              :photos,
+             :photo_processing,
              :in_progression,
              :liked,
              :creator,

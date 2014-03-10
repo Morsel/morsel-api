@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140310060334) do
+ActiveRecord::Schema.define(version: 20140310180516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -99,6 +99,7 @@ ActiveRecord::Schema.define(version: 20140310060334) do
     t.datetime "photo_updated_at"
     t.datetime "deleted_at"
     t.string   "nonce"
+    t.boolean  "photo_processing"
   end
 
   add_index "morsels", ["creator_id"], name: "index_morsels_on_creator_id", using: :btree
@@ -190,6 +191,7 @@ ActiveRecord::Schema.define(version: 20140310060334) do
     t.datetime "verified_at"
     t.string   "industry"
     t.boolean  "unsubscribed",           default: false
+    t.boolean  "photo_processing"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree

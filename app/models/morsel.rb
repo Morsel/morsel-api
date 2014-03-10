@@ -34,6 +34,7 @@ class Morsel < ActiveRecord::Base
   has_many :posts, through: :morsel_posts
 
   mount_uploader :photo, MorselPhotoUploader
+  process_in_background :photo
 
   scope :feed, -> { includes(:creator, :morsel_posts, :posts) }
 

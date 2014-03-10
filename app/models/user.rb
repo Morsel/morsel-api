@@ -72,6 +72,7 @@ class User < ActiveRecord::Base
             exclusion: ReservedPaths.non_username_paths
 
   mount_uploader :photo, UserPhotoUploader
+  process_in_background :photo
 
   def self.find_by_id_or_username(id_or_username)
     if id_or_username.to_i > 0
