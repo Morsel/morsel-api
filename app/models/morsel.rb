@@ -41,7 +41,7 @@ class Morsel < ActiveRecord::Base
   after_destroy :release_posts
 
   validate :description_or_photo_present?
-  validates :nonce, uniqueness: { scope: :creator_id }
+  validates :nonce, uniqueness: { scope: :creator_id }, :if => :nonce?
 
   def sort_order_for_post_id(post_id)
     morsel_posts.find_by(post_id: post_id).sort_order

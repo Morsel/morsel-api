@@ -2,7 +2,8 @@ class CreateMorsel < ActiveInteraction::Base
   model   :user
 
   hash :params do
-    string  :description, default: nil
+    string :description, default: nil
+    string :nonce, default: nil
   end
 
   hash :uploaded_photo_hash, default: nil do
@@ -25,6 +26,7 @@ class CreateMorsel < ActiveInteraction::Base
     photo = ActionDispatch::Http::UploadedFile.new(uploaded_photo_hash) if uploaded_photo_hash
     morsel = user.morsels.build(
       description: params[:description],
+      nonce: params[:nonce],
       photo: photo
     )
 

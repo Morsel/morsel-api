@@ -185,6 +185,7 @@ describe 'Morsels API' do
 
   describe 'POST /morsels morsels#create' do
     let(:chef) { FactoryGirl.create(:chef) }
+    let(:nonce) { '1234567890-1234-1234-1234-1234567890123' }
 
     it 'creates a Morsel' do
       post '/morsels',  api_key: api_key_for_user(chef),
@@ -193,7 +194,7 @@ describe 'Morsels API' do
                           description: 'It\'s not a toomarh!',
                           photo: Rack::Test::UploadedFile.new(
                             File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
-                          nonce: '1234567890-1234-1234-1234-1234567890123' },
+                          nonce: nonce },
                         post_title: 'Some title'
 
       expect(response).to be_success
@@ -205,6 +206,7 @@ describe 'Morsels API' do
       expect(json_data['photos']).to_not be_nil
 
       expect(new_morsel.posts).to_not be_empty
+      expect(new_morsel.nonce).to eq(nonce)
     end
 
     context 'duplicate nonce' do
@@ -215,7 +217,7 @@ describe 'Morsels API' do
                             description: 'It\'s not a toomarh!',
                             photo: Rack::Test::UploadedFile.new(
                               File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
-                            nonce: '1234567890-1234-1234-1234-1234567890123' },
+                            nonce: nonce },
                           post_title: 'Some title'
       end
       it 'returns an error' do
@@ -225,7 +227,7 @@ describe 'Morsels API' do
                             description: 'It\'s not a toomarh!',
                             photo: Rack::Test::UploadedFile.new(
                               File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
-                            nonce: '1234567890-1234-1234-1234-1234567890123' },
+                            nonce: nonce },
                           post_title: 'Some title'
 
         expect(response).to_not be_success
