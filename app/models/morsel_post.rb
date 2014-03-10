@@ -14,7 +14,7 @@
 
 class MorselPost < ActiveRecord::Base
   belongs_to :morsel
-  belongs_to :post
+  belongs_to :post, touch: true
 
   before_save :check_sort_order
 
