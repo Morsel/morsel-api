@@ -478,6 +478,7 @@ Created a new Morsel for the current User. Optionally append a Morsel to the Pos
 | morsel[description] | String | The description for the new Morsel | | Only if photo is null |
 | morsel[photo] | String | The photo for the new Morsel | | Only if description is null |
 | morsel[draft] | Boolean | Set to true if the Morsel is a draft | false | |
+| morsel[nonce] | String | Unique UUID to prevent duplicates | | |
 | post_id | Number | The ID of the Post to append this Morsel to. If none is specified, a new Post will be created for this Morsel. | | |
 | post_title | String | If a Post already exists, renames the title to this. Otherwise sets the title for the new Post to this. | | |
 | sort_order | Number | The ```sort_order``` for the Morsel in the Post. Requires ```post_id``` | end of Post | |
@@ -871,6 +872,7 @@ Used by third-party services to ping the API.
     "creator_id": 1,
     "created_at": "2014-01-07T16:34:43.071Z",
     "updated_at": "2014-01-07T16:34:43.071Z",
+    "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
     "photos": {
       "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -889,6 +891,7 @@ Used by third-party services to ping the API.
     "description": null,
     "created_at": "2014-01-07T16:34:43.071Z",
     "updated_at": "2014-01-07T16:34:43.071Z",
+    "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
     "photos": {
       "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -929,6 +932,7 @@ post_id exists
     "creator_id": 1,
     "created_at": "2014-01-07T16:34:43.071Z",
     "updated_at": "2014-01-07T16:34:43.071Z",
+    "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
     "photos": {
       "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -952,6 +956,7 @@ api_key exists
     "creator_id": 1,
     "created_at": "2014-01-07T16:34:43.071Z",
     "updated_at": "2014-01-07T16:34:43.071Z",
+    "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
     "photos": {
       "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -973,6 +978,7 @@ api_key && post_id exist
     "creator_id": 1,
     "created_at": "2014-01-07T16:34:43.071Z",
     "updated_at": "2014-01-07T16:34:43.071Z",
+    "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
     "photos": {
       "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
@@ -1023,6 +1029,8 @@ api_key && post_id exist
       "description": null,
       "creator_id": 3,
       "created_at": "2014-01-07T16:34:43.071Z",
+      "updated_at": "2014-01-07T16:34:43.071Z",
+      "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
       "photos": {
         "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
         "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
