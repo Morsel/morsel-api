@@ -8,7 +8,7 @@ class CheckUsernameExists < ActiveInteraction::Base
 
   def execute
     # Say non username paths are existing usernames for simplicity
-    non_username_path? || User.where(username: username).count > 0
+    non_username_path? || User.where("lower(username) = ?", username.downcase).count > 0
   end
 
   private
