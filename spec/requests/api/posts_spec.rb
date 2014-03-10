@@ -46,8 +46,9 @@ describe 'Posts API' do
     end
 
     context 'has drafts' do
+      let(:draft_posts_count) { rand(3..6) }
       before do
-        rand(3..6).times { FactoryGirl.create(:draft_post_with_morsels_and_creator) }
+        draft_posts_count.times { FactoryGirl.create(:draft_post_with_morsels_and_creator) }
       end
 
       it 'should NOT include drafts' do

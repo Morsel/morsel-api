@@ -394,6 +394,7 @@ Returns the Posts for the User with the specified ```user_id``` or ```user_usern
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
 | max_id | Number | Return Posts up to and including this ```id``` | | |
 | since_id | Number | Return Posts since this ```id``` | | |
+| include_drafts | Boolean | Flag to include drafts in the response
 
 ### Response
 

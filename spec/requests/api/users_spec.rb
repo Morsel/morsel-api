@@ -392,7 +392,9 @@ describe 'Users API' do
   end
 
   describe 'GET /users/{:user_id|user_username}/posts' do
-    let(:user_with_posts) { FactoryGirl.create(:user_with_posts) }
+    let(:posts_count) { 3 }
+
+    let(:user_with_posts) { FactoryGirl.create(:user_with_posts, posts_count: posts_count) }
 
     it 'returns all of the User\'s  Posts' do
       get "/users/#{user_with_posts.id}/posts", api_key: api_key_for_user(user_with_posts), format: :json
@@ -400,6 +402,34 @@ describe 'Users API' do
       expect(response).to be_success
 
       expect(json_data.count).to eq(user_with_posts.posts.count)
+    end
+
+    context 'has drafts' do
+      let(:draft_posts_count) { rand(3..6) }
+      before do
+        draft_posts_count.times { FactoryGirl.create(:draft_post_with_morsels_and_creator, creator: user_with_posts) }
+      end
+
+      it 'should NOT include drafts' do
+        get "/users/#{user_with_posts.id}/posts", api_key: api_key_for_user(user_with_posts),
+                                                  format: :json
+
+        expect(response).to be_success
+
+        expect(json_data.count).to eq(posts_count)
+      end
+
+      context 'include_drafts=true' do
+        it 'should include drafts' do
+          get "/users/#{user_with_posts.id}/posts", api_key: api_key_for_user(user_with_posts),
+                                                    include_drafts: true,
+                                                    format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(posts_count + draft_posts_count)
+        end
+      end
     end
 
     context 'pagination' do
