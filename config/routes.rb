@@ -42,7 +42,7 @@ MorselApp::Application.routes.draw do
 
   resources :comments, only: [:destroy]
 
-  resources :posts, only: [:create, :index, :show, :update] do
+  resources :posts, only: [:create, :index, :show, :update, :destroy] do
     collection do
       get 'drafts' => 'posts#drafts'
       post ':id/append' => 'posts#append'

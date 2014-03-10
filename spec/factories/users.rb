@@ -49,6 +49,16 @@ FactoryGirl.define do
     password 'password'
     bio 'Hi! I like turtles!'
 
+    factory :turd_ferg, class: User do
+      email 'turdferg@eatmorsel.com'
+      username 'turdferg'
+      first_name 'Turd'
+      last_name 'Ferguson'
+      password 'test1234'
+      title 'Suck it Trebek'
+      industry 'diner'
+    end
+
     factory :chef, class: User do
       industry 'chef'
 
@@ -74,14 +84,5 @@ FactoryGirl.define do
         create_list(:post_with_morsels, evaluator.posts_count, creator: user)
       end
     end
-  end
-
-  factory :turd_ferg, class: User do
-    email 'turdferg@eatmorsel.com'
-    username 'turdferg'
-    first_name 'Turd'
-    last_name 'Ferguson'
-    password 'test1234'
-    title 'Suck it Trebek'
   end
 end

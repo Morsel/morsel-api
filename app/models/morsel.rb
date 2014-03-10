@@ -30,8 +30,8 @@ class Morsel < ActiveRecord::Base
   has_many :comments
   has_many :likers, through: :likes, source: :user
   has_many :likes
-  has_many :morsel_posts
-  has_many :posts, through: :morsel_posts
+  has_many :morsel_posts, dependent: :destroy
+  has_many :posts, through: :morsel_posts, dependent: :destroy
 
   mount_uploader :photo, MorselPhotoUploader
   process_in_background :photo
@@ -39,7 +39,6 @@ class Morsel < ActiveRecord::Base
   scope :feed, -> { includes(:creator, :morsel_posts, :posts) }
 
   after_save :update_posts_updated_at
-  after_destroy :release_posts
 
   validate :description_or_photo_present?
   validates :nonce, uniqueness: { scope: :creator_id }, :if => :nonce?
@@ -94,11 +93,5 @@ class Morsel < ActiveRecord::Base
   def update_posts_updated_at
     # Faster than doing posts.each(&:touch)
     posts.update_all(updated_at: updated_at) if updated_at
-  end
-
-  def release_posts
-    posts.each do |p|
-      p.destroy if p.morsels.empty?
-    end
   end
 end

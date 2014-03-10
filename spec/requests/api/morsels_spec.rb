@@ -546,16 +546,19 @@ describe 'Morsels API' do
       delete "/morsels/#{existing_morsel.id}", api_key: api_key_for_user(chef), format: :json
 
       expect(response).to be_success
-      expect(Morsel.where(id: existing_morsel.id)).to be_empty
+      expect(Morsel.find_by(id: existing_morsel.id)).to be_nil
     end
 
-    context 'Morsels in a Post' do
-      let(:existing_post) { FactoryGirl.create(:post_with_morsels) }
+    context 'Morsel in many Posts' do
+      before do
+        5.times { FactoryGirl.create(:post_with_creator, morsels:[existing_morsel]) }
+      end
 
-      it 'soft deletes the Post if all Morsels are deleted' do
-        expect(Post.where(id: existing_post.id)).to_not be_empty
-        existing_post.morsels.each(&:destroy)
-        expect(Post.where(id: existing_post.id)).to be_empty
+      it 'soft deletes all of its Posts' do
+        delete "/morsels/#{existing_morsel.id}", api_key: api_key_for_user(chef), format: :json
+
+        expect(response).to be_success
+        expect(existing_morsel.posts).to be_empty
       end
     end
   end
@@ -755,7 +758,7 @@ describe 'Morsels API' do
         delete "/comments/#{comment_created_by_current_user.id}", api_key: api_key_for_user(chef), format: :json
 
         expect(response).to be_success
-        expect(Comment.where(id: comment_created_by_current_user.id)).to be_empty
+        expect(Comment.find_by(id: comment_created_by_current_user.id)).to be_nil
       end
     end
 
@@ -766,7 +769,7 @@ describe 'Morsels API' do
         delete "/comments/#{comment_on_morsel_created_by_current_user.id}", api_key: api_key_for_user(chef), format: :json
 
         expect(response).to be_success
-        expect(Comment.where(id: comment_on_morsel_created_by_current_user.id)).to be_empty
+        expect(Comment.find_by(id: comment_on_morsel_created_by_current_user.id)).to be_nil
       end
     end
 
@@ -776,7 +779,7 @@ describe 'Morsels API' do
         delete "/comments/#{comment.id}", api_key: api_key_for_user(chef), format: :json
 
         expect(response).to_not be_success
-        expect(Comment.where(id: comment.id)).to_not be_empty
+        expect(Comment.find_by(id: comment.id)).to_not be_nil
         expect(json_errors['user'].first).to eq('not authorized to delete comment')
       end
     end
