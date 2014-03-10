@@ -14,7 +14,7 @@ class PostsController < ApiController
       user = User.find_by_id_or_username(params[:user_id_or_username])
       raise ActiveRecord::RecordNotFound if user.nil?
       posts = Post.includes(:morsel_posts, :morsels, :creator)
-                  .published
+                  .include_drafts(params[:include_drafts])
                   .since(params[:since_id])
                   .max(params[:max_id])
                   .where('creator_id = ?', user.id)

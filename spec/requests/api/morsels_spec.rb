@@ -192,7 +192,8 @@ describe 'Morsels API' do
                         morsel: {
                           description: 'It\'s not a toomarh!',
                           photo: Rack::Test::UploadedFile.new(
-                            File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))) },
+                            File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
+                          nonce: '1234567890-1234-1234-1234-1234567890123' },
                         post_title: 'Some title'
 
       expect(response).to be_success
@@ -204,6 +205,32 @@ describe 'Morsels API' do
       expect(json_data['photos']).to_not be_nil
 
       expect(new_morsel.posts).to_not be_empty
+    end
+
+    context 'duplicate nonce' do
+      before do
+        post '/morsels',  api_key: api_key_for_user(chef),
+                          format: :json,
+                          morsel: {
+                            description: 'It\'s not a toomarh!',
+                            photo: Rack::Test::UploadedFile.new(
+                              File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
+                            nonce: '1234567890-1234-1234-1234-1234567890123' },
+                          post_title: 'Some title'
+      end
+      it 'returns an error' do
+        post '/morsels',  api_key: api_key_for_user(chef),
+                          format: :json,
+                          morsel: {
+                            description: 'It\'s not a toomarh!',
+                            photo: Rack::Test::UploadedFile.new(
+                              File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
+                            nonce: '1234567890-1234-1234-1234-1234567890123' },
+                          post_title: 'Some title'
+
+        expect(response).to_not be_success
+        expect(json_errors['nonce'].first).to eq('has already been taken')
+      end
     end
 
     context 'post_id included in parameters' do

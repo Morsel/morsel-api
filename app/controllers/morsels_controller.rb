@@ -103,7 +103,7 @@ class MorselsController < ApiController
 
   class MorselParams
     def self.build(params)
-      params.require(:morsel).permit(:description, :photo)
+      params.require(:morsel).permit(:description, :photo, :nonce)
     end
   end
 end

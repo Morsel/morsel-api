@@ -37,6 +37,7 @@ class Post < ActiveRecord::Base
 
   scope :drafts, -> { where(draft: true) }
   scope :published, -> { where(draft: false) }
+  scope :include_drafts, -> (include_drafts) { where(draft: false) unless include_drafts.present? }
 
   private
 
