@@ -205,6 +205,7 @@ Returns the Feed for the authenticated User. The Feed consists of Morsels sorted
 
 ## POST ```/users``` - Create a new User
 Creates a new User and returns an authentication_token
+Image processing is done in a background job. `photo_processing` will be set to `null` when it has finished.
 
 ### Request
 
@@ -469,7 +470,8 @@ Returns the User's authorizations
 # Morsel Methods
 
 ## POST ```/morsels``` - Create a new Morsel
-Created a new Morsel for the current User. Optionally append a Morsel to the Post with the specified ```post_id```
+Created a new Morsel for the current User. Optionally append a Morsel to the Post with the specified ```post_id```.
+Image processing is done in a background job. `photo_processing` will be set to `null` when it has finished.
 
 ### Request
 
@@ -879,7 +881,8 @@ Used by third-party services to ping the API.
       "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
-    }
+    },
+    "photo_processing": null
   }
 ```
 
@@ -899,6 +902,7 @@ Used by third-party services to ping the API.
       "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
     },
+    "photo_processing": null,
     "in_progression": false,
     "liked": false,
     "creator": {
@@ -911,7 +915,8 @@ Used by third-party services to ping the API.
         "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
         "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
         "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-      }
+      },
+      "photo_processing": null
     },
     "post": {
       "id": 4,
@@ -940,6 +945,7 @@ post_id exists
       "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
     },
+    "photo_processing": null,
     "post_id": 4,
     "sort_order": 1,
     "url": "http://eatmorsel.com/marty/1-butter/1"
@@ -964,6 +970,7 @@ api_key exists
       "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
     },
+    "photo_processing": null,
     "liked": false,
   }
 ```
@@ -986,6 +993,7 @@ api_key && post_id exist
       "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
       "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
     },
+    "photo_processing": null,
     "post_id": 4,
     "sort_order": 1,
     "url": "http://eatmorsel.com/marty/1-butter/1",
@@ -1064,7 +1072,8 @@ api_key && post_id exist
     "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
     "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
     "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-  }
+  },
+  "photo_processing": nil
 }
 ```
 
@@ -1086,6 +1095,7 @@ You'll only see these if the api_key matches the User you're looking up
     "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
     "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
   },
+  "photo_processing": null,
   "draft_count": 0,
   "like_count": 3,
   "morsel_count": 1,
@@ -1113,6 +1123,7 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
     "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
     "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
   },
+  "photo_processing": null,
   "auth_token": "butt-sack",
   "draft_count": 0,
   "like_count": 3,
