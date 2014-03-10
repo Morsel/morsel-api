@@ -52,6 +52,19 @@ class PostsController < ApiController
     end
   end
 
+  def destroy
+    destroy_post = DestroyPost.run(
+      post: Post.find(params[:id]),
+      user: current_user
+    )
+
+    if destroy_post.valid?
+      render_json 'OK'
+    else
+      render_json_errors(destroy_post.errors)
+    end
+  end
+
   def append
     morsel = Morsel.find(params[:morsel_id])
 

@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe 'Posts API' do
+  let(:chef) { FactoryGirl.create(:chef) }
   let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
   let(:morsels_count) { 4 }
 
@@ -181,7 +182,6 @@ describe 'Posts API' do
   end
 
   describe 'POST /morsels morsels#create' do
-    let(:chef) { FactoryGirl.create(:chef) }
     let(:expected_title) { 'Bake Sale!' }
 
     it 'creates a Post' do
@@ -256,6 +256,28 @@ describe 'Posts API' do
 
       expect(json_data['title']).to eq(new_title)
       expect(Post.find(existing_post.id).title).to eq(new_title)
+    end
+  end
+
+  describe 'DELETE /posts/{:post_id} posts#destroy' do
+    let(:existing_post) { FactoryGirl.create(:post_with_creator, creator: chef) }
+
+    it 'soft deletes the Post' do
+      delete "/posts/#{existing_post.id}", api_key: api_key_for_user(chef), format: :json
+
+      expect(response).to be_success
+      expect(Post.find_by(id: existing_post.id)).to be_nil
+    end
+
+    context 'Morsels in a Post' do
+      let(:existing_post) { FactoryGirl.create(:post_with_morsels_and_creator, creator: chef) }
+
+      it 'soft deletes all of its Morsels' do
+        delete "/posts/#{existing_post.id}", api_key: api_key_for_user(chef), format: :json
+
+        expect(response).to be_success
+        expect(existing_post.morsels).to be_empty
+      end
     end
   end
 
