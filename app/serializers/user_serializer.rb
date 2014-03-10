@@ -6,7 +6,8 @@ class UserSerializer < ActiveModel::Serializer
              :created_at,
              :title,
              :bio,
-             :photos
+             :photos,
+             :photo_processing
 
   def photos
     object.photos_hash
