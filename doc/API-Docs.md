@@ -37,7 +37,7 @@
   - [POST ```/posts``` - Create a new Post](#post-posts---create-a-new-post)
   - [GET ```/posts``` - Posts](#get-posts---posts)
   - [GET ```/posts/drafts``` - Post Drafts](#get-postsdrafts---post-drafts)
-  - [GET ```/posts/{post_id}``` - Post](#get-postspost_id---post)
+  - [GET ```/posts/{post_id}``` - Post](#get-postspost_id----post)
   - [PUT ```/posts/{post_id}``` - Update Post](#put-postspost_id---update-post)
   - [POST ```/posts/{post_id}/append``` - Append Morsel to Post](#post-postspost_idappend---append-morsel-to-post)
   - [DELETE ```/posts/{post_id}/append``` - Detach Morsel from Post](#delete-postspost_idappend---detach-morsel-from-post)
