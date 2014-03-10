@@ -48,6 +48,14 @@ describe 'Users API' do
       expect(json_data).to eq('true')
     end
 
+    it 'ignores case' do
+      get '/users/checkusername', username: user.username.swapcase, format: :json
+
+      expect(response).to be_success
+
+      expect(json_data).to eq('true')
+    end
+
     context 'username is a reserved path' do
       let(:sample_reserved_path) { ReservedPaths.non_username_paths.sample }
       it 'returns true to say the username already exists' do
