@@ -157,7 +157,7 @@ describe 'Users API' do
     it 'creates a new User' do
       post '/users', format: :json, user: { email: Faker::Internet.email, password: 'password',
                                             first_name: 'Foo', last_name: 'Bar', username: "user_#{Faker::Lorem.characters(10)}",
-                                            bio: 'Foo to the Stars' }
+                                            bio: 'Foo to the Stars', industry: 'diner' }
 
       expect(response).to be_success
 
@@ -167,7 +167,7 @@ describe 'Users API' do
       expect_json_keys(json_data, new_user, %w(id username first_name last_name sign_in_count title bio))
       expect(json_data['auth_token']).to eq(new_user.authentication_token)
       expect(json_data['photos']).to be_nil
-      expect_nil_json_keys(json_data, %w(password encrypted_password))
+      expect_nil_json_keys(json_data, %w(password encrypted_password industry))
     end
 
     it 'creates a user_event' do
