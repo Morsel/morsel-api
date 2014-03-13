@@ -16,7 +16,11 @@ class MorselForFeedSerializer < ActiveModel::Serializer
   end
 
   def in_progression
-    object.posts.first.morsels.count > 1
+    if object.posts.first
+      object.posts.first.morsels.count > 1
+    else
+      false
+    end
   end
 
   def liked
@@ -36,11 +40,15 @@ class MorselForFeedSerializer < ActiveModel::Serializer
 
   def post
     post = object.posts.first
-    {
-      id: post.id,
-      title: post.title,
-      slug: post.cached_slug,
-      created_at: post.created_at
-    }
+    if post
+      {
+        id: post.id,
+        title: post.title,
+        slug: post.cached_slug,
+        created_at: post.created_at
+      }
+    else
+      nil
+    end
   end
 end
