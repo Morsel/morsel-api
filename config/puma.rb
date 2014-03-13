@@ -1,10 +1,10 @@
 preload_app!
 
-min_threads = Integer(ENV['MIN_THREADS'] || 0)
-max_threads = Integer(ENV['MAX_THREADS'] || 5)
+min_threads = Integer(ENV['PUMA_MIN_THREADS'] || 0)
+max_threads = Integer(ENV['PUMA_MAX_THREADS'] || 5)
 
 threads min_threads, max_threads
-workers Integer(ENV['WORKER_COUNT'] || 3 )
+workers Integer(ENV['PUMA_WORKER_COUNT'] || 3 )
 
 on_worker_boot do
   ActiveSupport.on_load(:active_record) do
