@@ -40,7 +40,6 @@ class Morsel < ActiveRecord::Base
 
   after_save :update_posts_updated_at
 
-  validate :description_or_photo_present?
   validates :nonce, uniqueness: { scope: :creator_id }, :if => :nonce?
 
   def sort_order_for_post_id(post_id)
@@ -72,23 +71,15 @@ class Morsel < ActiveRecord::Base
   def photos_hash
     if photo_url.present?
       {
-        _104x104: photo_url(:_104x104),
-        _208x208: photo_url(:_208x208),
-        _320x214: photo_url(:_320x214),
-        _640x428: photo_url(:_640x428),
+        _50x50: photo_url(:_50x50),
+        _100x100: photo_url(:_100x100),
+        _320x320: photo_url(:_320x320),
         _640x640: photo_url(:_640x640)
       }
     end
   end
 
   private
-
-  def description_or_photo_present?
-    if description.blank? && (photo.blank? && photo_url.blank?)
-      errors.add(:base, 'Description or photo is required.')
-      return false
-    end
-  end
 
   def update_posts_updated_at
     # Faster than doing posts.each(&:touch)

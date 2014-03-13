@@ -404,10 +404,9 @@ describe 'Morsels API' do
 
         photos = json_data['photos']
         expect(photos['_640x640']).to_not be_nil
-        expect(photos['_640x428']).to_not be_nil
-        expect(photos['_320x214']).to_not be_nil
-        expect(photos['_208x208']).to_not be_nil
-        expect(photos['_104x104']).to_not be_nil
+        expect(photos['_320x320']).to_not be_nil
+        expect(photos['_100x100']).to_not be_nil
+        expect(photos['_50x50']).to_not be_nil
       end
     end
   end
