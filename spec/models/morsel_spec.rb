@@ -32,12 +32,6 @@ describe Morsel do
 
   it { should be_valid }
 
-  describe 'description and photo are missing' do
-    subject(:morsel_without_description_and_photo) { FactoryGirl.build(:morsel_without_description_and_photo) }
-
-    it { should_not be_valid }
-  end
-
   describe 'changing the sort_order in a post' do
     subject(:post_with_morsels) { FactoryGirl.create(:post_with_morsels) }
     subject(:first_morsel) { post_with_morsels.morsels.first }
