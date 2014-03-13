@@ -16,4 +16,5 @@
 class Relationship < ActiveRecord::Base
   include Authority::Abilities
   # TODO: Eventually use UserCreatable to track who created the Relationship
+  # TODO: Rename this to follow, so it can match Like and Comment as an activity and lowercase + past tense for notification message
 end

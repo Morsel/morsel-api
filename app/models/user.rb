@@ -36,6 +36,7 @@
 # **`verified_at`**             | `datetime`         |
 # **`industry`**                | `string(255)`      |
 # **`unsubscribed`**            | `boolean`          | `default(FALSE)`
+# **`photo_processing`**        | `boolean`          |
 #
 
 class User < ActiveRecord::Base
@@ -63,6 +64,8 @@ class User < ActiveRecord::Base
   has_many :likes
   has_many :morsels, foreign_key: :creator_id
   has_many :posts, foreign_key: :creator_id
+  has_many :activities, foreign_key: :creator_id
+  has_many :notifications
 
   validates :username,
             format: { with: /\A[a-zA-Z][A-Za-z0-9_]+$\z/ },

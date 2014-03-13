@@ -25,6 +25,8 @@ MorselApp::Application.routes.draw do
       put ':user_id/updateindustry' => 'users#updateindustry'
       get 'me' => 'users#me'
       post 'unsubscribe' => 'users#unsubscribe'
+      get 'activities' => 'activities#index'
+      get 'notifications' => 'notifications#index'
 
       get ':user_id_or_username' => 'users#show'
       get ':user_id_or_username/posts' => 'posts#index'

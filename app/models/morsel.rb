@@ -16,6 +16,8 @@
 # **`photo_file_size`**     | `string(255)`      |
 # **`photo_updated_at`**    | `datetime`         |
 # **`deleted_at`**          | `datetime`         |
+# **`nonce`**               | `string(255)`      |
+# **`photo_processing`**    | `boolean`          |
 #
 
 class Morsel < ActiveRecord::Base
@@ -27,6 +29,7 @@ class Morsel < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :creator, class_name: 'User', foreign_key: 'creator_id'
+  has_many :activities, as: :subject
   has_many :comments
   has_many :likers, through: :likes, source: :user
   has_many :likes
@@ -46,19 +49,19 @@ class Morsel < ActiveRecord::Base
     morsel_posts.find_by(post_id: post_id).sort_order
   end
 
+  def first_post_title_with_description
+    post_title_with_description(posts.first)
+  end
+
   def facebook_message(post)
-    message = ''
-    message << "#{post.title}: " if post.title?
-    message << "#{description} " if description.present?
+    message = post_title_with_description(post)
     message << url(post)
 
     message.normalize
   end
 
   def twitter_message(post)
-    message = ''
-    message << "#{post.title}: " if post.title?
-    message << "#{description} " if description.present?
+    message = post_title_with_description(post)
 
     message.twitter_string(url(post))
   end
@@ -80,6 +83,12 @@ class Morsel < ActiveRecord::Base
   end
 
   private
+
+  def post_title_with_description(post)
+    message = ''
+    message << "#{post.title}: " if post && post.title?
+    message << "#{description} " if description.present?
+  end
 
   def update_posts_updated_at
     # Faster than doing posts.each(&:touch)

@@ -4,6 +4,7 @@ class ApiController < ActionController::Base
   protect_from_forgery with: :null_session
 
   responders :json
+  respond_to :json
 
   before_filter :authenticate_user_from_token!
   include JSONEnvelopable

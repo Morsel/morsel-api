@@ -120,24 +120,6 @@ describe 'Posts API' do
       end
     end
 
-    context 'performance', performance: true do
-      before do
-        require 'benchmark'
-      end
-
-      context 'twenty Posts' do
-        before do
-          20.times { FactoryGirl.create(:post_with_morsels_and_creator) }
-        end
-
-        it 'should take more time' do
-          Benchmark.realtime {
-            get '/posts', api_key: api_key_for_user(turd_ferg), format: :json
-          }.should < 1.5
-        end
-      end
-    end
-
     context 'user_id included in parameters' do
       let(:post_with_morsels_and_creator) { FactoryGirl.create(:post_with_morsels_and_creator) }
 
@@ -154,28 +136,6 @@ describe 'Posts API' do
 
         json_data.each do |morsel_json|
           expect(morsel_json['creator_id']).to eq(creator_id)
-        end
-      end
-
-      context 'performance', performance: true do
-        before do
-          require 'benchmark'
-        end
-
-        it 'should take time' do
-          Benchmark.realtime { get('/posts', api_key: api_key_for_user(turd_ferg), format: :json) }.should < 0.5
-        end
-
-        context 'twenty Posts' do
-          before do
-            20.times { FactoryGirl.create(:post_with_morsels_and_creator) }
-          end
-
-          it 'should take more time' do
-            Benchmark.realtime {
-              get '/posts', api_key: api_key_for_user(turd_ferg), format: :json
-            }.should < 1.25
-          end
         end
       end
     end

@@ -36,6 +36,7 @@
 # **`verified_at`**             | `datetime`         |
 # **`industry`**                | `string(255)`      |
 # **`unsubscribed`**            | `boolean`          | `default(FALSE)`
+# **`photo_processing`**        | `boolean`          |
 #
 
 require 'spec_helper'
