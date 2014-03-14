@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140310180516) do
+ActiveRecord::Schema.define(version: 20140311215507) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +31,23 @@ ActiveRecord::Schema.define(version: 20140310180516) do
   add_index "active_admin_comments", ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id", using: :btree
   add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
   add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
+
+  create_table "activities", force: true do |t|
+    t.integer  "subject_id"
+    t.string   "subject_type"
+    t.integer  "action_id"
+    t.string   "action_type"
+    t.integer  "creator_id"
+    t.integer  "recipient_id"
+    t.integer  "notification_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "activities", ["creator_id"], name: "index_activities_on_creator_id", using: :btree
+  add_index "activities", ["recipient_id"], name: "index_activities_on_recipient_id", using: :btree
+  add_index "activities", ["subject_id"], name: "index_activities_on_subject_id", using: :btree
 
   create_table "authorizations", force: true do |t|
     t.string   "provider"
@@ -103,6 +120,19 @@ ActiveRecord::Schema.define(version: 20140310180516) do
   end
 
   add_index "morsels", ["creator_id"], name: "index_morsels_on_creator_id", using: :btree
+
+  create_table "notifications", force: true do |t|
+    t.integer  "payload_id"
+    t.string   "payload_type"
+    t.string   "message"
+    t.integer  "user_id"
+    t.datetime "marked_read_at"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "notifications", ["user_id"], name: "index_notifications_on_user_id", using: :btree
 
   create_table "posts", force: true do |t|
     t.string   "title"

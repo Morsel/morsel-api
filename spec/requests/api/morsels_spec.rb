@@ -569,8 +569,27 @@ describe 'Morsels API' do
       post "/morsels/#{morsel.id}/like", api_key: api_key_for_user(chef), format: :json
 
       expect(response).to be_success
-      expect(response.status).to eq(200)
       expect(morsel.likers).to include(chef)
+    end
+
+    it 'creates an Activity and Notification' do
+      Sidekiq::Testing.inline! do
+        post "/morsels/#{morsel.id}/like", api_key: api_key_for_user(chef), format: :json
+      end
+
+      expect(response).to be_success
+      activity = chef.activities.last
+      expect(activity).to_not be_nil
+      expect(activity.creator).to eq(chef)
+      expect(activity.recipient).to eq(morsel.creator)
+      expect(activity.subject).to eq(morsel)
+      expect(activity.action).to eq('Like')
+
+      notification = morsel.creator.notifications.last
+      expect(notification).to_not be_nil
+      expect(notification.user).to eq(morsel.creator)
+      expect(notification.payload).to eq(activity)
+      expect(notification.message).to eq("#{chef.full_name} (#{chef.username}) liked #{morsel.first_post_title_with_description}".truncate(100, separator: ' ', omission: '... '))
     end
 
     context 'current_user already likes the Morsel' do
@@ -735,6 +754,29 @@ describe 'Morsels API' do
       expect(json_data['creator']['id']).to eq(chef.id)
       expect(json_data['morsel_id']).to eq(new_comment.morsel.id)
       expect(chef.has_role?(:creator, new_comment))
+    end
+
+    it 'creates an Activity and Notification' do
+      Sidekiq::Testing.inline! do
+        post "/morsels/#{existing_morsel.id}/comments", api_key: api_key_for_user(chef),
+                                                        format: :json,
+                                                        comment: {
+                                                          description: 'Drop it like it\'s hot.' }
+      end
+
+      expect(response).to be_success
+      activity = chef.activities.last
+      expect(activity).to_not be_nil
+      expect(activity.creator).to eq(chef)
+      expect(activity.recipient).to eq(existing_morsel.creator)
+      expect(activity.subject).to eq(existing_morsel)
+      expect(activity.action).to eq('Comment')
+
+      notification = existing_morsel.creator.notifications.last
+      expect(notification).to_not be_nil
+      expect(notification.user).to eq(existing_morsel.creator)
+      expect(notification.payload).to eq(activity)
+      expect(notification.message).to eq("#{chef.full_name} (#{chef.username}) commented on #{existing_morsel.first_post_title_with_description}".truncate(100, separator: ' ', omission: '... '))
     end
 
     context 'missing Morsel' do

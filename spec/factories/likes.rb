@@ -14,20 +14,9 @@
 # **`updated_at`**  | `datetime`         |
 #
 
-class Like < ActiveRecord::Base
-  include Authority::Abilities
-  include UserCreatable
-
-  include Activityable
-  def self.activity_notification; true end
-  def subject; morsel end
-
-  acts_as_paranoid
-
-  belongs_to :morsel
-  belongs_to :user
-
-  self.authorizer_name = 'LikeAuthorizer'
-
-  validates :user_id, uniqueness: { scope: [:deleted_at, :morsel_id] }
+FactoryGirl.define do
+  factory :like do
+    association(:user)
+    association(:morsel, factory: :morsel_with_creator)
+  end
 end

@@ -16,6 +16,8 @@
 # **`photo_file_size`**     | `string(255)`      |
 # **`photo_updated_at`**    | `datetime`         |
 # **`deleted_at`**          | `datetime`         |
+# **`nonce`**               | `string(255)`      |
+# **`photo_processing`**    | `boolean`          |
 #
 
 require 'spec_helper'

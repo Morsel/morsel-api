@@ -15,19 +15,16 @@
 # **`updated_at`**   | `datetime`         |
 #
 
-class Comment < ActiveRecord::Base
-  include Authority::Abilities
-  include TimelinePaginateable
-  include UserCreatable
+require 'spec_helper'
 
-  include Activityable
-  def self.activity_notification; true end
-  def subject; morsel end
+describe Comment do
+  subject(:comment) { FactoryGirl.build(:comment) }
 
-  acts_as_paranoid
+  it { should respond_to(:user) }
+  it { should respond_to(:morsel) }
+  it { should respond_to(:description) }
 
-  belongs_to :user
-  belongs_to :morsel
-
-  self.authorizer_name = 'CommentAuthorizer'
+  it_behaves_like 'Activityable' do
+    let(:activityable_object) { comment }
+  end
 end

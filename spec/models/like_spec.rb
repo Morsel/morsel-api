@@ -14,20 +14,15 @@
 # **`updated_at`**  | `datetime`         |
 #
 
-class Like < ActiveRecord::Base
-  include Authority::Abilities
-  include UserCreatable
+require 'spec_helper'
 
-  include Activityable
-  def self.activity_notification; true end
-  def subject; morsel end
+describe Like do
+  subject(:like) { FactoryGirl.build(:like) }
 
-  acts_as_paranoid
+  it { should respond_to(:user) }
+  it { should respond_to(:morsel) }
 
-  belongs_to :morsel
-  belongs_to :user
-
-  self.authorizer_name = 'LikeAuthorizer'
-
-  validates :user_id, uniqueness: { scope: [:deleted_at, :morsel_id] }
+  it_behaves_like 'Activityable' do
+    let(:activityable_object) { like }
+  end
 end

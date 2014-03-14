@@ -1,6 +1,5 @@
 class UsersController < ApiController
   skip_before_filter :authenticate_user_from_token!, only: [:show, :checkusername, :reserveusername, :setrole, :unsubscribe]
-  respond_to :json
 
   def index
     custom_respond_with User.all

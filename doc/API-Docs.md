@@ -23,6 +23,8 @@
   - [GET ```/users/{user_id|user_username}/feed``` - User Feed](#get-usersuser_iduser_usernamefeed---user-feed)
   - [POST ```/users/authorizations``` - Create User Authorizations](#post-usersauthorizations---create-user-authorizations)
   - [GET ```/users/{user_id}/authorizations``` - User Authorizations](#get-usersuser_idauthorizations---user-authorizations)
+  - [GET ```/users/activities``` - User Activities](#get-usersactivities---user-activities)
+  - [GET ```/users/notifications``` - User Notifications](#get-usersnotifications---user-notifications)
 - [Morsel Methods](#morsel-methods)
   - [POST ```/morsels``` - Create a new Morsel](#post-morsels---create-a-new-morsel)
   - [GET ```/morsels/{morsel_id}``` - Morsel](#get-morselsmorsel_id---morsel)
@@ -62,6 +64,10 @@
     - [User](#user)
     - [User (w/ Private Attributes)](#user-w-private-attributes)
     - [User (w/ Auth Token)](#user-w-auth-token)
+  - [Activity Objects](#activity-objects)
+    - [Activity](#activity)
+  - [Notification Objects](#notification-objects)
+    - [Notification](#notification)
   - [Misc Objects](#misc-objects)
     - [Configuration](#configuration)
 - [Notes](#notes)
@@ -463,6 +469,46 @@ Returns the User's authorizations
 | __data__ |
 | -------- |
 | Array of [Authorization](#authorization) |
+
+<br />
+<br />
+
+## GET ```/users/activities``` - User Activities
+Returns the Authenticated User's Activities. An Activity is created when a User likes or comments on a Morsel. Think Facebook's Activity Log (https://www.facebook.com/<username>/allactivity).
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Activities up to and including this ```id``` | | |
+| since_id | Number | Return Authorizations since this ```id``` | | |
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [Activity](#activity) |
+
+<br />
+<br />
+
+## GET ```/users/notifications``` - User Notifications
+Returns the Authenticated User's Notifications. A Notification is created when someone likes or comments on your Morsels. Think Facebook or Twitter Notifications.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Notifications up to and including this ```id``` | | |
+| since_id | Number | Return Notifications since this ```id``` | | |
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [Notification](#notification) |
 
 <br />
 <br />
@@ -1134,6 +1180,102 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
   "twitter_username": "morsel_marty"
 }
 ```
+
+
+## Activity Objects
+
+### Activity
+
+```json
+{
+  "id":2,
+  "action":"Like",
+  "created_at":"2014-03-13T17:01:38.370Z",
+  "subject_type":"Morsel",
+  "subject":{
+    "id":2,
+    "description":"Voluptatem dolores beatae id labore ut corporis tempora id numquam in vel et nemo sed natus quos provident commodi quia quo officiis distinctio qui aut non iure nam illum reprehenderit debitis hic et esse molestiae nulla eaque excepturi quaerat eveniet nisi asperiores voluptate.",
+    "creator_id":1,
+    "updated_at":"2014-03-13T17:01:37.955Z",
+    "created_at":"2014-03-13T17:01:37.955Z",
+    "nonce":null,
+    "photos":{
+      "_104x104":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/2/_104x104_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_208x208":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/2/_208x208_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_320x214":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/2/_320x214_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_640x428":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/2/_640x428_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_640x640":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
+    },
+    "photo_processing":true,
+    "post_id":1,
+    "sort_order":2,
+    "url":"https://test.eatmorsel.com/user_3yugjkugvv/1-rem-adipisci-et-ut-totam-repudiandae-est/2",
+    "liked":true
+  },
+  "creator":{
+    "id":2,
+    "username":"user_m3m6m78gkr",
+    "first_name":"Kody",
+    "last_name":"Fritsch",
+    "created_at":"2014-03-13T17:01:38.219Z",
+    "title":null,
+    "bio":"Hi! I like turtles!",
+    "photos":null,
+    "photo_processing":null
+  }
+}
+```
+
+## Notification Objects
+
+### Notification
+
+```json
+{
+  "id":4,
+  "message":"Drew Muller (user_jtu6g7nacn) liked Enim quia sequi aut vel.: Soluta quo saepe nemo voluptatem... ",
+  "created_at":"2014-03-13T17:04:22.411Z",
+  "payload_type":"Activity",
+  "payload":{
+    "id":4,
+    "action":"Like",
+    "created_at":"2014-03-13T17:04:22.403Z",
+    "subject_type":"Morsel",
+    "subject":{
+      "id":1,
+      "description":"Soluta quo saepe nemo voluptatem similique et et veniam ipsa et dolore dolorem beatae nam doloremque enim distinctio quasi in architecto iure ut sit facere reiciendis alias quis.",
+      "creator_id":1,
+      "updated_at":"2014-03-13T17:04:21.899Z",
+      "created_at":"2014-03-13T17:04:21.899Z",
+      "nonce":null,
+      "photos":{
+        "_104x104":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/1/_104x104_1e5cc29c-4fb0-4e27-a323-269c755b5ba3.png",
+        "_208x208":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/1/_208x208_1e5cc29c-4fb0-4e27-a323-269c755b5ba3.png",
+        "_320x214":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/1/_320x214_1e5cc29c-4fb0-4e27-a323-269c755b5ba3.png",
+        "_640x428":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/1/_640x428_1e5cc29c-4fb0-4e27-a323-269c755b5ba3.png",
+        "_640x640":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/1/_640x640_1e5cc29c-4fb0-4e27-a323-269c755b5ba3.png"
+      },
+      "photo_processing":true,
+      "post_id":1,
+      "sort_order":1,
+      "url":"https://test.eatmorsel.com/user_qaa0jncv99/1-enim-quia-sequi-aut-vel/1",
+      "liked":false
+    },
+    "creator":{
+      "id":5,
+      "username":"user_jtu6g7nacn",
+      "first_name":"Drew",
+      "last_name":"Muller",
+      "created_at":"2014-03-13T17:04:22.381Z",
+      "title":null,
+      "bio":"Hi! I like turtles!",
+      "photos":null,
+      "photo_processing":null
+    }
+  }
+}
+```
+
 
 ## Misc Objects
 

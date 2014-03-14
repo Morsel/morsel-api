@@ -193,19 +193,6 @@ describe 'Users API' do
       expect(user_event.client_device).to eq('rspec')
       expect(user_event.client_version).to eq('1.2.3')
     end
-
-    context 'performance', performance: true do
-      before do
-        require 'benchmark'
-      end
-
-      it 'takes time' do
-        Benchmark.realtime { post('/users', format: :json, user: { email: 'foo@bar.com', password: 'password',
-                                                                   first_name: 'Foo', last_name: 'Bar', username: 'foobar',
-                                                                   bio: 'Foo to the Stars' })
-        }.should < 0.75
-      end
-    end
   end
 
   describe 'POST /users/sign_in sessions#create' do
@@ -222,16 +209,6 @@ describe 'Users API' do
       expect(json_data['sign_in_count']).to eq(1)
       expect_nil_json_keys(json_data, %w(password encrypted_password))
     end
-
-    context 'performance', performance: true do
-      before do
-        require 'benchmark'
-      end
-
-      it 'takes time' do
-        Benchmark.realtime { post('/users/sign_in', format: :json, user: { email: user.email, password: 'password' }) }.should < 1.25
-      end
-    end
   end
 
   # Undocumented method
@@ -247,16 +224,6 @@ describe 'Users API' do
       expect(response).to be_success
 
       expect(json_data.count).to eq(users_count)
-    end
-
-    context 'performance', performance: true do
-      before do
-        require 'benchmark'
-      end
-
-      it 'takes time' do
-        Benchmark.realtime { get('/users', api_key: api_key_for_user(User.first), format: :json) }.should < 0.1
-      end
     end
   end
 
@@ -292,16 +259,6 @@ describe 'Users API' do
       expect(response).to be_success
     end
 
-    context 'performance', performance: true do
-      before do
-        require 'benchmark'
-      end
-
-      it 'takes time' do
-        Benchmark.realtime { get("/users/#{user_with_posts.id}", api_key: api_key_for_user(user_with_posts), format: :json) }.should < 0.5
-      end
-    end
-
     context 'username passed instead of id' do
       it 'returns the User' do
         get "/users/#{user_with_posts.username}", api_key: api_key_for_user(user_with_posts), format: :json
@@ -317,16 +274,6 @@ describe 'Users API' do
 
         expect(json_data['like_count']).to eq(number_of_morsel_likes)
         expect(json_data['morsel_count']).to eq(user_with_posts.morsels.count)
-      end
-
-      context 'performance', performance: true do
-        before do
-          require 'benchmark'
-        end
-
-        it 'takes time' do
-          Benchmark.realtime { get("/users/#{user_with_posts.username}", api_key: api_key_for_user(user_with_posts), format: :json) }.should < 0.5
-        end
       end
     end
 
@@ -347,16 +294,6 @@ describe 'Users API' do
         expect(photos['_80x80']).to_not be_nil
         expect(photos['_40x40']).to_not be_nil
       end
-
-      context 'performance', performance: true do
-        before do
-          require 'benchmark'
-        end
-
-        it 'takes time' do
-          Benchmark.realtime { get("/users/#{user_with_posts.id}", api_key: api_key_for_user(user_with_posts), format: :json) }.should < 0.5
-        end
-      end
     end
 
     context 'has a Post draft' do
@@ -370,16 +307,6 @@ describe 'Users API' do
         expect(response).to be_success
 
         expect(json_data['draft_count']).to eq(1)
-      end
-
-      context 'performance', performance: true do
-        before do
-          require 'benchmark'
-        end
-
-        it 'takes time' do
-          Benchmark.realtime { get("/users/#{user_with_posts.id}", api_key: api_key_for_user(user_with_posts), format: :json) }.should < 0.5
-        end
       end
     end
   end
@@ -670,6 +597,86 @@ describe 'Users API' do
       expect(response).to be_success
       user.reload
       expect(user.unsubscribed).to be_true
+    end
+  end
+
+  describe 'GET /users/activities' do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:morsels_count) { 3 }
+    let(:some_post) { FactoryGirl.create(:post_with_morsels, morsels_count: morsels_count) }
+
+    before do
+      some_post.morsels.each do |morsel|
+        Sidekiq::Testing.inline! { morsel.likers << user }
+      end
+    end
+
+    it 'returns the User\'s recent activities' do
+      get "/users/activities", api_key: api_key_for_user(user), format: :json
+      expect(response).to be_success
+      expect(json_data.count).to eq(morsels_count)
+      first_activity = json_data.first
+      expect(first_activity['action_type']).to eq('Like')
+      expect(first_activity['subject_type']).to eq('Morsel')
+
+      # Since the activities call returns the newest first, compare against the last Morsel in some_post
+      expect_json_keys(first_activity['subject'], some_post.morsels.last, %w(id description nonce))
+    end
+
+    context 'subject is deleted' do
+      before do
+        Like.last.destroy
+      end
+
+      it 'removes the Activity' do
+        get "/users/activities", api_key: api_key_for_user(user), format: :json
+        expect(response).to be_success
+        expect(json_data.count).to eq(morsels_count - 1)
+      end
+    end
+  end
+
+  describe 'GET /users/notifications' do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:last_user) { FactoryGirl.create(:user) }
+    let(:notifications_count) { 3 }
+    let(:some_post) { FactoryGirl.create(:post_with_creator, creator: user) }
+
+    context 'a Morsel is liked' do
+      before do
+        notifications_count.times { FactoryGirl.create(:morsel_with_creator, creator: user, posts:[some_post]) }
+        user.morsels.each do |morsel|
+          Sidekiq::Testing.inline! { morsel.likers << FactoryGirl.create(:user) }
+        end
+        Sidekiq::Testing.inline! { user.morsels.last.likers << last_user }
+      end
+
+      it 'returns the User\'s recent notifications' do
+        get "/users/notifications", api_key: api_key_for_user(user), format: :json
+        expect(response).to be_success
+        expect(json_data.count).to eq(notifications_count + 1)
+        first_notification = json_data.first
+        first_morsel = some_post.morsels.first
+        expect(first_notification['message']).to eq("#{last_user.full_name} (#{last_user.username}) liked #{first_morsel.first_post_title_with_description}".truncate(100, separator: ' ', omission: '... '))
+        expect(first_notification['payload_type']).to eq('Activity')
+        expect(first_notification['payload']['action_type']).to eq('Like')
+        expect(first_notification['payload']['subject_type']).to eq('Morsel')
+
+        # Since the notifications call returns the newest first, compare against the last Morsel in some_post
+        expect_json_keys(first_notification['payload']['subject'], first_morsel, %w(id description nonce))
+      end
+
+      context 'Morsel is unliked' do
+        before do
+          Like.last.destroy
+        end
+
+        it 'should not notify for that action' do
+          get "/users/notifications", api_key: api_key_for_user(user), format: :json
+          expect(response).to be_success
+          expect(json_data.count).to eq(notifications_count)
+        end
+      end
     end
   end
 end
