@@ -601,6 +601,7 @@ describe 'Users API' do
   end
 
   describe 'GET /users/activities' do
+    let(:uri) { '/users/activities' }
     let(:user) { FactoryGirl.create(:user) }
     let(:morsels_count) { 3 }
     let(:some_post) { FactoryGirl.create(:post_with_morsels, morsels_count: morsels_count) }
@@ -612,7 +613,7 @@ describe 'Users API' do
     end
 
     it 'returns the User\'s recent activities' do
-      get "/users/activities", api_key: api_key_for_user(user), format: :json
+      get uri, api_key: api_key_for_user(user), format: :json
       expect(response).to be_success
       expect(json_data.count).to eq(morsels_count)
       first_activity = json_data.first
@@ -629,14 +630,76 @@ describe 'Users API' do
       end
 
       it 'removes the Activity' do
-        get "/users/activities", api_key: api_key_for_user(user), format: :json
+        get uri, api_key: api_key_for_user(user),
+                 format: :json
         expect(response).to be_success
         expect(json_data.count).to eq(morsels_count - 1)
+      end
+    end
+
+    context 'pagination' do
+      before do
+        30.times do
+          FactoryGirl.create(:morsel_like_activity, creator_id: user.id)
+        end
+      end
+
+      describe 'max_id' do
+        it 'returns results up to and including max_id' do
+          expected_count = rand(3..6)
+          max_id = Activity.first.id + expected_count - 1
+          get uri, api_key: api_key_for_user(user),
+                   max_id: max_id,
+                   format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+          expect(json_data.first['id']).to eq(max_id)
+        end
+      end
+
+      describe 'since_id' do
+        it 'returns results since since_id' do
+          expected_count = rand(3..6)
+          since_id = Activity.last.id - expected_count
+          get uri, api_key: api_key_for_user(user),
+                   since_id: since_id,
+                   format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+          expect(json_data.last['id']).to eq(since_id + 1)
+        end
+      end
+
+      describe 'count' do
+        it 'defaults to 20' do
+          get uri, api_key: api_key_for_user(user),
+                   format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(20)
+        end
+
+        it 'limits the result' do
+          expected_count = rand(3..6)
+          get uri, api_key: api_key_for_user(user),
+                   count: expected_count,
+                   format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+        end
       end
     end
   end
 
   describe 'GET /users/notifications' do
+    let(:uri) { '/users/notifications' }
     let(:user) { FactoryGirl.create(:user) }
     let(:last_user) { FactoryGirl.create(:user) }
     let(:notifications_count) { 3 }
@@ -652,7 +715,7 @@ describe 'Users API' do
       end
 
       it 'returns the User\'s recent notifications' do
-        get "/users/notifications", api_key: api_key_for_user(user), format: :json
+        get uri, api_key: api_key_for_user(user), format: :json
         expect(response).to be_success
         expect(json_data.count).to eq(notifications_count + 1)
         first_notification = json_data.first
@@ -672,9 +735,69 @@ describe 'Users API' do
         end
 
         it 'should not notify for that action' do
-          get "/users/notifications", api_key: api_key_for_user(user), format: :json
+          get uri, api_key: api_key_for_user(user), format: :json
           expect(response).to be_success
           expect(json_data.count).to eq(notifications_count)
+        end
+      end
+    end
+
+    context 'pagination' do
+      before do
+        30.times do
+          FactoryGirl.create(:activity_notification, user: user)
+        end
+      end
+
+      describe 'max_id' do
+        it 'returns results up to and including max_id' do
+          expected_count = rand(3..6)
+          max_id = Notification.first.id + expected_count - 1
+          get uri, api_key: api_key_for_user(user),
+                   max_id: max_id,
+                   format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+          expect(json_data.first['id']).to eq(max_id)
+        end
+      end
+
+      describe 'since_id' do
+        it 'returns results since since_id' do
+          expected_count = rand(3..6)
+          since_id = Notification.last.id - expected_count
+          get uri, api_key: api_key_for_user(user),
+                   since_id: since_id,
+                   format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+          expect(json_data.last['id']).to eq(since_id + 1)
+        end
+      end
+
+      describe 'count' do
+        it 'defaults to 20' do
+          get uri, api_key: api_key_for_user(user),
+                   format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(20)
+        end
+
+        it 'limits the result' do
+          expected_count = rand(3..6)
+          get uri, api_key: api_key_for_user(user),
+                   count: expected_count,
+                   format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
         end
       end
     end
