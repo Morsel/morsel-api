@@ -522,6 +522,7 @@ DEPENDENCIES
   rollbar
   rspec-instafail
   rspec-rails
+  rubocop
   sass-rails (~> 4.0.0)
   settingslogic
   sidekiq

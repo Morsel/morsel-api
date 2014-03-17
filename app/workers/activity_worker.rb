@@ -21,7 +21,7 @@ class ActivityWorker
         raise 'InvalidAction'
       end
 
-      message = "#{creator.full_name} (#{creator.username}) #{past_tense_action} #{activity.subject.first_post_title_with_description}"
+      message = "#{creator.full_name} (#{creator.username}) #{past_tense_action} #{activity.subject.post_title_with_description}"
       Notification.create(
         payload: activity,
         message: message.truncate(100, separator: ' ', omission: '... '),

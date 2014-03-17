@@ -26,7 +26,6 @@ describe Post do
   it { should respond_to(:cached_slug) }
 
   it { should respond_to(:creator) }
-  it { should respond_to(:morsel_posts) }
   it { should respond_to(:morsels) }
   it { should respond_to(:draft) }
   it { should respond_to(:published_at) }
@@ -88,16 +87,25 @@ describe Post do
     end
   end
 
-  describe 'with Morsels' do
+  context 'has Morsels' do
     subject(:post_with_morsels) { FactoryGirl.create(:post_with_morsels) }
 
     its(:morsels) { should_not be_empty }
 
     it 'returns Morsels ordered by sort_order' do
       morsel_ids = post_with_morsels.morsel_ids
-      MorselPost.find_by(post: post_with_morsels, morsel: post_with_morsels.morsels.last).update(sort_order: 1)
+      post_with_morsels.morsels.last.update(sort_order: 1)
 
       expect(post_with_morsels.morsel_ids).to eq(morsel_ids.rotate!(-1))
+    end
+
+    describe 'Post gets destroyed' do
+      it 'should destroy its Morsels' do
+        post_with_morsels.destroy
+        post_with_morsels.morsels.each do |morsel|
+          expect(morsel.deleted?).to be_true
+        end
+      end
     end
   end
 end

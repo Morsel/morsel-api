@@ -17,6 +17,6 @@ class PostSerializer < ActiveModel::Serializer
   end
 
   def morsels
-    object.morsels.order('morsel_posts.sort_order ASC')
+    object.morsels.order('sort_order ASC')
   end
 end

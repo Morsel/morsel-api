@@ -6,21 +6,14 @@ class MorselSerializer < ActiveModel::Serializer
              :created_at,
              :nonce,
              :photos,
-             :photo_processing
+             :photo_processing,
+             :sort_order,
+             :url,
+             :post_id,
+             :liked
 
-  def attributes
-    data = super
-    # HACK: Eventually when we/if we do many-to-many Morsel/Posts, this will screw things up.
-    post = object.posts.last
-    if post.present?
-      data[:post_id] = post.id
-      data[:sort_order] = object.sort_order_for_post_id(post.id)
-      data[:url] = object.url(post)
-    end
-
-    data[:liked] = current_user.likes?(object) if current_user.present?
-
-    data
+  def liked
+    current_user.present? && current_user.likes?(object)
   end
 
   def photos

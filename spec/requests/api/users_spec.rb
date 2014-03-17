@@ -342,7 +342,7 @@ describe 'Users API' do
     context 'has drafts' do
       let(:draft_posts_count) { rand(3..6) }
       before do
-        draft_posts_count.times { FactoryGirl.create(:draft_post_with_morsels_and_creator, creator: user_with_posts) }
+        draft_posts_count.times { FactoryGirl.create(:draft_post_with_morsels, creator: user_with_posts) }
       end
 
       it 'should NOT include drafts' do
@@ -707,7 +707,7 @@ describe 'Users API' do
 
     context 'a Morsel is liked' do
       before do
-        notifications_count.times { FactoryGirl.create(:morsel_with_creator, creator: user, posts:[some_post]) }
+        notifications_count.times { FactoryGirl.create(:morsel_with_creator, creator: user, post:some_post) }
         user.morsels.each do |morsel|
           Sidekiq::Testing.inline! { morsel.likers << FactoryGirl.create(:user) }
         end
@@ -720,7 +720,8 @@ describe 'Users API' do
         expect(json_data.count).to eq(notifications_count + 1)
         first_notification = json_data.first
         first_morsel = some_post.morsels.first
-        expect(first_notification['message']).to eq("#{last_user.full_name} (#{last_user.username}) liked #{first_morsel.first_post_title_with_description}".truncate(100, separator: ' ', omission: '... '))
+
+        expect(first_notification['message']).to eq("#{last_user.full_name} (#{last_user.username}) liked #{first_morsel.post_title_with_description}".truncate(100, separator: ' ', omission: '... '))
         expect(first_notification['payload_type']).to eq('Activity')
         expect(first_notification['payload']['action_type']).to eq('Like')
         expect(first_notification['payload']['subject_type']).to eq('Morsel')
