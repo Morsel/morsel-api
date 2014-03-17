@@ -3,6 +3,7 @@ module UserCreatable
 
   included do
     after_create :ensure_creator_role
+    resourcify
   end
 
   private

@@ -35,6 +35,14 @@ describe Morsel do
 
   it { should be_valid }
 
+  context 'saved with creator' do
+    subject(:morsel) { FactoryGirl.create(:morsel_with_creator) }
+    it 'adds :creator Role to the creator' do
+      expect(morsel.creator.has_role?(:creator, morsel)).to be_true
+      expect(morsel.creator.can_update?(morsel)).to be_true
+    end
+  end
+
   context 'post is missing' do
     before { morsel.post = nil }
     it { should_not be_valid }
