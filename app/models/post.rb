@@ -26,8 +26,7 @@ class Post < ActiveRecord::Base
   is_sluggable :title
 
   belongs_to :creator, class_name: 'User', foreign_key: 'creator_id'
-  has_many :morsel_posts, dependent: :destroy
-  has_many :morsels, -> { order('morsel_posts.sort_order ASC') }, through: :morsel_posts, dependent: :destroy
+  has_many :morsels, -> { order('sort_order ASC') }, dependent: :destroy
 
   before_save :update_published_at_if_necessary
 

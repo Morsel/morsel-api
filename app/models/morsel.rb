@@ -18,6 +18,8 @@
 # **`deleted_at`**          | `datetime`         |
 # **`nonce`**               | `string(255)`      |
 # **`photo_processing`**    | `boolean`          |
+# **`post_id`**             | `integer`          |
+# **`sort_order`**          | `integer`          |
 #
 
 class Morsel < ActiveRecord::Base
@@ -33,40 +35,31 @@ class Morsel < ActiveRecord::Base
   has_many :comments
   has_many :likers, through: :likes, source: :user
   has_many :likes
-  has_many :morsel_posts, dependent: :destroy
-  has_many :posts, through: :morsel_posts, dependent: :destroy
+  belongs_to :post, touch: true
+
+  before_save :check_sort_order
 
   mount_uploader :photo, MorselPhotoUploader
   process_in_background :photo
 
-  scope :feed, -> { includes(:creator, :morsel_posts, :posts) }
-
-  after_save :update_posts_updated_at
+  scope :feed, -> { includes(:creator, :post) }
 
   validates :nonce, uniqueness: { scope: :creator_id }, :if => :nonce?
+  validates :post, presence: true
 
-  def sort_order_for_post_id(post_id)
-    morsel_posts.find_by(post_id: post_id).sort_order
-  end
-
-  def first_post_title_with_description
-    post_title_with_description(posts.first)
-  end
-
-  def facebook_message(post)
-    message = post_title_with_description(post)
-    message << url(post)
+  def facebook_message
+    message = post_title_with_description
+    message << url
 
     message.normalize
   end
 
-  def twitter_message(post)
-    message = post_title_with_description(post)
-
-    message.twitter_string(url(post))
+  def twitter_message
+    message = post_title_with_description
+    message.twitter_string(url)
   end
 
-  def url(post)
+  def url
     # https://eatmorsel.com/marty/1-my-first-post/2
     "#{Settings.morsel.web_url}/#{creator.username}/#{post.id}-#{post.cached_slug}/#{post.morsels.find_index(self) + 1}"
   end
@@ -82,16 +75,31 @@ class Morsel < ActiveRecord::Base
     end
   end
 
-  private
-
-  def post_title_with_description(post)
+  def post_title_with_description
     message = ''
     message << "#{post.title}: " if post && post.title?
     message << "#{description} " if description.present?
   end
 
-  def update_posts_updated_at
-    # Faster than doing posts.each(&:touch)
-    posts.update_all(updated_at: updated_at) if updated_at
+  private
+
+  def check_sort_order
+    if self.sort_order_changed?
+      existing_morsel = Morsel.find_by(post: self.post, sort_order: self.sort_order)
+
+      # If the sort_order has been taken, increment the sort_order for every morsel >= sort_order
+      self.post.morsels.where('sort_order >= ?', self.sort_order).update_all('sort_order = sort_order + 1') if existing_morsel
+    end
+
+    self.sort_order = generate_sort_order if self.sort_order.blank?
+  end
+
+  def generate_sort_order
+    last_sort_order = post.morsels.maximum(:sort_order)
+    if last_sort_order.present?
+      last_sort_order + 1
+    else
+      1
+    end
   end
 end

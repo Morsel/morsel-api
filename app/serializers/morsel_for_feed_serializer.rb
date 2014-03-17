@@ -9,6 +9,7 @@ class MorselForFeedSerializer < ActiveModel::Serializer
              :in_progression,
              :liked,
              :creator,
+             :sort_order,
              :post
 
   def photos
@@ -16,8 +17,8 @@ class MorselForFeedSerializer < ActiveModel::Serializer
   end
 
   def in_progression
-    if object.posts.first
-      object.posts.first.morsels.count > 1
+    if object.post
+      object.post.morsels.count > 1
     else
       false
     end
@@ -39,7 +40,7 @@ class MorselForFeedSerializer < ActiveModel::Serializer
   end
 
   def post
-    post = object.posts.first
+    post = object.post
     if post
       {
         id: post.id,

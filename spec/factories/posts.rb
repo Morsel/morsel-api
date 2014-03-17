@@ -24,22 +24,16 @@ FactoryGirl.define do
 
     factory :post_with_creator, class: Post do
       association(:creator, factory: :user)
-    end
+      factory :post_with_morsels, class: Post do
+        ignore do
+          morsels_count 3
+        end
 
-    factory :post_with_morsels, class: Post do
-      association(:creator, factory: :user)
-      ignore do
-        morsels_count 3
-      end
+        after(:create) do |post, evaluator|
+          create_list(:morsel, evaluator.morsels_count, post: post, creator: post.creator)
+        end
 
-      after(:create) do |post, evaluator|
-        create_list(:morsel, evaluator.morsels_count, posts: [post], creator: post.creator)
-      end
-
-      # deprecated
-      factory :post_with_morsels_and_creator, class: Post do
-        # not deprecated
-        factory :draft_post_with_morsels_and_creator, class: Post do
+        factory :draft_post_with_morsels, class: Post do
           draft true
         end
       end

@@ -21,7 +21,8 @@
 
 FactoryGirl.define do
   factory :morsel_like_activity, class: Activity do
+    association(:creator, factory: :user)
     association(:action, factory: :like)
-    association(:subject, factory: :morsel)
+    association(:subject, factory: :morsel_with_creator)
   end
 end

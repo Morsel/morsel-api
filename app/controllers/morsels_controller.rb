@@ -26,20 +26,20 @@ class MorselsController < ApiController
 
   def create
     morsel_params = MorselParams.build(params)
+    # Handle deprecated post_id, post_title, and sort_order
+    morsel_params[:post] = { id: params[:post_id], title: params[:post_title]} if params[:post_id].present?
+    morsel_params[:sort_order] = params[:sort_order]  if params[:sort_order].present?
 
     create_morsel = CreateMorsel.run(
       params: morsel_params,
-      uploaded_photo_hash: CreateMorselUploadedPhotoHash.hash(morsel_params[:photo]),
+      uploaded_photo_hash: MorselUploadedPhotoHash.hash(morsel_params[:photo]),
       user: current_user,
-      post_id: params[:post_id],
-      post_title: params[:post_title],
-      sort_order: params[:sort_order],
       post_to_facebook: params[:post_to_facebook],
       post_to_twitter: params[:post_to_twitter]
     )
 
     if create_morsel.valid?
-      custom_respond_with create_morsel.result[:morsel], post: create_morsel.result[:post]
+      custom_respond_with create_morsel.result
     else
       render_json_errors create_morsel.errors
     end
@@ -50,45 +50,24 @@ class MorselsController < ApiController
   end
 
   def update
-    morsel = Morsel.find(params[:id])
+    morsel_params = MorselParams.build(params)
+    # Handle deprecated post_id, post_title, and sort_order
+    morsel_params[:post] = { id: params[:post_id], title: params[:post_title]} if params[:post_id].present?
+    morsel_params[:sort_order] = params[:sort_order]  if params[:sort_order].present?
 
-    if morsel.update_attributes(MorselParams.build(params))
-      if params[:post_id].present?
-        post = Post.find(params[:post_id])
+    update_morsel = UpdateMorsel.run(
+      morsel: Morsel.find(params[:id]),
+      params: morsel_params,
+      uploaded_photo_hash: MorselUploadedPhotoHash.hash(morsel_params[:photo]),
+      user: current_user,
+      post_to_facebook: params[:post_to_facebook],
+      post_to_twitter: params[:post_to_twitter]
+    )
 
-        if params[:new_post_id].present?
-          new_post = Post.find(params[:new_post_id])
-          if new_post.morsels.include? morsel
-            # Already exists
-            render_json_errors({ relationship: ['already exists'] }, :bad_request)
-          else
-            morsel_post = MorselPost.create(morsel: morsel, post: new_post, sort_order: params[:sort_order].presence)
-
-            if morsel_post
-              # Delete the Relationship from the old post
-              morsel.posts.destroy(post)
-
-              current_user.post_to_facebook(morsel.facebook_message(new_post)) if params[:post_to_facebook]
-              current_user.post_to_twitter(morsel.twitter_message(new_post)) if params[:post_to_twitter]
-
-              custom_respond_with morsel, post: new_post
-            else
-              render_json_errors(new_post.errors)
-            end
-          end
-        else
-          MorselPost.find_by(morsel: morsel, post: post).update(sort_order: params[:sort_order]) if params[:sort_order].present?
-
-          current_user.post_to_facebook(morsel.facebook_message(post)) if params[:post_to_facebook]
-          current_user.post_to_twitter(morsel.twitter_message(post)) if params[:post_to_twitter]
-
-          custom_respond_with morsel, post: post
-        end
-      else
-        custom_respond_with morsel
-      end
+    if update_morsel.valid?
+      custom_respond_with update_morsel.result
     else
-      render_json_errors(morsel.errors)
+      render_json_errors update_morsel.errors
     end
   end
 
@@ -103,7 +82,21 @@ class MorselsController < ApiController
 
   class MorselParams
     def self.build(params)
-      params.require(:morsel).permit(:description, :photo, :nonce)
+      params.require(:morsel).permit(:description, :photo, :nonce, :sort_order, post: [:id, :title])
+    end
+  end
+
+  # active_interaction only allows uploading File or Tempfile, so the UploadedFile used by CarrierWave is converted to a Hash then recreated
+  class MorselUploadedPhotoHash
+    def self.hash(params)
+      if params
+        {
+          type: params.content_type,
+          head: params.headers,
+          filename: params.original_filename,
+          tempfile: params.tempfile
+        }
+      end
     end
   end
 end

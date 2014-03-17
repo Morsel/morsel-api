@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140311215507) do
+ActiveRecord::Schema.define(version: 20140314204417) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -97,14 +97,6 @@ ActiveRecord::Schema.define(version: 20140311215507) do
 
   add_index "likes", ["user_id", "morsel_id"], name: "index_likes_on_user_id_and_morsel_id", using: :btree
 
-  create_table "morsel_posts", force: true do |t|
-    t.integer "morsel_id"
-    t.integer "post_id"
-    t.integer "sort_order"
-  end
-
-  add_index "morsel_posts", ["morsel_id", "post_id"], name: "index_morsel_posts_on_morsel_id_and_post_id", using: :btree
-
   create_table "morsels", force: true do |t|
     t.text     "description"
     t.datetime "created_at"
@@ -117,9 +109,12 @@ ActiveRecord::Schema.define(version: 20140311215507) do
     t.datetime "deleted_at"
     t.string   "nonce"
     t.boolean  "photo_processing"
+    t.integer  "post_id"
+    t.integer  "sort_order"
   end
 
   add_index "morsels", ["creator_id"], name: "index_morsels_on_creator_id", using: :btree
+  add_index "morsels", ["post_id"], name: "index_morsels_on_post_id", using: :btree
 
   create_table "notifications", force: true do |t|
     t.integer  "payload_id"

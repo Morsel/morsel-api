@@ -4,7 +4,7 @@ class PostsController < ApiController
 
   def index
     if params[:user_id_or_username].blank?
-      posts = Post.includes(:morsel_posts, :morsels, :creator)
+      posts = Post.includes(:morsels, :creator)
                   .published
                   .since(params[:since_id])
                   .max(params[:max_id])
@@ -13,7 +13,7 @@ class PostsController < ApiController
     else
       user = User.find_by_id_or_username(params[:user_id_or_username])
       raise ActiveRecord::RecordNotFound if user.nil?
-      posts = Post.includes(:morsel_posts, :morsels, :creator)
+      posts = Post.includes(:morsels, :creator)
                   .include_drafts(params[:include_drafts])
                   .since(params[:since_id])
                   .max(params[:max_id])
@@ -39,11 +39,11 @@ class PostsController < ApiController
   end
 
   def show
-    custom_respond_with Post.includes(:morsel_posts, :morsels, :creator).find(params[:id])
+    custom_respond_with Post.includes(:morsels, :creator).find(params[:id])
   end
 
   def update
-    post = Post.includes(:morsel_posts, :morsels, :creator).find(params[:id])
+    post = Post.includes(:morsels, :creator).find(params[:id])
 
     if post.update_attributes(PostParams.build(params))
       custom_respond_with post
@@ -68,14 +68,14 @@ class PostsController < ApiController
   def append
     morsel = Morsel.find(params[:morsel_id])
 
-    post = Post.includes(:morsel_posts, :morsels, :creator).find(params[:id])
+    post = Post.includes(:morsels, :creator).find(params[:id])
     if post.morsels.include? morsel
       # Already exists
       render_json_errors({ relationship: ['already exists'] }, :bad_request)
     else
-      morsel_post = MorselPost.create(morsel: morsel, post: post, sort_order: params[:sort_order].presence)
+      morsel.sort_order = params[:sort_order] if params[:sort_order].present?
 
-      if morsel_post.valid?
+      if morsel.update(post_id: post.id)
         custom_respond_with post
       else
         render_json_errors(post.errors)
@@ -99,7 +99,7 @@ class PostsController < ApiController
   end
 
   def drafts
-    posts = Post.includes(:morsel_posts, :morsels, :creator)
+    posts = Post.includes(:morsels, :creator)
                   .drafts
                   .since(params[:since_id])
                   .max(params[:max_id])
