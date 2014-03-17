@@ -46,12 +46,13 @@ class UpdateMorsel < ActiveInteraction::Base
     end
 
     photo = ActionDispatch::Http::UploadedFile.new(uploaded_photo_hash) if uploaded_photo_hash
-    params[:photo] = photo if photo
+    morsel.photo = photo if photo
 
     morsel.description = params[:description] if params[:description].present?
     morsel.nonce = params[:nonce] if params[:nonce].present?
     morsel.sort_order = params[:sort_order] if params[:sort_order].present?
     morsel.post_id = params[:post_id] if params[:post_id].present?
+    morsel.photo
 
     morsel.post = post if post
 
