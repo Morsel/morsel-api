@@ -8,6 +8,10 @@ class BasePhotoUploader < CarrierWave::Uploader::Base
     config.remove_previously_stored_files_after_update = false
   end
 
+  def cache_dir
+    "#{Rails.root}/tmp/uploads"
+  end
+
   def store_dir
     if Rails.env.production? || Rails.env.staging?
       "#{model.class.to_s.underscore}-photos/#{model.id}"
