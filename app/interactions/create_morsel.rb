@@ -34,14 +34,13 @@ class CreateMorsel < ActiveInteraction::Base
 
     post.title = post_params[:title] if post_params[:title].present?
 
-    photo = ActionDispatch::Http::UploadedFile.new(uploaded_photo_hash) if uploaded_photo_hash
     morsel = user.morsels.build(
       description: params[:description],
       nonce: params[:nonce],
-      photo: photo,
       sort_order: params[:sort_order]
     )
 
+    morsel.photo = ActionDispatch::Http::UploadedFile.new(uploaded_photo_hash) if uploaded_photo_hash
     morsel.post = post
 
     if morsel.save
