@@ -20,6 +20,7 @@ MorselApp::Application.routes.draw do
   resources :users, only: [:index, :update] do
     collection do
       post 'authorizations' => 'authorizations#create'
+      get 'authorizations' => 'authorizations#index'
       get 'checkusername(/:username)' => 'users#checkusername'
       post 'reserveusername(/:username)' => 'users#reserveusername'
       put ':user_id/updateindustry' => 'users#updateindustry'
@@ -32,7 +33,6 @@ MorselApp::Application.routes.draw do
       get ':user_id_or_username/posts' => 'posts#index'
       get ':user_id_or_username/feed' => 'morsels#index'
     end
-    resources :authorizations, only: [:index]
   end
 
   resources :morsels, only: [:create, :show, :update, :destroy] do

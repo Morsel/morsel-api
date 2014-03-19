@@ -22,7 +22,7 @@
   - [GET ```/users/{user_id|user_username}/posts``` - User Posts](#get-usersuser_iduser_usernameposts---user-posts)
   - [GET ```/users/{user_id|user_username}/feed``` - User Feed](#get-usersuser_iduser_usernamefeed---user-feed)
   - [POST ```/users/authorizations``` - Create User Authorizations](#post-usersauthorizations---create-user-authorizations)
-  - [GET ```/users/{user_id}/authorizations``` - User Authorizations](#get-usersuser_idauthorizations---user-authorizations)
+  - [GET ```/users/authorizations``` - User Authorizations](#get-usersauthorizations---user-authorizations)
   - [GET ```/users/activities``` - User Activities](#get-usersactivities---user-activities)
   - [GET ```/users/notifications``` - User Notifications](#get-usersnotifications---user-notifications)
 - [Morsel Methods](#morsel-methods)
@@ -451,8 +451,8 @@ Creates a new Authorization for the authenticated User
 <br />
 <br />
 
-## GET ```/users/{user_id}/authorizations``` - User Authorizations
-Returns the User's authorizations
+## GET ```/users/authorizations``` - User Authorizations
+Returns the current User's authorizations
 
 ### Request
 

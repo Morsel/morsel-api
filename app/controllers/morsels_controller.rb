@@ -29,7 +29,7 @@ class MorselsController < ApiController
   def create
     morsel_params = MorselParams.build(params)
     # Handle deprecated post_id, post_title, and sort_order
-    morsel_params[:post] = { id: params[:post_id], title: params[:post_title]} if params[:post_id].present?
+    morsel_params[:post] = { id: params[:post_id], title: params[:post_title] } if params[:post_id].present?
     morsel_params[:sort_order] = params[:sort_order]  if params[:sort_order].present?
 
     create_morsel = CreateMorsel.run(
@@ -54,7 +54,7 @@ class MorselsController < ApiController
   def update
     morsel_params = MorselParams.build(params)
     # Handle deprecated post_id, post_title, and sort_order
-    morsel_params[:post] = { id: params[:post_id], title: params[:post_title]} if params[:post_id].present?
+    morsel_params[:post] = { id: params[:post_id], title: params[:post_title] } if params[:post_id].present?
     morsel_params[:sort_order] = params[:sort_order]  if params[:sort_order].present?
 
     update_morsel = UpdateMorsel.run(
