@@ -215,7 +215,24 @@ describe 'Posts API' do
       expect(response).to be_success
 
       expect(json_data['title']).to eq(new_title)
-      expect(Post.find(existing_post.id).title).to eq(new_title)
+      expect(json_data['draft']).to eq(true)
+      new_post = Post.find(existing_post.id)
+      expect(new_post.title).to eq(new_title)
+      expect(new_post.draft).to eq(false)
+    end
+
+    it 'should set the draft to false when draft=false is passed' do
+      existing_post.update(draft:true)
+
+      put "/posts/#{existing_post.id}", api_key: api_key_for_user(turd_ferg),
+                                        format: :json,
+                                        post: { title: new_title, draft: false }
+
+      expect(response).to be_success
+
+      expect(json_data['draft']).to eq(false)
+      new_post = Post.find(existing_post.id)
+      expect(new_post.draft).to eq(false)
     end
 
     context 'current_user is NOT Post creator' do

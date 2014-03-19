@@ -10,8 +10,8 @@ class UpdatePost < ActiveInteraction::Base
   validate { errors.add(:user, 'not authorized to update Post') unless user.can_update?(post) }
 
   def execute
-    post.title = params[:title] if params[:title].present?
-    post.draft = params[:draft] if params[:draft].present?
+    post.title = params[:title] unless params[:title].nil?
+    post.draft = params[:draft] unless params[:draft].nil?
     post.save
 
     errors.merge!(post.errors)

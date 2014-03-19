@@ -44,7 +44,7 @@ class PostsController < ApiController
 
   def update
     update_post = UpdatePost.run(
-      post: Post.includes(:morsels, :creator).find(params[:id]),
+      post: Post.find(params[:id]),
       params: PostParams.build(params),
       user: current_user
     )
