@@ -10,7 +10,7 @@ class ApplicationAuthorizer < Authority::Authorizer
 
   def updatable_by?(user)
     # By default, only Admin and the resource's Creator can UPDATE resources
-    user.has_role?(:admin) || user.has_role?(:creator, resource) || true
+    user.has_role?(:admin) || user.has_role?(:creator, resource)
   end
 
   def deletable_by?(user)

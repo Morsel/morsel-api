@@ -1,6 +1,5 @@
 class UpdateMorsel < ActiveInteraction::Base
-  model :morsel
-  model :user
+  model :morsel, :user
 
   hash :params do
     string  :description, default: nil

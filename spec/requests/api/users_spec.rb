@@ -164,6 +164,7 @@ describe 'Users API' do
       expect(json_data['id']).to_not be_nil
 
       new_user = User.find json_data['id']
+
       expect_json_keys(json_data, new_user, %w(id username first_name last_name sign_in_count title bio))
       expect(json_data['auth_token']).to eq(new_user.authentication_token)
       expect(json_data['photos']).to be_nil

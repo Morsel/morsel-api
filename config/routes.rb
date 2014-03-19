@@ -47,8 +47,6 @@ MorselApp::Application.routes.draw do
   resources :posts, only: [:create, :index, :show, :update, :destroy] do
     collection do
       get 'drafts' => 'posts#drafts'
-      post ':id/append' => 'posts#append'
-      delete ':id/append' => 'posts#unappend'
     end
     resources :morsels, only: [:update, :destroy]
   end

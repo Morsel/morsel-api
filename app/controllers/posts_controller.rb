@@ -43,12 +43,16 @@ class PostsController < ApiController
   end
 
   def update
-    post = Post.includes(:morsels, :creator).find(params[:id])
+    update_post = UpdatePost.run(
+      post: Post.includes(:morsels, :creator).find(params[:id]),
+      params: PostParams.build(params),
+      user: current_user
+    )
 
-    if post.update_attributes(PostParams.build(params))
-      custom_respond_with post
+    if update_post.valid?
+      custom_respond_with update_post.result
     else
-      render_json_errors(post.errors)
+      render_json_errors update_post.errors
     end
   end
 
@@ -62,39 +66,6 @@ class PostsController < ApiController
       render_json 'OK'
     else
       render_json_errors(destroy_post.errors)
-    end
-  end
-
-  def append
-    morsel = Morsel.find(params[:morsel_id])
-
-    post = Post.includes(:morsels, :creator).find(params[:id])
-    if post.morsels.include? morsel
-      # Already exists
-      render_json_errors({ relationship: ['already exists'] }, :bad_request)
-    else
-      morsel.sort_order = params[:sort_order] if params[:sort_order].present?
-
-      if morsel.update(post_id: post.id)
-        custom_respond_with post
-      else
-        render_json_errors(post.errors)
-      end
-    end
-  end
-
-  def unappend
-    morsel = Morsel.find(params[:morsel_id])
-
-    post = Post.find(params[:id])
-    if post.morsels.include? morsel
-      if post.morsels.destroy(morsel)
-        render json: 'OK', status: :ok
-      else
-        render_json_errors(post.errors)
-      end
-    else
-      render_json_errors({ relationship: ['not found'] }, :not_found)
     end
   end
 

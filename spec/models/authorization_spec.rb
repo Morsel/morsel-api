@@ -33,6 +33,11 @@ describe Authorization do
 
   it { should be_valid }
 
+  it_behaves_like 'UserCreatable' do
+    let(:user_creatable_object) { FactoryGirl.build(:facebook_authorization) }
+    let(:user) { user_creatable_object.user }
+  end
+
   describe 'provider' do
     context 'does not exist' do
       before { authorization.provider = nil }

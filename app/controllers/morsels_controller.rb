@@ -2,6 +2,8 @@ class MorselsController < ApiController
   PUBLIC_ACTIONS = [:index]
   respond_to :json
 
+  include PhotoHashable
+
   # feed
   def index
     if params[:user_id_or_username].blank?
@@ -32,7 +34,7 @@ class MorselsController < ApiController
 
     create_morsel = CreateMorsel.run(
       params: morsel_params,
-      uploaded_photo_hash: MorselUploadedPhotoHash.hash(morsel_params[:photo]),
+      uploaded_photo_hash: photo_hash(morsel_params[:photo]),
       user: current_user,
       post_to_facebook: params[:post_to_facebook],
       post_to_twitter: params[:post_to_twitter]
@@ -58,7 +60,7 @@ class MorselsController < ApiController
     update_morsel = UpdateMorsel.run(
       morsel: Morsel.find(params[:id]),
       params: morsel_params,
-      uploaded_photo_hash: MorselUploadedPhotoHash.hash(morsel_params[:photo]),
+      uploaded_photo_hash: photo_hash(morsel_params[:photo]),
       user: current_user,
       post_to_facebook: params[:post_to_facebook],
       post_to_twitter: params[:post_to_twitter]
@@ -72,31 +74,21 @@ class MorselsController < ApiController
   end
 
   def destroy
-    morsel = Morsel.find(params[:id])
-    if morsel.destroy
-      render json: 'OK', status: :ok
+    destroy_morsel = DestroyMorsel.run(
+      morsel: Morsel.find(params[:id]),
+      user: current_user
+    )
+
+    if destroy_morsel.valid?
+      render_json 'OK'
     else
-      render_json_errors(morsel.errors)
+      render_json_errors(destroy_morsel.errors)
     end
   end
 
   class MorselParams
     def self.build(params)
       params.require(:morsel).permit(:description, :photo, :nonce, :sort_order, post: [:id, :title])
-    end
-  end
-
-  # active_interaction only allows uploading File or Tempfile, so the UploadedFile used by CarrierWave is converted to a Hash then recreated
-  class MorselUploadedPhotoHash
-    def self.hash(params)
-      if params
-        {
-          type: params.content_type,
-          head: params.headers,
-          filename: params.original_filename,
-          tempfile: params.tempfile
-        }
-      end
     end
   end
 end

@@ -141,7 +141,7 @@ describe 'Posts API' do
     end
   end
 
-  describe 'POST /morsels morsels#create' do
+  describe 'POST /posts posts#create' do
     let(:expected_title) { 'Bake Sale!' }
 
     it 'creates a Post' do
@@ -204,7 +204,7 @@ describe 'Posts API' do
   end
 
   describe 'PUT /posts/{:post_id} posts#update' do
-    let(:existing_post) { FactoryGirl.create(:post_with_morsels) }
+    let(:existing_post) { FactoryGirl.create(:post_with_morsels, creator: turd_ferg) }
     let(:new_title) { 'Shy Ronnie 2: Ronnie & Clyde' }
 
     it 'updates the Post' do
@@ -216,6 +216,16 @@ describe 'Posts API' do
 
       expect(json_data['title']).to eq(new_title)
       expect(Post.find(existing_post.id).title).to eq(new_title)
+    end
+
+    context 'current_user is NOT Post creator' do
+      it 'should NOT be authorized' do
+        put "/posts/#{existing_post.id}", api_key: api_key_for_user(FactoryGirl.create(:user)),
+                                          format: :json,
+                                          post: { title: new_title }
+
+        expect(response).to_not be_success
+      end
     end
   end
 
@@ -239,86 +249,12 @@ describe 'Posts API' do
         expect(existing_post.morsels).to be_empty
       end
     end
-  end
 
-  describe 'POST /posts/{:post_id}/append posts#append' do
-    let(:existing_post) { FactoryGirl.create(:post_with_morsels, morsels_count: morsels_count) }
-    let(:morsel_with_creator) { FactoryGirl.create(:morsel_with_creator) }
-
-    it 'appends the Morsel to the Post' do
-      post "/posts/#{existing_post.id}/append", api_key: api_key_for_user(turd_ferg),
-                                                format: :json,
-                                                morsel_id: morsel_with_creator.id
-
-      expect(response).to be_success
-
-      expect(json_data['id']).to eq(existing_post.id)
-
-      expect(existing_post.morsels).to include(morsel_with_creator)
-
-      expect(json_data['morsels'].count).to eq(morsels_count + 1)
-    end
-
-    context 'relationship already exists' do
-      let(:morsel_in_existing_post) { existing_post.morsels.first }
-
-      it 'returns an error' do
-        post "/posts/#{existing_post.id}/append", api_key: api_key_for_user(turd_ferg),
-                                                  format: :json,
-                                                  morsel_id: morsel_in_existing_post.id
+    context 'current_user is NOT Post creator' do
+      it 'should NOT be authorized' do
+        delete "/posts/#{existing_post.id}", api_key: api_key_for_user(FactoryGirl.create(:user)), format: :json
 
         expect(response).to_not be_success
-        expect(response.status).to eq(400)
-
-        expect(json_data).to be_nil
-        expect(json_errors['relationship'].first).to eq('already exists')
-      end
-    end
-
-    context 'sort_order included in parameters' do
-      let(:existing_post) { FactoryGirl.create(:post_with_morsels) }
-
-      it 'changes the sort_order' do
-        post "/posts/#{existing_post.id}/append", api_key: api_key_for_user(turd_ferg),
-                                                  format: :json,
-                                                  morsel_id: morsel_with_creator.id,
-                                                  sort_order: 1
-
-        expect(response).to be_success
-
-        expect(json_data['id']).to_not be_nil
-
-        expect(existing_post.morsel_ids.first).to eq(json_data['morsels'].first['id'])
-      end
-    end
-  end
-
-  describe 'DELETE posts/{:post_id}/append posts#unappend' do
-    let(:existing_post) { FactoryGirl.create(:post_with_morsels) }
-    let(:morsel_in_existing_post) { existing_post.morsels.first }
-
-    it 'unappends the Morsel from the Post' do
-      delete "/posts/#{existing_post.id}/append", api_key: api_key_for_user(turd_ferg),
-                                                  format: :json,
-                                                  morsel_id: morsel_in_existing_post.id
-
-      expect(response).to be_success
-
-      expect(existing_post.morsels).to_not include(morsel_in_existing_post)
-    end
-
-    context 'relationship not found' do
-      let(:morsel_with_creator) { FactoryGirl.create(:morsel_with_creator) }
-      it 'returns an error' do
-        delete "/posts/#{existing_post.id}/append", api_key: api_key_for_user(turd_ferg),
-                                                    format: :json,
-                                                    morsel_id: morsel_with_creator.id
-
-        expect(response).to_not be_success
-        expect(response.status).to eq(404)
-
-        expect(json_data).to be_nil
-        expect(json_errors['relationship'].first).to eq('not found')
       end
     end
   end

@@ -44,7 +44,6 @@ class Morsel < ActiveRecord::Base
 
   scope :feed, -> { includes(:creator, :post) }
 
-  validates :nonce, uniqueness: { scope: :creator_id }, :if => :nonce?
   validates :post, presence: true
 
   def facebook_message
