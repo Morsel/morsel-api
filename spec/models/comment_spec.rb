@@ -27,4 +27,9 @@ describe Comment do
   it_behaves_like 'Activityable' do
     let(:activityable_object) { comment }
   end
+
+  it_behaves_like 'UserCreatable' do
+    let(:user_creatable_object) { FactoryGirl.build(:comment) }
+    let(:user) { user_creatable_object.user }
+  end
 end

@@ -7,7 +7,7 @@ class UpdateUserIndustry < ActiveInteraction::Base
   validates :industry,
             inclusion: {
               in: %w(chef media diner),
-              message: "%{value} is not a valid industry"
+              message: '%{value} is not a valid industry'
             },
             presence: true
 

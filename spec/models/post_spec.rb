@@ -34,6 +34,11 @@ describe Post do
 
   its(:morsels) { should be_empty }
 
+  it_behaves_like 'UserCreatable' do
+    let(:user_creatable_object) { FactoryGirl.build(:post_with_creator) }
+    let(:user) { user_creatable_object.creator }
+  end
+
   describe 'title' do
     context 'greater than 50 characters' do
       before do

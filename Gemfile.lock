@@ -464,7 +464,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_interaction (~> 1.0)
+  active_interaction (~> 1.1)
   active_model_serializers
   activeadmin!
   annotate (>= 2.6.0)

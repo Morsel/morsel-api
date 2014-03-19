@@ -164,6 +164,7 @@ describe 'Users API' do
       expect(json_data['id']).to_not be_nil
 
       new_user = User.find json_data['id']
+
       expect_json_keys(json_data, new_user, %w(id username first_name last_name sign_in_count title bio))
       expect(json_data['auth_token']).to eq(new_user.authentication_token)
       expect(json_data['photos']).to be_nil
@@ -440,11 +441,11 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /users/{:user_id}/authorizations' do
+  describe 'GET /users/authorizations' do
     let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
 
-    it 'returns the User\'s Authorizations' do
-      get "/users/#{turd_ferg.id}/authorizations", api_key: api_key_for_user(turd_ferg), format: :json
+    it 'returns the current_user\'s Authorizations' do
+      get "/users/authorizations", api_key: api_key_for_user(turd_ferg), format: :json
 
       expect(response).to be_success
     end
@@ -468,9 +469,9 @@ describe 'Users API' do
         it 'returns results up to and including max_id' do
           expected_count = rand(3..6)
           max_id = Authorization.first.id + expected_count - 1
-          get "/users/#{turd_ferg.id}/authorizations", api_key: api_key_for_user(turd_ferg),
-                                                       max_id: max_id,
-                                                       format: :json
+          get "/users/authorizations", api_key: api_key_for_user(turd_ferg),
+                                       max_id: max_id,
+                                       format: :json
 
           expect(response).to be_success
 
@@ -483,9 +484,9 @@ describe 'Users API' do
         it 'returns results since since_id' do
           expected_count = rand(3..6)
           since_id = Authorization.last.id - expected_count
-          get "/users/#{turd_ferg.id}/authorizations", api_key: api_key_for_user(turd_ferg),
-                                                       since_id: since_id,
-                                                       format: :json
+          get "/users/authorizations", api_key: api_key_for_user(turd_ferg),
+                                       since_id: since_id,
+                                       format: :json
 
           expect(response).to be_success
 
@@ -496,8 +497,8 @@ describe 'Users API' do
 
       describe 'count' do
         it 'defaults to 20' do
-          get "/users/#{turd_ferg.id}/authorizations", api_key: api_key_for_user(turd_ferg),
-                                                       format: :json
+          get "/users/authorizations", api_key: api_key_for_user(turd_ferg),
+                                       format: :json
 
           expect(response).to be_success
 
@@ -506,9 +507,9 @@ describe 'Users API' do
 
         it 'limits the result' do
           expected_count = rand(3..6)
-          get "/users/#{turd_ferg.id}/authorizations", api_key: api_key_for_user(turd_ferg),
-                                                       count: expected_count,
-                                                       format: :json
+          get "/users/authorizations", api_key: api_key_for_user(turd_ferg),
+                                       count: expected_count,
+                                       format: :json
 
           expect(response).to be_success
 

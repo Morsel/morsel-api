@@ -22,7 +22,7 @@
   - [GET ```/users/{user_id|user_username}/posts``` - User Posts](#get-usersuser_iduser_usernameposts---user-posts)
   - [GET ```/users/{user_id|user_username}/feed``` - User Feed](#get-usersuser_iduser_usernamefeed---user-feed)
   - [POST ```/users/authorizations``` - Create User Authorizations](#post-usersauthorizations---create-user-authorizations)
-  - [GET ```/users/{user_id}/authorizations``` - User Authorizations](#get-usersuser_idauthorizations---user-authorizations)
+  - [GET ```/users/authorizations``` - User Authorizations](#get-usersauthorizations---user-authorizations)
   - [GET ```/users/activities``` - User Activities](#get-usersactivities---user-activities)
   - [GET ```/users/notifications``` - User Notifications](#get-usersnotifications---user-notifications)
 - [Morsel Methods](#morsel-methods)
@@ -42,8 +42,6 @@
   - [GET ```/posts/{post_id}``` - Post](#get-postspost_id----post)
   - [PUT ```/posts/{post_id}``` - Update Post](#put-postspost_id---update-post)
   - [DELETE ```/posts/{post_id}``` - Delete Post](#delete-postspost_id---delete-post)
-  - [POST ```/posts/{post_id}/append``` - Append Morsel to Post](#post-postspost_idappend---append-morsel-to-post)
-  - [DELETE ```/posts/{post_id}/append``` - Detach Morsel from Post](#delete-postspost_idappend---detach-morsel-from-post)
 - [Misc Methods](#misc-methods)
   - [GET ```/status``` - Status](#get-status---status)
   - [GET ```/configuration``` - Configuration](#get-configuration---configuration)
@@ -453,8 +451,8 @@ Creates a new Authorization for the authenticated User
 <br />
 <br />
 
-## GET ```/users/{user_id}/authorizations``` - User Authorizations
-Returns the User's authorizations
+## GET ```/users/authorizations``` - User Authorizations
+Returns the current User's authorizations
 
 ### Request
 
@@ -517,18 +515,18 @@ Returns the Authenticated User's Notifications. A Notification is created when s
 # Morsel Methods
 
 ## POST ```/morsels``` - Create a new Morsel
-Created a new Morsel for the current User. Optionally append a Morsel to the Post with the specified ```post_id```.
+Created a new Morsel for the current User.
 Image processing is done in a background job. `photo_processing` will be set to `null` when it has finished.
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| morsel[description] | String | The description for the new Morsel | | Only if photo is null |
-| morsel[photo] | String | The photo for the new Morsel | | Only if description is null |
+| morsel[description] | String | The description for the new Morsel | | |
+| morsel[photo] | String | The photo for the new Morsel | | |
 | morsel[draft] | Boolean | Set to true if the Morsel is a draft | false | |
 | morsel[nonce] | String | Unique UUID to prevent duplicates | | |
-| post_id | Number | The ID of the Post to append this Morsel to. If none is specified, a new Post will be created for this Morsel. | | |
+| post_id | Number | The ID of the Post to set this Morsel to. If none is specified, a new Post will be created for this Morsel. | | X |
 | post_title | String | If a Post already exists, renames the title to this. Otherwise sets the title for the new Post to this. | | |
 | sort_order | Number | The ```sort_order``` for the Morsel in the Post. Requires ```post_id``` | end of Post | |
 | post_to_facebook | Boolean | Post to the current_user's Facebook wall with the Post's title and Morsel description (if they exist) along with a link to the Morsel. __Requires a ```post_id```.__ | false | |
@@ -539,8 +537,6 @@ Image processing is done in a background job. `photo_processing` will be set to 
 | Condition | __data__ |
 | --------- | -------- |
 | Authenticated | Created [Morsel (Authenticated)](#morsel-authenticated) |
-| Appended to Post | Created [Morsel (w/ Post)](#morsel-w-post) |
-| Authenticated && Appended to Post | Created [Morsel (Authenticated w/ Post)](#morsel-authenticated-w-post) |
 | Default | Created [Morsel](#morsel) |
 
 <br />
@@ -786,55 +782,6 @@ Updates the Post with the specified ```post_id```
 | __data__ |
 | -------- |
 | Updated [Post](#post) |
-
-<br />
-<br />
-
-## POST ```/posts/{post_id}/append``` - Append Morsel to Post
-Appends a Morsel with the specified ```morsel_id``` to the Post with the specified ```post_id```
-
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| morsel_id         | Number  | ID of the Morsel to append | | x |
-| sort_order         | Number  | The ```sort_order``` for the Morsel in the Post | end of Post | |
-
-### Response
-
-| __data__ |
-| -------- |
-| Updated [Post](#post) |
-
-### Unique Errors
-
-| Message | Status | Description |
-| ------- | ------ |  ----------- |
-| __Relationship already exists__ | 400 (Bad Request) | The Morsel is already appended to the Post |
-
-<br />
-<br />
-
-## DELETE ```/posts/{post_id}/append``` - Detach Morsel from Post
-Detaches the Morsel with the specified ```morsel_id``` from the Post with the specified ```post_id```
-
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| morsel_id         | Number  | ID of the Morsel to detach | | x |
-
-### Response
-
-| Status Code |
-| ----------- |
-|         200 |
-
-### Unique Errors
-
-| Message | Status | Description |
-| ------- | ------ |  ----------- |
-| __Relationship not found__ | 404 (Not Found) | The Morsel is not appended to the Post |
 
 <br />
 <br />
@@ -1304,9 +1251,9 @@ NOTE: "non_username_paths" is just a sample of the real list, for an up to date 
 ## Notes
 
 ### sort_order
-`sort_order` is a property of the MorselPost relationship that determines what the order of a Morsel is within a Post. `sort_order` is not guaranteed to always be 1,2,3, etc. However, it can always be guaranteed to be in the correct sequential order (e.g. 3,6,8).
+`sort_order` is a property of a Morsel that determines what the order of it is within a Post. `sort_order` is not guaranteed to always be 1,2,3, etc. However, it can always be guaranteed to be in the correct sequential order (e.g. 3,6,8).
 
-Several things can determine the value of `sort_order` depending on how it is passed. Assuming we're creating a Morsel and appending it to a Post:
+Several things can determine the value of `sort_order` depending on how it is passed. Assuming we're creating a Morsel and passing a `post_id`:
 ```
   if sort_order is passed
     if sort_order is already taken by another Morsel in that post

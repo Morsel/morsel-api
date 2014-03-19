@@ -29,11 +29,18 @@ describe Morsel do
 
   it { should respond_to(:description) }
   it { should respond_to(:photo) }
+  it { should respond_to(:nonce) }
+  it { should respond_to(:sort_order) }
 
   it { should respond_to(:creator) }
   it { should respond_to(:post) }
 
   it { should be_valid }
+
+  it_behaves_like 'UserCreatable' do
+    let(:user_creatable_object) { FactoryGirl.build(:morsel_with_creator) }
+    let(:user) { user_creatable_object.creator }
+  end
 
   context 'saved with creator' do
     subject(:morsel) { FactoryGirl.create(:morsel_with_creator) }

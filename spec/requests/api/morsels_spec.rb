@@ -277,40 +277,6 @@ describe 'Morsels API' do
       end
     end
 
-    context 'duplicate nonce' do
-      before do
-        post '/morsels',  api_key: api_key_for_user(chef),
-                          format: :json,
-                          morsel: {
-                            description: 'It\'s not a toomarh!',
-                            photo: Rack::Test::UploadedFile.new(
-                              File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
-                            nonce: nonce,
-                            post: {
-                              id: some_post.id,
-                              title: 'Some title'
-                            }
-                          }
-      end
-      it 'returns an error' do
-        post '/morsels',  api_key: api_key_for_user(chef),
-                          format: :json,
-                          morsel: {
-                            description: 'It\'s not a toomarh!',
-                            photo: Rack::Test::UploadedFile.new(
-                              File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
-                            nonce: nonce,
-                            post: {
-                              id: some_post.id,
-                              title: 'Some title'
-                            }
-                          }
-
-        expect(response).to_not be_success
-        expect(json_errors['nonce'].first).to eq('has already been taken')
-      end
-    end
-
     context 'sort_order included in parameters' do
       let(:post_with_morsels) { FactoryGirl.create(:post_with_morsels) }
 
@@ -444,6 +410,22 @@ describe 'Morsels API' do
         expect(json_data['id']).to_not be_nil
       end
     end
+
+    context 'current_user is NOT a :chef' do
+      it 'should NOT be authorized' do
+        post '/morsels',  api_key: api_key_for_user(FactoryGirl.create(:user)),
+                          format: :json,
+                          morsel: {
+                            description: 'Holy Diver',
+                            nonce: nonce,
+                            post: {
+                              id: some_post.id
+                            }
+                          }
+
+        expect(response).to_not be_success
+      end
+    end
   end
 
   describe 'GET /morsels morsels#show' do
@@ -492,6 +474,16 @@ describe 'Morsels API' do
 
       expect(json_data['description']).to eq(new_description)
       expect(Morsel.find(existing_morsel.id).description).to eq(new_description)
+    end
+
+    context 'current_user is NOT Morsel creator' do
+      it 'should NOT be authorized' do
+        put "/morsels/#{existing_morsel.id}", api_key: api_key_for_user(FactoryGirl.create(:user)),
+                                              format: :json,
+                                              morsel: { description: new_description }
+
+        expect(response).to_not be_success
+      end
     end
 
     context 'post_id and sort_order included in parameters' do
@@ -597,13 +589,21 @@ describe 'Morsels API' do
   end
 
   describe 'DELETE /morsels/{:morsel_id} morsels#destroy' do
-    let(:existing_morsel) { FactoryGirl.create(:morsel_with_creator) }
+    let(:existing_morsel) { FactoryGirl.create(:morsel_with_creator, creator: chef) }
 
     it 'soft deletes the Morsel' do
       delete "/morsels/#{existing_morsel.id}", api_key: api_key_for_user(chef), format: :json
 
       expect(response).to be_success
       expect(Morsel.find_by(id: existing_morsel.id)).to be_nil
+    end
+
+    context 'current_user is NOT Morsel creator' do
+      it 'should NOT be authorized' do
+        delete "/morsels/#{existing_morsel.id}", api_key: api_key_for_user(FactoryGirl.create(:user)), format: :json
+
+        expect(response).to_not be_success
+      end
     end
   end
 
@@ -665,15 +665,22 @@ describe 'Morsels API' do
         expect(morsel.likers).to include(turd_ferg)
       end
     end
+
+    context 'current_user is NOT a :chef' do
+      it 'should be authorized' do
+        post "/morsels/#{morsel.id}/like", api_key: api_key_for_user(FactoryGirl.create(:user)), format: :json
+
+        expect(response).to be_success
+      end
+    end
+
   end
 
   describe 'DELETE /morsels/{:morsel_id}/like likes#destroy' do
     let(:morsel) { FactoryGirl.create(:morsel_with_creator) }
 
     context 'current_user has liked Morsel' do
-      before do
-        Like.create(morsel: morsel, user: turd_ferg)
-      end
+      before { Like.create(morsel: morsel, user: turd_ferg) }
 
       it 'soft deletes the Like' do
         delete "/morsels/#{morsel.id}/like", api_key: api_key_for_user(turd_ferg), format: :json
@@ -690,6 +697,15 @@ describe 'Morsels API' do
         expect(response).to_not be_success
         expect(response.status).to eq(422)
         expect(json_errors['morsel'].first).to eq('not liked')
+      end
+    end
+
+    context 'current_user is NOT Like creator' do
+      before { Like.create(morsel: morsel, user: turd_ferg) }
+      it 'should NOT be authorized' do
+        delete "/morsels/#{morsel.id}/like", api_key: api_key_for_user(FactoryGirl.create(:user)), format: :json
+
+        expect(response).to_not be_success
       end
     end
   end
@@ -830,6 +846,17 @@ describe 'Morsels API' do
                                     format: :json,
                                     comment: {
                                       description: 'Drop it like it\'s hot.' }
+
+        expect(response).to_not be_success
+      end
+    end
+
+    context 'current_user is NOT a :chef' do
+      it 'should NOT be authorized' do
+        post "/morsels/#{existing_morsel.id}/comments", api_key: api_key_for_user(FactoryGirl.create(:user)),
+                                                        format: :json,
+                                                        comment: {
+                                                          description: 'Drop it like it\'s hot.' }
 
         expect(response).to_not be_success
       end
