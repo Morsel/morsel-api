@@ -11,7 +11,7 @@
 # **`name`**            | `string(255)`      |
 # **`client_version`**  | `string(255)`      |
 # **`client_device`**   | `string(255)`      |
-# **`__utmz`**          | `hstore`           |
+# **`_ga`**             | `hstore`           |
 # **`created_at`**      | `datetime`         |
 # **`updated_at`**      | `datetime`         |
 #
