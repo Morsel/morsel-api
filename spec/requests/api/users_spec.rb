@@ -99,7 +99,7 @@ describe 'Users API' do
       expect {
         post '/users/reserveusername', email: fake_email,
                                        username: fake_username,
-                                       __utmz: {
+                                       _ga: {
                                         source: 'taco'
                                        },
                                        client: {
@@ -112,7 +112,7 @@ describe 'Users API' do
       user_event = UserEvent.last
       expect(user_event.name).to eq('reserved_username')
       expect(user_event.user_id).to_not be_nil
-      expect(user_event.__utmz['source']).to eq('taco')
+      expect(user_event._ga['source']).to eq('taco')
       expect(user_event.client_device).to eq('rspec')
       expect(user_event.client_version).to eq('1.2.3')
     end
@@ -177,7 +177,7 @@ describe 'Users API' do
                         first_name: 'Foo', last_name: 'Bar', username: "user_#{Faker::Lorem.characters(10)}",
                         bio: 'Foo to the Stars'
                        },
-                       __utmz: {
+                       _ga: {
                         source: 'grande'
                        },
                        client: {
@@ -190,7 +190,7 @@ describe 'Users API' do
       user_event = UserEvent.last
       expect(user_event.name).to eq('created_account')
       expect(user_event.user_id).to_not be_nil
-      expect(user_event.__utmz['source']).to eq('grande')
+      expect(user_event._ga['source']).to eq('grande')
       expect(user_event.client_device).to eq('rspec')
       expect(user_event.client_version).to eq('1.2.3')
     end
@@ -329,11 +329,20 @@ describe 'Users API' do
 
   describe 'GET /users/{:user_id|user_username}/posts' do
     let(:posts_count) { 3 }
-
     let(:user_with_posts) { FactoryGirl.create(:user_with_posts, posts_count: posts_count) }
+    let(:endpoint) { "/users/#{user_with_posts.id}/posts" }
+
+    it_behaves_like 'TimelinePaginateable' do
+      let(:user) { FactoryGirl.create(:user_with_posts) }
+      let(:paginateable_object_class) { Post }
+      before do
+        paginateable_object_class.delete_all
+        30.times { FactoryGirl.create(:post_with_creator, creator: user_with_posts) }
+      end
+    end
 
     it 'returns all of the User\'s  Posts' do
-      get "/users/#{user_with_posts.id}/posts", api_key: api_key_for_user(user_with_posts), format: :json
+      get endpoint, api_key: api_key_for_user(user_with_posts), format: :json
 
       expect(response).to be_success
 
@@ -347,7 +356,7 @@ describe 'Users API' do
       end
 
       it 'should NOT include drafts' do
-        get "/users/#{user_with_posts.id}/posts", api_key: api_key_for_user(user_with_posts),
+        get endpoint, api_key: api_key_for_user(user_with_posts),
                                                   format: :json
 
         expect(response).to be_success
@@ -357,75 +366,13 @@ describe 'Users API' do
 
       context 'include_drafts=true' do
         it 'should include drafts' do
-          get "/users/#{user_with_posts.id}/posts", api_key: api_key_for_user(user_with_posts),
+          get endpoint, api_key: api_key_for_user(user_with_posts),
                                                     include_drafts: true,
                                                     format: :json
 
           expect(response).to be_success
 
           expect(json_data.count).to eq(posts_count + draft_posts_count)
-        end
-      end
-    end
-
-    context 'pagination' do
-      before do
-        30.times do
-          p = FactoryGirl.create(:post_with_creator)
-          p.creator = user_with_posts
-          p.save
-        end
-      end
-
-      describe 'max_id' do
-        it 'returns results up to and including max_id' do
-          expected_count = rand(3..6)
-          max_id = Post.first.id + expected_count - 1
-          get "/users/#{user_with_posts.id}/posts", api_key: api_key_for_user(user_with_posts),
-                                                    max_id: max_id,
-                                                    format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(expected_count)
-          expect(json_data.first['id']).to eq(max_id)
-        end
-      end
-
-      describe 'since_id' do
-        it 'returns results since since_id' do
-          expected_count = rand(3..6)
-          since_id = Post.last.id - expected_count
-          get "/users/#{user_with_posts.id}/posts", api_key: api_key_for_user(user_with_posts),
-                                                    since_id: since_id,
-                                                    format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(expected_count)
-          expect(json_data.last['id']).to eq(since_id + 1)
-        end
-      end
-
-      describe 'count' do
-        it 'defaults to 20' do
-          get "/users/#{user_with_posts.id}/posts", api_key: api_key_for_user(user_with_posts),
-                                                    format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(20)
-        end
-
-        it 'limits the result' do
-          expected_count = rand(3..6)
-          get "/users/#{user_with_posts.id}/posts", api_key: api_key_for_user(user_with_posts),
-                                                    count: expected_count,
-                                                    format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(expected_count)
         end
       end
     end
@@ -442,80 +389,22 @@ describe 'Users API' do
   end
 
   describe 'GET /users/authorizations' do
-    let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
+    let(:endpoint) { '/users/authorizations' }
+    let(:user) { FactoryGirl.create(:user) }
 
-    it 'returns the current_user\'s Authorizations' do
-      get "/users/authorizations", api_key: api_key_for_user(turd_ferg), format: :json
-
-      expect(response).to be_success
+    it_behaves_like 'TimelinePaginateable' do
+      let(:paginateable_object_class) { Authorization }
+      before do
+        paginateable_object_class.delete_all
+        15.times { FactoryGirl.create(:facebook_authorization, user: user) }
+        15.times { FactoryGirl.create(:twitter_authorization, user: user) }
+      end
     end
 
-    context 'pagination' do
-      before do
-        15.times do
-          authorization = FactoryGirl.create(:facebook_authorization)
-          authorization.user = turd_ferg
-          authorization.save
-        end
+    it 'returns the current_user\'s Authorizations' do
+      get "/users/authorizations", api_key: api_key_for_user(user), format: :json
 
-        15.times do
-          authorization = FactoryGirl.create(:twitter_authorization)
-          authorization.user = turd_ferg
-          authorization.save
-        end
-      end
-
-      describe 'max_id' do
-        it 'returns results up to and including max_id' do
-          expected_count = rand(3..6)
-          max_id = Authorization.first.id + expected_count - 1
-          get "/users/authorizations", api_key: api_key_for_user(turd_ferg),
-                                       max_id: max_id,
-                                       format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(expected_count)
-          expect(json_data.first['id']).to eq(max_id)
-        end
-      end
-
-      describe 'since_id' do
-        it 'returns results since since_id' do
-          expected_count = rand(3..6)
-          since_id = Authorization.last.id - expected_count
-          get "/users/authorizations", api_key: api_key_for_user(turd_ferg),
-                                       since_id: since_id,
-                                       format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(expected_count)
-          expect(json_data.last['id']).to eq(since_id + 1)
-        end
-      end
-
-      describe 'count' do
-        it 'defaults to 20' do
-          get "/users/authorizations", api_key: api_key_for_user(turd_ferg),
-                                       format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(20)
-        end
-
-        it 'limits the result' do
-          expected_count = rand(3..6)
-          get "/users/authorizations", api_key: api_key_for_user(turd_ferg),
-                                       count: expected_count,
-                                       format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(expected_count)
-        end
-      end
+      expect(response).to be_success
     end
   end
 
@@ -602,7 +491,7 @@ describe 'Users API' do
   end
 
   describe 'GET /users/activities' do
-    let(:uri) { '/users/activities' }
+    let(:endpoint) { '/users/activities' }
     let(:user) { FactoryGirl.create(:user) }
     let(:morsels_count) { 3 }
     let(:some_post) { FactoryGirl.create(:post_with_morsels, morsels_count: morsels_count) }
@@ -613,8 +502,16 @@ describe 'Users API' do
       end
     end
 
+    it_behaves_like 'TimelinePaginateable' do
+      let(:paginateable_object_class) { Activity }
+      before do
+        paginateable_object_class.delete_all
+        30.times { FactoryGirl.create(:morsel_like_activity, creator_id: user.id) }
+      end
+    end
+
     it 'returns the User\'s recent activities' do
-      get uri, api_key: api_key_for_user(user), format: :json
+      get endpoint, api_key: api_key_for_user(user), format: :json
       expect(response).to be_success
       expect(json_data.count).to eq(morsels_count)
       first_activity = json_data.first
@@ -631,76 +528,16 @@ describe 'Users API' do
       end
 
       it 'removes the Activity' do
-        get uri, api_key: api_key_for_user(user),
+        get endpoint, api_key: api_key_for_user(user),
                  format: :json
         expect(response).to be_success
         expect(json_data.count).to eq(morsels_count - 1)
       end
     end
-
-    context 'pagination' do
-      before do
-        30.times do
-          FactoryGirl.create(:morsel_like_activity, creator_id: user.id)
-        end
-      end
-
-      describe 'max_id' do
-        it 'returns results up to and including max_id' do
-          expected_count = rand(3..6)
-          max_id = Activity.first.id + expected_count - 1
-          get uri, api_key: api_key_for_user(user),
-                   max_id: max_id,
-                   format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(expected_count)
-          expect(json_data.first['id']).to eq(max_id)
-        end
-      end
-
-      describe 'since_id' do
-        it 'returns results since since_id' do
-          expected_count = rand(3..6)
-          since_id = Activity.last.id - expected_count
-          get uri, api_key: api_key_for_user(user),
-                   since_id: since_id,
-                   format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(expected_count)
-          expect(json_data.last['id']).to eq(since_id + 1)
-        end
-      end
-
-      describe 'count' do
-        it 'defaults to 20' do
-          get uri, api_key: api_key_for_user(user),
-                   format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(20)
-        end
-
-        it 'limits the result' do
-          expected_count = rand(3..6)
-          get uri, api_key: api_key_for_user(user),
-                   count: expected_count,
-                   format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(expected_count)
-        end
-      end
-    end
   end
 
   describe 'GET /users/notifications' do
-    let(:uri) { '/users/notifications' }
+    let(:endpoint) { '/users/notifications' }
     let(:user) { FactoryGirl.create(:user) }
     let(:last_user) { FactoryGirl.create(:user) }
     let(:notifications_count) { 3 }
@@ -716,7 +553,7 @@ describe 'Users API' do
       end
 
       it 'returns the User\'s recent notifications' do
-        get uri, api_key: api_key_for_user(user), format: :json
+        get endpoint, api_key: api_key_for_user(user), format: :json
         expect(response).to be_success
         expect(json_data.count).to eq(notifications_count + 1)
         first_notification = json_data.first
@@ -737,70 +574,18 @@ describe 'Users API' do
         end
 
         it 'should not notify for that action' do
-          get uri, api_key: api_key_for_user(user), format: :json
+          get endpoint, api_key: api_key_for_user(user), format: :json
           expect(response).to be_success
           expect(json_data.count).to eq(notifications_count)
         end
       end
     end
 
-    context 'pagination' do
+    it_behaves_like 'TimelinePaginateable' do
+      let(:paginateable_object_class) { Notification }
       before do
-        30.times do
-          FactoryGirl.create(:activity_notification, user: user)
-        end
-      end
-
-      describe 'max_id' do
-        it 'returns results up to and including max_id' do
-          expected_count = rand(3..6)
-          max_id = Notification.first.id + expected_count - 1
-          get uri, api_key: api_key_for_user(user),
-                   max_id: max_id,
-                   format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(expected_count)
-          expect(json_data.first['id']).to eq(max_id)
-        end
-      end
-
-      describe 'since_id' do
-        it 'returns results since since_id' do
-          expected_count = rand(3..6)
-          since_id = Notification.last.id - expected_count
-          get uri, api_key: api_key_for_user(user),
-                   since_id: since_id,
-                   format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(expected_count)
-          expect(json_data.last['id']).to eq(since_id + 1)
-        end
-      end
-
-      describe 'count' do
-        it 'defaults to 20' do
-          get uri, api_key: api_key_for_user(user),
-                   format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(20)
-        end
-
-        it 'limits the result' do
-          expected_count = rand(3..6)
-          get uri, api_key: api_key_for_user(user),
-                   count: expected_count,
-                   format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(expected_count)
-        end
+        paginateable_object_class.delete_all
+        30.times { FactoryGirl.create(:activity_notification, user: user) }
       end
     end
   end

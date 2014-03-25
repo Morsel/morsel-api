@@ -32,6 +32,7 @@ class Morsel < ActiveRecord::Base
 
   belongs_to :creator, class_name: 'User', foreign_key: 'creator_id'
   has_many :activities, as: :subject
+  has_many :commenters, through: :comments, source: :user
   has_many :comments
   has_many :likers, through: :likes, source: :user
   has_many :likes
@@ -45,6 +46,14 @@ class Morsel < ActiveRecord::Base
   scope :feed, -> { includes(:creator, :post) }
 
   validates :post, presence: true
+
+  def like_count
+    likes.count
+  end
+
+  def comment_count
+    comments.count
+  end
 
   def facebook_message
     message = post_title_with_description

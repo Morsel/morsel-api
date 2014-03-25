@@ -29,6 +29,8 @@ describe Post do
   it { should respond_to(:morsels) }
   it { should respond_to(:draft) }
   it { should respond_to(:published_at) }
+  it { should respond_to(:total_like_count) }
+  it { should respond_to(:total_comment_count) }
 
   it { should be_valid }
 
@@ -109,6 +111,36 @@ describe Post do
         post_with_morsels.destroy
         post_with_morsels.morsels.each do |morsel|
           expect(morsel.deleted?).to be_true
+        end
+      end
+    end
+
+    context 'with likes' do
+      let(:likes_count) { rand(3..6) }
+      before do
+        likes_count.times do
+          post_with_morsels.morsels.sample.likers << FactoryGirl.create(:user)
+        end
+      end
+
+      describe '.total_like_count' do
+        it 'returns the total number of likes for all Morsels in a Post' do
+          expect(post_with_morsels.total_like_count).to eq(likes_count)
+        end
+      end
+    end
+
+    context 'with comments' do
+      let(:comments_count) { rand(3..6) }
+      before do
+        comments_count.times do
+          post_with_morsels.morsels.sample.commenters << FactoryGirl.create(:user)
+        end
+      end
+
+      describe '.total_comment_count' do
+        it 'returns the total number of comments for all Morsels in a Post' do
+          expect(post_with_morsels.total_comment_count).to eq(comments_count)
         end
       end
     end

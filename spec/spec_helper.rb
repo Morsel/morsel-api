@@ -60,9 +60,22 @@ Spork.prefork do
       DatabaseCleaner.strategy = :transaction
     end
 
-    config.before(:each) do
+    config.before(:each) do |example_method|
       DatabaseCleaner.start
       MandrillMailer.deliveries.clear
+
+      # Clears out the jobs for tests using the fake testing
+      Sidekiq::Worker.clear_all
+      # Get the current example from the example_method object
+      example = example_method.example
+
+      if example.metadata[:sidekiq] == :fake
+        Sidekiq::Testing.fake!
+      elsif example.metadata[:sidekiq] == :inline
+        Sidekiq::Testing.inline!
+      else
+        Sidekiq::Testing.fake!
+      end
     end
 
     config.after(:each) do

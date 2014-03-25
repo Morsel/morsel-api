@@ -31,14 +31,12 @@ MorselApp::Application.routes.draw do
 
       get ':user_id_or_username' => 'users#show'
       get ':user_id_or_username/posts' => 'posts#index'
-      get ':user_id_or_username/feed' => 'morsels#index'
     end
   end
 
   resources :morsels, only: [:create, :show, :update, :destroy] do
     resources :comments, only: [:create, :index]
   end
-  get 'feed' => 'morsels#index'
   post 'morsels/:morsel_id/like' => 'likes#create'
   delete 'morsels/:morsel_id/like' => 'likes#destroy'
 
@@ -50,4 +48,6 @@ MorselApp::Application.routes.draw do
     end
     resources :morsels, only: [:update, :destroy]
   end
+
+  get 'feed' => 'feed#index'
 end
