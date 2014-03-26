@@ -19,7 +19,6 @@
 
 FactoryGirl.define do
   factory :post do
-    association(:feed_item, factory: :post_feed_item)
     title { Faker::Lorem.sentence(rand(2..4)).truncate(50) }
     draft false
 

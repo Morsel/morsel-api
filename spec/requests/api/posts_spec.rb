@@ -264,6 +264,13 @@ describe 'Posts API' do
       expect(Post.find_by(id: existing_post.id)).to be_nil
     end
 
+    it 'soft deletes the Post\'s FeedItem' do
+      delete "/posts/#{existing_post.id}", api_key: api_key_for_user(chef), format: :json
+
+      expect(response).to be_success
+      expect(FeedItem.find_by(subject_id: existing_post.id, subject_type:existing_post.class)).to be_nil
+    end
+
     context 'Morsels in a Post' do
       let(:existing_post) { FactoryGirl.create(:post_with_morsels, creator: chef) }
 

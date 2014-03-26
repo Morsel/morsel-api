@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140325180430) do
+ActiveRecord::Schema.define(version: 20140326162147) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,6 +87,13 @@ ActiveRecord::Schema.define(version: 20140325180430) do
 
   add_index "emails", ["class_name"], name: "index_emails_on_class_name", unique: true, using: :btree
 
+  create_table "event_posts", force: true do |t|
+    t.string   "description"
+    t.string   "status"
+    t.datetime "start_at"
+    t.datetime "end_at"
+  end
+
   create_table "feed_items", force: true do |t|
     t.integer  "subject_id"
     t.string   "subject_type"
@@ -97,6 +104,13 @@ ActiveRecord::Schema.define(version: 20140325180430) do
   end
 
   add_index "feed_items", ["subject_id", "subject_type"], name: "index_feed_items_on_subject_id_and_subject_type", using: :btree
+
+  create_table "follows", force: true do |t|
+    t.integer  "follower_id"
+    t.integer  "followed_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "likes", force: true do |t|
     t.integer  "user_id"
@@ -154,13 +168,6 @@ ActiveRecord::Schema.define(version: 20140325180430) do
   add_index "posts", ["cached_slug"], name: "index_posts_on_cached_slug", using: :btree
   add_index "posts", ["creator_id"], name: "index_posts_on_creator_id", using: :btree
 
-  create_table "relationships", force: true do |t|
-    t.integer  "follower_id"
-    t.integer  "followed_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "roles", force: true do |t|
     t.string   "name"
     t.integer  "resource_id"
@@ -183,6 +190,10 @@ ActiveRecord::Schema.define(version: 20140325180430) do
   add_index "slugs", ["scope", "record_id"], name: "index_slugs_on_scope_and_record_id", using: :btree
   add_index "slugs", ["scope", "slug", "created_at"], name: "index_slugs_on_scope_and_slug_and_created_at", using: :btree
   add_index "slugs", ["scope", "slug"], name: "index_slugs_on_scope_and_slug", using: :btree
+
+  create_table "story_posts", force: true do |t|
+    t.integer "primary_morsel_id"
+  end
 
   create_table "user_events", force: true do |t|
     t.integer  "user_id"
