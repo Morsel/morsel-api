@@ -95,7 +95,7 @@ describe Post do
   end
 
   context 'has Morsels' do
-    subject(:post_with_morsels) { FactoryGirl.create(:post_with_morsels) }
+    subject(:post_with_morsels) { Sidekiq::Testing.inline! { FactoryGirl.create(:post_with_morsels) }}
 
     its(:morsels) { should_not be_empty }
 

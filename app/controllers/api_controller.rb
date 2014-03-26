@@ -45,7 +45,7 @@ class ApiController < ActionController::Base
   end
 
   def record_not_found(error)
-    render_json_errors({ record: ['not found'] }, :not_found)
+    render_json_errors({ base: ['Record not found'] }, :not_found)
   end
 
   def parameter_missing(error)
