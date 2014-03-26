@@ -28,6 +28,6 @@ class SessionsController < Devise::SessionsController
   private
 
   def invalid_login_attempt(http_status = :unauthorized)
-    render_json_errors({ 'email or password' => ['is invalid'] }, http_status)
+    render_json_errors({ base: ['email or password is invalid'] }, http_status)
   end
 end
