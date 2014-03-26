@@ -188,6 +188,22 @@ describe 'Posts API' do
         expect(new_post.draft).to be_true
       end
     end
+
+    context 'primary_morsel_id is included' do
+      let(:some_morsel) { FactoryGirl.create(:morsel_with_creator) }
+      it 'should fail since a new Post has no Morsels' do
+        post '/posts',  api_key: api_key_for_user(chef),
+                        format: :json,
+                        post: {
+                          title: expected_title,
+                          primary_morsel_id: FactoryGirl.create(:morsel).id
+                        }
+
+        expect(response).to_not be_success
+
+        expect(json_errors['primary_morsel'].first).to eq('does not belong to this Post')
+      end
+    end
   end
 
   describe 'GET /posts posts#show' do
@@ -241,6 +257,40 @@ describe 'Posts API' do
       expect(json_data['draft']).to eq(false)
       new_post = Post.find(existing_post.id)
       expect(new_post.draft).to eq(false)
+    end
+
+    context 'primary_morsel_id is included' do
+      let(:some_morsel) { FactoryGirl.create(:morsel_with_creator, post: existing_post) }
+      it 'updates the primary_morsel_id' do
+        put "/posts/#{existing_post.id}", api_key: api_key_for_user(turd_ferg),
+                                          format: :json,
+                                          post: {
+                                            title: new_title,
+                                            primary_morsel_id: some_morsel.id
+                                          }
+
+        expect(response).to be_success
+
+        expect(json_data['id']).to_not be_nil
+
+        new_post = Post.find json_data['id']
+        expect_json_keys(json_data, new_post, %w(id title creator_id))
+        expect(json_data['primary_morsel_id']).to eq(some_morsel.id)
+        expect(new_post.primary_morsel_id).to eq(some_morsel.id)
+      end
+
+      it 'should fail if primary_morsel_id is not one of the Post\'s Morsels' do
+        put "/posts/#{existing_post.id}", api_key: api_key_for_user(turd_ferg),
+                                          format: :json,
+                                          post: {
+                                            title: new_title,
+                                            primary_morsel_id: FactoryGirl.create(:morsel).id
+                                          }
+
+        expect(response).to_not be_success
+
+        expect(json_errors['primary_morsel'].first).to eq('does not belong to this Post')
+      end
     end
 
     context 'current_user is NOT Post creator' do

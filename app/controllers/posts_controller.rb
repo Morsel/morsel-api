@@ -26,15 +26,17 @@ class PostsController < ApiController
   end
 
   def create
-    create_post = CreatePost.run(
-      params: PostParams.build(params),
-      user: current_user
-    )
+    if current_user.can_create?(Post)
+      post = Post.new(PostParams.build(params))
+      post.creator = current_user
 
-    if create_post.valid?
-      custom_respond_with create_post.result
+      if post.save
+        custom_respond_with post
+      else
+        render_json_errors(post.errors)
+      end
     else
-      render_json_errors create_post.errors
+      render_json_errors({ user: ['not authorized to create Post']})
     end
   end
 
@@ -43,16 +45,15 @@ class PostsController < ApiController
   end
 
   def update
-    update_post = UpdatePost.run(
-      post: Post.find(params[:id]),
-      params: PostParams.build(params),
-      user: current_user
-    )
-
-    if update_post.valid?
-      custom_respond_with update_post.result
+    post = Post.find(params[:id])
+    if current_user.can_update?(post)
+      if post.update(PostParams.build(params))
+        custom_respond_with post
+      else
+        render_json_errors(post.errors)
+      end
     else
-      render_json_errors update_post.errors
+      render_json_errors({ user: ['not authorized to update Post']})
     end
   end
 
@@ -83,7 +84,7 @@ class PostsController < ApiController
 
   class PostParams
     def self.build(params)
-      params.require(:post).permit(:title, :draft)
+      params.require(:post).permit(:title, :draft, :primary_morsel_id)
     end
   end
 end

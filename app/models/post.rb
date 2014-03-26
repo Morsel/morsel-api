@@ -31,6 +31,8 @@ class Post < ActiveRecord::Base
 
   before_save :update_published_at_if_necessary
 
+  validate  :primary_morsel_belongs_to_post
+
   validates :title,
             presence: true,
             length: { maximum: 50 }
@@ -48,6 +50,10 @@ class Post < ActiveRecord::Base
   end
 
   private
+
+  def primary_morsel_belongs_to_post
+    errors.add(:primary_morsel, 'does not belong to this Post') if primary_morsel_id && !morsel_ids.include?(primary_morsel_id)
+  end
 
   def update_published_at_if_necessary
     self.published_at = DateTime.now if !published_at && !draft
