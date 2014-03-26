@@ -24,11 +24,13 @@ describe Post do
 
   it { should respond_to(:title) }
   it { should respond_to(:cached_slug) }
+  it { should respond_to(:draft) }
+  it { should respond_to(:published_at) }
+  it { should respond_to(:primary_morsel_id) }
 
   it { should respond_to(:creator) }
   it { should respond_to(:morsels) }
-  it { should respond_to(:draft) }
-  it { should respond_to(:published_at) }
+
   it { should respond_to(:total_like_count) }
   it { should respond_to(:total_comment_count) }
 

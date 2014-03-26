@@ -8,7 +8,8 @@ class PostSerializer < ActiveModel::Serializer
              :draft,
              :slug,
              :total_like_count,
-             :total_comment_count
+             :total_comment_count,
+             :primary_morsel_id
 
   has_one :creator
 

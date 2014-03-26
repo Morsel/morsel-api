@@ -505,7 +505,6 @@ Image processing is done in a background job. `photo_processing` will be set to 
 | ------------------- | ------- | ----------- | ------- | --------- |
 | morsel[description] | String | The description for the new Morsel | | |
 | morsel[photo] | String | The photo for the new Morsel | | |
-| morsel[draft] | Boolean | Set to true if the Morsel is a draft | false | |
 | morsel[nonce] | String | Unique UUID to prevent duplicates | | |
 | post_id | Number | The ID of the Post to set this Morsel to. If none is specified, a new Post will be created for this Morsel. | | X |
 | post_title | String | If a Post already exists, renames the title to this. Otherwise sets the title for the new Post to this. | | |
@@ -546,7 +545,6 @@ Updates the Morsel with the specified ```morsel_id```
 | morsel[photo] | String | The photo for the Morsel | | |
 | post_id | Number | Changes the ```sort_order``` of a Post when combined with ```sort_order```. | | |
 | sort_order | Number | Changes the ```sort_order``` of a Post when combined with ```post_id```. | | |
-| morsel[draft] | Boolean | Set to true if the Morsel is a draft | false | |
 | new_post_id | Number | Associates the Morsel to the Post with ID ```new_post_id``` and removes the previous relationship | | |
 | post_to_facebook | Boolean | Post to the current_user's Facebook wall with the Post's title and Morsel description (if they exist) along with a link to the Morsel. __Requires a ```post_id``` or ```new_post_id```.__ | false | |
 | post_to_twitter | Boolean | Send a Tweet from the current_user with the Post's title and Morsel description (if they exist) along with a link to the Morsel. If the title and description are too long they will be truncated to allow enough room for the links. __Requires a ```post_id``` or ```new_post_id```.__ | false | |
@@ -757,6 +755,8 @@ Updates the Post with the specified ```post_id```
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | post[title]         | String  | The title for the Post. Changing this will change the slug. | | |
+| post[draft] | Boolean | Set to true if the Post is a draft | false | |
+| post[primary_morsel_id] | Number | The ID of the Morsel to set as the primary Morsel for this Post. Must be the ID of a Morsel that is part of the Post | | |
 
 ### Response
 
@@ -989,6 +989,7 @@ api_key && post_id exist
   "updated_at": "2014-01-07T16:34:44.862Z",
   "slug": "butter-rocks",
   "draft": false,
+  "primary_morsel_id": 2,
   "published_at": "2014-01-07T16:34:44.862Z",
   "creator": {
     "id": 3,
