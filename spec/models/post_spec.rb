@@ -110,8 +110,14 @@ describe Post do
       it 'should destroy its Morsels' do
         post_with_morsels.destroy
         post_with_morsels.morsels.each do |morsel|
-          expect(morsel.deleted?).to be_true
+          expect(morsel.destroyed?).to be_true
         end
+      end
+
+      it 'should destroy its FeedItem' do
+        feed_item = post_with_morsels.feed_item
+        post_with_morsels.destroy
+        expect(feed_item.destroyed?).to be_true
       end
     end
 
