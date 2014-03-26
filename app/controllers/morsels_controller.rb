@@ -4,28 +4,6 @@ class MorselsController < ApiController
 
   include PhotoHashable
 
-  # feed
-  def index
-    if params[:user_id_or_username].blank?
-      morsels = Morsel.feed
-                      .since(params[:since_id])
-                      .max(params[:max_id])
-                      .limit(pagination_count)
-                      .order('created_at DESC')
-    else
-      user = User.find_by_id_or_username(params[:user_id_or_username])
-      raise ActiveRecord::RecordNotFound if user.nil?
-      morsels = Morsel.feed
-                      .since(params[:since_id])
-                      .max(params[:max_id])
-                      .where('creator_id = ?', user.id)
-                      .limit(pagination_count)
-                      .order('created_at DESC')
-    end
-
-    custom_respond_with morsels, each_serializer: MorselForFeedSerializer
-  end
-
   def create
     morsel_params = MorselParams.build(params)
     # Handle deprecated post_id, post_title, and sort_order

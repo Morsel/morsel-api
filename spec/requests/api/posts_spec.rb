@@ -19,7 +19,15 @@ describe 'Posts API' do
 
       expect(json_data.count).to eq(posts_count)
 
-      expect(json_data.first['morsels'].count).to eq(morsels_count)
+      first_post = json_data.first
+
+      expect(first_post['morsels'].count).to eq(morsels_count)
+      expect(first_post['total_like_count']).to_not be_nil
+      expect(first_post['total_comment_count']).to_not be_nil
+
+      first_morsel = first_post['morsels'].first
+      expect(first_morsel['like_count']).to_not be_nil
+      expect(first_morsel['comment_count']).to_not be_nil
     end
 
     it 'returns liked for each Morsel' do
@@ -141,7 +149,7 @@ describe 'Posts API' do
     end
   end
 
-  describe 'POST /posts posts#create' do
+  describe 'POST /posts posts#create', sidekiq: :inline do
     let(:expected_title) { 'Bake Sale!' }
 
     it 'creates a Post' do
@@ -215,7 +223,7 @@ describe 'Posts API' do
       expect(response).to be_success
 
       expect(json_data['title']).to eq(new_title)
-      expect(json_data['draft']).to eq(true)
+      expect(json_data['draft']).to eq(false)
       new_post = Post.find(existing_post.id)
       expect(new_post.title).to eq(new_title)
       expect(new_post.draft).to eq(false)

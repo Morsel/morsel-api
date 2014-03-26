@@ -10,7 +10,10 @@ class MorselSerializer < ActiveModel::Serializer
              :sort_order,
              :url,
              :post_id,
-             :liked
+             :liked,
+             :like_count,
+             :comment_count
+
 
   def liked
     current_user.present? && current_user.likes?(object)

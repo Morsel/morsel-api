@@ -44,9 +44,40 @@ describe Morsel do
 
   context 'saved with creator' do
     subject(:morsel) { FactoryGirl.create(:morsel_with_creator) }
+
     it 'adds :creator Role to the creator' do
       expect(morsel.creator.has_role?(:creator, morsel)).to be_true
       expect(morsel.creator.can_update?(morsel)).to be_true
+    end
+
+    context 'with likes' do
+      let(:likes_count) { rand(3..6) }
+      before do
+        likes_count.times do
+          morsel.likers << FactoryGirl.create(:user)
+        end
+      end
+
+      describe '.total_like_count' do
+        it 'returns the number of likes for a Morsel' do
+          expect(morsel.like_count).to eq(likes_count)
+        end
+      end
+    end
+
+    context 'with comments' do
+      let(:comments_count) { rand(3..6) }
+      before do
+        comments_count.times do
+          morsel.commenters << FactoryGirl.create(:user)
+        end
+      end
+
+      describe '.total_comment_count' do
+        it 'returns the number of comments for a Morsel' do
+          expect(morsel.comment_count).to eq(comments_count)
+        end
+      end
     end
   end
 

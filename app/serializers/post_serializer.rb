@@ -6,7 +6,9 @@ class PostSerializer < ActiveModel::Serializer
              :updated_at,
              :published_at,
              :draft,
-             :slug
+             :slug,
+             :total_like_count,
+             :total_comment_count
 
   has_one :creator
 

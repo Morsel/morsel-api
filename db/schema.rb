@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140320192005) do
+ActiveRecord::Schema.define(version: 20140325180430) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,6 +86,17 @@ ActiveRecord::Schema.define(version: 20140320192005) do
   end
 
   add_index "emails", ["class_name"], name: "index_emails_on_class_name", unique: true, using: :btree
+
+  create_table "feed_items", force: true do |t|
+    t.integer  "subject_id"
+    t.string   "subject_type"
+    t.datetime "deleted_at"
+    t.boolean  "visible",      default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "feed_items", ["subject_id", "subject_type"], name: "index_feed_items_on_subject_id_and_subject_type", using: :btree
 
   create_table "likes", force: true do |t|
     t.integer  "user_id"

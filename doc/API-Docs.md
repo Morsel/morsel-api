@@ -20,7 +20,6 @@
   - [GET ```/users/{user_id|user_username}``` - User](#get-usersuser_iduser_username---user)
   - [PUT ```/users/{user_id}``` - Update User](#put-usersuser_id---update-user)
   - [GET ```/users/{user_id|user_username}/posts``` - User Posts](#get-usersuser_iduser_usernameposts---user-posts)
-  - [GET ```/users/{user_id|user_username}/feed``` - User Feed](#get-usersuser_iduser_usernamefeed---user-feed)
   - [POST ```/users/authorizations``` - Create User Authorizations](#post-usersauthorizations---create-user-authorizations)
   - [GET ```/users/authorizations``` - User Authorizations](#get-usersauthorizations---user-authorizations)
   - [GET ```/users/activities``` - User Activities](#get-usersactivities---user-activities)
@@ -62,6 +61,8 @@
     - [User](#user)
     - [User (w/ Private Attributes)](#user-w-private-attributes)
     - [User (w/ Auth Token)](#user-w-auth-token)
+  - [Feed Objects](#feed-objects)
+    - [Feed Item](#feed-item)
   - [Activity Objects](#activity-objects)
     - [Activity](#activity)
   - [Notification Objects](#notification-objects)
@@ -186,21 +187,21 @@ TIMELINE_DEFAULT_LIMIT = 20
 # Feed Methods
 
 ## GET ```/feed``` - Feed
-Returns the Feed for the authenticated User. The Feed consists of Morsels sorted by their created_at date, with the most recent one's appearing first.
+Returns the Feed for the authenticated User. The Feed consists of [Feed Item](#feed-item)s sorted by their created_at date, with the most recent one's appearing first.
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Morsels up to and including this ```id``` | | |
-| since_id | Number | Return Morsels since this ```id``` | | |
+| max_id | Number | Return Feed Items up to and including this ```id``` | | |
+| since_id | Number | Return Feed Items since this ```id``` | | |
 
 ### Response
 
 | __data__ |
 | -------- |
-| Array of [Morsel (for Feed)](#morsel-for-feed) |
+| Array of [Feed Item](#feed-item) |
 
 <br />
 <br />
@@ -407,26 +408,6 @@ Returns the Posts for the User with the specified ```user_id``` or ```user_usern
 | __data__ |
 | -------- |
 | Array of [Post](#post) |
-
-<br />
-<br />
-
-## GET ```/users/{user_id|user_username}/feed``` - User Feed
-Returns the Feed for the User with the specified ```user_id``` or ```user_username```.
-
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Morsels up to and including this ```id``` | | |
-| since_id | Number | Return Morsels since this ```id``` | | |
-
-### Response
-
-| __data__ |
-| -------- |
-| Array of [Morsel (for Feed)](#morsel-for-feed) |
 
 <br />
 <br />
@@ -1129,6 +1110,32 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
 ```
 
 
+## Feed Objects
+
+### Feed Item
+
+```json
+{
+  "id":11,
+  "created_at":"2014-03-25T21:18:02.349Z",
+  "updated_at":"2014-03-25T21:18:02.360Z",
+  "subject_type":"Post",
+  "subject":{
+    "id":6,
+    "title":"Eum perspiciatis tempora omnis ab qui.",
+    "creator_id":null,
+    "created_at":"2014-03-25T21:18:02.354Z",
+    "updated_at":"2014-03-25T21:18:02.354Z",
+    "published_at":"2014-03-25T21:18:02.353Z",
+    "draft":false,
+    "slug":"eum-perspiciatis-tempora-omnis-ab-qui",
+    "creator":null,
+    "morsels":[]
+  }
+}
+```
+
+
 ## Activity Objects
 
 ### Activity
@@ -1268,8 +1275,3 @@ Several things can determine the value of `sort_order` depending on how it is pa
     else
       sort_order = 1
 ```
-
-### Hacks
-
-#### Morsel's post_id and sort_order
-Since we had originally planned the Morsels/Posts to be a many-to-many relationship (to allow things like 'forking' easily), any Morsel response from the API that includes and Post information will look to the Morsel's last Post. (MorselSerializer#attributes)
