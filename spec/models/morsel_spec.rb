@@ -79,6 +79,20 @@ describe Morsel do
         end
       end
     end
+
+    describe 'activities' do
+      before do
+        Sidekiq::Testing.inline! { morsel.likers << FactoryGirl.create(:user) }
+      end
+      context 'deleting a Morsel' do
+        before do
+          morsel.destroy
+        end
+        it 'should delete the Activities' do
+          expect(morsel.activities).to be_empty
+        end
+      end
+    end
   end
 
   context 'post is missing' do

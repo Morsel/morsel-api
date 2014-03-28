@@ -31,11 +31,11 @@ class Morsel < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :creator, class_name: 'User', foreign_key: 'creator_id'
-  has_many :activities, as: :subject
+  has_many :activities, as: :subject, dependent: :destroy
   has_many :commenters, through: :comments, source: :user
-  has_many :comments
+  has_many :comments, dependent: :destroy
   has_many :likers, through: :likes, source: :user
-  has_many :likes
+  has_many :likes, dependent: :destroy
   belongs_to :post, touch: true
 
   before_save :check_sort_order
@@ -75,10 +75,14 @@ class Morsel < ActiveRecord::Base
   def photos_hash
     if photo_url.present?
       {
-        _50x50: photo_url(:_50x50),
+        _50x50:   photo_url(:_50x50),
+        _80x80:   photo_url(:_80x80),
         _100x100: photo_url(:_100x100),
+        _240x240: photo_url(:_240x240),
         _320x320: photo_url(:_320x320),
-        _640x640: photo_url(:_640x640)
+        _480x480: photo_url(:_480x480),
+        _640x640: photo_url(:_640x640),
+        _992x992: photo_url(:_992x992)
       }
     end
   end
