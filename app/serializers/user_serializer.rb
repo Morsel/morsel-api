@@ -6,6 +6,7 @@ class UserSerializer < ActiveModel::Serializer
              :created_at,
              :title,
              :bio,
+             :industry,
              :photos,
              :photo_processing
 
