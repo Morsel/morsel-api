@@ -34,7 +34,7 @@ gem 'rolify'
 gem 'rollbar'
 gem 'sass-rails', '~> 4.0.0'
 gem 'settingslogic'
-gem 'sidekiq'
+gem 'sidekiq', '~> 3.0.0'
 gem 'sinatra', '>= 1.3.0', require: nil
 gem 'slim-rails'
 gem 'slugged', '~> 2.0'
