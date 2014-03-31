@@ -99,9 +99,7 @@ describe 'Users API' do
       expect {
         post '/users/reserveusername', email: fake_email,
                                        username: fake_username,
-                                       _ga: {
-                                        source: 'taco'
-                                       },
+                                       __utmz: 'source=taco',
                                        client: {
                                         device: 'rspec',
                                         version: '1.2.3'
@@ -112,7 +110,7 @@ describe 'Users API' do
       user_event = UserEvent.last
       expect(user_event.name).to eq('reserved_username')
       expect(user_event.user_id).to_not be_nil
-      expect(user_event._ga['source']).to eq('taco')
+      expect(user_event.__utmz).to eq('source=taco')
       expect(user_event.client_device).to eq('rspec')
       expect(user_event.client_version).to eq('1.2.3')
     end
@@ -183,9 +181,7 @@ describe 'Users API' do
                         first_name: 'Foo', last_name: 'Bar', username: "user_#{Faker::Lorem.characters(10)}",
                         bio: 'Foo to the Stars'
                        },
-                       _ga: {
-                        source: 'grande'
-                       },
+                       __utmz: 'source=taco',
                        client: {
                         device: 'rspec',
                         version: '1.2.3'
@@ -196,7 +192,7 @@ describe 'Users API' do
       user_event = UserEvent.last
       expect(user_event.name).to eq('created_account')
       expect(user_event.user_id).to_not be_nil
-      expect(user_event._ga['source']).to eq('grande')
+      expect(user_event.__utmz).to eq('source=taco')
       expect(user_event.client_device).to eq('rspec')
       expect(user_event.client_version).to eq('1.2.3')
     end

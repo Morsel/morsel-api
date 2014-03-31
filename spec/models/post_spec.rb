@@ -4,17 +4,18 @@
 #
 # ### Columns
 #
-# Name                | Type               | Attributes
-# ------------------- | ------------------ | ---------------------------
-# **`id`**            | `integer`          | `not null, primary key`
-# **`title`**         | `string(255)`      |
-# **`created_at`**    | `datetime`         |
-# **`updated_at`**    | `datetime`         |
-# **`creator_id`**    | `integer`          |
-# **`cached_slug`**   | `string(255)`      |
-# **`deleted_at`**    | `datetime`         |
-# **`draft`**         | `boolean`          | `default(FALSE), not null`
-# **`published_at`**  | `datetime`         |
+# Name                     | Type               | Attributes
+# ------------------------ | ------------------ | ---------------------------
+# **`id`**                 | `integer`          | `not null, primary key`
+# **`title`**              | `string(255)`      |
+# **`created_at`**         | `datetime`         |
+# **`updated_at`**         | `datetime`         |
+# **`creator_id`**         | `integer`          |
+# **`cached_slug`**        | `string(255)`      |
+# **`deleted_at`**         | `datetime`         |
+# **`draft`**              | `boolean`          | `default(FALSE), not null`
+# **`published_at`**       | `datetime`         |
+# **`primary_morsel_id`**  | `integer`          |
 #
 
 require 'spec_helper'
