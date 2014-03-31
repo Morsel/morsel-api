@@ -225,7 +225,7 @@ Image processing is done in a background job. `photo_processing` will be set to 
 | user[title] | String | The title for the new User. In MTP this includes "at <Restaurant>" | | |
 | user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
 | user[bio] | String | The bio for the new User. Maximum 255 characters. | | |
-| _ga | Hash | Google Analytics information to pass to the server | | |
+| __utmz | String | Google Analytics information to pass to the server | | |
 
 ### Response
 
@@ -321,7 +321,7 @@ Returns the user_id if the user is successfully created, otherwise an error.
 | ------------------- | ------- | ----------- | ------- | --------- |
 | username | String | The username reserve | | X |
 | email | String | The email associated with the username | | X |
-| _ga | Hash | Google Analytics information to pass to the server | | |
+| __utmz | String | Google Analytics information to pass to the server | | |
 
 ### Response
 
