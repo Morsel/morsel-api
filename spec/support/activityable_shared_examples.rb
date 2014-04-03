@@ -6,12 +6,24 @@ shared_examples 'Activityable' do
       }.to change(Activity, :count).by(1)
     end
 
-    it 'creates a Notification if Class.activity_notification is true' do
-      expected_count = activityable_object.activity_notification ? 1 : 0
-      if
+    context 'Class.activity_notification is true' do
+      it 'creates a Notification' do
+        expected_count = activityable_object.activity_notification ? 1 : 0
+
         expect{
           Sidekiq::Testing.inline! { activityable_object.save }
         }.to change(Notification, :count).by(expected_count)
+      end
+
+      context 'creator is the receiver' do
+        before do
+          activityable_object.subject.creator = activityable_object.user
+        end
+        it 'should NOT create a Notification if the creator is the receiver' do
+          expect{
+            Sidekiq::Testing.inline! { activityable_object.save }
+          }.to change(Notification, :count).by(0)
+        end
       end
     end
   end

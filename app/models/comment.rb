@@ -26,8 +26,9 @@ class Comment < ActiveRecord::Base
 
   acts_as_paranoid
 
-  belongs_to :user
   belongs_to :morsel
+  belongs_to :user
+  alias_attribute :creator, :user
 
   self.authorizer_name = 'CommentAuthorizer'
 end
