@@ -26,6 +26,7 @@ class Like < ActiveRecord::Base
 
   belongs_to :morsel
   belongs_to :user
+  alias_attribute :creator, :user
 
   self.authorizer_name = 'LikeAuthorizer'
 

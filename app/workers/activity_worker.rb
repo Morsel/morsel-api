@@ -12,7 +12,7 @@ class ActivityWorker
       recipient_id: recipient_id
     )
 
-    if notify_recipient && recipient_id.present?
+    if notify_recipient && recipient_id.present? && recipient_id != creator_id
       if action_type == 'Comment'
         past_tense_action = 'commented on'
       elsif action_type == 'Like'

@@ -851,11 +851,14 @@ Used by third-party services to ping the API.
     "updated_at": "2014-01-07T16:34:43.071Z",
     "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
     "photos": {
-      "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+      "_50x50":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_80x80":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_100x100":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_240x240":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_320x320":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_480x480":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_640x640":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_992x992":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
     },
     "photo_processing": null
   }
@@ -871,11 +874,14 @@ Used by third-party services to ping the API.
     "updated_at": "2014-01-07T16:34:43.071Z",
     "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
     "photos": {
-      "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+      "_50x50":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_80x80":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_100x100":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_240x240":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_320x320":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_480x480":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_640x640":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_992x992":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
     },
     "photo_processing": null,
     "in_progression": false,
@@ -914,11 +920,14 @@ post_id exists
     "updated_at": "2014-01-07T16:34:43.071Z",
     "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
     "photos": {
-      "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+      "_50x50":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_80x80":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_100x100":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_240x240":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_320x320":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_480x480":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_640x640":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_992x992":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
     },
     "photo_processing": null,
     "post_id": 4,
@@ -939,11 +948,14 @@ api_key exists
     "updated_at": "2014-01-07T16:34:43.071Z",
     "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
     "photos": {
-      "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+      "_50x50":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_80x80":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_100x100":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_240x240":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_320x320":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_480x480":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_640x640":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_992x992":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
     },
     "photo_processing": null,
     "liked": false,
@@ -962,11 +974,14 @@ api_key && post_id exist
     "updated_at": "2014-01-07T16:34:43.071Z",
     "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
     "photos": {
-      "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-      "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+      "_50x50":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_80x80":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_100x100":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_240x240":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_320x320":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_480x480":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_640x640":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_992x992":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
     },
     "photo_processing": null,
     "post_id": 4,
@@ -1016,11 +1031,14 @@ api_key && post_id exist
       "updated_at": "2014-01-07T16:34:43.071Z",
       "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
       "photos": {
-        "_104x104": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-        "_208x208": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-        "_320x214": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-        "_640x428": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png",
-        "_640x640": "https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/1389112483-morsel.png"
+        "_50x50":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_80x80":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_100x100":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_240x240":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_320x320":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_480x480":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_640x640":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_992x992":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
       },
       "sort_order": 1,
       "url": "http://eatmorsel.com/turdferg/4-butter-rocks/1"
@@ -1144,22 +1162,33 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
 ```json
 {
   "id":2,
-  "action":"Like",
+  "action_type":"Like",
+  "action": {
+    "id":6,
+    "user_id":2,
+    "morsel_id":3,
+    "deleted_at":null,
+    "created_at":"2014-04-01T22:05:20.683Z",
+    "updated_at":"2014-04-01T22:05:20.683Z"
+  },
   "created_at":"2014-03-13T17:01:38.370Z",
   "subject_type":"Morsel",
   "subject":{
-    "id":2,
+    "id":3,
     "description":"Voluptatem dolores beatae id labore ut corporis tempora id numquam in vel et nemo sed natus quos provident commodi quia quo officiis distinctio qui aut non iure nam illum reprehenderit debitis hic et esse molestiae nulla eaque excepturi quaerat eveniet nisi asperiores voluptate.",
     "creator_id":1,
     "updated_at":"2014-03-13T17:01:37.955Z",
     "created_at":"2014-03-13T17:01:37.955Z",
     "nonce":null,
     "photos":{
-      "_104x104":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/2/_104x104_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_208x208":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/2/_208x208_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_320x214":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/2/_320x214_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_640x428":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/2/_640x428_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_640x640":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
+      "_50x50":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/3/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_80x80":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/3/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_100x100":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/3/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_240x240":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/3/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_320x320":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/3/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_480x480":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/3/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_640x640":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/3/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_992x992":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/3/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
     },
     "photo_processing":true,
     "post_id":1,
@@ -1193,7 +1222,15 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
   "payload_type":"Activity",
   "payload":{
     "id":4,
-    "action":"Like",
+    "action_type":"Like",
+    "action": {
+      "id":6,
+      "user_id":2,
+      "morsel_id":3,
+      "deleted_at":null,
+      "created_at":"2014-04-01T22:05:20.683Z",
+      "updated_at":"2014-04-01T22:05:20.683Z"
+    },
     "created_at":"2014-03-13T17:04:22.403Z",
     "subject_type":"Morsel",
     "subject":{
@@ -1204,11 +1241,14 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
       "created_at":"2014-03-13T17:04:21.899Z",
       "nonce":null,
       "photos":{
-        "_104x104":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/1/_104x104_1e5cc29c-4fb0-4e27-a323-269c755b5ba3.png",
-        "_208x208":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/1/_208x208_1e5cc29c-4fb0-4e27-a323-269c755b5ba3.png",
-        "_320x214":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/1/_320x214_1e5cc29c-4fb0-4e27-a323-269c755b5ba3.png",
-        "_640x428":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/1/_640x428_1e5cc29c-4fb0-4e27-a323-269c755b5ba3.png",
-        "_640x640":"/Users/marty/Developer/Projects/machinespit/morsel-api/spec/support/uploads/morsel-photos/1/_640x640_1e5cc29c-4fb0-4e27-a323-269c755b5ba3.png"
+        "_50x50":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_80x80":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_100x100":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_240x240":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_320x320":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_480x480":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_640x640":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_992x992":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
       },
       "photo_processing":true,
       "post_id":1,
