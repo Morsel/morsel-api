@@ -64,6 +64,15 @@ class MorselsController < ApiController
     end
   end
 
+  def likers
+    likers = User.includes(:likes)
+                 .where('likes.morsel_id = ?', params[:id])
+                 .order('likes.id DESC')
+                 .references(:likes)
+
+    custom_respond_with likers
+  end
+
   class MorselParams
     def self.build(params)
       params.require(:morsel).permit(:description, :photo, :nonce, :sort_order, post: [:id, :title])

@@ -31,6 +31,7 @@
   - [DELETE ```/morsels/{morsel_id}``` - Delete Morsel](#delete-morselsmorsel_id---delete-morsel)
   - [POST ```/morsels/{morsel_id}/like``` - Like Morsel](#post-morselsmorsel_idlike---like-morsel)
   - [DELETE ```/morsels/{morsel_id}/like``` - Unlike Morsel](#delete-morselsmorsel_idlike---unlike-morsel)
+  - [GET ```/morsels/{morsel_id}/likers``` - Likers](#get-morselsmorsel_idlikers---likers)
   - [POST ```/morsels/{morsel_id}/comments``` - Create Comment](#post-morselsmorsel_idcomments---create-comment)
   - [GET ```/morsels/{morsel_id}/comments``` - Morsel Comments](#get-morselsmorsel_idcomments---morsel-comments)
   - [DELETE ```/comments/{comment_id}``` - Delete Comment](#delete-commentscomment_id---delete-comment)
@@ -603,6 +604,24 @@ Unlikes the Morsel with the specified ```morsel_id``` for the authenticated User
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
 | __Not liked__ | 404 (Not Found) | The Morsel is not liked by the User |
+
+<br />
+<br />
+
+## GET ```/morsels/{morsel_id}/likers``` - Likers
+Returns the Users who have liked the Morsel with the specified ```morsel_id```
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [User](#user) |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __Morsel not found__ | 404 (Not Found) | The Morsel could not be found |
 
 <br />
 <br />

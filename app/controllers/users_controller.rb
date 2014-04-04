@@ -40,7 +40,7 @@ class UsersController < ApiController
 
   def updateindustry
     update_user_industry = UpdateUserIndustry.run(
-      user_id: params[:user_id],
+      user_id: params[:id],
       industry: params[:industry]
     )
 

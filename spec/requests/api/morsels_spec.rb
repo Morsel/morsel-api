@@ -532,6 +532,21 @@ describe 'Morsels API' do
     end
   end
 
+  describe 'GET /morsels/{:morsel_id}/likers morsels#likers' do
+    let(:likes_count) { 3 }
+    let(:morsel_with_likers) { FactoryGirl.create(:morsel_with_likers, likes_count: likes_count) }
+    let(:morsel_id) { morsel_with_likers.id }
+    let(:endpoint) { "/morsels/#{morsel_id}/likers" }
+
+    it 'returns a list of Likers for the Morsel' do
+      get endpoint, api_key: api_key_for_user(turd_ferg), format: :json
+
+      expect(response).to be_success
+
+      expect(json_data.count).to eq(likes_count)
+    end
+  end
+
   describe 'GET /morsels/{:morsel_id}/comments comments#index' do
     let(:morsel_with_creator_and_comments) { FactoryGirl.create(:morsel_with_creator_and_comments) }
 

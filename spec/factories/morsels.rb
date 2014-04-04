@@ -32,6 +32,15 @@ FactoryGirl.define do
 
     factory :morsel_with_creator, class: Morsel do
       association(:creator, factory: :user)
+      factory :morsel_with_likers do
+        ignore do
+          likes_count 3
+        end
+
+        after(:create) do |morsel, evaluator|
+          create_list(:like, evaluator.likes_count, morsel: morsel)
+        end
+      end
       factory :morsel_with_creator_and_comments do
         ignore do
           comments_count 2
