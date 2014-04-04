@@ -23,7 +23,7 @@ MorselApp::Application.routes.draw do
       get 'authorizations' => 'authorizations#index'
       get 'checkusername(/:username)' => 'users#checkusername'
       post 'reserveusername(/:username)' => 'users#reserveusername'
-      put ':user_id/updateindustry' => 'users#updateindustry'
+      put ':id/updateindustry' => 'users#updateindustry'
       get 'me' => 'users#me'
       post 'unsubscribe' => 'users#unsubscribe'
       get 'activities' => 'activities#index'
@@ -36,9 +36,12 @@ MorselApp::Application.routes.draw do
 
   resources :morsels, only: [:create, :show, :update, :destroy] do
     resources :comments, only: [:create, :index]
+    collection do
+      post ':morsel_id/like' => 'likes#create'
+      delete ':morsel_id/like' => 'likes#destroy'
+      get ':id/likers' => 'morsels#likers'
+    end
   end
-  post 'morsels/:morsel_id/like' => 'likes#create'
-  delete 'morsels/:morsel_id/like' => 'likes#destroy'
 
   resources :comments, only: [:destroy]
 
