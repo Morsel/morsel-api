@@ -19,9 +19,6 @@ class CreateMorsel < ActiveInteraction::Base
     file :tempfile, default: nil
   end
 
-  boolean :post_to_facebook, default: false
-  boolean :post_to_twitter, default: false
-
   validates :user, presence: true
   validate { errors.add(:user, 'not authorized to create Morsel') unless user.can_create?(Morsel) }
 
@@ -45,8 +42,6 @@ class CreateMorsel < ActiveInteraction::Base
 
     if morsel.save
       morsel.errors.add(:post, post.errors) unless post.save
-      user.post_to_facebook(morsel.facebook_message) if post_to_facebook
-      user.post_to_twitter(morsel.twitter_message) if post_to_twitter
     end
 
     errors.merge!(morsel.errors)

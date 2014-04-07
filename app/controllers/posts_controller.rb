@@ -48,6 +48,9 @@ class PostsController < ApiController
     post = Post.find(params[:id])
     if current_user.can_update?(post)
       if post.update(PostParams.build(params))
+        FacebookUserDecorator.new(current_user).queue_facebook_message(post.id) if params[:post_to_facebook]
+        TwitterUserDecorator.new(current_user).queue_twitter_message(post.id) if params[:post_to_twitter]
+
         custom_respond_with post
       else
         render_json_errors(post.errors)

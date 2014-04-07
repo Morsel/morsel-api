@@ -55,21 +55,9 @@ class Morsel < ActiveRecord::Base
     comments.count
   end
 
-  def facebook_message
-    message = post_title_with_description
-    message << url
-
-    message.normalize
-  end
-
-  def twitter_message
-    message = post_title_with_description
-    message.twitter_string(url)
-  end
-
   def url
     # https://eatmorsel.com/marty/1-my-first-post/2
-    "#{Settings.morsel.web_url}/#{creator.username}/#{post.id}-#{post.cached_slug}/#{post.morsels.find_index(self) + 1}"
+    "#{post.url_for_morsel(self)}"
   end
 
   def photos_hash

@@ -28,6 +28,7 @@ describe Post do
   it { should respond_to(:draft) }
   it { should respond_to(:published_at) }
   it { should respond_to(:primary_morsel_id) }
+  it { should respond_to(:photo) }
 
   it { should respond_to(:creator) }
   it { should respond_to(:morsels) }
@@ -95,6 +96,30 @@ describe Post do
         expect(Post.find_using_slug(@old_slug)).to_not be_nil
       end
     end
+  end
+
+  describe '#url' do
+    let(:post_with_creator) { FactoryGirl.build(:post_with_creator) }
+    subject(:url) { post_with_creator.url }
+
+    it { should eq("https://test.eatmorsel.com/#{post_with_creator.creator.username}/#{post_with_creator.id}-#{post_with_creator.cached_slug}") }
+  end
+
+  describe '#facebook_message' do
+    let(:post_with_creator) { FactoryGirl.build(:post_with_creator) }
+    subject(:facebook_message) { post_with_creator.facebook_message }
+
+    it { should include(post_with_creator.title) }
+    it { should include(post_with_creator.url) }
+  end
+
+  describe '#twitter_message' do
+    let(:post_with_creator) { FactoryGirl.build(:post_with_creator) }
+    subject(:twitter_message) { post_with_creator.twitter_message }
+
+    it { should include(post_with_creator.title) }
+    it { should include(post_with_creator.url) }
+    it { should include(' via @eatmorsel') }
   end
 
   context 'has Morsels' do

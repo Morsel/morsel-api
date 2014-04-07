@@ -255,8 +255,8 @@ describe 'Users API' do
       expect_nil_json_keys(json_data, %w(password encrypted_password auth_token))
 
       expect(json_data['photos']).to be_nil
-      expect(json_data['twitter_username']).to eq(user_with_posts.twitter_username)
-      expect(json_data['facebook_uid']).to eq(user_with_posts.facebook_uid)
+      expect(json_data['facebook_uid']).to eq(FacebookUserDecorator.new(user_with_posts).facebook_uid)
+      expect(json_data['twitter_username']).to eq(TwitterUserDecorator.new(user_with_posts).twitter_username)
 
       expect(json_data['like_count']).to eq(number_of_morsel_likes)
       expect(json_data['morsel_count']).to eq(user_with_posts.morsels.count)
@@ -279,8 +279,8 @@ describe 'Users API' do
         expect_nil_json_keys(json_data, %w(password encrypted_password auth_token))
 
         expect(json_data['photos']).to be_nil
-        expect(json_data['twitter_username']).to eq(user_with_posts.twitter_username)
-        expect(json_data['facebook_uid']).to eq(user_with_posts.facebook_uid)
+        expect(json_data['facebook_uid']).to eq(FacebookUserDecorator.new(user_with_posts).facebook_uid)
+        expect(json_data['twitter_username']).to eq(TwitterUserDecorator.new(user_with_posts).twitter_username)
 
         expect(json_data['like_count']).to eq(number_of_morsel_likes)
         expect(json_data['morsel_count']).to eq(user_with_posts.morsels.count)
@@ -448,8 +448,9 @@ describe 'Users API' do
         expect(json_data['user_id']).to eq(chef.id)
         expect(json_data['name']).to eq(dummy_screen_name)
 
-        expect(chef.twitter_authorizations.count).to eq(1)
-        expect(chef.twitter_username).to eq(dummy_screen_name)
+        twitter_chef = TwitterUserDecorator.new(chef)
+        expect(twitter_chef.twitter_authorizations.count).to eq(1)
+        expect(twitter_chef.twitter_username).to eq(dummy_screen_name)
       end
     end
 
@@ -481,8 +482,9 @@ describe 'Users API' do
         expect(json_data['user_id']).to eq(chef.id)
         expect(json_data['name']).to eq(dummy_name)
 
-        expect(chef.facebook_authorizations.count).to eq(1)
-        expect(chef.facebook_uid).to eq(dummy_fb_uid)
+        facebook_chef = FacebookUserDecorator.new(chef)
+        expect(facebook_chef.facebook_authorizations.count).to eq(1)
+        expect(facebook_chef.facebook_uid).to eq(dummy_fb_uid)
       end
     end
   end

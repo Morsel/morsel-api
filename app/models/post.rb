@@ -21,6 +21,7 @@
 class Post < ActiveRecord::Base
   include Authority::Abilities
   include Feedable
+  include PhotoUploadable
   include TimelinePaginateable
   include UserCreatable
 
@@ -31,6 +32,9 @@ class Post < ActiveRecord::Base
   has_many    :morsels, -> { order('sort_order ASC') }, dependent: :destroy
 
   before_save :update_published_at_if_necessary
+
+  mount_uploader :photo, PostPhotoUploader
+  process_in_background :photo
 
   validate  :primary_morsel_belongs_to_post
 
@@ -48,6 +52,35 @@ class Post < ActiveRecord::Base
 
   def total_comment_count
      morsels.map(&:comment_count).reduce(:+)
+  end
+
+  def primary_morsel
+    morsels.find primary_morsel_id
+  end
+
+  def photos_hash
+    if photo_url.present?
+      {
+        _400x300: photo_url,
+      }
+    end
+  end
+
+  def facebook_message
+    "#{title}: #{url}".normalize
+  end
+
+  def twitter_message
+    "#{title}: ".twitter_string(url)
+  end
+
+  def url
+    # https://eatmorsel.com/marty/1-my-first-post
+    "#{Settings.morsel.web_url}/#{creator.username}/#{id}-#{cached_slug}"
+  end
+
+  def url_for_morsel(morsel)
+    "#{url}/#{morsels.find_index(morsel) + 1}"
   end
 
   private

@@ -59,13 +59,6 @@ describe User do
 
   its(:authentication_token) { should be_nil }
 
-  its(:twitter_authorizations) { should be_empty }
-
-  its(:twitter_authorization) { should be_nil }
-  its(:authorized_with_twitter?) { should be_false }
-  its(:twitter_username) { should be_nil }
-  its(:facebook_uid) { should be_nil }
-
   it { should be_valid }
 
   describe '.find_by_id_or_username' do
@@ -224,7 +217,7 @@ describe User do
 
   context 'Authorizations' do
     context 'Facebook' do
-      subject(:chef_with_facebook_authorization) { UserSocialClientsDecorator.new(FactoryGirl.create(:chef_with_facebook_authorization)) }
+      subject(:chef_with_facebook_authorization) { FacebookUserDecorator.new(FactoryGirl.create(:chef_with_facebook_authorization)) }
 
       its(:facebook_authorizations) { should_not be_empty }
 
@@ -235,7 +228,7 @@ describe User do
     end
 
     context 'Twitter' do
-      subject(:chef_with_twitter_authorization) { UserSocialClientsDecorator.new(FactoryGirl.create(:chef_with_twitter_authorization)) }
+      subject(:chef_with_twitter_authorization) { TwitterUserDecorator.new(FactoryGirl.create(:chef_with_twitter_authorization)) }
 
       its(:twitter_authorizations) { should_not be_empty }
 
@@ -246,57 +239,61 @@ describe User do
     end
   end
 
-  describe '#send_reserved_username_email' do
-    before do
-      user.save
-    end
+  context 'Email' do
+    describe '#send_reserved_username_email' do
+      let(:email_user) { EmailUserDecorator.new(user) }
 
-    it 'creates the EmailWorker job' do
-      expect {
-        user.send_reserved_username_email
-      }.to change(EmailWorker.jobs, :size).by(1)
-    end
-
-    it 'sends the Username Reserved email' do
-      Sidekiq::Testing.inline! { user.send_reserved_username_email }
-      mail = MandrillMailer.deliveries.first
-      username_reserved_email = Emails::UsernameReservedEmail.email(user)
-
-      expect(mail).to_not be_nil
-      expect(mail.message['from_email']).to eq('support@eatmorsel.com')
-      expect(mail.message['from_name']).to eq('Morsel')
-
-      expect(mail.template_name).to eq(username_reserved_email.template_name)
-      expect(mail.message['to'].first[:email]).to eq(user.email)
-      expect(mail.message['to'].first[:name]).to eq(user.full_name)
-      expect(mail.message['from_email']).to eq(username_reserved_email.from_email)
-      expect(mail.message['from_name']).to eq(username_reserved_email.from_name)
-
-      vars = mail.message['global_merge_vars'].map { |v| { v['name'] => v['content'] }}.reduce(Hash.new, :merge)
-      %w(subject teaser title subtitle body reason).each do |key|
-        expect(vars["email_#{key}".to_sym]).to eq(username_reserved_email.send(key))
-      end
-      expect(vars[:current_year]).to eq(Time.now.year)
-    end
-
-    context 'stop_sending? is set to true' do
-      it 'does NOT send the Username Reserved email' do
-        username_reserved_email = Emails::UsernameReservedEmail.email(user)
-        username_reserved_email.stop_sending = true
-        username_reserved_email.save
-
-        Sidekiq::Testing.inline! { user.send_reserved_username_email }
-        expect(MandrillMailer.deliveries).to be_empty
-      end
-    end
-
-    context 'user is unsubscribed' do
       before do
-        user.unsubscribed = true
+        email_user.save
       end
-      it 'does NOT send the Username Reserved email' do
-        Sidekiq::Testing.inline! { user.send_reserved_username_email }
-        expect(MandrillMailer.deliveries).to be_empty
+
+      it 'creates the EmailWorker job' do
+        expect {
+          email_user.send_reserved_username_email
+        }.to change(EmailWorker.jobs, :size).by(1)
+      end
+
+      it 'sends the Username Reserved email' do
+        Sidekiq::Testing.inline! { email_user.send_reserved_username_email }
+        mail = MandrillMailer.deliveries.first
+        username_reserved_email = Emails::UsernameReservedEmail.email(email_user)
+
+        expect(mail).to_not be_nil
+        expect(mail.message['from_email']).to eq('support@eatmorsel.com')
+        expect(mail.message['from_name']).to eq('Morsel')
+
+        expect(mail.template_name).to eq(username_reserved_email.template_name)
+        expect(mail.message['to'].first[:email]).to eq(email_user.email)
+        expect(mail.message['to'].first[:name]).to eq(email_user.full_name)
+        expect(mail.message['from_email']).to eq(username_reserved_email.from_email)
+        expect(mail.message['from_name']).to eq(username_reserved_email.from_name)
+
+        vars = mail.message['global_merge_vars'].map { |v| { v['name'] => v['content'] }}.reduce(Hash.new, :merge)
+        %w(subject teaser title subtitle body reason).each do |key|
+          expect(vars["email_#{key}".to_sym]).to eq(username_reserved_email.send(key))
+        end
+        expect(vars[:current_year]).to eq(Time.now.year)
+      end
+
+      context 'stop_sending? is set to true' do
+        it 'does NOT send the Username Reserved email' do
+          username_reserved_email = Emails::UsernameReservedEmail.email(email_user)
+          username_reserved_email.stop_sending = true
+          username_reserved_email.save
+
+          Sidekiq::Testing.inline! { email_user.send_reserved_username_email }
+          expect(MandrillMailer.deliveries).to be_empty
+        end
+      end
+
+      context 'user is unsubscribed' do
+        before do
+          email_user.unsubscribed = true
+        end
+        it 'does NOT send the Username Reserved email' do
+          Sidekiq::Testing.inline! { email_user.send_reserved_username_email }
+          expect(MandrillMailer.deliveries).to be_empty
+        end
       end
     end
   end
