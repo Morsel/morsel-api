@@ -25,6 +25,10 @@ FactoryGirl.define do
 
     factory :post_with_creator, class: Post do
       association(:creator, factory: :user)
+      factory :post_with_creator_and_photo do
+        photo Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
+      end
+
       factory :post_with_morsels, class: Post do
         ignore do
           morsels_count 3

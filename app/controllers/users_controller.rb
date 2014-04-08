@@ -30,7 +30,7 @@ class UsersController < ApiController
     if reserve_username.valid?
       user = reserve_username.result
       create_user_event(:reserved_username, user.id)
-      user.send_reserved_username_email
+      EmailUserDecorator.new(user).send_reserved_username_email
       sign_in user, store: false
       render_json(user_id: "#{user.id}")
     else

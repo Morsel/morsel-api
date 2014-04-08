@@ -132,24 +132,4 @@ describe Morsel do
 
     it { should eq("https://test.eatmorsel.com/#{first_morsel.creator.username}/#{post_with_morsels.id}-#{post_with_morsels.cached_slug}/1") }
   end
-
-  describe '#facebook_message' do
-    let(:post_with_morsels) { FactoryGirl.create(:post_with_morsels) }
-    let(:first_morsel) { post_with_morsels.morsels.first }
-    subject(:facebook_message) { first_morsel.facebook_message }
-
-    it { should include(first_morsel.url) }
-    it { should include(post_with_morsels.title) }
-    it { should include(first_morsel.description) }
-  end
-
-  describe '#twitter_message' do
-    let(:post_with_morsels) { FactoryGirl.create(:post_with_morsels) }
-    let(:first_morsel) { post_with_morsels.morsels.first }
-    subject(:twitter_message) { first_morsel.twitter_message }
-
-    it { should include(first_morsel.url) }
-    it { should include(post_with_morsels.title) }
-    it { should include(first_morsel.description[40]) } # Only bother checking the first 40 characters are included
-  end
 end

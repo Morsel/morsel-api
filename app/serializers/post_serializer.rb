@@ -9,7 +9,9 @@ class PostSerializer < ActiveModel::Serializer
              :slug,
              :total_like_count,
              :total_comment_count,
-             :primary_morsel_id
+             :primary_morsel_id,
+             :photos,
+             :url
 
   has_one :creator
 
@@ -21,5 +23,9 @@ class PostSerializer < ActiveModel::Serializer
 
   def morsels
     object.morsels.order('sort_order ASC')
+  end
+
+  def photos
+    object.photos_hash
   end
 end

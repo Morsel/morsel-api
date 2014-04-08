@@ -1,14 +1,20 @@
 class SocialWorker
   include Sidekiq::Worker
 
-  def perform(network, user_id, message)
+  def perform(network, user_id, post_id)
     user = User.includes(:authorizations).find(user_id)
-    social_clients_decorated_user = UserSocialClientsDecorator.new(user)
+    post = Post.find post_id
+
+    if post.photo.nil?
+      collage_generator_decorated_post = PostCollageGeneratorDecorator.new(post)
+      collage_generator_decorated_post.generate
+    end
+
     case network
     when 'facebook'
-      social_clients_decorated_user.facebook_client.put_connections('me', 'feed', message: message)
+      FacebookUserDecorator(user).post_facebook_message(post.facebook_message)
     when 'twitter'
-      social_clients_decorated_user.twitter_client.update(message)
+      TwitterUserDecorator(user).post_twitter_message(post.twitter_message)
     else
       raise "Invalid Network: #{network}"
     end

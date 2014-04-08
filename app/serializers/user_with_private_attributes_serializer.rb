@@ -17,4 +17,12 @@ class UserWithPrivateAttributesSerializer < UserSerializer
   def draft_count
     object.posts.drafts.count
   end
+
+  def facebook_uid
+    FacebookUserDecorator.new(object).facebook_uid
+  end
+
+  def twitter_username
+    TwitterUserDecorator.new(object).twitter_username
+  end
 end

@@ -93,38 +93,6 @@ class User < ActiveRecord::Base
     liked_morsels.include?(morsel)
   end
 
-  def facebook_authorization
-    facebook_authorizations.first
-  end
-
-  def authorized_with_facebook?
-    facebook_authorization && facebook_authorization.token.present?
-  end
-
-  def post_to_facebook(message)
-    SocialWorker.perform_async(:facebook, id, message) if authorized_with_facebook?
-  end
-
-  def facebook_uid
-    facebook_authorization.uid if authorized_with_facebook?
-  end
-
-  def twitter_authorization
-    twitter_authorizations.first
-  end
-
-  def authorized_with_twitter?
-    twitter_authorization && twitter_authorization.token.present?
-  end
-
-  def post_to_twitter(message)
-    SocialWorker.perform_async(:twitter, id, message) if authorized_with_twitter?
-  end
-
-  def twitter_username
-    twitter_authorization.name if authorized_with_twitter?
-  end
-
   def photos_hash
     if photo_url.present?
       {
@@ -144,10 +112,6 @@ class User < ActiveRecord::Base
     elsif last_name
       "#{last_name}"
     end
-  end
-
-  def send_reserved_username_email
-    EmailWorker.perform_async(id) unless unsubscribed?
   end
 
   private

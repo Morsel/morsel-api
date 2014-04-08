@@ -8,7 +8,7 @@ describe 'Morsels API' do
   describe 'POST /morsels morsels#create' do
     let(:chef) { FactoryGirl.create(:chef) }
     let(:nonce) { '1234567890-1234-1234-1234-1234567890123' }
-    let(:some_post) { FactoryGirl.create(:post) }
+    let(:some_post) { FactoryGirl.create(:post_with_creator) }
 
     it 'creates a Morsel' do
       post '/morsels',  api_key: api_key_for_user(chef),
@@ -166,73 +166,6 @@ describe 'Morsels API' do
       end
     end
 
-    context 'post_to_facebook included in parameters' do
-      let(:chef_with_facebook_authorization) { FactoryGirl.create(:chef_with_facebook_authorization) }
-
-      it 'posts to Facebook' do
-        dummy_name = 'Facebook User'
-
-        facebook_user = double('Hash')
-        facebook_user.stub(:[]).with('id').and_return('12345_67890')
-        facebook_user.stub(:[]).with('name').and_return(dummy_name)
-
-        client = double('Koala::Facebook::API')
-
-        Koala::Facebook::API.stub(:new).and_return(client)
-
-        client.stub(:put_connections).and_return('id' => '12345_67890')
-
-        expect {
-          post '/morsels',  api_key: api_key_for_user(chef_with_facebook_authorization),
-                            format: :json,
-                            morsel: {
-                              description: 'The Fresh Prince of Bel Air',
-                              post: {
-                                id: some_post.id,
-                                title: 'Some title'
-                              }
-                            },
-                            post_to_facebook: true
-        }.to change(SocialWorker.jobs, :size).by(1)
-
-        expect(response).to be_success
-
-        expect(json_data['id']).to_not be_nil
-
-      end
-    end
-
-    context 'post_to_twitter included in parameters' do
-      let(:chef_with_twitter_authorization) { FactoryGirl.create(:chef_with_twitter_authorization) }
-      let(:expected_tweet_url) { "https://twitter.com/#{chef_with_twitter_authorization.username}/status/12345" }
-
-      it 'posts a Tweet' do
-        client = double('Twitter::REST::Client')
-        tweet = double('Twitter::Tweet')
-        tweet.stub(:url).and_return(expected_tweet_url)
-
-        Twitter::Client.stub(:new).and_return(client)
-        client.stub(:update).and_return(tweet)
-
-        expect {
-          post '/morsels',  api_key: api_key_for_user(chef_with_twitter_authorization),
-                            format: :json,
-                            morsel: {
-                              description: 'D.A.N.C.E.',
-                              post: {
-                                id: some_post.id,
-                                title: 'Some title'
-                              }
-                            },
-                            post_to_twitter: true
-        }.to change(SocialWorker.jobs, :size).by(1)
-
-        expect(response).to be_success
-
-        expect(json_data['id']).to_not be_nil
-      end
-    end
-
     context 'current_user is NOT a :chef' do
       it 'should NOT be authorized' do
         post '/morsels',  api_key: api_key_for_user(FactoryGirl.create(:user)),
@@ -251,26 +184,26 @@ describe 'Morsels API' do
   end
 
   describe 'GET /morsels morsels#show' do
-    let(:morsel_with_creator) { FactoryGirl.create(:morsel_with_creator) }
+    let(:morsel_with_creator_and_post) { FactoryGirl.create(:morsel_with_creator_and_post) }
 
     it 'returns the Morsel' do
-      get "/morsels/#{morsel_with_creator.id}", api_key: api_key_for_user(turd_ferg), format: :json
+      get "/morsels/#{morsel_with_creator_and_post.id}", api_key: api_key_for_user(turd_ferg), format: :json
 
       expect(response).to be_success
 
-      expect_json_keys(json_data, morsel_with_creator, %w(id description creator_id))
+      expect_json_keys(json_data, morsel_with_creator_and_post, %w(id description creator_id))
       expect(json_data['liked']).to be_false
       expect(json_data['photos']).to_not be_nil
     end
 
     context 'has a photo' do
       before do
-        morsel_with_creator.photo = Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
-        morsel_with_creator.save
+        morsel_with_creator_and_post.photo = Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
+        morsel_with_creator_and_post.save
       end
 
       it 'returns the User with the appropriate image sizes' do
-        get "/morsels/#{morsel_with_creator.id}", api_key: api_key_for_user(turd_ferg), format: :json
+        get "/morsels/#{morsel_with_creator_and_post.id}", api_key: api_key_for_user(turd_ferg), format: :json
 
         expect(response).to be_success
 
@@ -284,7 +217,7 @@ describe 'Morsels API' do
   end
 
   describe 'PUT /morsels/{:morsel_id} morsels#update' do
-    let(:existing_morsel) { FactoryGirl.create(:morsel_with_creator, creator: chef) }
+    let(:existing_morsel) { FactoryGirl.create(:morsel_with_creator_and_post, creator: chef) }
     let(:new_description) { 'The proof is in the puddin' }
 
     it 'updates the Morsel' do
@@ -341,71 +274,6 @@ describe 'Morsels API' do
           post_with_morsels.reload
           expect(post_with_morsels.updated_at.to_datetime.to_f).to be >= last_morsel.updated_at.to_datetime.to_f
         end
-      end
-    end
-
-    context 'post_to_facebook included in parameters' do
-      let(:chef_with_facebook_authorization) { FactoryGirl.create(:chef_with_facebook_authorization) }
-      let(:post_with_morsels) { FactoryGirl.create(:post_with_morsels, creator: chef_with_facebook_authorization) }
-      let(:last_morsel) { post_with_morsels.morsels.last }
-
-      it 'posts to Facebook' do
-        dummy_name = 'Facebook User'
-
-        facebook_user = double('Hash')
-        facebook_user.stub(:[]).with('id').and_return('12345_67890')
-        facebook_user.stub(:[]).with('name').and_return(dummy_name)
-
-        client = double('Koala::Facebook::API')
-
-        Koala::Facebook::API.stub(:new).and_return(client)
-
-        client.stub(:put_connections).and_return('id' => '12345_67890')
-
-        expect {
-          put "/morsels/#{last_morsel.id}", api_key: api_key_for_user(chef_with_facebook_authorization),
-                                            format: :json,
-                                            morsel: {
-                                              description: 'The Fresh Prince of Bel Air',
-                                              post: {id: post_with_morsels.id}
-                                            },
-                                            post_to_facebook: true
-        }.to change(SocialWorker.jobs, :size).by(1)
-
-        expect(response).to be_success
-
-        expect(json_data['id']).to_not be_nil
-
-      end
-    end
-
-    context 'post_to_twitter included in parameters' do
-      let(:chef_with_twitter_authorization) { FactoryGirl.create(:chef_with_twitter_authorization) }
-      let(:expected_tweet_url) { "https://twitter.com/#{chef_with_twitter_authorization.username}/status/12345" }
-      let(:post_with_morsels) { FactoryGirl.create(:post_with_morsels, creator: chef_with_twitter_authorization) }
-      let(:last_morsel) { post_with_morsels.morsels.last }
-
-      it 'posts a Tweet' do
-        client = double('Twitter::REST::Client')
-        tweet = double('Twitter::Tweet')
-        tweet.stub(:url).and_return(expected_tweet_url)
-
-        Twitter::Client.stub(:new).and_return(client)
-        client.stub(:update).and_return(tweet)
-
-        expect {
-          put "/morsels/#{last_morsel.id}", api_key: api_key_for_user(chef_with_twitter_authorization),
-                                            format: :json,
-                                            morsel: {
-                                              description: 'The Fresh Prince of Bel Air',
-                                              post: {id: post_with_morsels.id}
-                                            },
-                                            post_to_twitter: true
-        }.to change(SocialWorker.jobs, :size).by(1)
-
-        expect(response).to be_success
-
-        expect(json_data['id']).to_not be_nil
       end
     end
   end

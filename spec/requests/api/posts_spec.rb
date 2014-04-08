@@ -24,6 +24,7 @@ describe 'Posts API' do
       expect(first_post['morsels'].count).to eq(morsels_count)
       expect(first_post['total_like_count']).to_not be_nil
       expect(first_post['total_comment_count']).to_not be_nil
+      expect(first_post['photos']).to be_nil
 
       first_morsel = first_post['morsels'].first
       expect(first_morsel['like_count']).to_not be_nil
@@ -166,6 +167,7 @@ describe 'Posts API' do
       new_post = Post.find json_data['id']
       expect_json_keys(json_data, new_post, %w(id title creator_id))
       expect(json_data['title']).to eq(expected_title)
+      expect(json_data['photos']).to be_nil
       expect(new_post.draft).to be_false
     end
 
@@ -224,6 +226,20 @@ describe 'Posts API' do
       get "/posts/#{post_with_morsels.id}", format: :json
 
       expect(response).to be_success
+    end
+
+    context 'has a photo' do
+      let(:post_with_creator_and_photo) { FactoryGirl.create(:post_with_creator_and_photo) }
+
+      it 'returns the Post with photos' do
+        get "/posts/#{post_with_creator_and_photo.id}", api_key: api_key_for_user(turd_ferg), format: :json
+
+        expect(response).to be_success
+
+        expect_json_keys(json_data, post_with_creator_and_photo, %w(id title creator_id))
+        photos = json_data['photos']
+        expect(photos['_400x300']).to_not be_nil
+      end
     end
   end
 
@@ -300,6 +316,62 @@ describe 'Posts API' do
                                           post: { title: new_title }
 
         expect(response).to_not be_success
+      end
+    end
+
+    context 'post_to_facebook included in parameters' do
+      let(:chef_with_facebook_authorization) { FactoryGirl.create(:chef_with_facebook_authorization) }
+      let(:post_with_morsels) { FactoryGirl.create(:post_with_morsels, creator: chef_with_facebook_authorization) }
+
+      it 'posts to Facebook' do
+        dummy_name = 'Facebook User'
+
+        facebook_user = double('Hash')
+        facebook_user.stub(:[]).with('id').and_return('12345_67890')
+        facebook_user.stub(:[]).with('name').and_return(dummy_name)
+
+        client = double('Koala::Facebook::API')
+
+        Koala::Facebook::API.stub(:new).and_return(client)
+
+        client.stub(:put_connections).and_return('id' => '12345_67890')
+
+        expect {
+          put "/posts/#{post_with_morsels.id}", api_key: api_key_for_user(chef_with_facebook_authorization),
+                                                format: :json,
+                                                post: { title: new_title },
+                                                post_to_facebook: true
+        }.to change(SocialWorker.jobs, :size).by(1)
+
+        expect(response).to be_success
+
+        expect(json_data['id']).to_not be_nil
+      end
+    end
+
+    context 'post_to_twitter included in parameters' do
+      let(:chef_with_twitter_authorization) { FactoryGirl.create(:chef_with_twitter_authorization) }
+      let(:expected_tweet_url) { "https://twitter.com/#{chef_with_twitter_authorization.username}/status/12345" }
+      let(:post_with_morsels) { FactoryGirl.create(:post_with_morsels, creator: chef_with_twitter_authorization) }
+
+      it 'posts a Tweet' do
+        client = double('Twitter::REST::Client')
+        tweet = double('Twitter::Tweet')
+        tweet.stub(:url).and_return(expected_tweet_url)
+
+        Twitter::Client.stub(:new).and_return(client)
+        client.stub(:update).and_return(tweet)
+
+        expect {
+          put "/posts/#{post_with_morsels.id}", api_key: api_key_for_user(chef_with_twitter_authorization),
+                                                format: :json,
+                                                post: { title: new_title },
+                                                post_to_twitter: true
+        }.to change(SocialWorker.jobs, :size).by(1)
+
+        expect(response).to be_success
+
+        expect(json_data['id']).to_not be_nil
       end
     end
   end
