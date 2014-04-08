@@ -12,9 +12,9 @@ class SocialWorker
 
     case network
     when 'facebook'
-      FacebookUserDecorator(user).post_facebook_message(post.facebook_message)
+      FacebookUserDecorator.new(user).post_facebook_message(post.facebook_message)
     when 'twitter'
-      TwitterUserDecorator(user).post_twitter_message(post.twitter_message)
+      TwitterUserDecorator.new(user).post_twitter_message(post.twitter_message)
     else
       raise "Invalid Network: #{network}"
     end
