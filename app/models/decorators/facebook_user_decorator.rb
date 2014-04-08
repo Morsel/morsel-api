@@ -3,7 +3,7 @@ class FacebookUserDecorator < SimpleDelegator
     SocialWorker.perform_async(:facebook, id, post_id) if authorized_with_facebook?
   end
 
-  def post_message(message)
+  def post_facebook_message(message)
     facebook_client.put_connections('me', 'feed', message: message)
   end
 
