@@ -49,5 +49,17 @@ shared_examples 'TimelinePaginateable' do
 
       expect(json_data.count).to eq(expected_count)
     end
+
+    it 'works with the other parameters' do
+      expected_count = rand(3..6)
+      get endpoint, api_key: api_key_for_user(user),
+               count: expected_count,
+               max_id: paginateable_object_class.last.id,
+               format: :json
+
+      expect(response).to be_success
+
+      expect(json_data.count).to eq(expected_count)
+    end
   end
 end
