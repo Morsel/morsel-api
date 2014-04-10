@@ -8,7 +8,7 @@
 # ----------------- | ------------------ | ---------------------------
 # **`id`**          | `integer`          | `not null, primary key`
 # **`user_id`**     | `integer`          |
-# **`morsel_id`**   | `integer`          |
+# **`item_id`**     | `integer`          |
 # **`deleted_at`**  | `datetime`         |
 # **`created_at`**  | `datetime`         |
 # **`updated_at`**  | `datetime`         |
@@ -20,7 +20,7 @@ describe Like do
   subject(:like) { FactoryGirl.build(:like) }
 
   it { should respond_to(:user) }
-  it { should respond_to(:morsel) }
+  it { should respond_to(:item) }
 
   it_behaves_like 'Activityable' do
     let(:activityable_object) { like }

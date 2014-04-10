@@ -13,6 +13,11 @@ class ApiController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from ActionController::ParameterMissing, with: :parameter_missing
 
+  rescue_from Authority::SecurityViolation do |error|
+    render_json_errors({ api: ["Not authorized to #{error.action} #{error.resource.class}"] }, :forbidden)
+  end
+
+
   def authenticate_admin_user!
     redirect_to new_user_session_path unless current_user.try(:admin?)
   end
@@ -23,13 +28,17 @@ class ApiController < ActionController::Base
 
   # api_key is expected to be in the format: "#{user.id}:#{user.authentication_token}"
   def authenticate_user_from_token!
-    if params[:api_key].present?
-      authenticate_user = AuthenticateUser.run(
-        api_key: params[:api_key]
-      )
+    api_key = params[:api_key]
+    if api_key.present?
+      split_key = api_key.split(':')
+      if split_key.size == 2
+        user = User.find(split_key[0])
 
-      if authenticate_user.valid?
-        sign_in authenticate_user.result, store: false, bypass: true
+        if user && Devise.secure_compare(user.authentication_token, split_key[1])
+          sign_in user, store: false, bypass: true
+        else
+          unauthorized_token
+        end
       else
         unauthorized_token
       end

@@ -1,29 +1,30 @@
 class LikesController < ApiController
   respond_to :json
+  authorize_actions_for Like
 
   def create
-    create_like = CreateLike.run(
-      morsel: Morsel.find(params[:morsel_id]),
-      user: current_user
-    )
+    like = Like.find_by(item_id: params[:item_id], user_id: current_user.id)
 
-    if create_like.valid?
-      render_json 'OK'
+    render_json_errors({item: ['already liked'] }) && return if like
+
+    like = Like.new(item_id: params[:item_id], user_id: current_user.id)
+
+    if like.save
+      custom_respond_with like
     else
-      render_json_errors(create_like.errors)
+      render_json_errors like.errors
     end
   end
 
   def destroy
-    destroy_like = DestroyLike.run(
-      morsel: Morsel.find(params[:morsel_id]),
-      user: current_user
-    )
+    like = Like.find_by(item_id: params[:item_id], user_id: current_user.id)
+    render_json_errors({ item: ['not liked'] }) && return unless like
+    authorize_action_for like
 
-    if destroy_like.valid?
+    if like.destroy
       render_json 'OK'
     else
-      render_json_errors(destroy_like.errors)
+      render_json_errors like.errors
     end
   end
 end

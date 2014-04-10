@@ -29,7 +29,7 @@ describe 'Users API' do
 
       expect(response).to be_success
 
-      expect(json_data).to eq('true')
+      expect(json_data).to eq(true)
     end
 
     it 'returns false if the username does NOT exist' do
@@ -37,7 +37,7 @@ describe 'Users API' do
 
       expect(response).to be_success
 
-      expect(json_data).to eq('false')
+      expect(json_data).to eq(false)
     end
 
     it 'can also accept username in the URL' do
@@ -45,7 +45,7 @@ describe 'Users API' do
 
       expect(response).to be_success
 
-      expect(json_data).to eq('true')
+      expect(json_data).to eq(true)
     end
 
     it 'ignores case' do
@@ -53,7 +53,7 @@ describe 'Users API' do
 
       expect(response).to be_success
 
-      expect(json_data).to eq('true')
+      expect(json_data).to eq(true)
     end
 
     context 'username is a reserved path' do
@@ -63,7 +63,7 @@ describe 'Users API' do
 
         expect(response).to be_success
 
-        expect(json_data).to eq('true')
+        expect(json_data).to eq(true)
       end
     end
   end
@@ -74,7 +74,11 @@ describe 'Users API' do
     let(:fake_username) { "user_#{Faker::Lorem.characters(10)}" }
 
     it 'creates a user with the specified username and email' do
-      post '/users/reserveusername', email: fake_email, username: fake_username, format: :json
+      post '/users/reserveusername',  user: {
+                                        email: fake_email,
+                                        username: fake_username
+                                      },
+                                      format: :json
 
       expect(response).to be_success
       expect(json_data['user_id']).to_not be_nil
@@ -90,21 +94,27 @@ describe 'Users API' do
     it 'sends an email' do
       expect{
         Sidekiq::Testing.inline! {
-          post '/users/reserveusername', email: fake_email, username: fake_username, format: :json
+          post '/users/reserveusername',  user: {
+                                            email: fake_email,
+                                            username: fake_username
+                                          },
+                                          format: :json
         }
       }.to change(MandrillMailer.deliveries, :count).by(1)
     end
 
     it 'creates a user_event' do
       expect {
-        post '/users/reserveusername', email: fake_email,
-                                       username: fake_username,
-                                       __utmz: 'source=taco',
-                                       client: {
-                                        device: 'rspec',
-                                        version: '1.2.3'
-                                       },
-                                       format: :json
+        post '/users/reserveusername',  user: {
+                                          email: fake_email,
+                                          username: fake_username
+                                        },
+                                        __utmz: 'source=taco',
+                                        client: {
+                                          device: 'rspec',
+                                          version: '1.2.3'
+                                        },
+                                        format: :json
       }.to change(UserEvent, :count).by(1)
 
       user_event = UserEvent.last
@@ -117,7 +127,11 @@ describe 'Users API' do
 
     context 'email already registered' do
       it 'returns an error' do
-        post '/users/reserveusername', email: user.email, username: fake_username, format: :json
+        post '/users/reserveusername',  user: {
+                                          email: user.email,
+                                          username: fake_username
+                                        },
+                                        format: :json
 
         expect(response).to_not be_success
         expect(json_errors['email'].first).to eq('has already been taken')
@@ -126,7 +140,11 @@ describe 'Users API' do
 
     context 'username already registered' do
       it 'returns an error' do
-        post '/users/reserveusername', email: fake_email, username: user.username, format: :json
+        post '/users/reserveusername',  user: {
+                                          email: fake_email,
+                                          username: user.username
+                                        },
+                                        format: :json
 
         expect(response).to_not be_success
         expect(json_errors['username'].first).to eq('has already been taken')
@@ -138,14 +156,14 @@ describe 'Users API' do
     let(:user) { FactoryGirl.create(:user) }
 
     it 'sets the industry for the specified User' do
-      put "/users/#{user.id}/updateindustry", industry: 'media', format: :json
+      put "/users/#{user.id}/updateindustry", user: { industry: 'media' }, format: :json
       expect(response).to be_success
       expect(User.find(user.id).industry).to eq('media')
     end
 
     context 'invalid industry passed' do
       it 'throws an error' do
-        put "/users/#{user.id}/updateindustry", role: 'butt', format: :json
+        put "/users/#{user.id}/updateindustry", user: { industry: 'butt' }, format: :json
         expect(response).to_not be_success
       end
     end
@@ -238,63 +256,63 @@ describe 'Users API' do
   end
 
   describe 'GET /users/{:user_id|user_username} users#show' do
-    let(:user_with_posts) { FactoryGirl.create(:user_with_posts) }
-    let(:number_of_morsel_likes) { rand(2..6) }
+    let(:user_with_morsels) { FactoryGirl.create(:user_with_morsels) }
+    let(:number_of_item_likes) { rand(2..6) }
 
     before do
-      morsel = user_with_posts.morsels.first
-      number_of_morsel_likes.times { morsel.likers << FactoryGirl.create(:user) }
+      item = user_with_morsels.items.first
+      number_of_item_likes.times { item.likers << FactoryGirl.create(:user) }
     end
 
     it 'returns the User' do
-      get "/users/#{user_with_posts.id}", api_key: api_key_for_user(user_with_posts), format: :json
+      get "/users/#{user_with_morsels.id}", api_key: api_key_for_user(user_with_morsels), format: :json
 
       expect(response).to be_success
 
-      expect_json_keys(json_data, user_with_posts, %w(id username first_name last_name sign_in_count title bio))
+      expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name sign_in_count title bio))
       expect_nil_json_keys(json_data, %w(password encrypted_password auth_token))
 
       expect(json_data['photos']).to be_nil
-      expect(json_data['facebook_uid']).to eq(FacebookUserDecorator.new(user_with_posts).facebook_uid)
-      expect(json_data['twitter_username']).to eq(TwitterUserDecorator.new(user_with_posts).twitter_username)
+      expect(json_data['facebook_uid']).to eq(FacebookUserDecorator.new(user_with_morsels).facebook_uid)
+      expect(json_data['twitter_username']).to eq(TwitterUserDecorator.new(user_with_morsels).twitter_username)
 
-      expect(json_data['like_count']).to eq(number_of_morsel_likes)
-      expect(json_data['morsel_count']).to eq(user_with_posts.morsels.count)
-      expect(json_data['draft_count']).to eq(user_with_posts.posts.drafts.count)
+      expect(json_data['like_count']).to eq(number_of_item_likes)
+      expect(json_data['item_count']).to eq(user_with_morsels.items.count)
+      expect(json_data['draft_count']).to eq(user_with_morsels.morsels.drafts.count)
     end
 
     it 'should be public' do
-      get "/users/#{user_with_posts.id}", format: :json
+      get "/users/#{user_with_morsels.id}", format: :json
 
       expect(response).to be_success
     end
 
     context 'username passed instead of id' do
       it 'returns the User' do
-        get "/users/#{user_with_posts.username}", api_key: api_key_for_user(user_with_posts), format: :json
+        get "/users/#{user_with_morsels.username}", api_key: api_key_for_user(user_with_morsels), format: :json
 
         expect(response).to be_success
 
-        expect_json_keys(json_data, user_with_posts, %w(id username first_name last_name sign_in_count title bio))
+        expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name sign_in_count title bio))
         expect_nil_json_keys(json_data, %w(password encrypted_password auth_token))
 
         expect(json_data['photos']).to be_nil
-        expect(json_data['facebook_uid']).to eq(FacebookUserDecorator.new(user_with_posts).facebook_uid)
-        expect(json_data['twitter_username']).to eq(TwitterUserDecorator.new(user_with_posts).twitter_username)
+        expect(json_data['facebook_uid']).to eq(FacebookUserDecorator.new(user_with_morsels).facebook_uid)
+        expect(json_data['twitter_username']).to eq(TwitterUserDecorator.new(user_with_morsels).twitter_username)
 
-        expect(json_data['like_count']).to eq(number_of_morsel_likes)
-        expect(json_data['morsel_count']).to eq(user_with_posts.morsels.count)
+        expect(json_data['like_count']).to eq(number_of_item_likes)
+        expect(json_data['item_count']).to eq(user_with_morsels.items.count)
       end
     end
 
     context 'has a photo' do
       before do
-        user_with_posts.photo = Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
-        user_with_posts.save
+        user_with_morsels.photo = Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
+        user_with_morsels.save
       end
 
       it 'returns the User with the appropriate image sizes' do
-        get "/users/#{user_with_posts.id}", api_key: api_key_for_user(user_with_posts), format: :json
+        get "/users/#{user_with_morsels.id}", api_key: api_key_for_user(user_with_morsels), format: :json
 
         expect(response).to be_success
 
@@ -306,13 +324,13 @@ describe 'Users API' do
       end
     end
 
-    context 'has a Post draft' do
+    context 'has a Morsel draft' do
       before do
-        user_with_posts.posts.first.update(draft: true)
+        user_with_morsels.morsels.first.update(draft: true)
       end
 
       it 'returns 1 for draft_count' do
-        get "/users/#{user_with_posts.id}", api_key: api_key_for_user(user_with_posts), format: :json
+        get "/users/#{user_with_morsels.id}", api_key: api_key_for_user(user_with_morsels), format: :json
 
         expect(response).to be_success
 
@@ -336,63 +354,63 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /users/{:user_id|user_username}/posts' do
-    let(:posts_count) { 3 }
-    let(:user_with_posts) { FactoryGirl.create(:user_with_posts, posts_count: posts_count) }
-    let(:endpoint) { "/users/#{user_with_posts.id}/posts" }
+  describe 'GET /users/{:user_id|user_username}/morsels' do
+    let(:morsels_count) { 3 }
+    let(:user_with_morsels) { FactoryGirl.create(:user_with_morsels, morsels_count: morsels_count) }
+    let(:endpoint) { "/users/#{user_with_morsels.id}/morsels" }
 
     it_behaves_like 'TimelinePaginateable' do
-      let(:user) { FactoryGirl.create(:user_with_posts) }
-      let(:paginateable_object_class) { Post }
+      let(:user) { FactoryGirl.create(:user_with_morsels) }
+      let(:paginateable_object_class) { Morsel }
       before do
         paginateable_object_class.delete_all
-        30.times { FactoryGirl.create(:post_with_creator, creator: user_with_posts) }
+        30.times { FactoryGirl.create(:morsel_with_creator, creator: user_with_morsels) }
       end
     end
 
-    it 'returns all of the User\'s  Posts' do
-      get endpoint, api_key: api_key_for_user(user_with_posts), format: :json
+    it 'returns all of the User\'s Morsels' do
+      get endpoint, api_key: api_key_for_user(user_with_morsels), format: :json
 
       expect(response).to be_success
 
-      expect(json_data.count).to eq(user_with_posts.posts.count)
+      expect(json_data.count).to eq(user_with_morsels.morsels.count)
     end
 
     context 'has drafts' do
-      let(:draft_posts_count) { rand(3..6) }
+      let(:draft_morsels_count) { rand(3..6) }
       before do
-        draft_posts_count.times { FactoryGirl.create(:draft_post_with_morsels, creator: user_with_posts) }
+        draft_morsels_count.times { FactoryGirl.create(:draft_morsel_with_items, creator: user_with_morsels) }
       end
 
       it 'should NOT include drafts' do
-        get endpoint, api_key: api_key_for_user(user_with_posts),
+        get endpoint, api_key: api_key_for_user(user_with_morsels),
                                                   format: :json
 
         expect(response).to be_success
 
-        expect(json_data.count).to eq(posts_count)
+        expect(json_data.count).to eq(morsels_count)
       end
 
       context 'include_drafts=true' do
         it 'should include drafts' do
-          get endpoint, api_key: api_key_for_user(user_with_posts),
+          get endpoint, api_key: api_key_for_user(user_with_morsels),
                                                     include_drafts: true,
                                                     format: :json
 
           expect(response).to be_success
 
-          expect(json_data.count).to eq(posts_count + draft_posts_count)
+          expect(json_data.count).to eq(morsels_count + draft_morsels_count)
         end
       end
     end
 
     context 'username passed instead of id' do
-      it 'returns all of the User\'s  Posts' do
-        get "/users/#{user_with_posts.username}/posts", api_key: api_key_for_user(user_with_posts), format: :json
+      it 'returns all of the User\'s Morsels' do
+        get "/users/#{user_with_morsels.username}/morsels", api_key: api_key_for_user(user_with_morsels), format: :json
 
         expect(response).to be_success
 
-        expect(json_data.count).to eq(user_with_posts.posts.count)
+        expect(json_data.count).to eq(user_with_morsels.morsels.count)
       end
     end
   end
@@ -504,12 +522,12 @@ describe 'Users API' do
   describe 'GET /users/activities' do
     let(:endpoint) { '/users/activities' }
     let(:user) { FactoryGirl.create(:user) }
-    let(:morsels_count) { 3 }
-    let(:some_post) { FactoryGirl.create(:post_with_morsels, morsels_count: morsels_count) }
+    let(:items_count) { 3 }
+    let(:some_morsel) { FactoryGirl.create(:morsel_with_items, items_count: items_count) }
 
     before do
-      some_post.morsels.each do |morsel|
-        Sidekiq::Testing.inline! { morsel.likers << user }
+      some_morsel.items.each do |item|
+        Sidekiq::Testing.inline! { item.likers << user }
       end
     end
 
@@ -517,20 +535,20 @@ describe 'Users API' do
       let(:paginateable_object_class) { Activity }
       before do
         paginateable_object_class.delete_all
-        30.times { FactoryGirl.create(:morsel_like_activity, creator_id: user.id) }
+        30.times { FactoryGirl.create(:item_like_activity, creator_id: user.id) }
       end
     end
 
     it 'returns the User\'s recent activities' do
       get endpoint, api_key: api_key_for_user(user), format: :json
       expect(response).to be_success
-      expect(json_data.count).to eq(morsels_count)
+      expect(json_data.count).to eq(items_count)
       first_activity = json_data.first
       expect(first_activity['action_type']).to eq('Like')
-      expect(first_activity['subject_type']).to eq('Morsel')
+      expect(first_activity['subject_type']).to eq('Item')
 
-      # Since the activities call returns the newest first, compare against the last Morsel in some_post
-      expect_json_keys(first_activity['subject'], some_post.morsels.last, %w(id description nonce))
+      # Since the activities call returns the newest first, compare against the last Item in some_morsel
+      expect_json_keys(first_activity['subject'], some_morsel.items.last, %w(id description nonce))
     end
 
     context 'subject is deleted' do
@@ -542,7 +560,7 @@ describe 'Users API' do
         get endpoint, api_key: api_key_for_user(user),
                  format: :json
         expect(response).to be_success
-        expect(json_data.count).to eq(morsels_count - 1)
+        expect(json_data.count).to eq(items_count - 1)
       end
     end
   end
@@ -552,15 +570,15 @@ describe 'Users API' do
     let(:user) { FactoryGirl.create(:user) }
     let(:last_user) { FactoryGirl.create(:user) }
     let(:notifications_count) { 3 }
-    let(:some_post) { FactoryGirl.create(:post_with_creator, creator: user) }
+    let(:some_morsel) { FactoryGirl.create(:morsel_with_creator, creator: user) }
 
-    context 'a Morsel is liked' do
+    context 'an Item is liked' do
       before do
-        notifications_count.times { FactoryGirl.create(:morsel_with_creator, creator: user, post:some_post) }
-        user.morsels.each do |morsel|
-          Sidekiq::Testing.inline! { morsel.likers << FactoryGirl.create(:user) }
+        notifications_count.times { FactoryGirl.create(:item_with_creator, creator: user, morsel:some_morsel) }
+        user.items.each do |item|
+          Sidekiq::Testing.inline! { item.likers << FactoryGirl.create(:user) }
         end
-        Sidekiq::Testing.inline! { user.morsels.last.likers << last_user }
+        Sidekiq::Testing.inline! { user.items.last.likers << last_user }
       end
 
       it 'returns the User\'s recent notifications' do
@@ -568,18 +586,18 @@ describe 'Users API' do
         expect(response).to be_success
         expect(json_data.count).to eq(notifications_count + 1)
         first_notification = json_data.first
-        first_morsel = some_post.morsels.first
+        first_item = some_morsel.items.first
 
-        expect(first_notification['message']).to eq("#{last_user.full_name} (#{last_user.username}) liked #{first_morsel.post_title_with_description}".truncate(100, separator: ' ', omission: '... '))
+        expect(first_notification['message']).to eq("#{last_user.full_name} (#{last_user.username}) liked #{first_item.morsel_title_with_description}".truncate(100, separator: ' ', omission: '... '))
         expect(first_notification['payload_type']).to eq('Activity')
         expect(first_notification['payload']['action_type']).to eq('Like')
-        expect(first_notification['payload']['subject_type']).to eq('Morsel')
+        expect(first_notification['payload']['subject_type']).to eq('Item')
 
-        # Since the notifications call returns the newest first, compare against the last Morsel in some_post
-        expect_json_keys(first_notification['payload']['subject'], first_morsel, %w(id description nonce))
+        # Since the notifications call returns the newest first, compare against the last Item in some_morsel
+        expect_json_keys(first_notification['payload']['subject'], first_item, %w(id description nonce))
       end
 
-      context 'Morsel is unliked' do
+      context 'Item is unliked' do
         before do
           Like.last.destroy
         end

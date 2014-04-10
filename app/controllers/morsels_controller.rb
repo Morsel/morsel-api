@@ -1,81 +1,98 @@
 class MorselsController < ApiController
-  PUBLIC_ACTIONS = [:index]
+  PUBLIC_ACTIONS = [:index, :show]
+  authorize_actions_for Morsel, except: PUBLIC_ACTIONS
+  authority_actions publish: 'update', drafts: 'read'
   respond_to :json
 
-  include PhotoHashable
-
   def create
-    morsel_params = MorselParams.build(params)
-    # Handle deprecated post_id, post_title, and sort_order
-    morsel_params[:post] = { id: params[:post_id], title: params[:post_title] } if params[:post_id].present?
-    morsel_params[:sort_order] = params[:sort_order]  if params[:sort_order].present?
+    morsel = Morsel.new(MorselParams.build(params))
+    morsel.creator = current_user
 
-    create_morsel = CreateMorsel.run(
-      params: morsel_params,
-      uploaded_photo_hash: photo_hash(morsel_params[:photo]),
-      user: current_user,
-      post_to_facebook: params[:post_to_facebook],
-      post_to_twitter: params[:post_to_twitter]
-    )
-
-    if create_morsel.valid?
-      custom_respond_with create_morsel.result
+    if morsel.save
+      custom_respond_with morsel
     else
-      render_json_errors create_morsel.errors
+      render_json_errors morsel.errors
     end
   end
 
+  def index
+    if params[:user_id_or_username].blank?
+      morsels = Morsel.includes(:items, :creator)
+                  .published
+                  .since(params[:since_id])
+                  .max(params[:max_id])
+                  .limit(pagination_count)
+                  .order('id DESC')
+    else
+      user = User.find_by_id_or_username(params[:user_id_or_username])
+      raise ActiveRecord::RecordNotFound if user.nil?
+      morsels = Morsel.includes(:items, :creator)
+                  .include_drafts(params[:include_drafts])
+                  .since(params[:since_id])
+                  .max(params[:max_id])
+                  .where('creator_id = ?', user.id)
+                  .limit(pagination_count)
+                  .order('id DESC')
+    end
+
+    custom_respond_with morsels
+  end
+
+  def drafts
+    morsels = Morsel.includes(:items, :creator)
+                  .drafts
+                  .since(params[:since_id])
+                  .max(params[:max_id])
+                  .where('creator_id = ?', current_user.id)
+                  .limit(pagination_count)
+                  .order('updated_at DESC')
+
+    custom_respond_with morsels
+  end
+
   def show
-    custom_respond_with Morsel.find(params[:id])
+    custom_respond_with Morsel.includes(:items, :creator).find(params[:id])
   end
 
   def update
-    morsel_params = MorselParams.build(params)
-    # Handle deprecated post_id, post_title, and sort_order
-    morsel_params[:post] = { id: params[:post_id], title: params[:post_title] } if params[:post_id].present?
-    morsel_params[:sort_order] = params[:sort_order]  if params[:sort_order].present?
+    morsel = Morsel.find params[:id]
+    authorize_action_for morsel
 
-    update_morsel = UpdateMorsel.run(
-      morsel: Morsel.find(params[:id]),
-      params: morsel_params,
-      uploaded_photo_hash: photo_hash(morsel_params[:photo]),
-      user: current_user,
-      post_to_facebook: params[:post_to_facebook],
-      post_to_twitter: params[:post_to_twitter]
-    )
-
-    if update_morsel.valid?
-      custom_respond_with update_morsel.result
+    if morsel.update(MorselParams.build(params))
+      custom_respond_with morsel
     else
-      render_json_errors update_morsel.errors
+      render_json_errors morsel.errors
     end
   end
 
   def destroy
-    destroy_morsel = DestroyMorsel.run(
-      morsel: Morsel.find(params[:id]),
-      user: current_user
-    )
+    morsel = Morsel.find(params[:id])
+    authorize_action_for morsel
 
-    if destroy_morsel.valid?
+    if morsel.destroy
       render_json 'OK'
     else
-      render_json_errors(destroy_morsel.errors)
+      render_json_errors(morsel.errors)
     end
   end
 
-  def likers
-    likers = User.includes(:likes)
-                 .where('likes.morsel_id = ?', params[:id])
-                 .order('likes.id DESC')
-                 .references(:likes)
+  def publish
+    morsel = Morsel.find params[:morsel_id]
+    authorize_action_for morsel
 
-    custom_respond_with likers
+    if morsel.update(draft: false)
+      FacebookUserDecorator.new(current_user).queue_facebook_message(morsel.id) if params[:post_to_facebook]
+      TwitterUserDecorator.new(current_user).queue_twitter_message(morsel.id) if params[:post_to_twitter]
+
+      custom_respond_with morsel
+    else
+      render_json_errors morsel.errors
+    end
   end
 
   class MorselParams
     def self.build(params)
-      params.require(:morsel).permit(:description, :photo, :nonce, :sort_order, post: [:id, :title])
+      params.require(:morsel).permit(:title, :draft, :primary_item_id)
     end
   end
 end

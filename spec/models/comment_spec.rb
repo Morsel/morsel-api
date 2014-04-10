@@ -8,7 +8,7 @@
 # ------------------ | ------------------ | ---------------------------
 # **`id`**           | `integer`          | `not null, primary key`
 # **`user_id`**      | `integer`          |
-# **`morsel_id`**    | `integer`          |
+# **`item_id`**      | `integer`          |
 # **`description`**  | `text`             |
 # **`deleted_at`**   | `datetime`         |
 # **`created_at`**   | `datetime`         |
@@ -21,7 +21,7 @@ describe Comment do
   subject(:comment) { FactoryGirl.build(:comment) }
 
   it { should respond_to(:user) }
-  it { should respond_to(:morsel) }
+  it { should respond_to(:item) }
   it { should respond_to(:description) }
 
   it_behaves_like 'Activityable' do

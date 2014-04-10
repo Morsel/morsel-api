@@ -1,21 +1,21 @@
 class UserWithPrivateAttributesSerializer < UserSerializer
   attributes :draft_count,
              :like_count,
-             :morsel_count,
+             :item_count,
              :sign_in_count,
              :facebook_uid,
              :twitter_username
 
   def like_count
-    object.morsel_likes_for_my_morsels_by_others_count
+    object.item_likes_for_my_items_by_others_count
   end
 
-  def morsel_count
-    object.morsels.count
+  def item_count
+    object.items.count
   end
 
   def draft_count
-    object.posts.drafts.count
+    object.morsels.drafts.count
   end
 
   def facebook_uid

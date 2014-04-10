@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140407144918) do
+ActiveRecord::Schema.define(version: 20140409200432) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,14 +66,14 @@ ActiveRecord::Schema.define(version: 20140407144918) do
 
   create_table "comments", force: true do |t|
     t.integer  "user_id"
-    t.integer  "morsel_id"
+    t.integer  "item_id"
     t.text     "description"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "comments", ["user_id", "morsel_id"], name: "index_comments_on_user_id_and_morsel_id", using: :btree
+  add_index "comments", ["user_id", "item_id"], name: "index_comments_on_user_id_and_item_id", using: :btree
 
   create_table "emails", force: true do |t|
     t.string   "class_name"
@@ -105,17 +105,7 @@ ActiveRecord::Schema.define(version: 20140407144918) do
     t.datetime "updated_at"
   end
 
-  create_table "likes", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "morsel_id"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "likes", ["user_id", "morsel_id"], name: "index_likes_on_user_id_and_morsel_id", using: :btree
-
-  create_table "morsels", force: true do |t|
+  create_table "items", force: true do |t|
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -127,12 +117,41 @@ ActiveRecord::Schema.define(version: 20140407144918) do
     t.datetime "deleted_at"
     t.string   "nonce"
     t.boolean  "photo_processing"
-    t.integer  "post_id"
+    t.integer  "morsel_id"
     t.integer  "sort_order"
   end
 
+  add_index "items", ["creator_id"], name: "index_items_on_creator_id", using: :btree
+  add_index "items", ["morsel_id"], name: "index_items_on_post_id", using: :btree
+
+  create_table "likes", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "item_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "likes", ["user_id", "item_id"], name: "index_likes_on_user_id_and_item_id", using: :btree
+
+  create_table "morsels", force: true do |t|
+    t.string   "title"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "creator_id"
+    t.string   "cached_slug"
+    t.datetime "deleted_at"
+    t.boolean  "draft",              default: true, null: false
+    t.datetime "published_at"
+    t.integer  "primary_item_id"
+    t.string   "photo"
+    t.string   "photo_content_type"
+    t.string   "photo_file_size"
+    t.datetime "photo_updated_at"
+  end
+
+  add_index "morsels", ["cached_slug"], name: "index_morsels_on_cached_slug", using: :btree
   add_index "morsels", ["creator_id"], name: "index_morsels_on_creator_id", using: :btree
-  add_index "morsels", ["post_id"], name: "index_morsels_on_post_id", using: :btree
 
   create_table "notifications", force: true do |t|
     t.integer  "payload_id"
@@ -146,25 +165,6 @@ ActiveRecord::Schema.define(version: 20140407144918) do
   end
 
   add_index "notifications", ["user_id"], name: "index_notifications_on_user_id", using: :btree
-
-  create_table "posts", force: true do |t|
-    t.string   "title"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "creator_id"
-    t.string   "cached_slug"
-    t.datetime "deleted_at"
-    t.boolean  "draft",              default: false, null: false
-    t.datetime "published_at"
-    t.integer  "primary_morsel_id"
-    t.string   "photo"
-    t.string   "photo_content_type"
-    t.string   "photo_file_size"
-    t.datetime "photo_updated_at"
-  end
-
-  add_index "posts", ["cached_slug"], name: "index_posts_on_cached_slug", using: :btree
-  add_index "posts", ["creator_id"], name: "index_posts_on_creator_id", using: :btree
 
   create_table "roles", force: true do |t|
     t.string   "name"

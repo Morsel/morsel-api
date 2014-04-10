@@ -57,7 +57,6 @@ FactoryGirl.define do
       last_name 'Ferguson'
       password 'test1234'
       title 'Suck it Trebek'
-      industry 'diner'
     end
 
     factory :chef, class: User do
@@ -76,13 +75,13 @@ FactoryGirl.define do
       end
     end
 
-    factory :user_with_posts do
+    factory :user_with_morsels do
       ignore do
-        posts_count 3
+        morsels_count 3
       end
 
       after(:create) do |user, evaluator|
-        create_list(:post_with_morsels, evaluator.posts_count, creator: user)
+        create_list(:morsel_with_items, evaluator.morsels_count, creator: user)
       end
     end
   end

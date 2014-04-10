@@ -7,99 +7,93 @@
 # Name                      | Type               | Attributes
 # ------------------------- | ------------------ | ---------------------------
 # **`id`**                  | `integer`          | `not null, primary key`
-# **`description`**         | `text`             |
+# **`title`**               | `string(255)`      |
 # **`created_at`**          | `datetime`         |
 # **`updated_at`**          | `datetime`         |
 # **`creator_id`**          | `integer`          |
+# **`cached_slug`**         | `string(255)`      |
+# **`deleted_at`**          | `datetime`         |
+# **`draft`**               | `boolean`          | `default(TRUE), not null`
+# **`published_at`**        | `datetime`         |
+# **`primary_item_id`**     | `integer`          |
 # **`photo`**               | `string(255)`      |
 # **`photo_content_type`**  | `string(255)`      |
 # **`photo_file_size`**     | `string(255)`      |
 # **`photo_updated_at`**    | `datetime`         |
-# **`deleted_at`**          | `datetime`         |
-# **`nonce`**               | `string(255)`      |
-# **`photo_processing`**    | `boolean`          |
-# **`post_id`**             | `integer`          |
-# **`sort_order`**          | `integer`          |
 #
 
 class Morsel < ActiveRecord::Base
   include Authority::Abilities
+  include Feedable
   include PhotoUploadable
   include TimelinePaginateable
   include UserCreatable
 
   acts_as_paranoid
+  is_sluggable :title
 
-  belongs_to :creator, class_name: 'User', foreign_key: 'creator_id'
-  has_many :activities, as: :subject, dependent: :destroy
-  has_many :commenters, through: :comments, source: :user
-  has_many :comments, dependent: :destroy
-  has_many :likers, through: :likes, source: :user
-  has_many :likes, dependent: :destroy
-  belongs_to :post, touch: true
+  belongs_to  :creator, class_name: 'User', foreign_key: 'creator_id'
+  has_many    :items, -> { order('sort_order ASC') }, dependent: :destroy
 
-  before_save :check_sort_order
+  before_save :update_published_at_if_necessary
 
   mount_uploader :photo, MorselPhotoUploader
   process_in_background :photo
 
-  scope :feed, -> { includes(:creator, :post) }
+  validate  :primary_item_belongs_to_morsel
 
-  validates :post, presence: true
+  validates :title,
+            presence: true,
+            length: { maximum: 50 }
 
-  def like_count
-    likes.count
+  scope :drafts, -> { where(draft: true) }
+  scope :published, -> { where(draft: false) }
+  scope :include_drafts, -> (include_drafts) { where(draft: false) unless include_drafts.present? }
+
+  def total_like_count
+     items.map(&:like_count).reduce(:+)
   end
 
-  def comment_count
-    comments.count
+  def total_comment_count
+     items.map(&:comment_count).reduce(:+)
   end
 
-  def url
-    # https://eatmorsel.com/marty/1-my-first-post/2
-    "#{post.url_for_morsel(self)}"
+  def primary_item
+    items.find primary_item_id
   end
 
   def photos_hash
     if photo_url.present?
       {
-        _50x50:   photo_url(:_50x50),
-        _80x80:   photo_url(:_80x80),
-        _100x100: photo_url(:_100x100),
-        _240x240: photo_url(:_240x240),
-        _320x320: photo_url(:_320x320),
-        _480x480: photo_url(:_480x480),
-        _640x640: photo_url(:_640x640),
-        _992x992: photo_url(:_992x992)
+        _400x300: photo_url,
       }
     end
   end
 
-  def post_title_with_description
-    message = ''
-    message << "#{post.title}: " if post && post.title?
-    message << "#{description} " if description.present?
+  def facebook_message
+    "#{title}: #{url}".normalize
+  end
+
+  def twitter_message
+    "#{title}: ".twitter_string(url)
+  end
+
+  def url
+    # https://eatmorsel.com/marty/1-my-first-morsel
+    "#{Settings.morsel.web_url}/#{creator.username}/#{id}-#{cached_slug}"
+  end
+
+  def url_for_item(item)
+    "#{url}/#{items.find_index(item) + 1}"
   end
 
   private
 
-  def check_sort_order
-    if self.sort_order_changed?
-      existing_morsel = Morsel.find_by(post: self.post, sort_order: self.sort_order)
-
-      # If the sort_order has been taken, increment the sort_order for every morsel >= sort_order
-      self.post.morsels.where('sort_order >= ?', self.sort_order).update_all('sort_order = sort_order + 1') if existing_morsel
-    end
-
-    self.sort_order = generate_sort_order if self.sort_order.blank?
+  def primary_item_belongs_to_morsel
+    errors.add(:primary_item, 'does not belong to this Morsel') if primary_item_id && !item_ids.include?(primary_item_id)
   end
 
-  def generate_sort_order
-    last_sort_order = post.morsels.maximum(:sort_order)
-    if last_sort_order.present?
-      last_sort_order + 1
-    else
-      1
-    end
+  def update_published_at_if_necessary
+    self.published_at = DateTime.now if !published_at && !draft
   end
 end

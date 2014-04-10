@@ -1,25 +1,25 @@
 class CommentsController < ApiController
   PUBLIC_ACTIONS = [:index]
+  authorize_actions_for Comment, except: PUBLIC_ACTIONS
   respond_to :json
 
   def create
-    create_comment = CreateComment.run(
-      description: CommentParams.build(params)[:description],
-      morsel: Morsel.find(params[:morsel_id]),
-      user: current_user
-    )
+    item = Item.find(params[:item_id])
 
-    if create_comment.valid?
-      custom_respond_with create_comment.result
+    comment = item.comments.build(CommentParams.build(params))
+    comment.user = current_user
+
+    if comment.save
+      custom_respond_with comment
     else
-      render_json_errors(create_comment.errors)
+      render_json_errors(comment.errors)
     end
   end
 
   def index
     comments = Comment.since(params[:since_id])
                       .max(params[:max_id])
-                      .where(morsel_id: params[:morsel_id])
+                      .where(item_id: params[:item_id])
                       .limit(pagination_count)
                       .order('id DESC')
 
@@ -27,15 +27,14 @@ class CommentsController < ApiController
   end
 
   def destroy
-    destroy_comment = DestroyComment.run(
-      comment: Comment.find(params[:id]),
-      user: current_user
-    )
+    comment = Comment.find(params[:id])
 
-    if destroy_comment.valid?
+    authorize_action_for comment
+
+    if comment.destroy
       render_json 'OK'
     else
-      render_json_errors(destroy_comment.errors)
+      render_json_errors(comment.errors)
     end
   end
 

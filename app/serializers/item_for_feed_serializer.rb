@@ -1,4 +1,4 @@
-class MorselForFeedSerializer < ActiveModel::Serializer
+class ItemForFeedSerializer < ActiveModel::Serializer
   attributes :id,
              :description,
              :created_at,
@@ -10,15 +10,15 @@ class MorselForFeedSerializer < ActiveModel::Serializer
              :liked,
              :creator,
              :sort_order,
-             :post
+             :morsel
 
   def photos
     object.photos_hash
   end
 
   def in_progression
-    if object.post
-      object.post.morsels.count > 1
+    if object.morsel
+      object.morsel.items.count > 1
     else
       false
     end
@@ -39,14 +39,14 @@ class MorselForFeedSerializer < ActiveModel::Serializer
     }
   end
 
-  def post
-    post = object.post
-    if post
+  def morsel
+    morsel = object.morsel
+    if morsel
       {
-        id: post.id,
-        title: post.title,
-        slug: post.cached_slug,
-        created_at: post.created_at
+        id: morsel.id,
+        title: morsel.title,
+        slug: morsel.cached_slug,
+        created_at: morsel.created_at
       }
     else
       nil

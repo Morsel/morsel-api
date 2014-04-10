@@ -1,20 +1,20 @@
 class SocialWorker
   include Sidekiq::Worker
 
-  def perform(network, user_id, post_id)
+  def perform(network, user_id, morsel_id)
     user = User.includes(:authorizations).find(user_id)
-    post = Post.find post_id
+    morsel = Morsel.find morsel_id
 
-    if post.photo.nil?
-      collage_generator_decorated_post = PostCollageGeneratorDecorator.new(post)
-      collage_generator_decorated_post.generate
+    if morsel.photo.nil?
+      collage_generator_decorated_morsel = MorselCollageGeneratorDecorator.new(morsel)
+      collage_generator_decorated_morsel.generate
     end
 
     case network
     when 'facebook'
-      FacebookUserDecorator.new(user).post_facebook_message(post.facebook_message)
+      FacebookUserDecorator.new(user).morsel_facebook_message(morsel.facebook_message)
     when 'twitter'
-      TwitterUserDecorator.new(user).post_twitter_message(post.twitter_message)
+      TwitterUserDecorator.new(user).morsel_twitter_message(morsel.twitter_message)
     else
       raise "Invalid Network: #{network}"
     end

@@ -7,50 +7,43 @@
 # Name                      | Type               | Attributes
 # ------------------------- | ------------------ | ---------------------------
 # **`id`**                  | `integer`          | `not null, primary key`
-# **`description`**         | `text`             |
+# **`title`**               | `string(255)`      |
 # **`created_at`**          | `datetime`         |
 # **`updated_at`**          | `datetime`         |
 # **`creator_id`**          | `integer`          |
+# **`cached_slug`**         | `string(255)`      |
+# **`deleted_at`**          | `datetime`         |
+# **`draft`**               | `boolean`          | `default(TRUE), not null`
+# **`published_at`**        | `datetime`         |
+# **`primary_item_id`**     | `integer`          |
 # **`photo`**               | `string(255)`      |
 # **`photo_content_type`**  | `string(255)`      |
 # **`photo_file_size`**     | `string(255)`      |
 # **`photo_updated_at`**    | `datetime`         |
-# **`deleted_at`**          | `datetime`         |
-# **`nonce`**               | `string(255)`      |
-# **`photo_processing`**    | `boolean`          |
-# **`post_id`**             | `integer`          |
-# **`sort_order`**          | `integer`          |
 #
-
-# Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
   factory :morsel do
-    association(:post)
-    description { Faker::Lorem.sentence(rand(5..100)) }
-    photo Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
+    title { Faker::Lorem.sentence(rand(2..4)).truncate(50) }
+    draft false
 
     factory :morsel_with_creator, class: Morsel do
       association(:creator, factory: :user)
-      factory :morsel_with_creator_and_post do
-        association(:post, factory: :post_with_creator)
+      factory :morsel_with_creator_and_photo do
+        photo Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
       end
-      factory :morsel_with_likers do
+
+      factory :morsel_with_items, class: Morsel do
         ignore do
-          likes_count 3
+          items_count 3
         end
 
         after(:create) do |morsel, evaluator|
-          create_list(:like, evaluator.likes_count, morsel: morsel)
-        end
-      end
-      factory :morsel_with_creator_and_comments do
-        ignore do
-          comments_count 2
+          create_list(:item, evaluator.items_count, morsel: morsel, creator: morsel.creator)
         end
 
-        after(:create) do |morsel, evaluator|
-          create_list(:comment, evaluator.comments_count, morsel: morsel)
+        factory :draft_morsel_with_items, class: Morsel do
+          draft true
         end
       end
     end

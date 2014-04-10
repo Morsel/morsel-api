@@ -16,8 +16,8 @@
 #
 
 FactoryGirl.define do
-  factory :post_feed_item, class: FeedItem do
-    factory :visible_post_feed_item, class: FeedItem do
+  factory :morsel_feed_item, class: FeedItem do
+    factory :visible_morsel_feed_item, class: FeedItem do
       visible true
     end
   end
