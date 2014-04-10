@@ -114,6 +114,7 @@ describe Morsel do
     subject(:facebook_message) { morsel_with_creator.facebook_message }
 
     it { should include(morsel_with_creator.title) }
+    it { should include(morsel_with_creator.creator.full_name) }
     it { should include(morsel_with_creator.url) }
   end
 
@@ -122,8 +123,9 @@ describe Morsel do
     subject(:twitter_message) { morsel_with_creator.twitter_message }
 
     it { should include(morsel_with_creator.title) }
+    it { should include(morsel_with_creator.creator.full_name) }
     it { should include(morsel_with_creator.url) }
-    it { should include(' via @eatmorsel') }
+    it { should include(' on @eatmorsel') }
   end
 
   context 'has Items' do
