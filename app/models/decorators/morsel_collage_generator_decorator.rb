@@ -133,9 +133,9 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
 
       c.pointsize 12
       c.stroke 'black'
-      c.draw "text 70, 19 'eatmorsel.com/#{creator.username}'"
+      c.draw "text 70, 19 'www.eatmorsel.com/#{creator.username}'"
       c.stroke 'none'
-      c.draw "text 70, 19  'eatmorsel.com/#{creator.username}'"
+      c.draw "text 70, 19  'www.eatmorsel.com/#{creator.username}'"
     end
 
     result.format 'png'
@@ -245,9 +245,9 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
 
       c.pointsize 12
       c.stroke 'black'
-      c.draw "text 70, 19 'eatmorsel.com/#{creator.username}'"
+      c.draw "text 70, 19 'www.eatmorsel.com/#{creator.username}'"
       c.stroke 'none'
-      c.draw "text 70, 19  'eatmorsel.com/#{creator.username}'"
+      c.draw "text 70, 19  'www.eatmorsel.com/#{creator.username}'"
     end
 
     result.format 'png'
@@ -363,9 +363,9 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
 
       c.pointsize 12
       c.stroke 'black'
-      c.draw "text 70, 19 'eatmorsel.com/#{creator.username}'"
+      c.draw "text 70, 19 'www.eatmorsel.com/#{creator.username}'"
       c.stroke 'none'
-      c.draw "text 70, 19  'eatmorsel.com/#{creator.username}'"
+      c.draw "text 70, 19  'www.eatmorsel.com/#{creator.username}'"
     end
 
     result.format 'png'

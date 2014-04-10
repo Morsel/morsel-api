@@ -17,7 +17,7 @@ MorselApp::Application.routes.draw do
                 registrations: 'registrations'
               }
 
-  resources :users, only: [:index, :update] do
+  resources :users, only: [:update] do
     collection do
       post 'authorizations' => 'authorizations#create'
       get 'authorizations' => 'authorizations#index'

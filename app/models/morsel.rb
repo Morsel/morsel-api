@@ -71,11 +71,12 @@ class Morsel < ActiveRecord::Base
   end
 
   def facebook_message
-    "#{title}: #{url}".normalize
+    "\"#{title}\" from #{creator.full_name} on Morsel #{url}".normalize
   end
 
   def twitter_message
-    "#{title}: ".twitter_string(url)
+    twitter_username_or_full_name = TwitterUserDecorator.new(creator).twitter_username.presence || creator.full_name
+    "\"#{title}\" from #{twitter_username_or_full_name} on @#{Settings.morsel.twitter_username}".twitter_string(url)
   end
 
   def url

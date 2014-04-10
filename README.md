@@ -17,6 +17,7 @@ PORT=3000
 
 MORSEL_API_URL=https://api.eatmorsel.com
 MORSEL_WEB_URL=https://eatmorsel.com
+MORSEL_TWITTER_USERNAME=eatmorsel
 PROFILER_PASSWORD=
 
 DEVELOPER_EMAIL=turdferg@eatmorsel.com

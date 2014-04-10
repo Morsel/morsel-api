@@ -35,7 +35,7 @@ class UsersController < ApiController
 
   def updateindustry
     user_params = UserParams.build(params)
-    user = User.find_by(user_params[:email])
+    user = User.find_by(user_params[:id])
 
     if user.update(industry: user_params[:industry])
       render_json 'OK'
