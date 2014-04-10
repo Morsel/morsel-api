@@ -10,7 +10,8 @@ class UserSerializer < ActiveModel::Serializer
              :photos,
              :photo_processing,
              :facebook_uid,
-             :twitter_username
+             :twitter_username,
+             :staff
 
   def photos
     object.photos_hash

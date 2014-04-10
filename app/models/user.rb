@@ -150,5 +150,11 @@ class User < ActiveRecord::Base
     else
       remove_role(:admin)
     end
+
+    if staff
+      add_role(:staff)
+    else
+      remove_role(:staff)
+    end
   end
 end

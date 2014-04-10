@@ -18,10 +18,6 @@ describe 'Core Extensions' do
           expect(twitter_string.length).to be <= 140
         end
 
-        it 'ends with \'... \'' do
-          expect(twitter_string[-27, 27]).to eq('... some_url via @eatmorsel')
-        end
-
         context 'has url' do
           let(:url) { 'https://eatmorsel.com/turdferg/posts/123/4' }
           let(:twitter_string_with_url) { Faker::Lorem.characters(rand(140..200)).twitter_string(url) }
@@ -31,8 +27,8 @@ describe 'Core Extensions' do
           end
 
           it 'truncates the string without ruining the URL' do
-            url_with_via = "#{url} via @eatmorsel"
-            expect(twitter_string_with_url[-url_with_via.length, url_with_via.length]).to eq(url_with_via)
+            expect(twitter_string_with_url).to include(url)
+            expect(twitter_string_with_url).to include('on @eatmorsel')
           end
         end
       end
@@ -42,7 +38,7 @@ describe 'Core Extensions' do
         let(:twitter_string) { random_string.twitter_string('some_url') }
 
         it 'returns the same string' do
-          expect(twitter_string).to eq("#{random_string} some_url via @eatmorsel")
+          expect(twitter_string).to eq("#{random_string} some_url")
         end
       end
     end

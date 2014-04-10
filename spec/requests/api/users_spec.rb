@@ -239,22 +239,6 @@ describe 'Users API' do
     end
   end
 
-  # Undocumented method
-  describe 'GET /users users#index' do
-    let(:users_count) { 3 }
-    before do
-      users_count.times { FactoryGirl.create(:user) }
-    end
-
-    it 'returns a list of Users' do
-      get '/users', api_key: api_key_for_user(User.first), format: :json
-
-      expect(response).to be_success
-
-      expect(json_data.count).to eq(users_count)
-    end
-  end
-
   describe 'GET /users/{:user_id|user_username} users#show' do
     let(:user_with_morsels) { FactoryGirl.create(:user_with_morsels) }
     let(:number_of_item_likes) { rand(2..6) }

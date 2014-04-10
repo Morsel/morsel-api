@@ -167,7 +167,7 @@ describe 'Morsels API' do
       expect_json_keys(json_data, new_morsel, %w(id title creator_id))
       expect(json_data['title']).to eq(expected_title)
       expect(json_data['photos']).to be_nil
-      expect(new_morsel.draft).to be_false
+      expect(new_morsel.draft).to be_true
     end
 
     context 'draft is set to true' do
