@@ -370,6 +370,18 @@ describe 'Morsels API' do
       expect(new_morsel.draft).to eq(false)
     end
 
+    it 'should set the primary_item_id of the Morsel if passed' do
+      post "/morsels/#{existing_draft_morsel.id}/publish",  api_key: api_key_for_user(chef),
+                                                            primary_item_id: existing_draft_morsel.items.first.id,
+                                                            format: :json
+
+      expect(response).to be_success
+
+      expect(json_data['primary_item_id']).to eq(existing_draft_morsel.items.first.id)
+      new_morsel = Morsel.find(existing_draft_morsel.id)
+      expect(new_morsel.primary_item_id).to eq(existing_draft_morsel.items.first.id)
+    end
+
     context 'post_to_facebook included in parameters' do
       let(:chef_with_facebook_authorization) { FactoryGirl.create(:chef_with_facebook_authorization) }
       let(:existing_draft_morsel) { FactoryGirl.create(:draft_morsel_with_items, creator: chef_with_facebook_authorization) }

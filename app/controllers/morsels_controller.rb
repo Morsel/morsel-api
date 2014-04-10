@@ -80,7 +80,10 @@ class MorselsController < ApiController
     morsel = Morsel.find params[:morsel_id]
     authorize_action_for morsel
 
-    if morsel.update(draft: false)
+    morsel.draft = false
+    morsel.primary_item_id = params[:primary_item_id] if params[:primary_item_id].present?
+
+    if morsel.save
       FacebookUserDecorator.new(current_user).queue_facebook_message(morsel.id) if params[:post_to_facebook]
       TwitterUserDecorator.new(current_user).queue_twitter_message(morsel.id) if params[:post_to_twitter]
 
