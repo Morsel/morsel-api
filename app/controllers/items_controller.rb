@@ -1,5 +1,5 @@
 class ItemsController < ApiController
-  PUBLIC_ACTIONS = [:index]
+  PUBLIC_ACTIONS = [:index, :show]
   authorize_actions_for Item, except: PUBLIC_ACTIONS
   authority_actions likers: 'read'
   respond_to :json
