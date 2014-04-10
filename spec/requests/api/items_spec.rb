@@ -107,7 +107,7 @@ describe 'Items API' do
     end
   end
 
-  describe 'GET /items items#show' do
+  describe 'GET /items/{:item_id} items#show' do
     let(:item_with_creator_and_morsel) { FactoryGirl.create(:item_with_creator_and_morsel) }
 
     it 'returns the Item' do
@@ -137,6 +137,12 @@ describe 'Items API' do
         expect(photos['_100x100']).to_not be_nil
         expect(photos['_50x50']).to_not be_nil
       end
+    end
+
+    it 'should be public' do
+      get "/items/#{item_with_creator_and_morsel.id}", format: :json
+
+      expect(response).to be_success
     end
   end
 
