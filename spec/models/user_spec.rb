@@ -196,6 +196,19 @@ describe User do
       end
     end
 
+    describe 'staff' do
+      context 'is true' do
+        before { user.update(staff: true) }
+        it 'adds the :staff role' do
+          expect(user.has_role?(:staff)).to be_true
+        end
+        it 'removed the :staff role if staff is set to false' do
+          user.update(staff: false)
+          expect(user.has_role?(:staff)).to be_false
+        end
+      end
+    end
+
     describe 'industry' do
       context 'chef' do
         before { user.update(industry: 'chef') }
