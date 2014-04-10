@@ -1100,7 +1100,9 @@ api_key && morsel_id exist
     "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
     "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
   },
-  "photo_processing": nil
+  "photo_processing": nil,
+  "facebook_uid": "1234567890",
+  "twitter_username": "morsel_marty"
 }
 ```
 
@@ -1126,9 +1128,7 @@ You'll only see these if the api_key matches the User you're looking up
   "draft_count": 0,
   "like_count": 3,
   "item_count": 1,
-  "sign_in_count": 1,
-  "facebook_uid": "1234567890",
-  "twitter_username": "morsel_marty"
+  "sign_in_count": 1
 }
 ```
 
