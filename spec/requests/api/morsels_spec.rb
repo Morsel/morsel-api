@@ -372,7 +372,7 @@ describe 'Morsels API' do
 
     it 'should set the primary_item_id of the Morsel if passed' do
       post "/morsels/#{existing_draft_morsel.id}/publish",  api_key: api_key_for_user(chef),
-                                                            primary_item_id: existing_draft_morsel.items.first.id,
+                                                            morsel: { primary_item_id: existing_draft_morsel.items.first.id },
                                                             format: :json
 
       expect(response).to be_success

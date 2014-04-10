@@ -81,7 +81,8 @@ class MorselsController < ApiController
     authorize_action_for morsel
 
     morsel.draft = false
-    morsel.primary_item_id = params[:primary_item_id] if params[:primary_item_id].present?
+    morsel_params = MorselParams.build(params)
+    morsel.primary_item_id = morsel_params[:primary_item_id] if morsel_params[:primary_item_id].present?
 
     if morsel.save
       FacebookUserDecorator.new(current_user).queue_facebook_message(morsel.id) if params[:post_to_facebook]

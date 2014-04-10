@@ -785,6 +785,7 @@ Publishes the Morsel with the specified ```morsel_id``` by setting a `published_
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
+| morsel[primary_item_id] | Number | The ID of the Item to set as the primary Item for this Morsel. Must be the ID of a Item that is part of the Morsel | | |
 | post_to_facebook | Boolean | Post to the current_user's Facebook wall with the Morsel's title and a link to the Morsel. | false | |
 | post_to_twitter | Boolean | Send a Tweet from the current_user with the Morsel's title and a link to the Morsel. If the title and description are too long they will be truncated to allow enough room for the link. | false | |
 
@@ -1102,7 +1103,8 @@ api_key && morsel_id exist
   },
   "photo_processing": nil,
   "facebook_uid": "1234567890",
-  "twitter_username": "morsel_marty"
+  "twitter_username": "morsel_marty",
+  "staff": true
 }
 ```
 
@@ -1125,10 +1127,13 @@ You'll only see these if the api_key matches the User you're looking up
     "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
   },
   "photo_processing": null,
+  "sign_in_count": 1
+  "facebook_uid": "1234567890",
+  "twitter_username": "morsel_marty",
+  "staff": true,
   "draft_count": 0,
   "like_count": 3,
-  "item_count": 1,
-  "sign_in_count": 1
+  "item_count": 1
 }
 ```
 
@@ -1157,7 +1162,8 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
   "item_count": 1,
   "sign_in_count": 1,
   "facebook_uid": "1234567890",
-  "twitter_username": "morsel_marty"
+  "twitter_username": "morsel_marty",
+  "staff": true
 }
 ```
 
