@@ -30,26 +30,25 @@ MorselApp::Application.routes.draw do
       get 'notifications' => 'notifications#index'
 
       get ':user_id_or_username' => 'users#show'
-      get ':user_id_or_username/posts' => 'posts#index'
+      get ':user_id_or_username/morsels' => 'morsels#index'
     end
   end
 
-  resources :morsels, only: [:create, :show, :update, :destroy] do
+  resources :items, only: [:create, :show, :update, :destroy] do
     resources :comments, only: [:create, :index]
-    collection do
-      post ':morsel_id/like' => 'likes#create'
-      delete ':morsel_id/like' => 'likes#destroy'
-      get ':id/likers' => 'morsels#likers'
-    end
+    post 'like' => 'likes#create'
+    delete 'like' => 'likes#destroy'
+    get 'likers' => 'items#likers'
   end
 
   resources :comments, only: [:destroy]
 
-  resources :posts, only: [:create, :index, :show, :update, :destroy] do
+  resources :morsels, only: [:create, :index, :show, :update, :destroy] do
     collection do
-      get 'drafts' => 'posts#drafts'
+      get 'drafts' => 'morsels#drafts'
     end
-    resources :morsels, only: [:update, :destroy]
+    resources :items, only: [:update, :destroy]
+    post 'publish' => 'morsels#publish'
   end
 
   get 'feed' => 'feed#index'

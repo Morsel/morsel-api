@@ -7,7 +7,6 @@ gem 'puma'
 gem 'rails', '4.0.3'
 gem 'pg'
 
-gem 'active_interaction', '~> 1.1'
 gem 'active_model_serializers'
 gem 'activeadmin', github: 'gregbell/active_admin'
 gem "authority", "~> 2.9.0"

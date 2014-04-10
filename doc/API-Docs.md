@@ -19,29 +19,30 @@
   - [PUT ```/users/{user_id}/updateindustry``` - Update Industry](#put-usersuser_idupdateindustry---update-industry)
   - [GET ```/users/{user_id|user_username}``` - User](#get-usersuser_iduser_username---user)
   - [PUT ```/users/{user_id}``` - Update User](#put-usersuser_id---update-user)
-  - [GET ```/users/{user_id|user_username}/posts``` - User Posts](#get-usersuser_iduser_usernameposts---user-posts)
+  - [GET ```/users/{user_id|user_username}/morsels``` - User Morsels](#get-usersuser_iduser_usernamemorsels---user-morsels)
   - [POST ```/users/authorizations``` - Create User Authorizations](#post-usersauthorizations---create-user-authorizations)
   - [GET ```/users/authorizations``` - User Authorizations](#get-usersauthorizations---user-authorizations)
   - [GET ```/users/activities``` - User Activities](#get-usersactivities---user-activities)
   - [GET ```/users/notifications``` - User Notifications](#get-usersnotifications---user-notifications)
+- [Item Methods](#item-methods)
+  - [POST ```/items``` - Create a new Item](#post-items---create-a-new-item)
+  - [GET ```/items/{item_id}``` - Item](#get-itemsitem_id---item)
+  - [PUT ```/items/{item_id}``` - Update Item](#put-itemsitem_id---update-item)
+  - [DELETE ```/items/{item_id}``` - Delete Item](#delete-itemsitem_id---delete-item)
+  - [POST ```/items/{item_id}/like``` - Like Item](#post-itemsitem_idlike---like-item)
+  - [DELETE ```/items/{item_id}/like``` - Unlike Item](#delete-itemsitem_idlike---unlike-item)
+  - [GET ```/items/{item_id}/likers``` - Likers](#get-itemsitem_idlikers---likers)
+  - [POST ```/items/{item_id}/comments``` - Create Comment](#post-itemsitem_idcomments---create-comment)
+  - [GET ```/items/{item_id}/comments``` - Item Comments](#get-itemsitem_idcomments---item-comments)
+  - [DELETE ```/comments/{comment_id}``` - Delete Comment](#delete-commentscomment_id---delete-comment)
 - [Morsel Methods](#morsel-methods)
   - [POST ```/morsels``` - Create a new Morsel](#post-morsels---create-a-new-morsel)
-  - [GET ```/morsels/{morsel_id}``` - Morsel](#get-morselsmorsel_id---morsel)
+  - [GET ```/morsels``` - Morsels](#get-morsels---morsels)
+  - [GET ```/morsels/drafts``` - Morsel Drafts](#get-morselsdrafts---morsel-drafts)
+  - [GET ```/morsels/{morsel_id}``` - Morsel](#get-morselsmorsel_id----morsel)
   - [PUT ```/morsels/{morsel_id}``` - Update Morsel](#put-morselsmorsel_id---update-morsel)
+  - [POST ```/morsels/{morsel_id}/publish``` - Publish Morsel](#post-morselsmorsel_idpublish---Publish-morsel)
   - [DELETE ```/morsels/{morsel_id}``` - Delete Morsel](#delete-morselsmorsel_id---delete-morsel)
-  - [POST ```/morsels/{morsel_id}/like``` - Like Morsel](#post-morselsmorsel_idlike---like-morsel)
-  - [DELETE ```/morsels/{morsel_id}/like``` - Unlike Morsel](#delete-morselsmorsel_idlike---unlike-morsel)
-  - [GET ```/morsels/{morsel_id}/likers``` - Likers](#get-morselsmorsel_idlikers---likers)
-  - [POST ```/morsels/{morsel_id}/comments``` - Create Comment](#post-morselsmorsel_idcomments---create-comment)
-  - [GET ```/morsels/{morsel_id}/comments``` - Morsel Comments](#get-morselsmorsel_idcomments---morsel-comments)
-  - [DELETE ```/comments/{comment_id}``` - Delete Comment](#delete-commentscomment_id---delete-comment)
-- [Post Methods](#post-methods)
-  - [POST ```/posts``` - Create a new Post](#post-posts---create-a-new-post)
-  - [GET ```/posts``` - Posts](#get-posts---posts)
-  - [GET ```/posts/drafts``` - Post Drafts](#get-postsdrafts---post-drafts)
-  - [GET ```/posts/{post_id}``` - Post](#get-postspost_id----post)
-  - [PUT ```/posts/{post_id}``` - Update Post](#put-postspost_id---update-post)
-  - [DELETE ```/posts/{post_id}``` - Delete Post](#delete-postspost_id---delete-post)
 - [Misc Methods](#misc-methods)
   - [GET ```/status``` - Status](#get-status---status)
   - [GET ```/configuration``` - Configuration](#get-configuration---configuration)
@@ -50,14 +51,14 @@
     - [Authorization](#authorization)
   - [Comment Objects](#comment-objects)
     - [Comment](#comment)
+  - [Item Objects](#item-objects)
+    - [Item](#item)
+    - [Item (for Feed)](#item-for-feed)
+    - [Item (w/ Morsel)](#item-w-morsel)
+    - [Item (Authenticated)](#item-authenticated)
+    - [Item (Authenticated w/ Morsel)](#item-authenticated-w-morsel)
   - [Morsel Objects](#morsel-objects)
     - [Morsel](#morsel)
-    - [Morsel (for Feed)](#morsel-for-feed)
-    - [Morsel (w/ Post)](#morsel-w-post)
-    - [Morsel (Authenticated)](#morsel-authenticated)
-    - [Morsel (Authenticated w/ Post)](#morsel-authenticated-w-post)
-  - [Post Objects](#post-objects)
-    - [Post](#post)
   - [User Objects](#user-objects)
     - [User](#user)
     - [User (w/ Private Attributes)](#user-w-private-attributes)
@@ -72,8 +73,6 @@
     - [Configuration](#configuration)
 - [Notes](#notes)
   - [sort_order](#sort_order)
-  - [Hacks](#hacks)
-    - [Morsel's post_id and sort_order](#morsels-post_id-and-sort_order)
 
 # Overview
 ## URI Structure
@@ -103,7 +102,7 @@ expect to get a user resource in return:
 }
 ```
 
-if you make a call for a user's posts: ```users/1/posts```
+if you make a call for a user's morsels: ```users/1/morsels```
 expect to get an array of resources in return:
 ```json
 {
@@ -114,10 +113,10 @@ expect to get an array of resources in return:
   "errors": null,
   "data": [{
     "id": 4,
-    "title": "Some Post Title"
+    "title": "Some Morsel Title"
   }, {
     "id": 5,
-    "title": "Another Post Title"
+    "title": "Another Morsel Title"
   }]
 ```
 
@@ -145,33 +144,33 @@ Errors are returned as a dictionary in ```errors```. Each key represents the res
 
 ## Pagination
 
-The API uses a pagination method similar to how Facebook and Twitter do. For a nice post about why and how it works, check out this [link](https://dev.twitter.com/docs/working-with-timelines). You'll use ```max_id``` OR ```since_id``` per API call, don't combine them as the API will ignore it.
+The API uses a pagination method similar to how Facebook and Twitter do. For a nice article about why and how it works, check out this [link](https://dev.twitter.com/docs/working-with-timelines). You'll use ```max_id``` OR ```since_id``` per API call, don't combine them as the API will ignore it.
 
 ### Example
 
-#### Getting the recent Posts:
-Make a call to the API: ```/posts.json?api_key=whatever&count=10```
-The API responds with the 10 most recent Posts, let's say their id's are from 100-91.
+#### Getting the recent Morsels:
+Make a call to the API: ```/morsels.json?api_key=whatever&count=10```
+The API responds with the 10 most recent Morsels, let's say their id's are from 100-91.
 
-#### Getting a next set of Posts going back:
-Based on the previous results, you want to get Posts that are older than id 91 (the lowest/oldest id). So you'll want to set a ```max_id``` parameter to that id - 1 (```max_id``` is inclusive, meaning it will include the Post with the id passed in the results, which in this case would duplicate a Post). So set ```max_id``` to 91-1, 90.
-Make a call to the API: ```/posts.json?api_key=whatever&count=10&max_id=90```
-The API responds with the next 10 Posts, in this case their id's are from 90-81.
+#### Getting a next set of Morsels going back:
+Based on the previous results, you want to get Morsels that are older than id 91 (the lowest/oldest id). So you'll want to set a ```max_id``` parameter to that id - 1 (```max_id``` is inclusive, meaning it will include the Morsel with the id passed in the results, which in this case would duplicate a Morsel). So set ```max_id``` to 91-1, 90.
+Make a call to the API: ```/morsels.json?api_key=whatever&count=10&max_id=90```
+The API responds with the next 10 Morsels, in this case their id's are from 90-81.
 And repeat this process as you go further back until you get no results (or ```max_id``` < 1).
 
-#### Getting a set of Posts going forward (new Posts):
-Apps like Facebook and Twitter will show a floating message while you're scrolling through a list telling you that X new Posts have been added to the top of your feed.
-We can achieve the same thing by sending a call to the API every once awhile asking for any new Posts since the most recent one you have. To do this, you'll set a ```since_id``` parameter (which is not inclusive) to the id of the most recent Post. Continuing the example, this would be ```since_id``` = 100.
-Make a call to the API: ```/posts.json?api_key=whatever&count=10&since_id=100```
-The API responds with any new Posts since the Post with id = 100. So if there were three new Posts added, it would return Posts with id's from 101-103.
+#### Getting a set of Morsels going forward (new Morsels):
+Apps like Facebook and Twitter will show a floating message while you're scrolling through a list telling you that X new Morsels have been added to the top of your feed.
+We can achieve the same thing by sending a call to the API every once awhile asking for any new Morsels since the most recent one you have. To do this, you'll set a ```since_id``` parameter (which is not inclusive) to the id of the most recent Morsel. Continuing the example, this would be ```since_id``` = 100.
+Make a call to the API: ```/morsels.json?api_key=whatever&count=10&since_id=100```
+The API responds with any new Morsels since the Morsel with id = 100. So if there were three new Morsels added, it would return Morsels with id's from 101-103.
 
 ## About the API Documentation
 __URI Conventions__
 
 | Notation            | Meaning       | Example  |
 | ------------------- | ------------- | -------- |
-| Curly brackets {}   | Required Item | API_HOST/user/{user_id}/likes <br /><i>The user id is required.</i> |
-| Square brackets []  | Optional Item | API_HOST/user/{user_id}/posts[/type] <br /><i>Specifying a Post type is optional (NOTE: This is just an example).</i> |
+| Curly brackets {}   | Required Item | API_HOST/morsels/{morsel_id}/likers <br /><i>The `morsel_id` is required.</i> |
+| Square brackets []  | Optional Item | API_HOST/feed?[count] <br /><i>Specifying a `count` is optional</i> |
 
 
 # Authentication
@@ -320,8 +319,8 @@ Returns the user_id if the user is successfully created, otherwise an error.
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| username | String | The username reserve | | X |
-| email | String | The email associated with the username | | X |
+| user[username] | String | The username reserve | | X |
+| user[email] | String | The email associated with the username | | X |
 | __utmz | String | Google Analytics information to pass to the server | | |
 
 ### Response
@@ -342,7 +341,7 @@ Returns the user_id if the user is successfully created, otherwise an error.
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| industry | String | The User's industry. Currently the only valid values are 'chef', 'diner', and 'media'. | | X |
+| user[industry] | String | The User's industry. Currently the only valid values are 'chef', 'diner', and 'media'. | | X |
 
 ### Response
 
@@ -392,23 +391,23 @@ Updates the User with the specified ```user_id```
 <br />
 <br />
 
-## GET ```/users/{user_id|user_username}/posts``` - User Posts
-Returns the Posts for the User with the specified ```user_id``` or ```user_username```.
+## GET ```/users/{user_id|user_username}/morsels``` - User Morsels
+Returns the Morsels for the User with the specified ```user_id``` or ```user_username```.
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Posts up to and including this ```id``` | | |
-| since_id | Number | Return Posts since this ```id``` | | |
+| max_id | Number | Return Morsels up to and including this ```id``` | | |
+| since_id | Number | Return Morsels since this ```id``` | | |
 | include_drafts | Boolean | Flag to include drafts in the response
 
 ### Response
 
 | __data__ |
 | -------- |
-| Array of [Post](#post) |
+| Array of [Morsel](#morsel) |
 
 <br />
 <br />
@@ -454,7 +453,7 @@ Returns the current User's authorizations
 <br />
 
 ## GET ```/users/activities``` - User Activities
-Returns the Authenticated User's Activities. An Activity is created when a User likes or comments on a Morsel. Think Facebook's Activity Log (https://www.facebook.com/<username>/allactivity).
+Returns the Authenticated User's Activities. An Activity is created when a User likes or comments on a Item. Think Facebook's Activity Log (https://www.facebook.com/<username>/allactivity).
 
 ### Request
 
@@ -474,7 +473,7 @@ Returns the Authenticated User's Activities. An Activity is created when a User 
 <br />
 
 ## GET ```/users/notifications``` - User Notifications
-Returns the Authenticated User's Notifications. A Notification is created when someone likes or comments on your Morsels. Think Facebook or Twitter Notifications.
+Returns the Authenticated User's Notifications. A Notification is created when someone likes or comments on your Items. Think Facebook or Twitter Notifications.
 
 ### Request
 
@@ -494,70 +493,67 @@ Returns the Authenticated User's Notifications. A Notification is created when s
 <br />
 
 
-# Morsel Methods
+# Item Methods
 
-## POST ```/morsels``` - Create a new Morsel
-Created a new Morsel for the current User.
+## POST ```/items``` - Create a new Item
+Created a new Item for the current User.
 Image processing is done in a background job. `photo_processing` will be set to `null` when it has finished.
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| morsel[description] | String | The description for the new Morsel | | |
-| morsel[photo] | String | The photo for the new Morsel | | |
-| morsel[nonce] | String | Unique UUID to prevent duplicates | | |
-| post_id | Number | The ID of the Post to set this Morsel to. If none is specified, a new Post will be created for this Morsel. | | X |
-| post_title | String | If a Post already exists, renames the title to this. Otherwise sets the title for the new Post to this. | | |
-| sort_order | Number | The ```sort_order``` for the Morsel in the Post. Requires ```post_id``` | end of Post | |
+| item[description] | String | The description for the new Item | | |
+| item[photo] | String | The photo for the new Item | | |
+| item[nonce] | String | Unique UUID to prevent duplicates | | |
+| item[sort_order] | Number | The ```sort_order``` for the Item in the Morsel. | end of Morsel | |
+| item[morsel_id] | Number | The ID of the Morsel to set this Item to. | | X |
 
 ### Response
 
 | Condition | __data__ |
 | --------- | -------- |
-| Authenticated | Created [Morsel (Authenticated)](#morsel-authenticated) |
-| Default | Created [Morsel](#morsel) |
+| Authenticated | Created [Item (Authenticated)](#item-authenticated) |
+| Default | Created [Item](#item) |
 
 <br />
 <br />
 
-## GET ```/morsels/{morsel_id}``` - Morsel
-Returns Morsel with the specified ```morsel_id```
+## GET ```/items/{item_id}``` - Item
+Returns Item with the specified ```item_id```
 
 ### Response
 
 | __data__ |
 | -------- |
-| [Morsel (Authenticated)](#morsel-authenticated) |
+| [Item (Authenticated)](#item-authenticated) |
 
 <br />
 <br />
 
-## PUT ```/morsels/{morsel_id}``` - Update Morsel
-Updates the Morsel with the specified ```morsel_id```
+## PUT ```/items/{item_id}``` - Update Item
+Updates the Item with the specified ```item_id```
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| morsel[description] | String | The description for the Morsel | | |
-| morsel[photo] | String | The photo for the Morsel | | |
-| post_id | Number | Changes the ```sort_order``` of a Post when combined with ```sort_order```. | | |
-| sort_order | Number | Changes the ```sort_order``` of a Post when combined with ```post_id```. | | |
-| new_post_id | Number | Associates the Morsel to the Post with ID ```new_post_id``` and removes the previous relationship | | |
+| item[description] | String | The description for the Item | | |
+| item[photo] | String | The photo for the Item | | |
+| item[sort_order] | Number | Changes the ```sort_order``` of a Morsel when combined with ```morsel_id```. | | |
+| item[morsel_id] | Number | Changes the ```sort_order``` of a Morsel when combined with ```sort_order```. | | |
 
 ### Response
 
-| Condition | __data__ |
-| --------- | -------- |
-| Post ID Included | Updated [Morsel (Authenticated w/ Post)](#morsel-authenticated-w-post) |
-| Default | Updated [Morsel (Authenticated)](#morsel-authenticated) |
+| __data__ |
+| -------- |
+| [Item (Authenticated)](#item-authenticated) |
 
 <br />
 <br />
 
-## DELETE ```/morsels/{morsel_id}``` - Delete Morsel
-Deletes the Morsel with the specified ```morsel_id```.
+## DELETE ```/items/{item_id}``` - Delete Item
+Deletes the Item with the specified ```item_id```.
 
 ### Response
 
@@ -568,8 +564,26 @@ Deletes the Morsel with the specified ```morsel_id```.
 <br />
 <br />
 
-## POST ```/morsels/{morsel_id}/like``` - Like Morsel
-Likes the Morsel with the specified ```morsel_id``` for the authenticated User
+## POST ```/items/{item_id}/like``` - Like Item
+Likes the Item with the specified ```item_id``` for the authenticated User
+
+### Response
+
+| Status Code |
+| ----------- |
+|         201 |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __Already exists__ | 400 (Bad Request) | The Item is already liked by the User |
+
+<br />
+<br />
+
+## DELETE ```/items/{item_id}/like``` - Unlike Item
+Unlikes the Item with the specified ```item_id``` for the authenticated User
 
 ### Response
 
@@ -581,31 +595,13 @@ Likes the Morsel with the specified ```morsel_id``` for the authenticated User
 
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
-| __Already exists__ | 400 (Bad Request) | The Morsel is already liked by the User |
+| __Not liked__ | 404 (Not Found) | The Item is not liked by the User |
 
 <br />
 <br />
 
-## DELETE ```/morsels/{morsel_id}/like``` - Unlike Morsel
-Unlikes the Morsel with the specified ```morsel_id``` for the authenticated User
-
-### Response
-
-| Status Code |
-| ----------- |
-|         200 |
-
-### Unique Errors
-
-| Message | Status | Description |
-| ------- | ------ |  ----------- |
-| __Not liked__ | 404 (Not Found) | The Morsel is not liked by the User |
-
-<br />
-<br />
-
-## GET ```/morsels/{morsel_id}/likers``` - Likers
-Returns the Users who have liked the Morsel with the specified ```morsel_id```
+## GET ```/items/{item_id}/likers``` - Likers
+Returns the Users who have liked the Item with the specified ```item_id```
 
 ### Response
 
@@ -617,13 +613,13 @@ Returns the Users who have liked the Morsel with the specified ```morsel_id```
 
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
-| __Morsel not found__ | 404 (Not Found) | The Morsel could not be found |
+| __Item not found__ | 404 (Not Found) | The Item could not be found |
 
 <br />
 <br />
 
-## POST ```/morsels/{morsel_id}/comments``` - Create Comment
-Create a Comment for the Morsel with the specified ```morsel_id```
+## POST ```/items/{item_id}/comments``` - Create Comment
+Create a Comment for the Item with the specified ```item_id```
 
 ### Request
 
@@ -641,13 +637,13 @@ Create a Comment for the Morsel with the specified ```morsel_id```
 
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
-| __Morsel not found__ | 404 (Not Found) | The Morsel could not be found |
+| __Item not found__ | 404 (Not Found) | The Item could not be found |
 
 <br />
 <br />
 
-## GET ```/morsels/{morsel_id}/comments``` - Morsel Comments
-List the Comments for the Morsel with the specified ```morsel_id```
+## GET ```/items/{item_id}/comments``` - Item Comments
+List the Comments for the Item with the specified ```item_id```
 
 ### Request
 
@@ -667,7 +663,7 @@ List the Comments for the Morsel with the specified ```morsel_id```
 <br />
 
 ## DELETE ```/comments/{comment_id}``` - Delete Comment
-Deletes the Comment with the specified ```comment_id``` if the authenticated User is the Comment or Morsel Creator
+Deletes the Comment with the specified ```comment_id``` if the authenticated User is the Comment or Item Creator
 
 ### Response
 
@@ -686,100 +682,117 @@ Deletes the Comment with the specified ```comment_id``` if the authenticated Use
 <br />
 
 
-# Post Methods
+# Morsel Methods
 
-## POST ```/posts``` - Create a new Post
-Creates a new Post for the current User.
-
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| post[title] | String | The title for the new Post | | x |
-| post[draft] | Boolean | Set to true if the Post is a draft | false | |
-
-### Response
-
-| __data__ |
-| -------- |
-| Created [Post](#post) |
-
-<br />
-<br />
-
-## GET ```/posts``` - Posts
-Returns the Posts for all Users.
+## POST ```/morsels``` - Create a new Morsel
+Creates a new Morsel for the current User.
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Posts up to and including this ```id``` | | |
-| since_id | Number | Return Posts since this ```id``` | | |
+| morsel[title] | String | The title for the new Morsel | | x |
+| morsel[draft] | Boolean | Set to true if the Morsel is a draft | false | |
 
 ### Response
 
 | __data__ |
 | -------- |
-| Array of [Post](#post) |
+| Created [Morsel](#morsel) |
 
 <br />
 <br />
 
-## GET ```/posts/drafts``` - Post Drafts
-Returns the Post Drafts for the authenticated User sorted by their updated_at, with the most recent one's appearing first.
+## GET ```/morsels``` - Morsels
+Returns the Morsels for all Users.
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Posts up to and including this ```id``` | | |
-| since_id | Number | Return Posts since this ```id``` | | |
+| max_id | Number | Return Morsels up to and including this ```id``` | | |
+| since_id | Number | Return Morsels since this ```id``` | | |
 
 ### Response
 
 | __data__ |
 | -------- |
-| Array of [Post](#post) |
+| Array of [Morsel](#morsel) |
 
 <br />
 <br />
 
-## GET ```/posts/{post_id}``` -  Post
-Returns the Post with the specified ```post_id```
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-
-### Response
-
-| __data__ |
-| -------- |
-| [Post](#post) |
-
-<br />
-<br />
-
-## PUT ```/posts/{post_id}``` - Update Post
-Updates the Post with the specified ```post_id```
+## GET ```/morsels/drafts``` - Morsel Drafts
+Returns the Morsel Drafts for the authenticated User sorted by their updated_at, with the most recent one's appearing first.
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| post[title]         | String  | The title for the Post. Changing this will change the slug. | | |
-| post[draft] | Boolean | Set to true if the Post is a draft | false | |
-| post[primary_morsel_id] | Number | The ID of the Morsel to set as the primary Morsel for this Post. Must be the ID of a Morsel that is part of the Post | | |
-| post_to_facebook | Boolean | Post to the current_user's Facebook wall with the Post's title and a link to the Post. | false | |
-| post_to_twitter | Boolean | Send a Tweet from the current_user with the Post's title and a link to the Post. If the title and description are too long they will be truncated to allow enough room for the link. | false | |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Morsels up to and including this ```id``` | | |
+| since_id | Number | Return Morsels since this ```id``` | | |
 
 ### Response
 
 | __data__ |
 | -------- |
-| Updated [Post](#post) |
+| Array of [Morsel](#morsel) |
+
+<br />
+<br />
+
+## GET ```/morsels/{morsel_id}``` -  Morsel
+Returns the Morsel with the specified ```morsel_id```
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+
+### Response
+
+| __data__ |
+| -------- |
+| [Morsel](#morsel) |
+
+<br />
+<br />
+
+## PUT ```/morsels/{morsel_id}``` - Update Morsel
+Updates the Morsel with the specified ```morsel_id```
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| morsel[title]         | String  | The title for the Morsel. Changing this will change the slug. | | |
+| morsel[draft] | Boolean | Set to true if the Morsel is a draft | false | |
+| morsel[primary_item_id] | Number | The ID of the Item to set as the primary Item for this Morsel. Must be the ID of a Item that is part of the Morsel | | |
+
+### Response
+
+| __data__ |
+| -------- |
+| Updated [Morsel](#morsel) |
+
+<br />
+<br />
+
+POST ```/morsels/{morsel_id}/publish``` - Publish Morsel
+Publishes the Morsel with the specified ```morsel_id``` by setting a `published_at` DateTime and `draft`=false
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| post_to_facebook | Boolean | Post to the current_user's Facebook wall with the Morsel's title and a link to the Morsel. | false | |
+| post_to_twitter | Boolean | Send a Tweet from the current_user with the Morsel's title and a link to the Morsel. If the title and description are too long they will be truncated to allow enough room for the link. | false | |
+
+### Response
+
+| __data__ |
+| -------- |
+| Publishes [Morsel](#morsel) |
 
 <br />
 <br />
@@ -850,14 +863,14 @@ Used by third-party services to ping the API.
       "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg"
     }
   },
-  "morsel_id": 5,
+  "item_id": 5,
   "created_at": "2014-01-07T18:37:19.661Z"
 }
 ```
 
-## Morsel Objects
+## Item Objects
 
-### Morsel
+### Item
 
 ```json
   {
@@ -868,20 +881,20 @@ Used by third-party services to ping the API.
     "updated_at": "2014-01-07T16:34:43.071Z",
     "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
     "photos": {
-      "_50x50":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_80x80":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_100x100":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_240x240":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_320x320":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_480x480":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_640x640":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_992x992":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
+      "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_80x80":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_100x100":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_240x240":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_480x480":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
     },
     "photo_processing": null
   }
 ```
 
-### Morsel (for Feed)
+### Item (for Feed)
 
 ```json
   {
@@ -891,14 +904,14 @@ Used by third-party services to ping the API.
     "updated_at": "2014-01-07T16:34:43.071Z",
     "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
     "photos": {
-      "_50x50":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_80x80":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_100x100":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_240x240":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_320x320":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_480x480":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_640x640":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_992x992":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
+      "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_80x80":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_100x100":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_240x240":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_480x480":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
     },
     "photo_processing": null,
     "in_progression": false,
@@ -916,7 +929,7 @@ Used by third-party services to ping the API.
       },
       "photo_processing": null
     },
-    "post": {
+    "morsel": {
       "id": 4,
       "title": "Butter Rocks!",
       "slug": "butter-rocks"
@@ -925,8 +938,8 @@ Used by third-party services to ping the API.
   }
 ```
 
-### Morsel (w/ Post)
-post_id exists
+### Item (w/ Morsel)
+morsel_id exists
 
 ```json
   {
@@ -937,23 +950,23 @@ post_id exists
     "updated_at": "2014-01-07T16:34:43.071Z",
     "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
     "photos": {
-      "_50x50":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_80x80":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_100x100":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_240x240":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_320x320":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_480x480":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_640x640":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_992x992":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
+      "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_80x80":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_100x100":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_240x240":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_480x480":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
     },
     "photo_processing": null,
-    "post_id": 4,
+    "morsel_id": 4,
     "sort_order": 1,
     "url": "http://eatmorsel.com/marty/1-butter/1"
   }
 ```
 
-### Morsel (Authenticated)
+### Item (Authenticated)
 api_key exists
 
 ```json
@@ -965,22 +978,22 @@ api_key exists
     "updated_at": "2014-01-07T16:34:43.071Z",
     "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
     "photos": {
-      "_50x50":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_80x80":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_100x100":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_240x240":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_320x320":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_480x480":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_640x640":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_992x992":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
+      "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_80x80":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_100x100":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_240x240":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_480x480":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
     },
     "photo_processing": null,
     "liked": false,
   }
 ```
 
-### Morsel (Authenticated w/ Post)
-api_key && post_id exist
+### Item (Authenticated w/ Morsel)
+api_key && morsel_id exist
 
 ```json
   {
@@ -991,26 +1004,26 @@ api_key && post_id exist
     "updated_at": "2014-01-07T16:34:43.071Z",
     "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
     "photos": {
-      "_50x50":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_80x80":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_100x100":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_240x240":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_320x320":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_480x480":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_640x640":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_992x992":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
+      "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_80x80":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_100x100":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_240x240":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_480x480":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
     },
     "photo_processing": null,
-    "post_id": 4,
+    "morsel_id": 4,
     "sort_order": 1,
     "url": "http://eatmorsel.com/marty/1-butter/1",
     "liked": false,
   }
 ```
 
-## Post Objects
+## Morsel Objects
 
-### Post
+### Morsel
 
 ```json
 {
@@ -1021,10 +1034,10 @@ api_key && post_id exist
   "updated_at": "2014-01-07T16:34:44.862Z",
   "slug": "butter-rocks",
   "draft": false,
-  "primary_morsel_id": 2,
+  "primary_item_id": 2,
   "published_at": "2014-01-07T16:34:44.862Z",
   "photos": {
-    "_400x300":"https://morsel-staging.s3.amazonaws.com/post-images/4/648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
+    "_400x300":"https://morsel-staging.s3.amazonaws.com/morsel-images/4/648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
   },
   "creator": {
     "id": 3,
@@ -1042,7 +1055,7 @@ api_key && post_id exist
       "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
     }
   },
-  "morsels": [
+  "items": [
     {
       "id": 2,
       "description": null,
@@ -1051,14 +1064,14 @@ api_key && post_id exist
       "updated_at": "2014-01-07T16:34:43.071Z",
       "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
       "photos": {
-        "_50x50":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_80x80":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_100x100":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_240x240":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_320x320":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_480x480":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_640x640":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_992x992":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
+        "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_80x80":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_100x100":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_240x240":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_480x480":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
       },
       "sort_order": 1,
       "url": "http://eatmorsel.com/turdferg/4-butter-rocks/1"
@@ -1112,7 +1125,7 @@ You'll only see these if the api_key matches the User you're looking up
   "photo_processing": null,
   "draft_count": 0,
   "like_count": 3,
-  "morsel_count": 1,
+  "item_count": 1,
   "sign_in_count": 1,
   "facebook_uid": "1234567890",
   "twitter_username": "morsel_marty"
@@ -1141,7 +1154,7 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
   "auth_token": "butt-sack",
   "draft_count": 0,
   "like_count": 3,
-  "morsel_count": 1,
+  "item_count": 1,
   "sign_in_count": 1,
   "facebook_uid": "1234567890",
   "twitter_username": "morsel_marty"
@@ -1158,7 +1171,7 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
   "id":11,
   "created_at":"2014-03-25T21:18:02.349Z",
   "updated_at":"2014-03-25T21:18:02.360Z",
-  "subject_type":"Post",
+  "subject_type":"Morsel",
   "subject":{
     "id":6,
     "title":"Eum perspiciatis tempora omnis ab qui.",
@@ -1169,7 +1182,7 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
     "draft":false,
     "slug":"eum-perspiciatis-tempora-omnis-ab-qui",
     "creator":null,
-    "morsels":[]
+    "items":[]
   }
 }
 ```
@@ -1186,13 +1199,13 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
   "action": {
     "id":6,
     "user_id":2,
-    "morsel_id":3,
+    "item_id":3,
     "deleted_at":null,
     "created_at":"2014-04-01T22:05:20.683Z",
     "updated_at":"2014-04-01T22:05:20.683Z"
   },
   "created_at":"2014-03-13T17:01:38.370Z",
-  "subject_type":"Morsel",
+  "subject_type":"Item",
   "subject":{
     "id":3,
     "description":"Voluptatem dolores beatae id labore ut corporis tempora id numquam in vel et nemo sed natus quos provident commodi quia quo officiis distinctio qui aut non iure nam illum reprehenderit debitis hic et esse molestiae nulla eaque excepturi quaerat eveniet nisi asperiores voluptate.",
@@ -1201,17 +1214,17 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
     "created_at":"2014-03-13T17:01:37.955Z",
     "nonce":null,
     "photos":{
-      "_50x50":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/3/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_80x80":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/3/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_100x100":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/3/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_240x240":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/3/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_320x320":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/3/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_480x480":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/3/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_640x640":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/3/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_992x992":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/3/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
+      "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/3/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_80x80":"https://morsel-staging.s3.amazonaws.com/item-images/item/3/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_100x100":"https://morsel-staging.s3.amazonaws.com/item-images/item/3/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_240x240":"https://morsel-staging.s3.amazonaws.com/item-images/item/3/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/3/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_480x480":"https://morsel-staging.s3.amazonaws.com/item-images/item/3/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/3/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/3/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
     },
     "photo_processing":true,
-    "post_id":1,
+    "morsel_id":1,
     "sort_order":2,
     "url":"https://test.eatmorsel.com/user_3yugjkugvv/1-rem-adipisci-et-ut-totam-repudiandae-est/2",
     "liked":true
@@ -1246,13 +1259,13 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
     "action": {
       "id":6,
       "user_id":2,
-      "morsel_id":3,
+      "item_id":3,
       "deleted_at":null,
       "created_at":"2014-04-01T22:05:20.683Z",
       "updated_at":"2014-04-01T22:05:20.683Z"
     },
     "created_at":"2014-03-13T17:04:22.403Z",
-    "subject_type":"Morsel",
+    "subject_type":"Item",
     "subject":{
       "id":1,
       "description":"Soluta quo saepe nemo voluptatem similique et et veniam ipsa et dolore dolorem beatae nam doloremque enim distinctio quasi in architecto iure ut sit facere reiciendis alias quis.",
@@ -1261,17 +1274,17 @@ Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```a
       "created_at":"2014-03-13T17:04:21.899Z",
       "nonce":null,
       "photos":{
-        "_50x50":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_80x80":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_100x100":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_240x240":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_320x320":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_480x480":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_640x640":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_992x992":"https://morsel-staging.s3.amazonaws.com/morsel-images/morsel/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
+        "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_80x80":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_100x100":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_240x240":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_480x480":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+        "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
       },
       "photo_processing":true,
-      "post_id":1,
+      "morsel_id":1,
       "sort_order":1,
       "url":"https://test.eatmorsel.com/user_qaa0jncv99/1-enim-quia-sequi-aut-vel/1",
       "liked":false
@@ -1319,20 +1332,20 @@ NOTE: "non_username_paths" is just a sample of the real list, for an up to date 
 ## Notes
 
 ### sort_order
-`sort_order` is a property of a Morsel that determines what the order of it is within a Post. `sort_order` is not guaranteed to always be 1,2,3, etc. However, it can always be guaranteed to be in the correct sequential order (e.g. 3,6,8).
+`sort_order` is a property of a Item that determines what the order of it is within a Morsel. `sort_order` is not guaranteed to always be 1,2,3, etc. However, it can always be guaranteed to be in the correct sequential order (e.g. 3,6,8).
 
-Several things can determine the value of `sort_order` depending on how it is passed. Assuming we're creating a Morsel and passing a `post_id`:
+Several things can determine the value of `sort_order` depending on how it is passed. Assuming we're creating a Item and passing a `morsel_id`:
 ```
   if sort_order is passed
-    if sort_order is already taken by another Morsel in that post
-      increment the sort_order of every morsel with a sort_order >= passed_sort_order
+    if sort_order is already taken by another Item in that morsel
+      increment the sort_order of every item with a sort_order >= passed_sort_order
       sort_order = passed_sort_order
     else
       sort_order = passed_sort_order
 
   if no sort_order is passed
-    if post already has Morsels
-      sort_order = post.morsels.maximum(sort_order) + 1
+    if morsel already has Items
+      sort_order = morsel.items.maximum(sort_order) + 1
     else
       sort_order = 1
 ```

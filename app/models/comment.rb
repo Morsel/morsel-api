@@ -8,7 +8,7 @@
 # ------------------ | ------------------ | ---------------------------
 # **`id`**           | `integer`          | `not null, primary key`
 # **`user_id`**      | `integer`          |
-# **`morsel_id`**    | `integer`          |
+# **`item_id`**      | `integer`          |
 # **`description`**  | `text`             |
 # **`deleted_at`**   | `datetime`         |
 # **`created_at`**   | `datetime`         |
@@ -22,11 +22,11 @@ class Comment < ActiveRecord::Base
 
   include Activityable
   def self.activity_notification; true end
-  def subject; morsel end
+  def subject; item end
 
   acts_as_paranoid
 
-  belongs_to :morsel
+  belongs_to :item
   belongs_to :user
   alias_attribute :creator, :user
 

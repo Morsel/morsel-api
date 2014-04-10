@@ -1,22 +1,28 @@
 class MorselSerializer < ActiveModel::Serializer
   attributes :id,
-             :description,
+             :title,
              :creator_id,
-             :updated_at,
              :created_at,
-             :nonce,
+             :updated_at,
+             :published_at,
+             :draft,
+             :slug,
+             :total_like_count,
+             :total_comment_count,
+             :primary_item_id,
              :photos,
-             :photo_processing,
-             :sort_order,
-             :url,
-             :post_id,
-             :liked,
-             :like_count,
-             :comment_count
+             :url
 
+  has_one :creator
 
-  def liked
-    current_user.present? && current_user.likes?(object)
+  has_many :items
+
+  def slug
+    object.cached_slug
+  end
+
+  def items
+    object.items.order('sort_order ASC')
   end
 
   def photos

@@ -1,20 +1,20 @@
 class AuthorizationsController < ApiController
   respond_to :json
+  authorize_actions_for Authorization
 
   def create
     authorization_params = AuthorizationParams.build(params)
+    provider = authorization_params['provider']
+    if provider == 'facebook'
+      authorization = FacebookUserDecorator.new(current_user).build_facebook_authorization(authorization_params)
+    elsif provider == 'twitter'
+      authorization = TwitterUserDecorator.new(current_user).build_twitter_authorization(authorization_params)
+    end
 
-    create_authorization = CreateAuthorization.run(
-      provider: authorization_params['provider'],
-      user: current_user,
-      token: authorization_params['token'],
-      secret: authorization_params['secret']
-    )
-
-    if create_authorization.valid?
-      custom_respond_with create_authorization.result
+    if authorization.save
+      custom_respond_with authorization
     else
-      render_json_errors(create_authorization.errors)
+      render_json_errors(authorization.errors)
     end
   end
 

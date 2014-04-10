@@ -2,11 +2,11 @@ class CommentSerializer < ActiveModel::Serializer
   attributes :id,
              :description,
              :created_at,
-             :morsel_id,
+             :item_id,
              :creator
 
-  def morsel_id
-    object.morsel.id
+  def item_id
+    object.item.id
   end
 
   def creator

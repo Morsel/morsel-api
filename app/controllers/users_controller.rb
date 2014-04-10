@@ -10,49 +10,42 @@ class UsersController < ApiController
   end
 
   def checkusername
-    check_username_exists = CheckUsernameExists.run(
-      username: params[:username]
-    )
-
-    if check_username_exists.valid?
-      render_json "#{check_username_exists.result}"
+    username = params[:username]
+    if ReservedPaths.non_username_paths.include?(username) || User.where('lower(username) = ?', username.downcase).count > 0
+      render_json true
     else
-      render_json_errors check_username_exists.errors
+      render_json false
     end
   end
 
   def reserveusername
-    reserve_username = ReserveUsername.run(
-      username: params[:username],
-      email: params[:email]
-    )
+    user = User.new(UserParams.build(params))
+    user.password = Devise.friendly_token
+    user.active = false
 
-    if reserve_username.valid?
-      user = reserve_username.result
+    if user.save
       create_user_event(:reserved_username, user.id)
       EmailUserDecorator.new(user).send_reserved_username_email
       sign_in user, store: false
       render_json(user_id: "#{user.id}")
     else
-      render_json_errors reserve_username.errors
+      render_json_errors user.errors
     end
   end
 
   def updateindustry
-    update_user_industry = UpdateUserIndustry.run(
-      user_id: params[:id],
-      industry: params[:industry]
-    )
+    user_params = UserParams.build(params)
+    user = User.find_by(user_params[:email])
 
-    if update_user_industry.valid?
+    if user.update(industry: user_params[:industry])
       render_json 'OK'
     else
-      render_json_errors update_user_industry.errors
+      render_json_errors(user.errors)
     end
   end
 
   def show
-    user = User.includes(:authorizations, :posts, :morsels).find_by_id_or_username(params[:user_id_or_username])
+    user = User.includes(:authorizations, :morsels, :items).find_by_id_or_username(params[:user_id_or_username])
     raise ActiveRecord::RecordNotFound if user.nil?
 
     custom_respond_with user, serializer: UserWithPrivateAttributesSerializer
@@ -60,6 +53,8 @@ class UsersController < ApiController
 
   def update
     user = User.find(params[:id])
+    authorize_action_for user
+
     if user.update_attributes(UserParams.build(params))
       custom_respond_with user, serializer: UserWithPrivateAttributesSerializer
     else
@@ -68,14 +63,12 @@ class UsersController < ApiController
   end
 
   def unsubscribe
-    unsubscribe_user = UnsubscribeUser.run(
-      email: params[:email]
-    )
+    user = User.find_by(email: params[:email])
 
-    if unsubscribe_user.valid?
+    if user.update(unsubscribed: true)
       render_json 'OK'
     else
-      render_json_errors unsubscribe_user.errors
+      render_json_errors(user.errors)
     end
   end
 

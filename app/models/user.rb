@@ -41,8 +41,11 @@
 
 class User < ActiveRecord::Base
   include Authority::UserAbilities
+  include Authority::Abilities
   include PhotoUploadable
   rolify
+
+  self.authorizer_name = 'UserAuthorizer'
 
   devise :database_authenticatable, :registerable, :rememberable, :trackable, :validatable
   # :recoverable
@@ -51,7 +54,7 @@ class User < ActiveRecord::Base
   after_save :ensure_role
 
   has_many :authorizations
-  has_many :comments, through: :morsels
+  has_many :comments, through: :items
   has_many  :facebook_authorizations,
             -> { where provider: 'facebook' },
             class_name: 'Authorization',
@@ -60,12 +63,19 @@ class User < ActiveRecord::Base
             -> { where provider: 'twitter' },
             class_name: 'Authorization',
             foreign_key: :user_id
-  has_many :liked_morsels, source: :morsel, through: :likes
+  has_many :liked_items, source: :item, through: :likes
   has_many :likes
+  has_many :items, foreign_key: :creator_id
   has_many :morsels, foreign_key: :creator_id
-  has_many :posts, foreign_key: :creator_id
   has_many :activities, foreign_key: :creator_id
   has_many :notifications
+
+
+  validates :industry,
+            inclusion: {
+              in: %w(chef media diner),
+              message: '%{value} is not a valid industry'
+            }, allow_nil: true
 
   validates :username,
             format: { with: /\A[a-zA-Z][A-Za-z0-9_]+$\z/ },
@@ -85,12 +95,12 @@ class User < ActiveRecord::Base
     end
   end
 
-  def morsel_likes_for_my_morsels_by_others_count
-    Like.where(morsel_id: morsel_ids).count
+  def item_likes_for_my_items_by_others_count
+    Like.where(item_id: item_ids).count
   end
 
-  def likes?(morsel)
-    liked_morsels.include?(morsel)
+  def likes?(item)
+    liked_items.include?(item)
   end
 
   def photos_hash

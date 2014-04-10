@@ -28,8 +28,6 @@ GEM
       erubis (~> 2.7.0)
       rack (~> 1.5.2)
       rack-test (~> 0.6.2)
-    active_interaction (1.1.2)
-      activemodel (>= 3, < 5)
     active_model_serializers (0.8.1)
       activemodel (>= 3.0)
     activemodel (4.0.3)
@@ -464,7 +462,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_interaction (~> 1.1)
   active_model_serializers
   activeadmin!
   annotate (>= 2.6.0)

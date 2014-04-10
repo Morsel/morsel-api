@@ -7,6 +7,7 @@ class FeedController < ApiController
                   .visible_items
                   .limit(pagination_count)
                   .order('id DESC')
+
     custom_respond_with feed_items
   end
 end

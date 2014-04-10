@@ -18,7 +18,7 @@
 require 'spec_helper'
 
 describe FeedItem do
-  subject(:feed_item) { FactoryGirl.build(:post_feed_item) }
+  subject(:feed_item) { FactoryGirl.build(:morsel_feed_item) }
 
   it { should respond_to(:subject) }
   it { should respond_to(:visible) }

@@ -1,281 +1,323 @@
 require 'spec_helper'
-
 describe 'Morsels API' do
-  let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
   let(:chef) { FactoryGirl.create(:chef) }
-  let(:morsels_count) { 4 }
+  let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
+  let(:items_count) { 4 }
 
-  describe 'POST /morsels morsels#create' do
-    let(:chef) { FactoryGirl.create(:chef) }
-    let(:nonce) { '1234567890-1234-1234-1234-1234567890123' }
-    let(:some_post) { FactoryGirl.create(:post_with_creator) }
+  describe 'GET /morsels morsels#index' do
+    let(:morsels_count) { 3 }
+
+    before do
+      morsels_count.times { FactoryGirl.create(:morsel_with_items, items_count: items_count) }
+    end
+
+    it 'returns a list of Morsels' do
+      get '/morsels', api_key: api_key_for_user(turd_ferg), format: :json
+
+      expect(response).to be_success
+
+      expect(json_data.count).to eq(morsels_count)
+
+      first_morsel = json_data.first
+
+      expect(first_morsel['items'].count).to eq(items_count)
+      expect(first_morsel['total_like_count']).to_not be_nil
+      expect(first_morsel['total_comment_count']).to_not be_nil
+      expect(first_morsel['photos']).to be_nil
+
+      first_item = first_morsel['items'].first
+      expect(first_item['like_count']).to_not be_nil
+      expect(first_item['comment_count']).to_not be_nil
+    end
+
+    it 'returns liked for each Item' do
+      get '/morsels', api_key: api_key_for_user(turd_ferg), format: :json
+
+      expect(response).to be_success
+      first_item = json_data.first['items'].first
+      expect(first_item['liked']).to_not be_nil
+    end
+
+    it 'returns morsel_id, sort_order, and url for each Item' do
+      get '/morsels', api_key: api_key_for_user(turd_ferg), format: :json
+
+      expect(response).to be_success
+      first_item = json_data.first['items'].first
+      expect(first_item['morsel_id']).to_not be_nil
+      expect(first_item['sort_order']).to_not be_nil
+      expect(first_item['url']).to_not be_nil
+    end
+
+    it 'should be public' do
+      get '/morsels', format: :json
+
+      expect(response).to be_success
+    end
+
+    context 'has drafts' do
+      let(:draft_morsels_count) { rand(3..6) }
+      before do
+        draft_morsels_count.times { FactoryGirl.create(:draft_morsel_with_items) }
+      end
+
+      it 'should NOT include drafts' do
+        get '/morsels', api_key: api_key_for_user(turd_ferg),
+                      format: :json
+
+        expect(response).to be_success
+
+        expect(json_data.count).to eq(morsels_count)
+      end
+    end
+
+    context 'pagination' do
+      before do
+        30.times { FactoryGirl.create(:morsel_with_creator) }
+      end
+
+      describe 'max_id' do
+        it 'returns results up to and including max_id' do
+          expected_count = rand(3..6)
+          max_id = Morsel.first.id + expected_count - 1
+          get '/morsels', api_key: api_key_for_user(turd_ferg),
+                        max_id: max_id,
+                        format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+          expect(json_data.first['id']).to eq(max_id)
+        end
+      end
+
+      describe 'since_id' do
+        it 'returns results since since_id' do
+          expected_count = rand(3..6)
+          since_id = Morsel.last.id - expected_count
+          get '/morsels', api_key: api_key_for_user(turd_ferg),
+                        since_id: since_id,
+                        format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+          expect(json_data.last['id']).to eq(since_id + 1)
+        end
+      end
+
+      describe 'count' do
+        it 'defaults to 20' do
+          get '/morsels', api_key: api_key_for_user(turd_ferg),
+                        format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(20)
+        end
+
+        it 'limits the result' do
+          expected_count = rand(3..6)
+          get '/morsels', api_key: api_key_for_user(turd_ferg),
+                        count: expected_count,
+                        format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(expected_count)
+        end
+      end
+    end
+
+    context 'user_id included in parameters' do
+      let(:morsel_with_items) { FactoryGirl.create(:morsel_with_items) }
+
+      it 'returns all Morsels for user_id' do
+        get '/morsels', api_key: api_key_for_user(turd_ferg),
+                      user_id_or_username: morsel_with_items.creator.id,
+                      format: :json
+
+        expect(response).to be_success
+
+        expect(json_data.count).to eq(1)
+
+        creator_id = morsel_with_items.creator.id
+
+        json_data.each do |item_json|
+          expect(item_json['creator_id']).to eq(creator_id)
+        end
+      end
+    end
+  end
+
+  describe 'POST /morsels morsels#create', sidekiq: :inline do
+    let(:expected_title) { 'Bake Sale!' }
 
     it 'creates a Morsel' do
       post '/morsels',  api_key: api_key_for_user(chef),
-                        format: :json,
-                        morsel: {
-                          description: 'It\'s not a toomarh!',
-                          photo: Rack::Test::UploadedFile.new(
-                            File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
-                          nonce: nonce,
-                          post: {
-                            id: some_post.id
-                          }
-                        }
+                      format: :json,
+                      morsel: {
+                        title: expected_title
+                      }
 
       expect(response).to be_success
 
       expect(json_data['id']).to_not be_nil
 
       new_morsel = Morsel.find json_data['id']
-      expect_json_keys(json_data, new_morsel, %w(id description creator_id))
-      expect(json_data['photos']).to_not be_nil
-
-      expect(new_morsel.post).to eq(some_post)
-      expect(new_morsel.nonce).to eq(nonce)
+      expect_json_keys(json_data, new_morsel, %w(id title creator_id))
+      expect(json_data['title']).to eq(expected_title)
+      expect(json_data['photos']).to be_nil
+      expect(new_morsel.draft).to be_false
     end
 
-    context 'deprecated parameters' do
-      describe 'post_id' do
-        it 'creates a Morsel' do
-          post '/morsels',  api_key: api_key_for_user(chef),
-                            format: :json,
-                            morsel: {
-                              description: 'It\'s not a toomarh!',
-                              photo: Rack::Test::UploadedFile.new(
-                                File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
-                              nonce: nonce
-                            },
-                            post_id: some_post.id
-
-          expect(response).to be_success
-
-          expect(json_data['id']).to_not be_nil
-
-          new_morsel = Morsel.find json_data['id']
-          expect_json_keys(json_data, new_morsel, %w(id description creator_id))
-          expect(json_data['photos']).to_not be_nil
-
-          expect(new_morsel.post).to eq(some_post)
-          expect(new_morsel.nonce).to eq(nonce)
-        end
-      end
-
-      describe 'post_title' do
-        let(:expected_title) { 'Symphony of Destruction' }
-        it 'changes the post_title' do
-          post '/morsels',  api_key: api_key_for_user(chef),
-                            format: :json,
-                            morsel: { description: 'Explooooooooooooooodes-aaah' },
-                            post_id: some_post.id,
-                            post_title: expected_title
-
-          expect(response).to be_success
-
-          expect(json_data['id']).to_not be_nil
-
-          new_morsel = Morsel.find json_data['id']
-          expect(new_morsel.post.title).to eq(expected_title)
-        end
-      end
-
-      describe 'sort_order' do
-        let(:post_with_morsels) { FactoryGirl.create(:post_with_morsels) }
-        let(:expected_sort_order) { 2 }
-        it 'changes the sort_order' do
-          post '/morsels',  api_key: api_key_for_user(chef),
-                            format: :json,
-                            morsel: { description: 'Explooooooooooooooodes-aaah' },
-                            post_id: post_with_morsels.id,
-                            sort_order: expected_sort_order
-
-          expect(response).to be_success
-
-          expect(json_data['id']).to_not be_nil
-
-          new_morsel = Morsel.find json_data['id']
-          expect(new_morsel.sort_order).to eq(expected_sort_order)
-        end
-      end
-    end
-
-    context 'sort_order included in parameters' do
-      let(:post_with_morsels) { FactoryGirl.create(:post_with_morsels) }
-
-      it 'changes the sort_order' do
+    context 'draft is set to true' do
+      it 'creates a draft Morsel' do
         post '/morsels',  api_key: api_key_for_user(chef),
-                          format: :json,
-                          morsel: {
-                            description: 'Parabol.',
-                            sort_order: 1,
-                            post: {
-                              id: post_with_morsels.id
-                            }
-                          }
+                        format: :json,
+                        morsel: {
+                          title: expected_title,
+                          draft: true
+                        }
 
         expect(response).to be_success
 
         expect(json_data['id']).to_not be_nil
 
-        expect(post_with_morsels.morsel_ids.first).to eq(json_data['id'])
-      end
-
-      describe '213 sort_order scenario' do
-        context 'Morsels are created and attached to the same Post with sort_orders 2,1,3' do
-          let(:existing_post) { FactoryGirl.create(:post_with_creator) }
-          let(:descriptions) { [ 'Should be first', 'Should be second', 'Should be third'] }
-
-          before do
-            post '/morsels',  api_key: api_key_for_user(chef),
-                              format: :json,
-                              morsel: {
-                                description: descriptions[1],
-                                sort_order: 2,
-                                post: {
-                                  id: existing_post.id
-                                }
-                              }
-
-            post '/morsels',  api_key: api_key_for_user(chef),
-                              format: :json,
-                              morsel: {
-                                description: descriptions[0],
-                                sort_order: 1,
-                                post: {
-                                  id: existing_post.id
-                                }
-                              }
-
-            post '/morsels',  api_key: api_key_for_user(chef),
-                              format: :json,
-                              morsel: {
-                                description: descriptions[2],
-                                sort_order: 3,
-                                post: {
-                                  id: existing_post.id
-                                }
-                              }
-
-          end
-          it 'returns them in the correct order' do
-            expect(existing_post.morsels.map { |m| m.sort_order }).to eq([1, 2, 3])
-            expect(existing_post.morsels.map { |m| m.description }).to eq(descriptions)
-          end
-        end
-
+        new_morsel = Morsel.find json_data['id']
+        expect_json_keys(json_data, new_morsel, %w(id title creator_id))
+        expect(json_data['title']).to eq(expected_title)
+        expect(new_morsel.draft).to be_true
       end
     end
 
-    context 'current_user is NOT a :chef' do
-      it 'should NOT be authorized' do
-        post '/morsels',  api_key: api_key_for_user(FactoryGirl.create(:user)),
-                          format: :json,
-                          morsel: {
-                            description: 'Holy Diver',
-                            nonce: nonce,
-                            post: {
-                              id: some_post.id
-                            }
-                          }
+    context 'primary_item_id is included' do
+      let(:some_item) { FactoryGirl.create(:item_with_creator) }
+      it 'should fail since a new Morsel has no Items' do
+        post '/morsels',  api_key: api_key_for_user(chef),
+                        format: :json,
+                        morsel: {
+                          title: expected_title,
+                          primary_item_id: FactoryGirl.create(:item).id
+                        }
 
         expect(response).to_not be_success
+
+        expect(json_errors['primary_item'].first).to eq('does not belong to this Morsel')
       end
     end
   end
 
   describe 'GET /morsels morsels#show' do
-    let(:morsel_with_creator_and_post) { FactoryGirl.create(:morsel_with_creator_and_post) }
+    let(:morsel_with_items) { FactoryGirl.create(:morsel_with_items, items_count: items_count) }
 
     it 'returns the Morsel' do
-      get "/morsels/#{morsel_with_creator_and_post.id}", api_key: api_key_for_user(turd_ferg), format: :json
+      get "/morsels/#{morsel_with_items.id}", api_key: api_key_for_user(turd_ferg), format: :json
 
       expect(response).to be_success
 
-      expect_json_keys(json_data, morsel_with_creator_and_post, %w(id description creator_id))
-      expect(json_data['liked']).to be_false
-      expect(json_data['photos']).to_not be_nil
+      expect_json_keys(json_data, morsel_with_items, %w(id title creator_id))
+      expect(json_data['slug']).to eq(morsel_with_items.cached_slug)
+
+      expect(json_data['items'].count).to eq(items_count)
+    end
+
+    it 'should be public' do
+      get "/morsels/#{morsel_with_items.id}", format: :json
+
+      expect(response).to be_success
     end
 
     context 'has a photo' do
-      before do
-        morsel_with_creator_and_post.photo = Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
-        morsel_with_creator_and_post.save
-      end
+      let(:morsel_with_creator_and_photo) { FactoryGirl.create(:morsel_with_creator_and_photo) }
 
-      it 'returns the User with the appropriate image sizes' do
-        get "/morsels/#{morsel_with_creator_and_post.id}", api_key: api_key_for_user(turd_ferg), format: :json
+      it 'returns the Morsel with photos' do
+        get "/morsels/#{morsel_with_creator_and_photo.id}", api_key: api_key_for_user(turd_ferg), format: :json
 
         expect(response).to be_success
 
+        expect_json_keys(json_data, morsel_with_creator_and_photo, %w(id title creator_id))
         photos = json_data['photos']
-        expect(photos['_640x640']).to_not be_nil
-        expect(photos['_320x320']).to_not be_nil
-        expect(photos['_100x100']).to_not be_nil
-        expect(photos['_50x50']).to_not be_nil
+        expect(photos['_400x300']).to_not be_nil
       end
     end
   end
 
   describe 'PUT /morsels/{:morsel_id} morsels#update' do
-    let(:existing_morsel) { FactoryGirl.create(:morsel_with_creator_and_post, creator: chef) }
-    let(:new_description) { 'The proof is in the puddin' }
+    let(:existing_morsel) { FactoryGirl.create(:morsel_with_items, creator: turd_ferg) }
+    let(:new_title) { 'Shy Ronnie 2: Ronnie & Clyde' }
 
     it 'updates the Morsel' do
-      put "/morsels/#{existing_morsel.id}", api_key: api_key_for_user(chef),
-                                            format: :json,
-                                            morsel: { description: new_description }
+      put "/morsels/#{existing_morsel.id}", api_key: api_key_for_user(turd_ferg),
+                                        format: :json,
+                                        morsel: { title: new_title }
 
       expect(response).to be_success
 
-      expect(json_data['description']).to eq(new_description)
-      expect(Morsel.find(existing_morsel.id).description).to eq(new_description)
+      expect(json_data['title']).to eq(new_title)
+      expect(json_data['draft']).to eq(false)
+      new_morsel = Morsel.find(existing_morsel.id)
+      expect(new_morsel.title).to eq(new_title)
+      expect(new_morsel.draft).to eq(false)
+    end
+
+    it 'should set the draft to false when draft=false is passed' do
+      existing_morsel.update(draft:true)
+
+      put "/morsels/#{existing_morsel.id}", api_key: api_key_for_user(turd_ferg),
+                                        format: :json,
+                                        morsel: { title: new_title, draft: false }
+
+      expect(response).to be_success
+
+      expect(json_data['draft']).to eq(false)
+      new_morsel = Morsel.find(existing_morsel.id)
+      expect(new_morsel.draft).to eq(false)
+    end
+
+    context 'primary_item_id is included' do
+      let(:some_item) { FactoryGirl.create(:item_with_creator, morsel: existing_morsel) }
+      it 'updates the primary_item_id' do
+        put "/morsels/#{existing_morsel.id}", api_key: api_key_for_user(turd_ferg),
+                                          format: :json,
+                                          morsel: {
+                                            title: new_title,
+                                            primary_item_id: some_item.id
+                                          }
+
+        expect(response).to be_success
+
+        expect(json_data['id']).to_not be_nil
+
+        new_morsel = Morsel.find json_data['id']
+        expect_json_keys(json_data, new_morsel, %w(id title creator_id))
+        expect(json_data['primary_item_id']).to eq(some_item.id)
+        expect(new_morsel.primary_item_id).to eq(some_item.id)
+      end
+
+      it 'should fail if primary_item_id is not one of the Morsel\'s Items' do
+        put "/morsels/#{existing_morsel.id}", api_key: api_key_for_user(turd_ferg),
+                                          format: :json,
+                                          morsel: {
+                                            title: new_title,
+                                            primary_item_id: FactoryGirl.create(:item).id
+                                          }
+
+        expect(response).to_not be_success
+
+        expect(json_errors['primary_item'].first).to eq('does not belong to this Morsel')
+      end
     end
 
     context 'current_user is NOT Morsel creator' do
       it 'should NOT be authorized' do
         put "/morsels/#{existing_morsel.id}", api_key: api_key_for_user(FactoryGirl.create(:user)),
-                                              format: :json,
-                                              morsel: { description: new_description }
+                                          format: :json,
+                                          morsel: { title: new_title }
 
         expect(response).to_not be_success
       end
     end
 
-    context 'post_id and sort_order included in parameters' do
-      let(:post_with_morsels) { FactoryGirl.create(:post_with_morsels, creator: chef) }
-      let(:last_morsel) { post_with_morsels.morsels.last }
-
-      context 'Morsel belongs to the Post' do
-        it 'changes the sort_order' do
-          put "/morsels/#{last_morsel.id}", api_key: api_key_for_user(chef),
-                                            format: :json,
-                                            morsel: {
-                                              description: 'Just like a bus route.',
-                                              sort_order: 1
-                                            },
-                                            post_id: post_with_morsels.id
-
-          expect(response).to be_success
-
-          expect(json_data['id']).to_not be_nil
-          expect(post_with_morsels.morsel_ids.first).to eq(json_data['id'])
-        end
-
-        it 'touches the posts' do
-          put "/morsels/#{last_morsel.id}", api_key: api_key_for_user(chef),
-                                            format: :json,
-                                            morsel: { description: 'Just like a bus route.' },
-                                            post_id: post_with_morsels.id
-
-          expect(response).to be_success
-
-          expect(json_data['id']).to_not be_nil
-
-          post_with_morsels.reload
-          expect(post_with_morsels.updated_at.to_datetime.to_f).to be >= last_morsel.updated_at.to_datetime.to_f
-        end
-      end
-    end
   end
 
   describe 'DELETE /morsels/{:morsel_id} morsels#destroy' do
@@ -288,6 +330,24 @@ describe 'Morsels API' do
       expect(Morsel.find_by(id: existing_morsel.id)).to be_nil
     end
 
+    it 'soft deletes the Morsel\'s FeedItem' do
+      delete "/morsels/#{existing_morsel.id}", api_key: api_key_for_user(chef), format: :json
+
+      expect(response).to be_success
+      expect(FeedItem.find_by(subject_id: existing_morsel.id, subject_type:existing_morsel.class)).to be_nil
+    end
+
+    context 'Items in a Morsel' do
+      let(:existing_morsel) { FactoryGirl.create(:morsel_with_items, creator: chef) }
+
+      it 'soft deletes all of its Items' do
+        delete "/morsels/#{existing_morsel.id}", api_key: api_key_for_user(chef), format: :json
+
+        expect(response).to be_success
+        expect(existing_morsel.items).to be_empty
+      end
+    end
+
     context 'current_user is NOT Morsel creator' do
       it 'should NOT be authorized' do
         delete "/morsels/#{existing_morsel.id}", api_key: api_key_for_user(FactoryGirl.create(:user)), format: :json
@@ -297,161 +357,120 @@ describe 'Morsels API' do
     end
   end
 
-  describe 'POST /morsels/{:morsel_id}/like' do
-    let(:morsel) { FactoryGirl.create(:morsel_with_creator) }
-
-    it 'likes the Morsel for current_user' do
-      post "/morsels/#{morsel.id}/like", api_key: api_key_for_user(chef), format: :json
-
-      expect(response).to be_success
-      expect(morsel.likers).to include(chef)
-    end
-
-    it 'creates an Activity and Notification' do
-      Sidekiq::Testing.inline! do
-        post "/morsels/#{morsel.id}/like", api_key: api_key_for_user(chef), format: :json
-      end
+  describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
+    let(:existing_draft_morsel) { FactoryGirl.create(:draft_morsel_with_items, creator: chef) }
+    it 'should publish the Morsel by setting draft to false and setting a published_at DateTime' do
+      post "/morsels/#{existing_draft_morsel.id}/publish",  api_key: api_key_for_user(chef),
+                                                      format: :json
 
       expect(response).to be_success
-      activity = chef.activities.last
-      expect(activity).to_not be_nil
-      expect(activity.creator).to eq(chef)
-      expect(activity.recipient).to eq(morsel.creator)
-      expect(activity.subject).to eq(morsel)
-      expect(activity.action).to eq(Like.last)
 
-      notification = morsel.creator.notifications.last
-      expect(notification).to_not be_nil
-      expect(notification.user).to eq(morsel.creator)
-      expect(notification.payload).to eq(activity)
-      expect(notification.message).to eq("#{chef.full_name} (#{chef.username}) liked #{morsel.post_title_with_description}".truncate(100, separator: ' ', omission: '... '))
+      expect(json_data['draft']).to eq(false)
+      new_morsel = Morsel.find(existing_draft_morsel.id)
+      expect(new_morsel.draft).to eq(false)
     end
 
-    context 'current_user already likes the Morsel' do
-      before do
-        morsel.likers << turd_ferg
-      end
+    context 'post_to_facebook included in parameters' do
+      let(:chef_with_facebook_authorization) { FactoryGirl.create(:chef_with_facebook_authorization) }
+      let(:existing_draft_morsel) { FactoryGirl.create(:draft_morsel_with_items, creator: chef_with_facebook_authorization) }
 
-      it 'returns an error' do
-        post "/morsels/#{morsel.id}/like", api_key: api_key_for_user(turd_ferg), format: :json
+      it 'posts to Facebook' do
+        dummy_name = 'Facebook User'
 
-        expect(response).to_not be_success
-        expect(response.status).to eq(422)
-        expect(json_errors['morsel'].first).to eq('already liked')
-      end
-    end
+        facebook_user = double('Hash')
+        facebook_user.stub(:[]).with('id').and_return('12345_67890')
+        facebook_user.stub(:[]).with('name').and_return(dummy_name)
 
-    context 'current_user has liked then unliked the Morsel' do
-      before do
-        morsel.likers << turd_ferg
-        morsel.likers.destroy(turd_ferg)
-      end
+        client = double('Koala::Facebook::API')
 
-      it 'likes the Morsel for the current_user' do
-        post "/morsels/#{morsel.id}/like", api_key: api_key_for_user(turd_ferg), format: :json
+        Koala::Facebook::API.stub(:new).and_return(client)
+
+        client.stub(:put_connections).and_return('id' => '12345_67890')
+
+        expect {
+          post "/morsels/#{existing_draft_morsel.id}/publish",  api_key: api_key_for_user(chef_with_facebook_authorization),
+                                                                format: :json,
+                                                                post_to_facebook: true
+        }.to change(SocialWorker.jobs, :size).by(1)
 
         expect(response).to be_success
-        expect(response.status).to eq(200)
-        expect(morsel.likers).to include(turd_ferg)
+
+        expect(json_data['id']).to_not be_nil
       end
     end
 
-    context 'current_user is NOT a :chef' do
-      it 'should be authorized' do
-        post "/morsels/#{morsel.id}/like", api_key: api_key_for_user(FactoryGirl.create(:user)), format: :json
+    context 'post_to_twitter included in parameters' do
+      let(:chef_with_twitter_authorization) { FactoryGirl.create(:chef_with_twitter_authorization) }
+      let(:existing_draft_morsel) { FactoryGirl.create(:draft_morsel_with_items, creator: chef_with_twitter_authorization) }
+
+      let(:expected_tweet_url) { "https://twitter.com/#{chef_with_twitter_authorization.username}/status/12345" }
+
+      it 'posts a Tweet' do
+        client = double('Twitter::REST::Client')
+        tweet = double('Twitter::Tweet')
+        tweet.stub(:url).and_return(expected_tweet_url)
+
+        Twitter::Client.stub(:new).and_return(client)
+        client.stub(:update).and_return(tweet)
+
+        expect {
+          post "/morsels/#{existing_draft_morsel.id}/publish",  api_key: api_key_for_user(chef_with_twitter_authorization),
+                                                                format: :json,
+                                                                post_to_twitter: true
+        }.to change(SocialWorker.jobs, :size).by(1)
 
         expect(response).to be_success
-      end
-    end
 
-  end
-
-  describe 'DELETE /morsels/{:morsel_id}/like likes#destroy' do
-    let(:morsel) { FactoryGirl.create(:morsel_with_creator) }
-
-    context 'current_user has liked Morsel' do
-      before { Like.create(morsel: morsel, user: turd_ferg) }
-
-      it 'soft deletes the Like' do
-        delete "/morsels/#{morsel.id}/like", api_key: api_key_for_user(turd_ferg), format: :json
-
-        expect(response).to be_success
-        expect(morsel.likers).to_not include(turd_ferg)
-      end
-    end
-
-    context 'current_user has NOT liked Morsel' do
-      it 'does NOT soft delete the Like' do
-        delete "/morsels/#{morsel.id}/like", api_key: api_key_for_user(turd_ferg), format: :json
-
-        expect(response).to_not be_success
-        expect(response.status).to eq(422)
-        expect(json_errors['morsel'].first).to eq('not liked')
-      end
-    end
-
-    context 'current_user is NOT Like creator' do
-      before { Like.create(morsel: morsel, user: turd_ferg) }
-      it 'should NOT be authorized' do
-        delete "/morsels/#{morsel.id}/like", api_key: api_key_for_user(FactoryGirl.create(:user)), format: :json
-
-        expect(response).to_not be_success
+        expect(json_data['id']).to_not be_nil
       end
     end
   end
 
-  describe 'GET /morsels/{:morsel_id}/likers morsels#likers' do
-    let(:likes_count) { 3 }
-    let(:morsel_with_likers) { FactoryGirl.create(:morsel_with_likers, likes_count: likes_count) }
-    let(:morsel_id) { morsel_with_likers.id }
-    let(:endpoint) { "/morsels/#{morsel_id}/likers" }
+  describe 'GET /morsels/drafts morsels#drafts' do
+    let(:morsels_count) { 3 }
+    let(:draft_morsels_count) { rand(3..6) }
 
-    it 'returns a list of Likers for the Morsel' do
-      get endpoint, api_key: api_key_for_user(turd_ferg), format: :json
-
-      expect(response).to be_success
-
-      expect(json_data.count).to eq(likes_count)
-    end
-  end
-
-  describe 'GET /morsels/{:morsel_id}/comments comments#index' do
-    let(:morsel_with_creator_and_comments) { FactoryGirl.create(:morsel_with_creator_and_comments) }
-
-    it 'returns a list of Comments for the Morsel' do
-      get "/morsels/#{morsel_with_creator_and_comments.id}/comments", api_key: api_key_for_user(turd_ferg), format: :json
-
-      expect(response).to be_success
-
-      expect(json_data.count).to eq(2)
-
-      first_comment = json_data.first
-      expect(first_comment['creator']).to_not be_nil
-      expect(first_comment['morsel_id']).to eq(morsel_with_creator_and_comments.id)
+    before do
+      morsels_count.times { FactoryGirl.create(:morsel_with_items, items_count: items_count) }
+      draft_morsels_count.times { FactoryGirl.create(:draft_morsel_with_items, creator: turd_ferg) }
     end
 
-    it 'should be public' do
-      get "/morsels/#{morsel_with_creator_and_comments.id}/comments", format: :json
+    it 'returns the authenticated User\'s Morsel Drafts' do
+      get '/morsels/drafts', api_key: api_key_for_user(turd_ferg),
+                           format: :json
 
       expect(response).to be_success
+      expect(json_data.count).to eq(draft_morsels_count)
+
+      first_morsel = json_data.first
+
+      expect(first_morsel['draft']).to be_true
+
+      expect(first_morsel['creator']).to_not be_nil
+    end
+
+    it 'returns morsel_id, sort_order, and url for each Item' do
+      get '/morsels', api_key: api_key_for_user(turd_ferg), format: :json
+
+      expect(response).to be_success
+      first_item = json_data.first['items'].first
+      expect(first_item['morsel_id']).to_not be_nil
+      expect(first_item['sort_order']).to_not be_nil
+      expect(first_item['url']).to_not be_nil
     end
 
     context 'pagination' do
       before do
-        30.times do
-          comment = FactoryGirl.create(:comment)
-          comment.morsel = morsel_with_creator_and_comments
-          comment.save
-        end
+        30.times { FactoryGirl.create(:draft_morsel_with_items, creator: turd_ferg) }
       end
 
       describe 'max_id' do
         it 'returns results up to and including max_id' do
           expected_count = rand(3..6)
-          max_id = Comment.first.id + expected_count - 1
-          get "/morsels/#{morsel_with_creator_and_comments.id}/comments", api_key: api_key_for_user(turd_ferg),
-                                                                          max_id: max_id,
-                                                                          format: :json
+          max_id = Morsel.where(creator_id: turd_ferg.id, draft: true).order('id ASC').first.id + expected_count - 1
+          get '/morsels/drafts', api_key: api_key_for_user(turd_ferg),
+                               max_id: max_id,
+                               format: :json
 
           expect(response).to be_success
 
@@ -463,10 +482,10 @@ describe 'Morsels API' do
       describe 'since_id' do
         it 'returns results since since_id' do
           expected_count = rand(3..6)
-          since_id = Comment.last.id - expected_count
-          get "/morsels/#{morsel_with_creator_and_comments.id}/comments", api_key: api_key_for_user(turd_ferg),
-                                                                          since_id: since_id,
-                                                                          format: :json
+          since_id = Morsel.last.id - expected_count
+          get '/morsels/drafts', api_key: api_key_for_user(turd_ferg),
+                               since_id: since_id,
+                               format: :json
 
           expect(response).to be_success
 
@@ -477,8 +496,8 @@ describe 'Morsels API' do
 
       describe 'count' do
         it 'defaults to 20' do
-          get "/morsels/#{morsel_with_creator_and_comments.id}/comments", api_key: api_key_for_user(turd_ferg),
-                                                                          format: :json
+          get '/morsels/drafts', api_key: api_key_for_user(turd_ferg),
+                               format: :json
 
           expect(response).to be_success
 
@@ -487,118 +506,14 @@ describe 'Morsels API' do
 
         it 'limits the result' do
           expected_count = rand(3..6)
-          get "/morsels/#{morsel_with_creator_and_comments.id}/comments", api_key: api_key_for_user(turd_ferg),
-                                                                          count: expected_count,
-                                                                          format: :json
+          get '/morsels/drafts', api_key: api_key_for_user(turd_ferg),
+                               count: expected_count,
+                               format: :json
 
           expect(response).to be_success
 
           expect(json_data.count).to eq(expected_count)
         end
-      end
-    end
-
-  end
-
-  describe 'POST /morsels/{:morsel_id}/comments comments#create' do
-    let(:existing_morsel) { FactoryGirl.create(:morsel_with_creator) }
-
-    it 'creates a Comment for the Morsel' do
-      post "/morsels/#{existing_morsel.id}/comments", api_key: api_key_for_user(chef),
-                                                      format: :json,
-                                                      comment: {
-                                                        description: 'Drop it like it\'s hot.' }
-
-      expect(response).to be_success
-
-      expect(json_data['id']).to_not be_nil
-
-      new_comment = Comment.find(json_data['id'])
-      expect_json_keys(json_data, new_comment, %w(id description))
-
-      expect(json_data['creator']).to_not be_nil
-      expect(json_data['creator']['id']).to eq(chef.id)
-      expect(json_data['morsel_id']).to eq(new_comment.morsel.id)
-      expect(chef.has_role?(:creator, new_comment))
-    end
-
-    it 'creates an Activity and Notification' do
-      Sidekiq::Testing.inline! do
-        post "/morsels/#{existing_morsel.id}/comments", api_key: api_key_for_user(chef),
-                                                        format: :json,
-                                                        comment: {
-                                                          description: 'Drop it like it\'s hot.' }
-      end
-
-      expect(response).to be_success
-      activity = chef.activities.last
-      expect(activity).to_not be_nil
-      expect(activity.creator).to eq(chef)
-      expect(activity.recipient).to eq(existing_morsel.creator)
-      expect(activity.subject).to eq(existing_morsel)
-      expect(activity.action).to eq(Comment.last)
-
-      notification = existing_morsel.creator.notifications.last
-      expect(notification).to_not be_nil
-      expect(notification.user).to eq(existing_morsel.creator)
-      expect(notification.payload).to eq(activity)
-      expect(notification.message).to eq("#{chef.full_name} (#{chef.username}) commented on #{existing_morsel.post_title_with_description}".truncate(100, separator: ' ', omission: '... '))
-    end
-
-    context 'missing Morsel' do
-      it 'should fail' do
-        post '/morsels/0/comments', api_key: api_key_for_user(chef),
-                                    format: :json,
-                                    comment: {
-                                      description: 'Drop it like it\'s hot.' }
-
-        expect(response).to_not be_success
-      end
-    end
-
-    context 'current_user is NOT a :chef' do
-      it 'should NOT be authorized' do
-        post "/morsels/#{existing_morsel.id}/comments", api_key: api_key_for_user(FactoryGirl.create(:user)),
-                                                        format: :json,
-                                                        comment: {
-                                                          description: 'Drop it like it\'s hot.' }
-
-        expect(response).to_not be_success
-      end
-    end
-  end
-
-  describe 'DELETE /comments/{:comment_id} comments#destroy' do
-    context 'current_user is the Comment creator' do
-      let(:comment_created_by_current_user) { FactoryGirl.create(:comment, user: chef) }
-
-      it 'soft deletes the Comment' do
-        delete "/comments/#{comment_created_by_current_user.id}", api_key: api_key_for_user(chef), format: :json
-
-        expect(response).to be_success
-        expect(Comment.find_by(id: comment_created_by_current_user.id)).to be_nil
-      end
-    end
-
-    context 'current_user is the Morsel creator' do
-      let(:comment_on_morsel_created_by_current_user) { FactoryGirl.create(:comment, morsel: FactoryGirl.create(:morsel, creator: chef)) }
-
-      it 'soft deletes the Comment' do
-        delete "/comments/#{comment_on_morsel_created_by_current_user.id}", api_key: api_key_for_user(chef), format: :json
-
-        expect(response).to be_success
-        expect(Comment.find_by(id: comment_on_morsel_created_by_current_user.id)).to be_nil
-      end
-    end
-
-    context 'current_user is not the Comment or Morsel creator' do
-      let(:comment) { FactoryGirl.create(:comment) }
-      it 'does NOT soft delete the Comment' do
-        delete "/comments/#{comment.id}", api_key: api_key_for_user(chef), format: :json
-
-        expect(response).to_not be_success
-        expect(Comment.find_by(id: comment.id)).to_not be_nil
-        expect(json_errors['user'].first).to eq('not authorized to delete comment')
       end
     end
   end

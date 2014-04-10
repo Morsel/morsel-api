@@ -8,6 +8,21 @@ class ApplicationAuthorizer < Authority::Authorizer
     user.has_role?(:admin) || user.has_role?(:chef)
   end
 
+  def self.readable_by?(user)
+    # By default, anyone can READ resources
+    true
+  end
+
+  def self.updatable_by?(user)
+    # By default, any User can UPDATE resources
+    user.present?
+  end
+
+  def self.deletable_by?(user)
+    # By default, any User can DELETE resources
+    user.present?
+  end
+
   def updatable_by?(user)
     # By default, only Admin and the resource's Creator can UPDATE resources
     user.has_role?(:admin) || user.has_role?(:creator, resource)
