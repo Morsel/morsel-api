@@ -291,9 +291,9 @@ Unsubscribes the User with the specified user_id from all emails
 <br />
 <br />
 
+## DEPRECATED
 ## GET ```/users/checkusername``` - Check Username
 Returns ```true``` if the username already exists, otherwise ```false```.
-Also aliased as: ```/users/checkusername/:username```
 
 ### Request
 
@@ -308,6 +308,35 @@ Also aliased as: ```/users/checkusername/:username```
 | Username does exist | true |
 | Username does NOT exist | false |
 | Username is invalid | Errors |
+
+<br />
+<br />
+
+## GET ```/users/validateusername``` - Check Username
+Returns ```true``` if the username is valid, otherwise errors.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| username | String | The username to validate | | X |
+
+### Response
+
+| Condition | __data__ |
+| --------- | -------- |
+| Username does NOT exist | true |
+| Username is invalid or already exists | Errors (see below) |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| 'username': ['is required'] | 422 (Unprocessible Entity) | username not passed |
+| 'username': ['must be less than 16 characters'] | 422 (Unprocessible Entity) | |
+| 'username': ['cannot contain spaces'] | 422 (Unprocessible Entity) | |
+| 'username': ['has already been taken'] | 422 (Unprocessible Entity) | username has already been taken or is a reserved path |
+| 'username': ['must start with a letter and can only contain alphanumeric characters and underscores'] | 422 (Unprocessible Entity) | |
 
 <br />
 <br />

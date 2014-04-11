@@ -9,12 +9,24 @@ class UsersController < ApiController
     custom_respond_with current_user, serializer: UserWithPrivateAttributesSerializer
   end
 
+  # TODO: DEPRECATE
   def checkusername
     username = params[:username]
     if ReservedPaths.non_username_paths.include?(username) || User.where('lower(username) = ?', username.downcase).count > 0
       render_json true
     else
       render_json false
+    end
+  end
+
+  def validateusername
+    user = User.new(username: params[:username])
+    user.validate_username
+
+    if user.errors.empty?
+      render_json true
+    else
+      render_json_errors user.errors
     end
   end
 

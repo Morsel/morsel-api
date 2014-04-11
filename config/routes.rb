@@ -21,7 +21,8 @@ MorselApp::Application.routes.draw do
     collection do
       post 'authorizations' => 'authorizations#create'
       get 'authorizations' => 'authorizations#index'
-      get 'checkusername(/:username)' => 'users#checkusername'
+      get 'checkusername(/:username)' => 'users#checkusername' # DEPRECATED
+      get 'validateusername(/:username)' => 'users#validateusername'
       post 'reserveusername(/:username)' => 'users#reserveusername'
       put ':id/updateindustry' => 'users#updateindustry'
       get 'me' => 'users#me'
