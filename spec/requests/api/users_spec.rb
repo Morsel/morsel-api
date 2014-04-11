@@ -21,49 +21,58 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /users/checkusername users#checkusername' do
+  describe 'GET /users/validateusername users#validateusername' do
     let(:user) { FactoryGirl.create(:user) }
-
-    it 'returns true if the username does exist' do
-      get '/users/checkusername', username: user.username, format: :json
+    it 'returns true if the username does NOT exist' do
+      get '/users/validateusername', username: 'not_a_username', format: :json
 
       expect(response).to be_success
 
       expect(json_data).to eq(true)
     end
 
-    it 'returns false if the username does NOT exist' do
-      get '/users/checkusername', username: 'not_a_username', format: :json
+    it 'returns an error if the username is nil' do
+      get '/users/validateusername', format: :json
 
-      expect(response).to be_success
-
-      expect(json_data).to eq(false)
+      expect(response).to_not be_success
+      expect(json_errors['username']).to include('is required')
     end
 
-    it 'can also accept username in the URL' do
-      get "/users/checkusername/#{user.username}", format: :json
+    it 'returns an error if the username is too long' do
+      get '/users/validateusername', username: 'longlonglonglong', format: :json
 
-      expect(response).to be_success
+      expect(response).to_not be_success
+      expect(json_errors['username']).to include('must be less than 16 characters')
+    end
 
-      expect(json_data).to eq(true)
+    it 'returns an error for spaces' do
+      get '/users/validateusername', username: 'Bob Dole', format: :json
+
+      expect(response).to_not be_success
+      expect(json_errors['username']).to include('cannot contain spaces')
+    end
+
+    it 'returns an error if the username already exists' do
+      get '/users/validateusername', username: user.username, format: :json
+
+      expect(response).to_not be_success
+      expect(json_errors['username']).to include('has already been taken')
     end
 
     it 'ignores case' do
-      get '/users/checkusername', username: user.username.swapcase, format: :json
+      get '/users/validateusername', username: user.username.swapcase, format: :json
 
-      expect(response).to be_success
-
-      expect(json_data).to eq(true)
+      expect(response).to_not be_success
+      expect(json_errors['username']).to include('has already been taken')
     end
 
     context 'username is a reserved path' do
       let(:sample_reserved_path) { ReservedPaths.non_username_paths.sample }
       it 'returns true to say the username already exists' do
-        get '/users/checkusername', username: sample_reserved_path, format: :json
+        get '/users/validateusername', username: sample_reserved_path, format: :json
 
-        expect(response).to be_success
-
-        expect(json_data).to eq(true)
+        expect(response).to_not be_success
+        expect(json_errors['username']).to include('has already been taken')
       end
     end
   end

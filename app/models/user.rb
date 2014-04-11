@@ -77,12 +77,7 @@ class User < ActiveRecord::Base
               message: '%{value} is not a valid industry'
             }, allow_nil: true
 
-  validates :username,
-            format: { with: /\A[a-zA-Z][A-Za-z0-9_]+$\z/ },
-            length: { maximum: 15 },
-            presence: true,
-            uniqueness: { case_sensitive: false },
-            exclusion: ReservedPaths.non_username_paths
+  validate :validate_username
 
   mount_uploader :photo, UserPhotoUploader
   process_in_background :photo
@@ -121,6 +116,18 @@ class User < ActiveRecord::Base
       "#{first_name}"
     elsif last_name
       "#{last_name}"
+    end
+  end
+
+  def validate_username
+    if username.nil?
+      errors.add(:username, 'is required')
+    else
+      errors.add(:username, 'must be less than 16 characters') if username.length > 15
+      errors.add(:username, 'cannot contain spaces') if username.include? ' '
+      errors.add(:username, 'has already been taken') if ReservedPaths.non_username_paths.include?(username)
+      errors.add(:username, 'must start with a letter and can only contain alphanumeric characters and underscores') unless username.match(/\A[a-zA-Z][A-Za-z0-9_]+$\z/)
+      errors.add(:username, 'has already been taken') if User.where('lower(username) = ? AND id != ?', username.downcase, id || 0).count > 0
     end
   end
 
