@@ -6,11 +6,23 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
   COLLAGE_PADDING = 4
   COLLAGE_SINGLE_CELL_SIZE = 95
   COLLAGE_DOUBLE_CELL_SIZE = (COLLAGE_SINGLE_CELL_SIZE * 2) + COLLAGE_PADDING
-  COLLAGE_TRIPLE_CELL_SIZE = COLLAGE_DOUBLE_CELL_SIZE + COLLAGE_PADDING
+  COLLAGE_TRIPLE_CELL_SIZE = (COLLAGE_SINGLE_CELL_SIZE * 3) + COLLAGE_PADDING + COLLAGE_PADDING
 
   def generate
     item_count = items.count
-    if item_count == 5
+    if item_count == 1
+      self.photo = generate_one_item_collage(self)
+      save!
+    elsif item_count == 2
+      self.photo = generate_two_item_collage(self)
+      save!
+    elsif item_count == 3
+      self.photo = generate_three_item_collage(self)
+      save!
+    elsif item_count == 4
+      self.photo = generate_four_item_collage(self)
+      save!
+    elsif item_count == 5
       self.photo = generate_five_item_collage(self)
       save!
     elsif item_count == 6
@@ -26,6 +38,289 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
 
   private
 
+  # A-title- AA
+  # AA AA AA AA
+  # AA AA AA AA
+  # AA AA AA AA
+  # AA AA AA AA
+  # creator- AA
+  def generate_one_item_collage(morsel)
+    primary_item = morsel.primary_item
+    creator = morsel.creator
+
+    items = []
+    items.push(primary_item) if primary_item
+
+    morsel.items.each do |m|
+      items.push(m) if m && m != primary_item
+    end
+
+    if Rails.env.development?
+      local_path = "#{Rails.root}/public"
+    else
+      local_path = ''
+    end
+
+    x = COLLAGE_PADDING
+    y = COLLAGE_PADDING
+
+    gravity = 'NorthWest'
+    font = Rails.root.join('app', 'assets', 'fonts', 'RobotoCondensed-Regular.ttf')
+    font_bold = Rails.root.join('app', 'assets', 'fonts', 'RobotoSlab-Bold.ttf')
+
+    tmp = Tempfile.new(%W[mini_magick_collage_ .png])
+
+    # -modulate brightness[,saturation,hue]
+    # Vary the brightness, saturation, and hue of an image.
+    # The arguments are given as a percentages of variation. A value of 100 means no change, and any missing values are taken to mean 100.
+    # The brightness is a multiplier of the overall brightness of the image, so 0 means pure black, 50 is half as bright, 200 is twice as bright. To invert its meaning -negate the image before and after.
+    # The saturation controls the amount of color in an image. For example, 0 produce a grayscale image, while a large value such as 200 produce a very colorful, 'cartoonish' color.
+    `convert "#{local_path+items[0].photo_url(:_50x50)}" -gaussian-blur 20 -modulate 70,40 -resize 300x300 -extent 300x300 #{tmp.path}`
+
+    background_image = MiniMagick::Image.new(tmp.path, tmp)
+
+    creator_photo = MiniMagick::Image.open("#{local_path+creator.photo_url(:_144x144)}")
+
+    result = background_image.composite(MiniMagick::Image.open(local_path+items[0].photo_url(:_480x480))) do |c| # A (Cover)
+      c.compose 'Over'
+      c.gravity gravity
+      c.geometry "#{COLLAGE_TRIPLE_CELL_SIZE}x#{COLLAGE_TRIPLE_CELL_SIZE}+#{x}+#{y}"
+    end.composite(creator_photo) do |c| # Creator Pic
+      c.compose 'Over'
+      c.gravity 'SouthWest'
+      c.geometry '50x50+10+10'
+    end
+
+    creator_name_x = 70
+    creator_name_y = 34
+    creator_url_y = 19
+    result.combine_options do |c|
+      c.font font_bold
+      c.fill "white"
+      c.pointsize 30
+      c.gravity 'NorthWest'
+      c.stroke 'black'
+      c.strokewidth 3
+      c.draw "text 10,65 '#{morsel.title}'"
+      c.stroke 'none'
+      c.draw "text 10,65 '#{morsel.title}'"
+
+      c.strokewidth 1
+
+      c.gravity 'SouthWest'
+      c.font font
+      c.pointsize 15
+      c.stroke 'black'
+      c.draw "text #{creator_name_x}, #{creator_name_y} '#{creator.full_name}'"
+      c.stroke 'none'
+      c.draw "text #{creator_name_x}, #{creator_name_y} '#{creator.full_name}'"
+
+      c.pointsize 12
+      c.stroke 'black'
+      c.draw "text #{creator_name_x}, #{creator_url_y} 'www.eatmorsel.com/#{creator.username}'"
+      c.stroke 'none'
+      c.draw "text #{creator_name_x}, #{creator_url_y} 'www.eatmorsel.com/#{creator.username}'"
+    end
+
+    result.format 'png'
+    result
+  end
+
+  # AA AA AA BB
+  # AA AA AA BB
+  # A-titl-A
+  # AA AA AA
+  # AA AA AA
+  # creator-
+  def generate_two_item_collage(morsel)
+    primary_item = morsel.primary_item
+    creator = morsel.creator
+
+    items = []
+    items.push(primary_item) if primary_item
+
+    morsel.items.each do |m|
+      items.push(m) if m && m != primary_item
+    end
+
+    if Rails.env.development?
+      local_path = "#{Rails.root}/public"
+    else
+      local_path = ''
+    end
+
+    x = COLLAGE_PADDING
+    y = COLLAGE_PADDING
+
+    left_offset = COLLAGE_TRIPLE_CELL_SIZE + COLLAGE_PADDING + COLLAGE_PADDING
+
+    gravity = 'NorthWest'
+    font = Rails.root.join('app', 'assets', 'fonts', 'RobotoCondensed-Regular.ttf')
+    font_bold = Rails.root.join('app', 'assets', 'fonts', 'RobotoSlab-Bold.ttf')
+
+    tmp = Tempfile.new(%W[mini_magick_collage_ .png])
+
+    # -modulate brightness[,saturation,hue]
+    # Vary the brightness, saturation, and hue of an image.
+    # The arguments are given as a percentages of variation. A value of 100 means no change, and any missing values are taken to mean 100.
+    # The brightness is a multiplier of the overall brightness of the image, so 0 means pure black, 50 is half as bright, 200 is twice as bright. To invert its meaning -negate the image before and after.
+    # The saturation controls the amount of color in an image. For example, 0 produce a grayscale image, while a large value such as 200 produce a very colorful, 'cartoonish' color.
+    `convert "#{local_path+items[0].photo_url(:_50x50)}" -gaussian-blur 20 -modulate 70,40 -resize 400x400 -extent 400x300 #{tmp.path}`
+
+    background_image = MiniMagick::Image.new(tmp.path, tmp)
+
+    creator_photo = MiniMagick::Image.open("#{local_path+creator.photo_url(:_144x144)}")
+
+    result = background_image.composite(MiniMagick::Image.open(local_path+items[0].photo_url(:_480x480))) do |c| # A (Cover)
+      c.compose 'Over'
+      c.gravity gravity
+      c.geometry "#{COLLAGE_TRIPLE_CELL_SIZE}x#{COLLAGE_TRIPLE_CELL_SIZE}+#{x}+#{y}"
+    end.composite(MiniMagick::Image.open("#{local_path+items[1].photo_url(:_240x240)}")) do |c| # B
+      c.compose 'Over'
+      c.gravity gravity
+      x = left_offset
+      c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
+    end.composite(creator_photo) do |c| # Creator Pic
+      c.compose 'Over'
+      c.gravity 'SouthWest'
+      c.geometry '50x50+10+10'
+    end
+
+    creator_name_x = 70
+    creator_name_y = 34
+    creator_url_y = 19
+    result.combine_options do |c|
+      c.font font_bold
+      c.fill "white"
+      c.pointsize 30
+      c.gravity 'NorthWest'
+      c.stroke 'black'
+      c.strokewidth 3
+      c.draw "text 10,65 '#{morsel.title}'"
+      c.stroke 'none'
+      c.draw "text 10,65 '#{morsel.title}'"
+
+      c.strokewidth 1
+
+      c.gravity 'SouthWest'
+      c.font font
+      c.pointsize 15
+      c.stroke 'black'
+      c.draw "text #{creator_name_x}, #{creator_name_y} '#{creator.full_name}'"
+      c.stroke 'none'
+      c.draw "text #{creator_name_x}, #{creator_name_y} '#{creator.full_name}'"
+
+      c.pointsize 12
+      c.stroke 'black'
+      c.draw "text #{creator_name_x}, #{creator_url_y} 'www.eatmorsel.com/#{creator.username}'"
+      c.stroke 'none'
+      c.draw "text #{creator_name_x}, #{creator_url_y} 'www.eatmorsel.com/#{creator.username}'"
+    end
+
+    result.format 'png'
+    result
+  end
+
+  # AA AA AA BB
+  # AA AA AA BB
+  # A-titl-A CC
+  # AA AA AA CC
+  # AA AA AA
+  # creator-
+  def generate_three_item_collage(morsel)
+    primary_item = morsel.primary_item
+    creator = morsel.creator
+
+    items = []
+    items.push(primary_item) if primary_item
+
+    morsel.items.each do |m|
+      items.push(m) if m && m != primary_item
+    end
+
+    if Rails.env.development?
+      local_path = "#{Rails.root}/public"
+    else
+      local_path = ''
+    end
+
+    x = COLLAGE_PADDING
+    y = COLLAGE_PADDING
+
+    left_offset = COLLAGE_TRIPLE_CELL_SIZE + COLLAGE_PADDING + COLLAGE_PADDING
+
+    gravity = 'NorthWest'
+    font = Rails.root.join('app', 'assets', 'fonts', 'RobotoCondensed-Regular.ttf')
+    font_bold = Rails.root.join('app', 'assets', 'fonts', 'RobotoSlab-Bold.ttf')
+
+    tmp = Tempfile.new(%W[mini_magick_collage_ .png])
+
+    # -modulate brightness[,saturation,hue]
+    # Vary the brightness, saturation, and hue of an image.
+    # The arguments are given as a percentages of variation. A value of 100 means no change, and any missing values are taken to mean 100.
+    # The brightness is a multiplier of the overall brightness of the image, so 0 means pure black, 50 is half as bright, 200 is twice as bright. To invert its meaning -negate the image before and after.
+    # The saturation controls the amount of color in an image. For example, 0 produce a grayscale image, while a large value such as 200 produce a very colorful, 'cartoonish' color.
+    `convert "#{local_path+items[0].photo_url(:_50x50)}" -gaussian-blur 20 -modulate 70,40 -resize 400x400 -extent 400x300 #{tmp.path}`
+
+    background_image = MiniMagick::Image.new(tmp.path, tmp)
+
+    creator_photo = MiniMagick::Image.open("#{local_path+creator.photo_url(:_144x144)}")
+
+    result = background_image.composite(MiniMagick::Image.open(local_path+items[0].photo_url(:_480x480))) do |c| # A (Cover)
+      c.compose 'Over'
+      c.gravity gravity
+      c.geometry "#{COLLAGE_TRIPLE_CELL_SIZE}x#{COLLAGE_TRIPLE_CELL_SIZE}+#{x}+#{y}"
+    end.composite(MiniMagick::Image.open("#{local_path+items[1].photo_url(:_240x240)}")) do |c| # B
+      c.compose 'Over'
+      c.gravity gravity
+      x = left_offset
+      c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
+    end.composite(MiniMagick::Image.open("#{local_path+items[2].photo_url(:_240x240)}")) do |c| # C
+      c.compose 'Over'
+      c.gravity gravity
+      y = y + COLLAGE_SINGLE_CELL_SIZE + COLLAGE_PADDING
+      c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
+    end.composite(creator_photo) do |c| # Creator Pic
+      c.compose 'Over'
+      c.gravity 'SouthWest'
+      c.geometry '50x50+10+10'
+    end
+
+    creator_name_x = 70
+    creator_name_y = 34
+    creator_url_y = 19
+    result.combine_options do |c|
+      c.font font_bold
+      c.fill "white"
+      c.pointsize 30
+      c.gravity 'NorthWest'
+      c.stroke 'black'
+      c.strokewidth 3
+      c.draw "text 10,65 '#{morsel.title}'"
+      c.stroke 'none'
+      c.draw "text 10,65 '#{morsel.title}'"
+
+      c.strokewidth 1
+
+      c.gravity 'SouthWest'
+      c.font font
+      c.pointsize 15
+      c.stroke 'black'
+      c.draw "text #{creator_name_x}, #{creator_name_y} '#{creator.full_name}'"
+      c.stroke 'none'
+      c.draw "text #{creator_name_x}, #{creator_name_y} '#{creator.full_name}'"
+
+      c.pointsize 12
+      c.stroke 'black'
+      c.draw "text #{creator_name_x}, #{creator_url_y} 'www.eatmorsel.com/#{creator.username}'"
+      c.stroke 'none'
+      c.draw "text #{creator_name_x}, #{creator_url_y} 'www.eatmorsel.com/#{creator.username}'"
+    end
+
+    result.format 'png'
+    result
+  end
+
   # AA AA AA BB
   # AA AA AA BB
   # A-titl-A CC
@@ -33,6 +328,103 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
   # AA AA AA DD
   # creator- DD
   def generate_four_item_collage(morsel)
+    primary_item = morsel.primary_item
+    creator = morsel.creator
+
+    items = []
+    items.push(primary_item) if primary_item
+
+    morsel.items.each do |m|
+      items.push(m) if m && m != primary_item
+    end
+
+    if Rails.env.development?
+      local_path = "#{Rails.root}/public"
+    else
+      local_path = ''
+    end
+
+    x = COLLAGE_PADDING
+    y = COLLAGE_PADDING
+
+    left_offset = COLLAGE_TRIPLE_CELL_SIZE + COLLAGE_PADDING + COLLAGE_PADDING
+
+    gravity = 'NorthWest'
+    font = Rails.root.join('app', 'assets', 'fonts', 'RobotoCondensed-Regular.ttf')
+    font_bold = Rails.root.join('app', 'assets', 'fonts', 'RobotoSlab-Bold.ttf')
+
+    tmp = Tempfile.new(%W[mini_magick_collage_ .png])
+
+    # -modulate brightness[,saturation,hue]
+    # Vary the brightness, saturation, and hue of an image.
+    # The arguments are given as a percentages of variation. A value of 100 means no change, and any missing values are taken to mean 100.
+    # The brightness is a multiplier of the overall brightness of the image, so 0 means pure black, 50 is half as bright, 200 is twice as bright. To invert its meaning -negate the image before and after.
+    # The saturation controls the amount of color in an image. For example, 0 produce a grayscale image, while a large value such as 200 produce a very colorful, 'cartoonish' color.
+    `convert "#{local_path+items[0].photo_url(:_50x50)}" -gaussian-blur 20 -modulate 70,40 -resize 400x400 -extent 400x300 #{tmp.path}`
+
+    background_image = MiniMagick::Image.new(tmp.path, tmp)
+
+    creator_photo = MiniMagick::Image.open("#{local_path+creator.photo_url(:_144x144)}")
+
+    result = background_image.composite(MiniMagick::Image.open(local_path+items[0].photo_url(:_480x480))) do |c| # A (Cover)
+      c.compose 'Over'
+      c.gravity gravity
+      c.geometry "#{COLLAGE_TRIPLE_CELL_SIZE}x#{COLLAGE_TRIPLE_CELL_SIZE}+#{x}+#{y}"
+    end.composite(MiniMagick::Image.open("#{local_path+items[1].photo_url(:_240x240)}")) do |c| # B
+      c.compose 'Over'
+      c.gravity gravity
+      x = left_offset
+      c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
+    end.composite(MiniMagick::Image.open("#{local_path+items[2].photo_url(:_240x240)}")) do |c| # C
+      c.compose 'Over'
+      c.gravity gravity
+      y = y + COLLAGE_SINGLE_CELL_SIZE + COLLAGE_PADDING
+      c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
+    end.composite(MiniMagick::Image.open("#{local_path+items[3].photo_url(:_240x240)}")) do |c| # D
+      c.compose 'Over'
+      c.gravity gravity
+      x = left_offset
+      y = y + COLLAGE_SINGLE_CELL_SIZE + COLLAGE_PADDING
+      c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
+    end.composite(creator_photo) do |c| # Creator Pic
+      c.compose 'Over'
+      c.gravity 'SouthWest'
+      c.geometry '50x50+10+10'
+    end
+
+    creator_name_x = 70
+    creator_name_y = 34
+    creator_url_y = 19
+    result.combine_options do |c|
+      c.font font_bold
+      c.fill "white"
+      c.pointsize 30
+      c.gravity 'NorthWest'
+      c.stroke 'black'
+      c.strokewidth 3
+      c.draw "text 10,65 '#{morsel.title}'"
+      c.stroke 'none'
+      c.draw "text 10,65 '#{morsel.title}'"
+
+      c.strokewidth 1
+
+      c.gravity 'SouthWest'
+      c.font font
+      c.pointsize 15
+      c.stroke 'black'
+      c.draw "text #{creator_name_x}, #{creator_name_y} '#{creator.full_name}'"
+      c.stroke 'none'
+      c.draw "text #{creator_name_x}, #{creator_name_y} '#{creator.full_name}'"
+
+      c.pointsize 12
+      c.stroke 'black'
+      c.draw "text #{creator_name_x}, #{creator_url_y} 'www.eatmorsel.com/#{creator.username}'"
+      c.stroke 'none'
+      c.draw "text #{creator_name_x}, #{creator_url_y} 'www.eatmorsel.com/#{creator.username}'"
+    end
+
+    result.format 'png'
+    result
   end
 
   # AA AA BB CC
@@ -111,6 +503,9 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
       c.geometry '50x50+10+10'
     end
 
+    creator_name_x = 70
+    creator_name_y = 34
+    creator_url_y = 19
     result.combine_options do |c|
       c.font font_bold
       c.fill "white"
@@ -127,15 +522,15 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
       c.font font
       c.pointsize 15
       c.stroke 'black'
-      c.draw "text 70, 34 '#{creator.full_name}'"
+      c.draw "text #{creator_name_x}, #{creator_name_y} '#{creator.full_name}'"
       c.stroke 'none'
-      c.draw "text 70, 34 '#{creator.full_name}'"
+      c.draw "text #{creator_name_x}, #{creator_name_y} '#{creator.full_name}'"
 
       c.pointsize 12
       c.stroke 'black'
-      c.draw "text 70, 19 'www.eatmorsel.com/#{creator.username}'"
+      c.draw "text #{creator_name_x}, #{creator_url_y} 'www.eatmorsel.com/#{creator.username}'"
       c.stroke 'none'
-      c.draw "text 70, 19  'www.eatmorsel.com/#{creator.username}'"
+      c.draw "text #{creator_name_x}, #{creator_url_y} 'www.eatmorsel.com/#{creator.username}'"
     end
 
     result.format 'png'
@@ -223,6 +618,9 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
       c.geometry '50x50+10+10'
     end
 
+    creator_name_x = 70
+    creator_name_y = 34
+    creator_url_y = 19
     result.combine_options do |c|
       c.font font_bold
       c.fill "white"
@@ -239,15 +637,15 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
       c.font font
       c.pointsize 15
       c.stroke 'black'
-      c.draw "text 70, 34 '#{creator.full_name}'"
+      c.draw "text #{creator_name_x}, #{creator_name_y} '#{creator.full_name}'"
       c.stroke 'none'
-      c.draw "text 70, 34 '#{creator.full_name}'"
+      c.draw "text #{creator_name_x}, #{creator_name_y} '#{creator.full_name}'"
 
       c.pointsize 12
       c.stroke 'black'
-      c.draw "text 70, 19 'www.eatmorsel.com/#{creator.username}'"
+      c.draw "text #{creator_name_x}, #{creator_url_y} 'www.eatmorsel.com/#{creator.username}'"
       c.stroke 'none'
-      c.draw "text 70, 19  'www.eatmorsel.com/#{creator.username}'"
+      c.draw "text #{creator_name_x}, #{creator_url_y} 'www.eatmorsel.com/#{creator.username}'"
     end
 
     result.format 'png'
@@ -341,6 +739,9 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
       c.geometry '50x50+10+10'
     end
 
+    creator_name_x = 70
+    creator_name_y = 34
+    creator_url_y = 19
     result.combine_options do |c|
       c.font font_bold
       c.fill "white"
@@ -357,15 +758,15 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
       c.font font
       c.pointsize 15
       c.stroke 'black'
-      c.draw "text 70, 34 '#{creator.full_name}'"
+      c.draw "text #{creator_name_x}, #{creator_name_y} '#{creator.full_name}'"
       c.stroke 'none'
-      c.draw "text 70, 34 '#{creator.full_name}'"
+      c.draw "text #{creator_name_x}, #{creator_name_y} '#{creator.full_name}'"
 
       c.pointsize 12
       c.stroke 'black'
-      c.draw "text 70, 19 'www.eatmorsel.com/#{creator.username}'"
+      c.draw "text #{creator_name_x}, #{creator_url_y} 'www.eatmorsel.com/#{creator.username}'"
       c.stroke 'none'
-      c.draw "text 70, 19  'www.eatmorsel.com/#{creator.username}'"
+      c.draw "text #{creator_name_x}, #{creator_url_y} 'www.eatmorsel.com/#{creator.username}'"
     end
 
     result.format 'png'
