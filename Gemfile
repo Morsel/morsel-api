@@ -70,12 +70,10 @@ group :development, :test do
   gem 'guard-rails_best_practices'
   gem 'guard-rspec'
   gem 'guard-rubocop'
-  gem 'guard-spork', '1.5.0'
   gem 'guard-shell'
   gem 'rails_best_practices'
   gem 'rspec-instafail'
   gem 'rspec-rails'
-  gem 'spork-rails', '4.0.0'
 end
 
 group :test do
