@@ -37,6 +37,7 @@
 # **`industry`**                | `string(255)`      |
 # **`unsubscribed`**            | `boolean`          | `default(FALSE)`
 # **`photo_processing`**        | `boolean`          |
+# **`staff`**                   | `boolean`          | `default(FALSE)`
 #
 
 # Read about factories at https://github.com/thoughtbot/factory_girl

@@ -21,16 +21,6 @@ guard 'rails_best_practices' do
   watch(%r{^app/(.+)\.rb$})
 end
 
-guard 'spork', rspec_env: { RAILS_ENV: 'test' } do
-  watch(%r{^config/initializers/.+\.rb$})
-  watch('config/application.rb')
-  watch('config/environment.rb')
-  watch('config/environments/test.rb')
-  watch('Gemfile')
-  watch('Gemfile.lock')
-  watch('spec/spec_helper.rb') { :rspec }
-end
-
 guard 'rspec', cmd: 'bundle exec rspec --drb --format Fuubar --color', all_after_pass: false, all_on_start: true, failed_mode: :keep do
   watch(%r{^app/(.*)(\.erb|\.haml)$})                 { |m| "spec/#{m[1]}#{m[2]}_spec.rb" }
   watch(%r{^app/(.+)\.rb$})                           { |m| "spec/#{m[1]}_spec.rb" }

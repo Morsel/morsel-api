@@ -37,6 +37,7 @@
 # **`industry`**                | `string(255)`      |
 # **`unsubscribed`**            | `boolean`          | `default(FALSE)`
 # **`photo_processing`**        | `boolean`          |
+# **`staff`**                   | `boolean`          | `default(FALSE)`
 #
 
 class User < ActiveRecord::Base
