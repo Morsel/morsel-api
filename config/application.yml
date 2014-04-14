@@ -10,6 +10,8 @@ aws:
     secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
   buckets:
     default: <%= ENV['S3_DEFAULT_BUCKET'] %>
+bitly:
+  access_token: <%= ENV['BITLY_ACCESS_TOKEN'] %>
 facebook:
   app_id: <%= ENV['FACEBOOK_APP_ID'] %>
   app_secret: <%= ENV['FACEBOOK_APP_SECRET'] %>

@@ -11,7 +11,9 @@ class MorselSerializer < ActiveModel::Serializer
              :total_comment_count,
              :primary_item_id,
              :photos,
-             :url
+             :url,
+             :facebook_mrsl,
+             :twitter_mrsl
 
   has_one :creator
 

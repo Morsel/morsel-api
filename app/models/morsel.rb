@@ -25,6 +25,7 @@
 class Morsel < ActiveRecord::Base
   include Authority::Abilities
   include Feedable
+  include Mrslable
   include PhotoUploadable
   include TimelinePaginateable
   include UserCreatable
@@ -71,12 +72,12 @@ class Morsel < ActiveRecord::Base
   end
 
   def facebook_message
-    "\"#{title}\" from #{creator.full_name} on Morsel #{url}".normalize
+    "\"#{title}\" from #{creator.full_name} on Morsel #{facebook_mrsl}".normalize
   end
 
   def twitter_message
     twitter_username_or_full_name = TwitterUserDecorator.new(creator).twitter_username.presence || creator.full_name
-    "\"#{title}\" from #{twitter_username_or_full_name} on @#{Settings.morsel.twitter_username}".twitter_string(url)
+    "\"#{title}\" from #{twitter_username_or_full_name} on @#{Settings.morsel.twitter_username}".twitter_string(twitter_mrsl)
   end
 
   def url
