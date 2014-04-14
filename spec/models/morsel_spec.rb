@@ -110,21 +110,21 @@ describe Morsel do
   end
 
   describe '#facebook_message' do
-    let(:morsel_with_creator) { FactoryGirl.build(:morsel_with_creator) }
+    let(:morsel_with_creator) { FactoryGirl.create(:morsel_with_creator) }
     subject(:facebook_message) { morsel_with_creator.facebook_message }
 
     it { should include(morsel_with_creator.title) }
     it { should include(morsel_with_creator.creator.full_name) }
-    it { should include(morsel_with_creator.url) }
+    it { should include(morsel_with_creator.facebook_mrsl) }
   end
 
   describe '#twitter_message' do
-    let(:morsel_with_creator) { FactoryGirl.build(:morsel_with_creator) }
+    let(:morsel_with_creator) { FactoryGirl.create(:morsel_with_creator) }
     subject(:twitter_message) { morsel_with_creator.twitter_message }
 
     it { should include(morsel_with_creator.title) }
     it { should include(morsel_with_creator.creator.full_name) }
-    it { should include(morsel_with_creator.url) }
+    it { should include(morsel_with_creator.twitter_mrsl) }
     it { should include(' on @eatmorsel') }
   end
 

@@ -63,6 +63,10 @@ FactoryGirl.define do
     factory :chef, class: User do
       industry 'chef'
 
+      factory :chef_with_photo, class: User do
+        photo Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
+      end
+
       factory :chef_with_facebook_authorization do
         after(:create) do |chef|
           create_list(:facebook_authorization, 1, user: chef)

@@ -5,7 +5,6 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'rspec'
 require 'email_spec'
-require 'rspec/autorun'
 require 'factory_girl'
 require 'sidekiq/testing'
 require 'mandrill_mailer/offline'
@@ -46,6 +45,7 @@ RSpec.configure do |config|
   config.order = 'random'
 
   config.include Requests::JsonHelpers, type: :request
+  config.include Requests::ServiceStubs, type: :request
 
   config.before(:suite) do
     ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
@@ -54,6 +54,7 @@ RSpec.configure do |config|
     FactoryGirl.factories.clear
     Dir[Rails.root.join('spec/factories/**/*.rb')].each { |f| load f }
     ENV.update Dotenv::Environment.new('.env.test')
+    Settings.reload!
 
     DatabaseCleaner.clean_with(:truncation)
 
