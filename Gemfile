@@ -9,7 +9,9 @@ gem 'pg'
 
 gem 'active_model_serializers'
 gem 'activeadmin', github: 'gregbell/active_admin'
+gem 'addressable', '~> 2.3.6'
 gem "authority", "~> 2.9.0"
+gem 'bitly', '~> 0.10.1'
 gem 'bootstrap-sass', '>= 3.0.0.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem "carrierwave", "~> 0.9.0"
