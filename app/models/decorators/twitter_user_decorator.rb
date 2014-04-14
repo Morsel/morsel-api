@@ -1,8 +1,4 @@
 class TwitterUserDecorator < SimpleDelegator
-  def queue_twitter_message(morsel_id)
-    SocialWorker.perform_async(:twitter, id, morsel_id) if authorized_with_twitter?
-  end
-
   def post_twitter_message(message)
     user_twitter_client.update(message)
   end

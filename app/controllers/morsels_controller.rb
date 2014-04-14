@@ -84,8 +84,12 @@ class MorselsController < ApiController
     morsel.primary_item_id = params[:morsel][:primary_item_id] if params[:morsel] && params[:morsel][:primary_item_id].present?
 
     if morsel.save
-      FacebookUserDecorator.new(current_user).queue_facebook_message(morsel.id) if params[:post_to_facebook]
-      TwitterUserDecorator.new(current_user).queue_twitter_message(morsel.id) if params[:post_to_twitter]
+      PublishMorselWorker.perform_async({
+        morsel_id: morsel.id,
+        user_id: current_user.id,
+        post_to_facebook: params[:post_to_facebook],
+        post_to_twitter: params[:post_to_twitter]
+      })
 
       custom_respond_with morsel
     else

@@ -25,6 +25,7 @@ namespace :morsel do
     task prod_to_stag: :environment do
       prod_backup_url = heroku('pgbackups:url', 'morsel-api')
       heroku("pgbackups:restore DATABASE_URL #{prod_backup_url} --confirm=morsel-api-staging", 'morsel-api-staging')
+      # heroku pgbackups:restore DATABASE_URL `heroku pgbackups:url --app=morsel-api`
     end
   end
 

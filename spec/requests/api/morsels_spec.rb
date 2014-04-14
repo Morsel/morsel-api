@@ -358,10 +358,19 @@ describe 'Morsels API' do
   end
 
   describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
-    let(:existing_draft_morsel) { FactoryGirl.create(:draft_morsel_with_items, creator: chef) }
+    let(:chef) { FactoryGirl.create(:chef_with_photo) }
+    let(:existing_draft_morsel) { FactoryGirl.create(:draft_morsel_with_items, creator: chef, build_feed_item: false, include_mrsl: false) }
     it 'should publish the Morsel by setting draft to false and setting a published_at DateTime' do
-      post "/morsels/#{existing_draft_morsel.id}/publish",  api_key: api_key_for_user(chef),
-                                                      format: :json
+      MorselCollageGeneratorDecorator.any_instance.should_receive(:generate).exactly(1).times.and_return(nil)
+      Mrsl.should_receive(:shorten).exactly(2).times.and_call_original
+      FeedItem.should_receive(:new).exactly(1).times.and_call_original
+      FacebookUserDecorator.any_instance.should_not_receive(:post_facebook_message)
+      TwitterUserDecorator.any_instance.should_not_receive(:post_twitter_message)
+
+      Sidekiq::Testing.inline! {
+        post "/morsels/#{existing_draft_morsel.id}/publish",  api_key: api_key_for_user(chef),
+                                                        format: :json
+      }
 
       expect(response).to be_success
 
@@ -384,26 +393,23 @@ describe 'Morsels API' do
 
     context 'post_to_facebook included in parameters' do
       let(:chef_with_facebook_authorization) { FactoryGirl.create(:chef_with_facebook_authorization) }
-      let(:existing_draft_morsel) { FactoryGirl.create(:draft_morsel_with_items, creator: chef_with_facebook_authorization) }
+      let(:existing_draft_morsel) { FactoryGirl.create(:draft_morsel_with_items, creator: chef_with_facebook_authorization, build_feed_item: false, include_mrsl: false) }
 
       it 'posts to Facebook' do
-        dummy_name = 'Facebook User'
+        stub_facebook_client
+        stub_bitly_client
 
-        facebook_user = double('Hash')
-        facebook_user.stub(:[]).with('id').and_return('12345_67890')
-        facebook_user.stub(:[]).with('name').and_return(dummy_name)
+        MorselCollageGeneratorDecorator.any_instance.should_receive(:generate).exactly(1).times.and_return(nil)
+        Mrsl.should_receive(:shorten).exactly(2).times.and_call_original
+        FeedItem.should_receive(:new).exactly(1).times.and_call_original
+        FacebookUserDecorator.any_instance.should_receive(:post_facebook_message).exactly(1).times.and_call_original
+        TwitterUserDecorator.any_instance.should_not_receive(:post_twitter_message)
 
-        client = double('Koala::Facebook::API')
-
-        Koala::Facebook::API.stub(:new).and_return(client)
-
-        client.stub(:put_connections).and_return('id' => '12345_67890')
-
-        expect {
+        Sidekiq::Testing.inline! {
           post "/morsels/#{existing_draft_morsel.id}/publish",  api_key: api_key_for_user(chef_with_facebook_authorization),
                                                                 format: :json,
                                                                 post_to_facebook: true
-        }.to change(SocialWorker.jobs, :size).by(1)
+        }
 
         expect(response).to be_success
 
@@ -413,23 +419,23 @@ describe 'Morsels API' do
 
     context 'post_to_twitter included in parameters' do
       let(:chef_with_twitter_authorization) { FactoryGirl.create(:chef_with_twitter_authorization) }
-      let(:existing_draft_morsel) { FactoryGirl.create(:draft_morsel_with_items, creator: chef_with_twitter_authorization) }
-
-      let(:expected_tweet_url) { "https://twitter.com/#{chef_with_twitter_authorization.username}/status/12345" }
+      let(:existing_draft_morsel) { FactoryGirl.create(:draft_morsel_with_items, creator: chef_with_twitter_authorization, build_feed_item: false, include_mrsl: false) }
 
       it 'posts a Tweet' do
-        client = double('Twitter::REST::Client')
-        tweet = double('Twitter::Tweet')
-        tweet.stub(:url).and_return(expected_tweet_url)
+        stub_twitter_client
+        stub_bitly_client
 
-        Twitter::Client.stub(:new).and_return(client)
-        client.stub(:update).and_return(tweet)
+        MorselCollageGeneratorDecorator.any_instance.should_receive(:generate).exactly(1).times.and_return(nil)
+        Mrsl.should_receive(:shorten).exactly(2).times.and_call_original
+        FeedItem.should_receive(:new).exactly(1).times.and_call_original
+        FacebookUserDecorator.any_instance.should_not_receive(:post_facebook_message)
+        TwitterUserDecorator.any_instance.should_receive(:post_twitter_message).exactly(1).times.and_call_original
 
-        expect {
+        Sidekiq::Testing.inline! {
           post "/morsels/#{existing_draft_morsel.id}/publish",  api_key: api_key_for_user(chef_with_twitter_authorization),
                                                                 format: :json,
                                                                 post_to_twitter: true
-        }.to change(SocialWorker.jobs, :size).by(1)
+        }
 
         expect(response).to be_success
 

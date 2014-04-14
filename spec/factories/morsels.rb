@@ -26,6 +26,18 @@ FactoryGirl.define do
   factory :morsel do
     title { Faker::Lorem.sentence(rand(2..4)).truncate(50) }
     draft false
+    ignore do
+      include_mrsl true
+    end
+
+    after(:build) do |morsel, evaluator|
+      if evaluator.include_mrsl
+        morsel.mrsl = {
+          facebook_mrsl: 'https://mrsl.co/facebook',
+          twitter_mrsl: 'https://mrsl.co/twitter'
+        }
+      end
+    end
 
     factory :morsel_with_creator, class: Morsel do
       association(:creator, factory: :user)
@@ -35,11 +47,15 @@ FactoryGirl.define do
 
       factory :morsel_with_items, class: Morsel do
         ignore do
+          build_feed_item true
           items_count 3
         end
 
         after(:create) do |morsel, evaluator|
           create_list(:item, evaluator.items_count, morsel: morsel, creator: morsel.creator)
+          morsel.primary_item_id = morsel.item_ids.last
+          morsel.build_feed_item(subject_id: morsel.id, subject_type: 'Morsel', visible: true) if evaluator.build_feed_item
+          morsel.save
         end
 
         factory :draft_morsel_with_items, class: Morsel do

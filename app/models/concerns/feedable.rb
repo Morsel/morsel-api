@@ -4,15 +4,10 @@ module Feedable
   included do
     has_one :feed_item, as: :subject, dependent: :destroy
 
-    after_create :create_feed_item
     after_save :update_visibility
   end
 
   private
-
-  def create_feed_item
-    FeedWorker.perform_async(self.id, self.class.to_s)
-  end
 
   def update_visibility
     if self.feed_item
