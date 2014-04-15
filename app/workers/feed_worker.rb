@@ -6,7 +6,8 @@ class FeedWorker
 
     feed_item = FeedItem.new(
       subject_id: options['morsel_id'],
-      subject_type: 'Morsel'
+      subject_type: 'Morsel',
+      visible: true
     )
 
     if feed_item.save
