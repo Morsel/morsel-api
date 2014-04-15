@@ -10,14 +10,8 @@ class FeedWorker
     )
 
     if feed_item.save
-      if options['post_to_facebook']
-        options['post_to_twitter'] = nil
-        SocialWorker.perform_async(options)
-      end
-      if options['post_to_twitter']
-        options['post_to_facebook'] = nil
-        SocialWorker.perform_async(options)
-      end
+      SocialWorker.perform_async(options.except('post_to_twitter')) if options['post_to_facebook']
+      SocialWorker.perform_async(options.except('post_to_facebook')) if options['post_to_twitter']
     end
   end
 end
