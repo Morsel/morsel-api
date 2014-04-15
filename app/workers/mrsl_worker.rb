@@ -18,8 +18,14 @@ class MrslWorker
     if morsel.feed_item.nil?
       FeedWorker.perform_async(options)
     else
-      SocialWorker.perform_async(options) if options['post_to_facebook']
-      SocialWorker.perform_async(options) if options['post_to_twitter']
+      if options['post_to_facebook']
+        options['post_to_twitter'] = nil
+        SocialWorker.perform_async(options)
+      end
+      if options['post_to_twitter']
+        options['post_to_facebook'] = nil
+        SocialWorker.perform_async(options)
+      end
     end
   end
 end
