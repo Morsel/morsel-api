@@ -1067,7 +1067,7 @@ api_key && morsel_id exist
   "primary_item_id": 2,
   "published_at": "2014-01-07T16:34:44.862Z",
   "photos": {
-    "_400x300":"https://morsel-staging.s3.amazonaws.com/morsel-images/4/648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
+    "_800x600":"https://morsel-staging.s3.amazonaws.com/morsel-images/4/648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
   },
   "creator": {
     "id": 3,

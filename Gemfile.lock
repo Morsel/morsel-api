@@ -16,6 +16,13 @@ GIT
       ransack (~> 1.0)
       sass-rails
 
+GIT
+  remote: git://github.com/minimagick/minimagick.git
+  revision: 9ecb65092abb3f2027ecb5f07730a10b39f8a5fd
+  specs:
+    mini_magick (3.7.0)
+      subexec (~> 0.2.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -258,8 +265,6 @@ GEM
       thread_safe (~> 0.2.0)
     method_source (0.8.2)
     mime-types (1.25.1)
-    mini_magick (3.7.0)
-      subexec (~> 0.2.1)
     mini_portile (0.5.2)
     minitest (4.7.5)
     multi_json (1.9.2)
@@ -507,7 +512,7 @@ DEPENDENCIES
   koala (~> 1.8.0rc1)
   mandrill_mailer (~> 0.4.3)
   mime-types
-  mini_magick
+  mini_magick!
   newrelic_rpm
   paranoia (~> 2.0)
   pg

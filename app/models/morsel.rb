@@ -66,7 +66,7 @@ class Morsel < ActiveRecord::Base
   def photos_hash
     if photo_url.present?
       {
-        _400x300: photo_url,
+        _800x600: photo_url,
       }
     end
   end
