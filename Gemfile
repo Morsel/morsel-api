@@ -26,7 +26,7 @@ gem 'jquery-rails'
 gem "koala", "~> 1.8.0rc1"
 gem "mandrill_mailer", "~> 0.4.3"
 gem 'mime-types'
-gem 'mini_magick'
+gem 'mini_magick', github: 'minimagick/minimagick'
 gem 'newrelic_rpm'
 gem 'paranoia', '~> 2.0'
 gem 'rack-cors', require: 'rack/cors'

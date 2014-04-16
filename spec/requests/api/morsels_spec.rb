@@ -237,7 +237,7 @@ describe 'Morsels API' do
 
         expect_json_keys(json_data, morsel_with_creator_and_photo, %w(id title creator_id))
         photos = json_data['photos']
-        expect(photos['_400x300']).to_not be_nil
+        expect(photos['_800x600']).to_not be_nil
       end
     end
   end
@@ -361,6 +361,8 @@ describe 'Morsels API' do
     let(:chef) { FactoryGirl.create(:chef_with_photo) }
     let(:existing_draft_morsel) { FactoryGirl.create(:draft_morsel_with_items, creator: chef, build_feed_item: false, include_mrsl: false) }
     it 'should publish the Morsel by setting draft to false and setting a published_at DateTime' do
+      stub_bitly_client
+
       MorselCollageGeneratorDecorator.any_instance.should_receive(:generate).exactly(1).times.and_return(nil)
       Mrsl.should_receive(:shorten).exactly(2).times.and_call_original
       FeedItem.should_receive(:new).exactly(1).times.and_call_original
