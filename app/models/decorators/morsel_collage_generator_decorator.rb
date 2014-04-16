@@ -9,22 +9,22 @@ module MiniMagick
       tmp_title_outer = Tempfile.new(%W[mini_magick_collage_title_outer_ .png])
       tmp_title_inner = Tempfile.new(%W[mini_magick_collage_title_inner_ .png])
 
-      `convert -font #{MorselCollageGeneratorDecorator::COLLAGE_FONT_BOLD} \
+      `convert -font #{MorselCollageGeneratorDecorator::ROBOTO_SLAB_BOLD} \
         -size #{max_width}x#{max_height} \
         -background none \
         -fill white \
         -strokewidth 6 \
         -stroke black \
-        label:'#{title}' \
+        label:'#{title.upcase}' \
         #{tmp_title_outer.path}`
 
-      `convert -font #{MorselCollageGeneratorDecorator::COLLAGE_FONT_BOLD} \
+      `convert -font #{MorselCollageGeneratorDecorator::ROBOTO_SLAB_BOLD} \
         -size #{max_width}x#{max_height} \
         -background none \
         -fill white \
         -strokewidth 6 \
         -stroke none \
-        label:'#{title}' \
+        label:'#{title.upcase}' \
         #{tmp_title_inner.path}`
 
       title_outer_image = MiniMagick::Image.new(tmp_title_outer.path, tmp_title_outer)
@@ -56,7 +56,7 @@ module MiniMagick
         c.fill "white"
         c.strokewidth 2
         c.gravity 'SouthWest'
-        c.font MorselCollageGeneratorDecorator::COLLAGE_FONT
+        c.font MorselCollageGeneratorDecorator::ROBOTO_SLAB
 
         c.size '600x'
         c.background 'red'
@@ -66,10 +66,11 @@ module MiniMagick
         c.stroke 'none'
         c.draw "text #{creator_name_x}, #{creator_name_y} '#{creator.full_name}'"
 
+        c.font MorselCollageGeneratorDecorator::ROBOTO
         c.size '600x'
         c.background 'blue'
         c.stroke 'black'
-        c.pointsize 24
+        c.pointsize 20
         c.draw "text #{creator_name_x}, #{creator_url_y} 'www.eatmorsel.com/#{creator.username}'"
         c.stroke 'none'
         c.draw "text #{creator_name_x}, #{creator_url_y} 'www.eatmorsel.com/#{creator.username}'"
@@ -89,33 +90,34 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
   COLLAGE_SINGLE_CELL_SIZE = 190
   COLLAGE_DOUBLE_CELL_SIZE = (COLLAGE_SINGLE_CELL_SIZE * 2) + COLLAGE_PADDING
   COLLAGE_TRIPLE_CELL_SIZE = (COLLAGE_SINGLE_CELL_SIZE * 3) + COLLAGE_PADDING + COLLAGE_PADDING
-  COLLAGE_FONT = Rails.root.join('app', 'assets', 'fonts', 'RobotoCondensed-Regular.ttf')
-  COLLAGE_FONT_BOLD = Rails.root.join('app', 'assets', 'fonts', 'RobotoSlab-Bold.ttf')
+  ROBOTO = Rails.root.join('app', 'assets', 'fonts', 'Roboto-Regular.ttf')
+  ROBOTO_SLAB = Rails.root.join('app', 'assets', 'fonts', 'RobotoSlab-Regular.ttf')
+  ROBOTO_SLAB_BOLD = Rails.root.join('app', 'assets', 'fonts', 'RobotoSlab-Bold.ttf')
   COLLAGE_LOCAL_PATH = Rails.env.development? ? "#{Rails.root}/public" : ''
   COLLAGE_DEFAULT_GRAVITY = 'NorthWest'
 
   def generate
-    item_count = items.count
+    item_count = valid_items().count
     if item_count == 1
-      self.photo = generate_one_item_collage(self)
+      self.photo = generate_one_item_collage
       save!
     elsif item_count == 2
-      self.photo = generate_two_item_collage(self)
+      self.photo = generate_two_item_collage
       save!
     elsif item_count == 3
-      self.photo = generate_three_item_collage(self)
+      self.photo = generate_three_item_collage
       save!
     elsif item_count == 4
-      self.photo = generate_four_item_collage(self)
+      self.photo = generate_four_item_collage
       save!
     elsif item_count == 5
-      self.photo = generate_five_item_collage(self)
+      self.photo = generate_five_item_collage
       save!
     elsif item_count == 6
-      self.photo = generate_six_item_collage(self)
+      self.photo = generate_six_item_collage
       save!
     elsif item_count >= 7
-      self.photo = generate_seven_item_collage(self)
+      self.photo = generate_seven_item_collage
       save!
     else
       puts "Invalid Morsel passed: #{id} or no template exists for Morsel with #{item_count} Items"
@@ -124,17 +126,17 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
 
   private
 
-  def items_for_morsel(morsel)
-    items = []
+  def valid_items
+    valid_items = []
 
-    primary_item = morsel.primary_item
-    items.push(primary_item) if primary_item
+    primary_item = self.primary_item
+    valid_items.push(primary_item) if primary_item
 
-    morsel.items.each do |m|
-      items.push(m) if m && m != primary_item
+    self.items.each do |m|
+      valid_items.push(m) if m.photo_url && m != primary_item
     end
 
-    items
+    valid_items
   end
 
   def blurred_image(image_path, options = {})
@@ -160,17 +162,17 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
   # AA AA AA AA
   # AA AA AA AA
   # creator- AA
-  def generate_one_item_collage(morsel)
-    items = items_for_morsel(morsel)
+  def generate_one_item_collage
+    valid_items = valid_items()
 
     x = COLLAGE_PADDING
     y = COLLAGE_PADDING
 
-    result = blurred_image("#{COLLAGE_LOCAL_PATH+items[0].photo_url(:_50x50)}", {max_width: 600, width: 600, max_height: 600, height: 600}).composite(MiniMagick::Image.open(COLLAGE_LOCAL_PATH+items[0].photo_url(:_640x640))) do |c| # A (Cover)
+    result = blurred_image("#{COLLAGE_LOCAL_PATH+valid_items[0].photo_url(:_50x50)}", {max_width: 600, width: 600, max_height: 600, height: 600}).composite(MiniMagick::Image.open(COLLAGE_LOCAL_PATH+valid_items[0].photo_url(:_640x640))) do |c| # A (Cover)
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       c.geometry "#{COLLAGE_TRIPLE_CELL_SIZE}x#{COLLAGE_TRIPLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite_title(morsel.title, {max_width: 560}).add_creator_information(morsel.creator)
+    end.composite_title(self.title, {max_width: 560}).add_creator_information(self.creator)
 
     result.format 'png'
     result
@@ -182,24 +184,24 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
   # AA AA AA --
   # AA AA AA --
   # creator- --
-  def generate_two_item_collage(morsel)
-    items = items_for_morsel(morsel)
+  def generate_two_item_collage
+    valid_items = valid_items()
 
     x = COLLAGE_PADDING
     y = COLLAGE_PADDING
 
     left_offset = COLLAGE_TRIPLE_CELL_SIZE + COLLAGE_PADDING + COLLAGE_PADDING
 
-    result = blurred_image("#{COLLAGE_LOCAL_PATH+items[0].photo_url(:_50x50)}", {max_width: 800, width: 800, max_height: 800, height: 600}).composite(MiniMagick::Image.open(COLLAGE_LOCAL_PATH+items[0].photo_url(:_640x640))) do |c| # A (Cover)
+    result = blurred_image("#{COLLAGE_LOCAL_PATH+valid_items[0].photo_url(:_50x50)}", {max_width: 800, width: 800, max_height: 800, height: 600}).composite(MiniMagick::Image.open(COLLAGE_LOCAL_PATH+valid_items[0].photo_url(:_640x640))) do |c| # A (Cover)
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       c.geometry "#{COLLAGE_TRIPLE_CELL_SIZE}x#{COLLAGE_TRIPLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[1].photo_url(:_320x320)}")) do |c| # B
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[1].photo_url(:_320x320)}")) do |c| # B
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       x = left_offset
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite_title(morsel.title, {max_width: 560}).add_creator_information(morsel.creator)
+    end.composite_title(self.title, {max_width: 560}).add_creator_information(self.creator)
 
     result.format 'png'
     result
@@ -211,29 +213,29 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
   # AA AA AA CC
   # AA AA AA --
   # creator- --
-  def generate_three_item_collage(morsel)
-    items = items_for_morsel(morsel)
+  def generate_three_item_collage
+    valid_items = valid_items()
 
     x = COLLAGE_PADDING
     y = COLLAGE_PADDING
 
     left_offset = COLLAGE_TRIPLE_CELL_SIZE + COLLAGE_PADDING + COLLAGE_PADDING
 
-    result = blurred_image("#{COLLAGE_LOCAL_PATH+items[0].photo_url(:_50x50)}", {max_width: 800, width: 800, max_height: 800, height: 600}).composite(MiniMagick::Image.open(COLLAGE_LOCAL_PATH+items[0].photo_url(:_640x640))) do |c| # A (Cover)
+    result = blurred_image("#{COLLAGE_LOCAL_PATH+valid_items[0].photo_url(:_50x50)}", {max_width: 800, width: 800, max_height: 800, height: 600}).composite(MiniMagick::Image.open(COLLAGE_LOCAL_PATH+valid_items[0].photo_url(:_640x640))) do |c| # A (Cover)
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       c.geometry "#{COLLAGE_TRIPLE_CELL_SIZE}x#{COLLAGE_TRIPLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[1].photo_url(:_320x320)}")) do |c| # B
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[1].photo_url(:_320x320)}")) do |c| # B
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       x = left_offset
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[2].photo_url(:_320x320)}")) do |c| # C
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[2].photo_url(:_320x320)}")) do |c| # C
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       y = y + COLLAGE_SINGLE_CELL_SIZE + COLLAGE_PADDING
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite_title(morsel.title, {max_width: 560}).add_creator_information(morsel.creator)
+    end.composite_title(self.title, {max_width: 560}).add_creator_information(self.creator)
 
     result.format 'png'
     result
@@ -245,35 +247,35 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
   # AA AA AA CC
   # AA AA AA DD
   # creator- DD
-  def generate_four_item_collage(morsel)
-    items = items_for_morsel(morsel)
+  def generate_four_item_collage
+    valid_items = valid_items()
 
     x = COLLAGE_PADDING
     y = COLLAGE_PADDING
 
     left_offset = COLLAGE_TRIPLE_CELL_SIZE + COLLAGE_PADDING + COLLAGE_PADDING
 
-    result = blurred_image("#{COLLAGE_LOCAL_PATH+items[0].photo_url(:_50x50)}", {max_width: 800, width: 800, max_height: 800, height: 600}).composite(MiniMagick::Image.open(COLLAGE_LOCAL_PATH+items[0].photo_url(:_640x640))) do |c| # A (Cover)
+    result = blurred_image("#{COLLAGE_LOCAL_PATH+valid_items[0].photo_url(:_50x50)}", {max_width: 800, width: 800, max_height: 800, height: 600}).composite(MiniMagick::Image.open(COLLAGE_LOCAL_PATH+valid_items[0].photo_url(:_640x640))) do |c| # A (Cover)
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       c.geometry "#{COLLAGE_TRIPLE_CELL_SIZE}x#{COLLAGE_TRIPLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[1].photo_url(:_320x320)}")) do |c| # B
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[1].photo_url(:_320x320)}")) do |c| # B
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       x = left_offset
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[2].photo_url(:_320x320)}")) do |c| # C
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[2].photo_url(:_320x320)}")) do |c| # C
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       y = y + COLLAGE_SINGLE_CELL_SIZE + COLLAGE_PADDING
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[3].photo_url(:_320x320)}")) do |c| # D
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[3].photo_url(:_320x320)}")) do |c| # D
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       x = left_offset
       y = y + COLLAGE_SINGLE_CELL_SIZE + COLLAGE_PADDING
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite_title(morsel.title, {max_width: 560}).add_creator_information(morsel.creator)
+    end.composite_title(self.title, {max_width: 560}).add_creator_information(self.creator)
 
     result.format 'png'
     result
@@ -287,40 +289,40 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
   # AA AA DD EE
   # title------
   # creator----
-  def generate_five_item_collage(morsel)
-    items = items_for_morsel(morsel)
+  def generate_five_item_collage
+    valid_items = valid_items()
 
     x = COLLAGE_PADDING
     y = COLLAGE_PADDING
 
     left_offset = COLLAGE_SINGLE_CELL_SIZE + COLLAGE_SINGLE_CELL_SIZE + COLLAGE_PADDING + COLLAGE_PADDING + COLLAGE_PADDING
 
-    result = blurred_image("#{COLLAGE_LOCAL_PATH+items[0].photo_url(:_50x50)}", {max_width: 800, width: 800, max_height: 800, height: 600}).composite(MiniMagick::Image.open(COLLAGE_LOCAL_PATH+items[0].photo_url(:_640x640))) do |c| # A (Cover)
+    result = blurred_image("#{COLLAGE_LOCAL_PATH+valid_items[0].photo_url(:_50x50)}", {max_width: 800, width: 800, max_height: 800, height: 600}).composite(MiniMagick::Image.open(COLLAGE_LOCAL_PATH+valid_items[0].photo_url(:_640x640))) do |c| # A (Cover)
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       c.geometry "#{COLLAGE_DOUBLE_CELL_SIZE}x#{COLLAGE_DOUBLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[1].photo_url(:_320x320)}")) do |c| # B
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[1].photo_url(:_320x320)}")) do |c| # B
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       x = left_offset
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[2].photo_url(:_320x320)}")) do |c| # C
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[2].photo_url(:_320x320)}")) do |c| # C
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       x = x + COLLAGE_SINGLE_CELL_SIZE+COLLAGE_PADDING
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[3].photo_url(:_320x320)}")) do |c| # D
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[3].photo_url(:_320x320)}")) do |c| # D
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       x = left_offset
       y = y + COLLAGE_SINGLE_CELL_SIZE + COLLAGE_PADDING
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[4].photo_url(:_320x320)}")) do |c| # E
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[4].photo_url(:_320x320)}")) do |c| # E
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       x = x + COLLAGE_SINGLE_CELL_SIZE+COLLAGE_PADDING
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite_title(morsel.title, {max_width: 760, max_height: 80, y: (COLLAGE_DOUBLE_CELL_SIZE+COLLAGE_PADDING+COLLAGE_PADDING)}).add_creator_information(morsel.creator)
+    end.composite_title(self.title, {max_width: 760, max_height: 80, y: (COLLAGE_DOUBLE_CELL_SIZE+COLLAGE_PADDING+COLLAGE_PADDING)}).add_creator_information(self.creator)
 
     result.format 'png'
     result
@@ -332,45 +334,45 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
   # AA AA DD EE
   # title--- FF
   # creator- FF
-  def generate_six_item_collage(morsel)
-    items = items_for_morsel(morsel)
+  def generate_six_item_collage
+    valid_items = valid_items()
 
     x = COLLAGE_PADDING
     y = COLLAGE_PADDING
 
     left_offset = COLLAGE_SINGLE_CELL_SIZE + COLLAGE_SINGLE_CELL_SIZE + COLLAGE_PADDING + COLLAGE_PADDING + COLLAGE_PADDING
 
-    result = blurred_image("#{COLLAGE_LOCAL_PATH+items[0].photo_url(:_50x50)}", {max_width: 800, width: 800, max_height: 800, height: 600}).composite(MiniMagick::Image.open(COLLAGE_LOCAL_PATH+items[0].photo_url(:_640x640))) do |c| # A (Cover)
+    result = blurred_image("#{COLLAGE_LOCAL_PATH+valid_items[0].photo_url(:_50x50)}", {max_width: 800, width: 800, max_height: 800, height: 600}).composite(MiniMagick::Image.open(COLLAGE_LOCAL_PATH+valid_items[0].photo_url(:_640x640))) do |c| # A (Cover)
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       c.geometry "#{COLLAGE_DOUBLE_CELL_SIZE}x#{COLLAGE_DOUBLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[1].photo_url(:_320x320)}")) do |c| # B
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[1].photo_url(:_320x320)}")) do |c| # B
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       x = left_offset
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[2].photo_url(:_320x320)}")) do |c| # C
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[2].photo_url(:_320x320)}")) do |c| # C
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       x = x + COLLAGE_SINGLE_CELL_SIZE+COLLAGE_PADDING
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[3].photo_url(:_320x320)}")) do |c| # D
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[3].photo_url(:_320x320)}")) do |c| # D
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       x = left_offset
       y = y + COLLAGE_SINGLE_CELL_SIZE + COLLAGE_PADDING
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[4].photo_url(:_320x320)}")) do |c| # E
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[4].photo_url(:_320x320)}")) do |c| # E
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       x = x + COLLAGE_SINGLE_CELL_SIZE+COLLAGE_PADDING
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[5].photo_url(:_320x320)}")) do |c| # F
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[5].photo_url(:_320x320)}")) do |c| # F
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       y = y + COLLAGE_SINGLE_CELL_SIZE+COLLAGE_PADDING
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite_title(morsel.title, {max_width: (760 - COLLAGE_SINGLE_CELL_SIZE - COLLAGE_PADDING), max_height: 80, y: (COLLAGE_DOUBLE_CELL_SIZE+COLLAGE_PADDING+COLLAGE_PADDING)}).add_creator_information(morsel.creator)
+    end.composite_title(self.title, {max_width: (760 - COLLAGE_SINGLE_CELL_SIZE - COLLAGE_PADDING), max_height: 80, y: (COLLAGE_DOUBLE_CELL_SIZE+COLLAGE_PADDING+COLLAGE_PADDING)}).add_creator_information(self.creator)
 
     result.format 'png'
     result
@@ -382,51 +384,51 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
   # AA AA DD EE
   # title FF GG
   # cretr FF GG
-  def generate_seven_item_collage(morsel)
-    items = items_for_morsel(morsel)
+  def generate_seven_item_collage
+    valid_items = valid_items()
 
     x = COLLAGE_PADDING
     y = COLLAGE_PADDING
 
     left_offset = COLLAGE_SINGLE_CELL_SIZE + COLLAGE_SINGLE_CELL_SIZE + COLLAGE_PADDING + COLLAGE_PADDING + COLLAGE_PADDING
 
-    result = blurred_image("#{COLLAGE_LOCAL_PATH+items[0].photo_url(:_50x50)}", {max_width: 800, width: 800, max_height: 800, height: 600}).composite(MiniMagick::Image.open(COLLAGE_LOCAL_PATH+items[0].photo_url(:_640x640))) do |c| # A (Cover)
+    result = blurred_image("#{COLLAGE_LOCAL_PATH+valid_items[0].photo_url(:_50x50)}", {max_width: 800, width: 800, max_height: 800, height: 600}).composite(MiniMagick::Image.open(COLLAGE_LOCAL_PATH+valid_items[0].photo_url(:_640x640))) do |c| # A (Cover)
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       c.geometry "#{COLLAGE_DOUBLE_CELL_SIZE}x#{COLLAGE_DOUBLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[1].photo_url(:_320x320)}")) do |c| # B
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[1].photo_url(:_320x320)}")) do |c| # B
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       x = left_offset
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[2].photo_url(:_320x320)}")) do |c| # C
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[2].photo_url(:_320x320)}")) do |c| # C
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       x = x + COLLAGE_SINGLE_CELL_SIZE+COLLAGE_PADDING
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[3].photo_url(:_320x320)}")) do |c| # D
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[3].photo_url(:_320x320)}")) do |c| # D
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       x = left_offset
       y = y + COLLAGE_SINGLE_CELL_SIZE + COLLAGE_PADDING
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[4].photo_url(:_320x320)}")) do |c| # E
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[4].photo_url(:_320x320)}")) do |c| # E
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       x = x + COLLAGE_SINGLE_CELL_SIZE+COLLAGE_PADDING
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[5].photo_url(:_320x320)}")) do |c| # F
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[5].photo_url(:_320x320)}")) do |c| # F
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       x = left_offset
       y = y + COLLAGE_SINGLE_CELL_SIZE+COLLAGE_PADDING
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+items[6].photo_url(:_320x320)}")) do |c| # G
+    end.composite(MiniMagick::Image.open("#{COLLAGE_LOCAL_PATH+valid_items[6].photo_url(:_320x320)}")) do |c| # G
       c.compose 'Over'
       c.gravity COLLAGE_DEFAULT_GRAVITY
       x = x + COLLAGE_SINGLE_CELL_SIZE+COLLAGE_PADDING
       c.geometry "#{COLLAGE_SINGLE_CELL_SIZE}x#{COLLAGE_SINGLE_CELL_SIZE}+#{x}+#{y}"
-    end.composite_title(morsel.title, {max_width: (760 - COLLAGE_SINGLE_CELL_SIZE - COLLAGE_PADDING), max_height: 80, y: (COLLAGE_DOUBLE_CELL_SIZE+COLLAGE_PADDING+COLLAGE_PADDING)}).add_creator_information(morsel.creator)
+    end.composite_title(self.title, {max_width: (760 - COLLAGE_SINGLE_CELL_SIZE - COLLAGE_PADDING), max_height: 80, y: (COLLAGE_DOUBLE_CELL_SIZE+COLLAGE_PADDING+COLLAGE_PADDING)}).add_creator_information(self.creator)
 
     result.format 'png'
     result
