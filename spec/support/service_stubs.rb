@@ -23,6 +23,7 @@ module Requests
       Koala::Facebook::API.stub(:new).and_return(facebook_client)
 
       facebook_client.stub(:put_connections).and_return('id' => '12345_67890')
+      facebook_client.stub(:put_picture).and_return('id' => '12345_67890')
 
       facebook_client
     end

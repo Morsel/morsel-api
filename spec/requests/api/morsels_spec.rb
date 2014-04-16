@@ -363,10 +363,10 @@ describe 'Morsels API' do
     it 'should publish the Morsel by setting draft to false and setting a published_at DateTime' do
       stub_bitly_client
 
-      MorselCollageGeneratorDecorator.any_instance.should_receive(:generate).exactly(1).times.and_return(nil)
+      MorselCollageGeneratorDecorator.any_instance.should_receive(:generate).exactly(1).times.and_return { existing_draft_morsel.update(photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))))}
       Mrsl.should_receive(:shorten).exactly(2).times.and_call_original
       FeedItem.should_receive(:new).exactly(1).times.and_call_original
-      FacebookUserDecorator.any_instance.should_not_receive(:post_facebook_message)
+      FacebookUserDecorator.any_instance.should_not_receive(:post_facebook_photo_url)
       TwitterUserDecorator.any_instance.should_not_receive(:post_twitter_message)
 
       Sidekiq::Testing.inline! {
@@ -401,10 +401,10 @@ describe 'Morsels API' do
         stub_facebook_client
         stub_bitly_client
 
-        MorselCollageGeneratorDecorator.any_instance.should_receive(:generate).exactly(1).times.and_return(nil)
+        MorselCollageGeneratorDecorator.any_instance.should_receive(:generate).exactly(1).times.and_return { existing_draft_morsel.update(photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))))}
         Mrsl.should_receive(:shorten).exactly(2).times.and_call_original
         FeedItem.should_receive(:new).exactly(1).times.and_call_original
-        FacebookUserDecorator.any_instance.should_receive(:post_facebook_message).exactly(1).times.and_call_original
+        FacebookUserDecorator.any_instance.should_receive(:post_facebook_photo_url).exactly(1).times.and_call_original
         TwitterUserDecorator.any_instance.should_not_receive(:post_twitter_message)
 
         Sidekiq::Testing.inline! {
@@ -427,10 +427,10 @@ describe 'Morsels API' do
         stub_twitter_client
         stub_bitly_client
 
-        MorselCollageGeneratorDecorator.any_instance.should_receive(:generate).exactly(1).times.and_return(nil)
+        MorselCollageGeneratorDecorator.any_instance.should_receive(:generate).exactly(1).times.and_return { existing_draft_morsel.update(photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))))}
         Mrsl.should_receive(:shorten).exactly(2).times.and_call_original
         FeedItem.should_receive(:new).exactly(1).times.and_call_original
-        FacebookUserDecorator.any_instance.should_not_receive(:post_facebook_message)
+        FacebookUserDecorator.any_instance.should_not_receive(:post_facebook_photo_url)
         TwitterUserDecorator.any_instance.should_receive(:post_twitter_message).exactly(1).times.and_call_original
 
         Sidekiq::Testing.inline! {
