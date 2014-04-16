@@ -15,7 +15,7 @@ module MiniMagick
         -fill white \
         -strokewidth 6 \
         -stroke black \
-        label:'#{title.upcase}' \
+        label:'#{title}' \
         #{tmp_title_outer.path}`
 
       `convert -font #{MorselCollageGeneratorDecorator::ROBOTO_SLAB_BOLD} \
@@ -24,7 +24,7 @@ module MiniMagick
         -fill white \
         -strokewidth 6 \
         -stroke none \
-        label:'#{title.upcase}' \
+        label:'#{title}' \
         #{tmp_title_inner.path}`
 
       title_outer_image = MiniMagick::Image.new(tmp_title_outer.path, tmp_title_outer)
