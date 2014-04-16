@@ -3,6 +3,10 @@ class FacebookUserDecorator < SimpleDelegator
     facebook_client.put_connections('me', 'feed', message: message)
   end
 
+  def post_facebook_photo_url(photo_url, message)
+    facebook_client.put_picture(photo_url, {message: message})
+  end
+
   def facebook_uid
     facebook_authorization.uid if authorized_with_facebook?
   end
