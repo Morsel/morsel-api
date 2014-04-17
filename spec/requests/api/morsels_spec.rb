@@ -367,7 +367,7 @@ describe 'Morsels API' do
       Mrsl.should_receive(:shorten).exactly(2).times.and_call_original
       FeedItem.should_receive(:new).exactly(1).times.and_call_original
       FacebookUserDecorator.any_instance.should_not_receive(:post_facebook_photo_url)
-      TwitterUserDecorator.any_instance.should_not_receive(:post_twitter_message)
+      TwitterUserDecorator.any_instance.should_not_receive(:post_twitter_photo_url)
 
       Sidekiq::Testing.inline! {
         post "/morsels/#{existing_draft_morsel.id}/publish",  api_key: api_key_for_user(chef),
@@ -405,7 +405,7 @@ describe 'Morsels API' do
         Mrsl.should_receive(:shorten).exactly(2).times.and_call_original
         FeedItem.should_receive(:new).exactly(1).times.and_call_original
         FacebookUserDecorator.any_instance.should_receive(:post_facebook_photo_url).exactly(1).times.and_call_original
-        TwitterUserDecorator.any_instance.should_not_receive(:post_twitter_message)
+        TwitterUserDecorator.any_instance.should_not_receive(:post_twitter_photo_url)
 
         Sidekiq::Testing.inline! {
           post "/morsels/#{existing_draft_morsel.id}/publish",  api_key: api_key_for_user(chef_with_facebook_authorization),
@@ -431,7 +431,7 @@ describe 'Morsels API' do
         Mrsl.should_receive(:shorten).exactly(2).times.and_call_original
         FeedItem.should_receive(:new).exactly(1).times.and_call_original
         FacebookUserDecorator.any_instance.should_not_receive(:post_facebook_photo_url)
-        TwitterUserDecorator.any_instance.should_receive(:post_twitter_message).exactly(1).times.and_call_original
+        TwitterUserDecorator.any_instance.should_receive(:post_twitter_photo_url).exactly(1).times.and_call_original
 
         Sidekiq::Testing.inline! {
           post "/morsels/#{existing_draft_morsel.id}/publish",  api_key: api_key_for_user(chef_with_twitter_authorization),

@@ -3,6 +3,10 @@ class TwitterUserDecorator < SimpleDelegator
     user_twitter_client.update(message)
   end
 
+  def post_twitter_photo_url(photo_url, message)
+    user_twitter_client.update_with_media(message, File.open(photo_url))
+  end
+
   def twitter_username
     twitter_authorization.name if authorized_with_twitter?
   end

@@ -34,7 +34,7 @@ module Requests
       tweet.stub(:url).and_return('https://twitter.com/eatmorsel/status/12345')
 
       Twitter::Client.stub(:new).and_return(twitter_client)
-      twitter_client.stub(:update).and_return(tweet)
+      twitter_client.stub(:update_with_media).and_return(tweet)
 
       twitter_client
     end
