@@ -1,12 +1,10 @@
-require 'open-uri'
-
 class TwitterUserDecorator < SimpleDelegator
-  def post_twitter_message(message)
-    user_twitter_client.update(message)
+  def post_twitter_message(twitter_message)
+    user_twitter_client.update(twitter_message)
   end
 
-  def post_twitter_photo_url(photo_url, message)
-    user_twitter_client.update_with_media(message, open(photo_url))
+  def post_twitter_photo_url(twitter_photo_url, twitter_message)
+    user_twitter_client.update_with_media(twitter_message, open(twitter_photo_url))
   end
 
   def twitter_username
