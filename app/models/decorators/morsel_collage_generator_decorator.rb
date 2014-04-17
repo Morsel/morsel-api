@@ -42,7 +42,8 @@ module MiniMagick
     end
 
     def add_creator_information(creator)
-      image = self.composite(MiniMagick::Image.open("#{MorselCollageGeneratorDecorator::COLLAGE_LOCAL_PATH+creator.photo_url(:_144x144)}")) do |c|
+      creator_photo_url = creator.photo_url(:_144x144) ? MorselCollageGeneratorDecorator::COLLAGE_LOCAL_PATH+creator.photo_url(:_144x144) : MorselCollageGeneratorDecorator::COLLAGE_PLACEHOLDER_IMAGE
+      image = self.composite(MiniMagick::Image.open(creator_photo_url)) do |c|
         c.compose 'Over'
         c.gravity 'SouthWest'
         c.geometry '100x100+20+20'
@@ -93,6 +94,7 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
   ROBOTO = Rails.root.join('app', 'assets', 'fonts', 'Roboto-Regular.ttf')
   ROBOTO_SLAB = Rails.root.join('app', 'assets', 'fonts', 'RobotoSlab-Regular.ttf')
   ROBOTO_SLAB_BOLD = Rails.root.join('app', 'assets', 'fonts', 'RobotoSlab-Bold.ttf')
+  COLLAGE_PLACEHOLDER_IMAGE = Rails.root.join('app', 'assets', 'images', 'm_144x144.png')
   COLLAGE_LOCAL_PATH = Rails.env.development? ? "#{Rails.root}/public" : ''
   COLLAGE_DEFAULT_GRAVITY = 'NorthWest'
 
