@@ -20,7 +20,7 @@ gem 'carrierwave_backgrounder'
 gem 'devise', "~> 3.2.2"
 # gem 'doorkeeper', '~> 0.7.0'
 # gem 'formtastic'
-gem "hirefire-resource"
+gem 'hirefire-resource', '~> 0.3.2'
 gem 'jbuilder', '~> 1.2'
 gem 'jquery-rails'
 gem "koala", "~> 1.8.0rc1"
