@@ -76,7 +76,11 @@ class Morsel < ActiveRecord::Base
   end
 
   def twitter_message
-    twitter_username_or_full_name = TwitterUserDecorator.new(creator).twitter_username.presence || creator.full_name
+    if TwitterUserDecorator.new(creator).twitter_username.present?
+      twitter_username_or_full_name = "@#{TwitterUserDecorator.new(creator).twitter_username}"
+    else
+      twitter_username_or_full_name = creator.full_name
+    end
     "\"#{title}\" from #{twitter_username_or_full_name} on @#{Settings.morsel.twitter_username}".twitter_string(twitter_mrsl)
   end
 
