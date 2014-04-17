@@ -131,7 +131,7 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
   def valid_items
     valid_items = []
 
-    primary_item = self.primary_item
+    primary_item = self.primary_item if primary_item_id
     valid_items.push(primary_item) if primary_item
 
     self.items.each do |m|
