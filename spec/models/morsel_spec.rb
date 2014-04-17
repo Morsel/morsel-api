@@ -32,6 +32,7 @@ describe Morsel do
   it { should respond_to(:draft) }
   it { should respond_to(:published_at) }
   it { should respond_to(:primary_item_id) }
+  it { should respond_to(:primary_item) }
   it { should respond_to(:photo) }
 
   it { should respond_to(:creator) }
@@ -174,6 +175,16 @@ describe Morsel do
         it 'returns the total number of likes for all Items in a Morsel' do
           expect(morsel_with_items.total_like_count).to eq(likes_count)
         end
+      end
+    end
+
+    context 'primary_item gets destroyed' do
+      before do
+        morsel_with_items.primary_item.destroy
+        morsel_with_items.reload
+      end
+      it 'should nil the primary_item_id' do
+        expect(morsel_with_items.primary_item_id).to be_nil
       end
     end
 

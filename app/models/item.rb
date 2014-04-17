@@ -38,6 +38,7 @@ class Item < ActiveRecord::Base
   has_many :likes, dependent: :destroy
   belongs_to :morsel, touch: true
 
+  before_destroy :nullify_primary_item_id_if_primary_item_on_morsel
   before_save :check_sort_order
 
   mount_uploader :photo, ItemPhotoUploader
@@ -101,5 +102,9 @@ class Item < ActiveRecord::Base
     else
       1
     end
+  end
+
+  def nullify_primary_item_id_if_primary_item_on_morsel
+    self.morsel.update(primary_item_id: nil) if self.morsel.primary_item_id == self.id
   end
 end

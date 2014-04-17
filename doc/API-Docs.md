@@ -1069,6 +1069,9 @@ api_key && morsel_id exist
   "photos": {
     "_800x600":"https://morsel-staging.s3.amazonaws.com/morsel-images/4/648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
   },
+  "url": "http://eatmorsel.com/turdferg/4-butter-rocks",
+  "facebook_mrsl": "http://mrsl.co/facebook",
+  "twitter_mrsl": "http://mrsl.co/twitter",
   "creator": {
     "id": 3,
     "username": "turdferg",

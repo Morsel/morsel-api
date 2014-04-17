@@ -35,6 +35,7 @@ class Morsel < ActiveRecord::Base
 
   belongs_to  :creator, class_name: 'User', foreign_key: 'creator_id'
   has_many    :items, -> { order('sort_order ASC') }, dependent: :destroy
+  belongs_to  :primary_item, class_name: 'Item'
 
   before_save :update_published_at_if_necessary
 
@@ -57,10 +58,6 @@ class Morsel < ActiveRecord::Base
 
   def total_comment_count
      items.map(&:comment_count).reduce(:+)
-  end
-
-  def primary_item
-    items.find primary_item_id
   end
 
   def photos_hash
