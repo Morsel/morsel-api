@@ -1,3 +1,5 @@
+require 'open-uri'
+
 class TwitterUserDecorator < SimpleDelegator
   def post_twitter_message(message)
     user_twitter_client.update(message)
