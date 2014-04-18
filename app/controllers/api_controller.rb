@@ -58,7 +58,7 @@ class ApiController < ActionController::Base
   end
 
   def parameter_missing(error)
-    render_json_errors({ api: error.message }, :not_found)
+    render_json_errors({ api: [error.message] }, :not_found)
   end
 
   def unauthorized_token

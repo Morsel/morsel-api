@@ -4,7 +4,11 @@ class TwitterUserDecorator < SimpleDelegator
   end
 
   def post_twitter_photo_url(twitter_photo_url, twitter_message)
-    twitter_photo_file = URI.parse(twitter_photo_url).open
+    if Rails.env.test?
+      twitter_photo_file = open(twitter_photo_url)
+    else
+      twitter_photo_file = URI.parse(twitter_photo_url).open
+    end
     if twitter_photo_file
       user_twitter_client.update_with_media(twitter_message, twitter_photo_file)
       twitter_photo_file.close
