@@ -10,6 +10,23 @@ describe 'Users API' do
       expect(response).to be_success
 
       expect(json_data['id']).to eq(user.id)
+      expect(json_data['sign_in_count']).to_not be_nil
+      expect(json_data['staff']).to_not be_nil
+    end
+
+    context 'has a Morsel draft' do
+      let(:user_with_morsels) { FactoryGirl.create(:user_with_morsels) }
+      before do
+        user_with_morsels.morsels.first.update(draft: true)
+      end
+
+      it 'returns 1 for draft_count' do
+        get '/users/me', api_key: api_key_for_user(user_with_morsels), format: :json
+
+        expect(response).to be_success
+
+        expect(json_data['draft_count']).to eq(1)
+      end
     end
 
     context 'invalid api_key' do
@@ -262,8 +279,8 @@ describe 'Users API' do
 
       expect(response).to be_success
 
-      expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name sign_in_count title bio))
-      expect_nil_json_keys(json_data, %w(password encrypted_password auth_token))
+      expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name title bio industry))
+      expect_nil_json_keys(json_data, %w(password encrypted_password staff draft_count sign_in_count photo_processing auth_token))
 
       expect(json_data['photos']).to be_nil
       expect(json_data['facebook_uid']).to eq(FacebookUserDecorator.new(user_with_morsels).facebook_uid)
@@ -271,13 +288,18 @@ describe 'Users API' do
 
       expect(json_data['like_count']).to eq(number_of_item_likes)
       expect(json_data['item_count']).to eq(user_with_morsels.items.count)
-      expect(json_data['draft_count']).to eq(user_with_morsels.morsels.drafts.count)
     end
 
     it 'should be public' do
       get "/users/#{user_with_morsels.id}", format: :json
 
       expect(response).to be_success
+
+      expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name title bio industry facebook_uid twitter_username))
+      expect_nil_json_keys(json_data, %w(password encrypted_password staff draft_count sign_in_count photo_processing auth_token))
+
+      expect(json_data['like_count']).to eq(number_of_item_likes)
+      expect(json_data['item_count']).to eq(user_with_morsels.items.count)
     end
 
     context 'username passed instead of id' do
@@ -286,8 +308,8 @@ describe 'Users API' do
 
         expect(response).to be_success
 
-        expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name sign_in_count title bio))
-        expect_nil_json_keys(json_data, %w(password encrypted_password auth_token))
+        expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name title bio industry))
+        expect_nil_json_keys(json_data, %w(password encrypted_password staff draft_count sign_in_count photo_processing auth_token))
 
         expect(json_data['photos']).to be_nil
         expect(json_data['facebook_uid']).to eq(FacebookUserDecorator.new(user_with_morsels).facebook_uid)
@@ -314,20 +336,6 @@ describe 'Users API' do
         expect(photos['_72x72']).to_not be_nil
         expect(photos['_80x80']).to_not be_nil
         expect(photos['_40x40']).to_not be_nil
-      end
-    end
-
-    context 'has a Morsel draft' do
-      before do
-        user_with_morsels.morsels.first.update(draft: true)
-      end
-
-      it 'returns 1 for draft_count' do
-        get "/users/#{user_with_morsels.id}", api_key: api_key_for_user(user_with_morsels), format: :json
-
-        expect(response).to be_success
-
-        expect(json_data['draft_count']).to eq(1)
       end
     end
   end

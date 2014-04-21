@@ -8,10 +8,10 @@ class UserSerializer < ActiveModel::Serializer
              :bio,
              :industry,
              :photos,
-             :photo_processing,
              :facebook_uid,
              :twitter_username,
-             :staff
+             :item_count,
+             :like_count
 
   def photos
     object.photos_hash
@@ -23,5 +23,13 @@ class UserSerializer < ActiveModel::Serializer
 
   def twitter_username
     TwitterUserDecorator.new(object).twitter_username
+  end
+
+  def like_count
+    object.item_likes_for_my_items_by_others_count
+  end
+
+  def item_count
+    object.items.count
   end
 end
