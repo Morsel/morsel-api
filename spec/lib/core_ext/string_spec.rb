@@ -12,7 +12,7 @@ describe 'Core Extensions' do
 
     describe '#twitter_string' do
       context 'greater than 140 characters' do
-        let(:twitter_string) { Faker::Lorem.characters(rand(145..200)).twitter_string('some_url') }
+        let(:twitter_string) { Faker::Lorem.characters(rand(145..200)).twitter_string("some_url") }
 
         it 'truncates up to 140 characters' do
           expect(twitter_string.length).to be <= 140
@@ -20,7 +20,7 @@ describe 'Core Extensions' do
 
         context 'has url' do
           let(:url) { 'https://eatmorsel.com/turdferg/posts/123/4' }
-          let(:twitter_string_with_url) { Faker::Lorem.characters(rand(140..200)).twitter_string(url) }
+          let(:twitter_string_with_url) { Faker::Lorem.characters(rand(140..200)).twitter_string("on @eatmorsel #{url}") }
 
           it 'truncates up to 140 characters' do
             expect(twitter_string.length).to be <= 140

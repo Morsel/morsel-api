@@ -382,14 +382,13 @@ Returns the user_id if the user is successfully created, otherwise an error.
 <br />
 
 ## GET ```/users/{user_id|user_username}``` - User
-Returns the User with the specified ```user_id``` or ```user_username```
+Returns the User with the specified ```user_id``` or ```user_username``` if the User exists and is `active`. Otherwise, returns 404 (Not Found).
 
 ### Response
 
-| Condition | __data__ |
-| --------- | -------- |
-| Authenticated User's ID or Username | [User (w/ Private Attributes)](#user-w-private-attributes) |
-| Everyone Else | [User](#user) |
+| __data__ |
+| -------- |
+| [User](#user) |
 
 <br />
 <br />
@@ -1133,69 +1132,31 @@ api_key && morsel_id exist
     "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
     "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
   },
-  "photo_processing": nil,
   "facebook_uid": "1234567890",
   "twitter_username": "morsel_marty",
-  "staff": true
+  "item_count": 1,
+  "like_count": 3
 }
 ```
 
 ### User (w/ Private Attributes)
-You'll only see these if the api_key matches the User you're looking up
-
+You'll only see these if the api_key matches the User you're looking up.
+This includes the same keys as [User](#user), along with:
 ```json
 {
-  "id": 3,
-  "username": "turdferg",
-  "first_name": "Turd",
-  "last_name": "Ferguson",
-  "created_at": "2014-01-07T18:35:57.877Z",
-  "title": "Executive Chef at Jeopardy",
-  "bio": "Suck It, Trebek",
-  "photos": {
-    "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-  },
-  "photo_processing": null,
-  "sign_in_count": 1
-  "facebook_uid": "1234567890",
-  "twitter_username": "morsel_marty",
   "staff": true,
   "draft_count": 0,
-  "like_count": 3,
-  "item_count": 1
+  "sign_in_count": 1,
+  "photo_processing": null
 }
 ```
 
 ### User (w/ Auth Token)
-Same as [User (w/ Private Attributes)](#user-w-private-attributes) but with ```auth_token```
+This includes the same keys as [User (w/ Private Attributes)](#user-w-private-attributes), along with:
 
 ```json
 {
-  "id": 3,
-  "username": "turdferg",
-  "first_name": "Turd",
-  "last_name": "Ferguson",
-  "created_at": "2014-01-07T18:35:57.877Z",
-  "title": "Executive Chef at Jeopardy",
-  "bio": "Suck It, Trebek",
-  "photos": {
-    "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-  },
-  "photo_processing": null,
   "auth_token": "butt-sack",
-  "draft_count": 0,
-  "like_count": 3,
-  "item_count": 1,
-  "sign_in_count": 1,
-  "facebook_uid": "1234567890",
-  "twitter_username": "morsel_marty",
-  "staff": true
 }
 ```
 

@@ -1,10 +1,6 @@
 class UsersController < ApiController
   skip_before_filter :authenticate_user_from_token!, only: [:show, :checkusername, :reserveusername, :setrole, :unsubscribe]
 
-  def index
-    custom_respond_with User.all
-  end
-
   def me
     custom_respond_with current_user, serializer: UserWithPrivateAttributesSerializer
   end
@@ -57,9 +53,9 @@ class UsersController < ApiController
 
   def show
     user = User.includes(:authorizations, :morsels, :items).find_by_id_or_username(params[:user_id_or_username])
-    raise ActiveRecord::RecordNotFound if user.nil?
+    raise ActiveRecord::RecordNotFound if user.nil? || !user.active?
 
-    custom_respond_with user, serializer: UserWithPrivateAttributesSerializer
+    custom_respond_with user
   end
 
   def update

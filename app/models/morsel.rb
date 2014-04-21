@@ -78,7 +78,7 @@ class Morsel < ActiveRecord::Base
     else
       twitter_username_or_full_name = creator.full_name
     end
-    "\"#{title}\" from #{twitter_username_or_full_name} on @#{Settings.morsel.twitter_username}".twitter_string(twitter_mrsl)
+    "\"#{title}\" from #{twitter_username_or_full_name}".twitter_string("on @#{Settings.morsel.twitter_username} #{twitter_mrsl}")
   end
 
   def url
