@@ -34,6 +34,7 @@ gem 'rack-perftools_profiler', require: 'rack/perftools_profiler'
 gem 'rolify'
 gem 'rollbar'
 gem 'sass-rails', '~> 4.0.0'
+gem 'seedbank'
 gem 'settingslogic'
 gem 'sidekiq', '~> 3.0.0'
 gem 'sinatra', '>= 1.3.0', require: nil

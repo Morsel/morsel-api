@@ -24,6 +24,7 @@
   - [GET ```/users/authorizations``` - User Authorizations](#get-usersauthorizations---user-authorizations)
   - [GET ```/users/activities``` - User Activities](#get-usersactivities---user-activities)
   - [GET ```/users/notifications``` - User Notifications](#get-usersnotifications---user-notifications)
+  - [GET ```/users/{user_id}/cuisines``` - User Cuisines](#get-usersuser_idcuisines---user-cuisines)
 - [Item Methods](#item-methods)
   - [POST ```/items``` - Create a new Item](#post-items---create-a-new-item)
   - [GET ```/items/{item_id}``` - Item](#get-itemsitem_id---item)
@@ -43,6 +44,9 @@
   - [PUT ```/morsels/{morsel_id}``` - Update Morsel](#put-morselsmorsel_id---update-morsel)
   - [POST ```/morsels/{morsel_id}/publish``` - Publish Morsel](#post-morselsmorsel_idpublish---Publish-morsel)
   - [DELETE ```/morsels/{morsel_id}``` - Delete Morsel](#delete-morselsmorsel_id---delete-morsel)
+- [Cuisine Methods](#cuisine-methods)
+  - [GET ```/cuisines``` - Cuisines](#get-cuisines---cuisines)
+  - [GET ```/cuisines/{cuisine_id}/users``` - Cuisine Users](#get-cuisinescuisine_id---cuisine-users)
 - [Misc Methods](#misc-methods)
   - [GET ```/status``` - Status](#get-status---status)
   - [GET ```/configuration``` - Configuration](#get-configuration---configuration)
@@ -429,7 +433,6 @@ Returns the Morsels for the User with the specified ```user_id``` or ```user_use
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
 | max_id | Number | Return Morsels up to and including this ```id``` | | |
 | since_id | Number | Return Morsels since this ```id``` | | |
-| include_drafts | Boolean | Flag to include drafts in the response
 
 ### Response
 
@@ -516,6 +519,18 @@ Returns the Authenticated User's Notifications. A Notification is created when s
 | __data__ |
 | -------- |
 | Array of [Notification](#notification) |
+
+<br />
+<br />
+
+## GET ```/users/{user_id}/cuisines``` - User Cuisines
+Returns the Cuisines for the User with the specified ```user_id```.
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [Cuisine](#cuisine) |
 
 <br />
 <br />
@@ -822,6 +837,33 @@ Publishes the Morsel with the specified ```morsel_id``` by setting a `published_
 | __data__ |
 | -------- |
 | Publishes [Morsel](#morsel) |
+
+<br />
+<br />
+
+
+# Cuisine Methods
+
+## GET ```/cuisines``` - Cuisines
+Returns the list of Cuisines
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [Cuisine](#cuisine) |
+
+<br />
+<br />
+
+## GET ```/cuisines/{cuisine_id}/users``` - Cuisine Users
+Returns a list of Users who belong to the Cuisine with the specified `cuisine_id`
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [User](#user) |
 
 <br />
 <br />
@@ -1305,6 +1347,15 @@ This includes the same keys as [User (w/ Private Attributes)](#user-w-private-at
 
 
 ## Misc Objects
+
+### Cuisine
+
+```json
+{
+  "id": 7,
+  "name": "African"
+}
+```
 
 ### Configuration
 NOTE: "non_username_paths" is just a sample of the real list, for an up to date list of these reserved usernames, see NOTE: [lib/reserved_paths.rb](../lib/reserved_paths.rb)

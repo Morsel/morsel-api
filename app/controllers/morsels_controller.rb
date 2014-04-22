@@ -16,21 +16,26 @@ class MorselsController < ApiController
   end
 
   def index
-    if params[:user_id_or_username].blank?
+    if params[:user_id].present? || params[:username].present?
+      if params[:user_id].present?
+        user = User.find params[:user_id]
+      elsif params[:username].present?
+        user = User.find_by('lower(username) = lower(?)', params[:username])
+      end
+
+      raise ActiveRecord::RecordNotFound if user.nil?
       morsels = Morsel.includes(:items, :creator)
                   .published
                   .since(params[:since_id])
                   .max(params[:max_id])
+                  .where('creator_id = ?', user.id)
                   .limit(pagination_count)
                   .order('id DESC')
     else
-      user = User.find_by_id_or_username(params[:user_id_or_username])
-      raise ActiveRecord::RecordNotFound if user.nil?
       morsels = Morsel.includes(:items, :creator)
-                  .include_drafts(params[:include_drafts])
+                  .published
                   .since(params[:since_id])
                   .max(params[:max_id])
-                  .where('creator_id = ?', user.id)
                   .limit(pagination_count)
                   .order('id DESC')
     end
@@ -77,7 +82,7 @@ class MorselsController < ApiController
   end
 
   def publish
-    morsel = Morsel.find params[:morsel_id]
+    morsel = Morsel.find params[:id]
     authorize_action_for morsel
 
     morsel.draft = false

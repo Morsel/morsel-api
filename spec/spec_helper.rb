@@ -4,6 +4,7 @@ require 'rubygems'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'rspec'
+require 'database_cleaner'
 require 'email_spec'
 require 'factory_girl'
 require 'sidekiq/testing'

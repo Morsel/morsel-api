@@ -127,26 +127,6 @@ describe 'Morsels API' do
         end
       end
     end
-
-    context 'user_id included in parameters' do
-      let(:morsel_with_items) { FactoryGirl.create(:morsel_with_items) }
-
-      it 'returns all Morsels for user_id' do
-        get '/morsels', api_key: api_key_for_user(turd_ferg),
-                      user_id_or_username: morsel_with_items.creator.id,
-                      format: :json
-
-        expect(response).to be_success
-
-        expect(json_data.count).to eq(1)
-
-        creator_id = morsel_with_items.creator.id
-
-        json_data.each do |item_json|
-          expect(item_json['creator_id']).to eq(creator_id)
-        end
-      end
-    end
   end
 
   describe 'POST /morsels morsels#create', sidekiq: :inline do

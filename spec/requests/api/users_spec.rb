@@ -391,18 +391,6 @@ describe 'Users API' do
 
         expect(json_data.count).to eq(morsels_count)
       end
-
-      context 'include_drafts=true' do
-        it 'should include drafts' do
-          get endpoint, api_key: api_key_for_user(user_with_morsels),
-                                                    include_drafts: true,
-                                                    format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(morsels_count + draft_morsels_count)
-        end
-      end
     end
 
     context 'username passed instead of id' do

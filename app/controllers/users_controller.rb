@@ -52,7 +52,11 @@ class UsersController < ApiController
   end
 
   def show
-    user = User.includes(:authorizations, :morsels, :items).find_by_id_or_username(params[:user_id_or_username])
+    if params[:id].present?
+      user = User.includes(:authorizations, :morsels, :items).find params[:id]
+    elsif params[:username].present?
+      user = User.includes(:authorizations, :morsels, :items).find_by('lower(username) = lower(?)', params[:username])
+    end
     raise ActiveRecord::RecordNotFound if user.nil? || !user.active?
 
     custom_respond_with user
