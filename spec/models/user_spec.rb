@@ -62,38 +62,6 @@ describe User do
 
   it { should be_valid }
 
-  describe '.find_by_id_or_username' do
-    before do
-      user.save
-    end
-
-    context 'valid id is passed' do
-      it 'returns the User with that id' do
-        expect(User.find_by_id_or_username(user.id)).to_not be_nil
-      end
-    end
-
-    context 'invalid id is passed' do
-      it 'returns nil' do
-        expect(User.find_by_id_or_username(123456789)).to be_nil
-      end
-    end
-
-    context 'username is passed' do
-      context 'valid username is passed' do
-        it 'returns the User with that username' do
-          expect(User.find_by_id_or_username(user.username)).to_not be_nil
-        end
-      end
-
-      context 'invalid username is passed' do
-        it 'returns nil' do
-          expect(User.find_by_id_or_username('butt_sack')).to be_nil
-        end
-      end
-    end
-  end
-
   describe 'email' do
     context 'already taken' do
       before do

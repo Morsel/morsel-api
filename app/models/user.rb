@@ -55,6 +55,8 @@ class User < ActiveRecord::Base
   after_save :ensure_role
 
   has_many :authorizations
+  has_many :cuisine_users
+  has_many :cuisines, through: :cuisine_users
   has_many :comments, through: :items
   has_many  :facebook_authorizations,
             -> { where provider: 'facebook' },

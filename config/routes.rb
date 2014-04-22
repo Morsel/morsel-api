@@ -17,6 +17,12 @@ MorselApp::Application.routes.draw do
                 registrations: 'registrations'
               }
 
+  resources :cuisines, only: [:index] do
+    member do
+      get 'users' => 'cuisines#users', id: /\d+/
+    end
+  end
+
   resources :users, only: [:update] do
     collection do
       post 'authorizations' => 'authorizations#create'
@@ -24,15 +30,23 @@ MorselApp::Application.routes.draw do
       get 'checkusername(/:username)' => 'users#checkusername' # DEPRECATED
       get 'validateusername(/:username)' => 'users#validateusername'
       post 'reserveusername(/:username)' => 'users#reserveusername'
-      put ':id/updateindustry' => 'users#updateindustry'
       get 'me' => 'users#me'
       post 'unsubscribe' => 'users#unsubscribe'
       get 'activities' => 'activities#index'
       get 'notifications' => 'notifications#index'
 
-      get ':user_id_or_username' => 'users#show'
-      get ':user_id_or_username/morsels' => 'morsels#index'
+      # Note: Keep these at the end
+      get ':id' => 'users#show', id: /\d+/
+      get ':username' => 'users#show', username: /[a-zA-Z][A-Za-z0-9_]+/
+      get ':user_id/morsels' => 'morsels#index', user_id: /\d+/
+      get ':username/morsels' => 'morsels#index', username: /[a-zA-Z][A-Za-z0-9_]+/
     end
+
+    member do
+      put 'updateindustry' => 'users#updateindustry'
+    end
+
+    get 'cuisines' => 'cuisines#index', user_id: /\d+/
   end
 
   resources :items, only: [:create, :show, :update, :destroy] do
@@ -48,8 +62,12 @@ MorselApp::Application.routes.draw do
     collection do
       get 'drafts' => 'morsels#drafts'
     end
+
     resources :items, only: [:update, :destroy]
-    post 'publish' => 'morsels#publish'
+
+    member do
+      post 'publish' => 'morsels#publish'
+    end
   end
 
   get 'feed' => 'feed#index'

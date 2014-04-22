@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140414044738) do
+ActiveRecord::Schema.define(version: 20140421224933) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -74,6 +74,22 @@ ActiveRecord::Schema.define(version: 20140414044738) do
   end
 
   add_index "comments", ["user_id", "item_id"], name: "index_comments_on_user_id_and_item_id", using: :btree
+
+  create_table "cuisine_users", id: false, force: true do |t|
+    t.integer  "cuisine_id"
+    t.integer  "user_id"
+    t.datetime "deleted_at"
+  end
+
+  add_index "cuisine_users", ["cuisine_id"], name: "index_cuisine_users_on_cuisine_id", using: :btree
+  add_index "cuisine_users", ["user_id"], name: "index_cuisine_users_on_user_id", using: :btree
+
+  create_table "cuisines", force: true do |t|
+    t.string   "name"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "emails", force: true do |t|
     t.string   "class_name"
