@@ -1,41 +1,42 @@
 class CommentsController < ApiController
   PUBLIC_ACTIONS = [:index]
   authorize_actions_for Comment, except: PUBLIC_ACTIONS
-  respond_to :json
 
   def create
-    item = Item.find(params[:item_id])
-
-    comment = item.comments.build(CommentParams.build(params))
-    comment.user = current_user
+    comment = Comment.new({commentable_id: params[:id], commentable_type: commentable_type, commenter_id: current_user.id}.merge(CommentParams.build(params)))
 
     if comment.save
       custom_respond_with comment
     else
-      render_json_errors(comment.errors)
+      render_json_errors comment.errors
     end
   end
 
   def index
-    comments = Comment.since(params[:since_id])
-                      .max(params[:max_id])
-                      .where(item_id: params[:item_id])
-                      .limit(pagination_count)
-                      .order('id DESC')
-
-    custom_respond_with comments
+    custom_respond_with Comment.since(params[:since_id])
+                        .max(params[:max_id])
+                        .where('commentable_type = ? AND commentable_id = ?', commentable_type, params[:id])
+                        .limit(pagination_count)
+                        .order('id DESC')
   end
 
   def destroy
-    comment = Comment.find(params[:id])
+    comment = Comment.find_by(id: params[:comment_id])
+    if comment
+      authorize_action_for comment
 
-    authorize_action_for comment
-
-    if comment.destroy
-      render_json 'OK'
-    else
-      render_json_errors(comment.errors)
+      if comment.destroy
+        custom_respond_with 'OK'
+      else
+        render_json_errors comment.errors
+      end
     end
+  end
+
+  private
+
+  def commentable_type
+    request.path.split('/').second.classify
   end
 
   class CommentParams

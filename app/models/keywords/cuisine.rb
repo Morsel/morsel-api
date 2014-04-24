@@ -1,0 +1,2 @@
+class Cuisine < Keyword
+end

@@ -1,6 +1,5 @@
 class ItemsController < ApiController
   PUBLIC_ACTIONS = [:show]
-  include ControllerCommentable, ControllerLikeable
 
   def create
     Authority.enforce :create, Item, current_user

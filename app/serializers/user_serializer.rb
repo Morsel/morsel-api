@@ -10,7 +10,7 @@ class UserSerializer < ActiveModel::Serializer
              :photos,
              :facebook_uid,
              :twitter_username,
-             :item_count,
+             :morsel_count,
              :like_count
 
   def photos
@@ -25,7 +25,7 @@ class UserSerializer < ActiveModel::Serializer
     TwitterUserDecorator.new(object).twitter_username
   end
 
-  def item_count
-    object.items.count
+  def morsel_count
+    object.morsels.count
   end
 end

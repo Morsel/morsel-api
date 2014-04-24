@@ -1,6 +1,14 @@
 require 'spec_helper'
 
 describe 'Users API' do
+  it_behaves_like 'TaggableController' do
+    let(:user) { FactoryGirl.create(:chef) }
+    let(:taggable_route) { '/users' }
+    let(:taggable) { user }
+    let(:keyword) { FactoryGirl.create(:keyword) }
+    let(:tag) { FactoryGirl.create(:user_tag, tagger: user) }
+  end
+
   describe 'GET /users/me users#me' do
     let(:user) { FactoryGirl.create(:user) }
 
@@ -282,7 +290,7 @@ describe 'Users API' do
       expect(json_data['twitter_username']).to eq(TwitterUserDecorator.new(user_with_morsels).twitter_username)
 
       expect(json_data['like_count']).to eq(number_of_likes)
-      expect(json_data['item_count']).to eq(user_with_morsels.items.count)
+      expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.count)
     end
 
     it 'should be public' do
@@ -294,7 +302,7 @@ describe 'Users API' do
       expect_nil_json_keys(json_data, %w(password encrypted_password staff draft_count sign_in_count photo_processing auth_token email))
 
       expect(json_data['like_count']).to eq(number_of_likes)
-      expect(json_data['item_count']).to eq(user_with_morsels.items.count)
+      expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.count)
     end
 
     context 'username passed instead of id' do
@@ -311,7 +319,7 @@ describe 'Users API' do
         expect(json_data['twitter_username']).to eq(TwitterUserDecorator.new(user_with_morsels).twitter_username)
 
         expect(json_data['like_count']).to eq(number_of_likes)
-        expect(json_data['item_count']).to eq(user_with_morsels.items.count)
+        expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.count)
       end
     end
 

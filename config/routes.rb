@@ -19,27 +19,47 @@ MorselApp::Application.routes.draw do
 
   concern :commentable do
     member do
-      post 'comments' => 'items#comment'
-      delete 'comments/:comment_id' => 'items#uncomment'
-      get 'comments' => 'items#comments'
+      post 'comments' => 'comments#create'
+      get 'comments' => 'comments#index'
+      # put 'comments/:comment_id' => 'comments#update'
+      delete 'comments/:comment_id' => 'comments#destroy'
+    end
+  end
+
+  concern :followable do
+    member do
+      post 'follow' => 'follows#create'
+      get 'followers' => 'follows#followers'
+      get 'followed_users' => 'follows#followed_users'
+      delete 'follow' => 'follows#destroy'
     end
   end
 
   concern :likeable do
     member do
-      post 'like' => 'items#like'
-      delete 'like' => 'items#unlike'
-      get 'likers' => 'items#likers'
+      post 'like' => 'likes#create'
+      get 'likers' => 'likes#likers'
+      delete 'like' => 'likes#destroy'
     end
   end
 
-  resources :cuisines, only: [:index] do
+  concern :taggable do
     member do
-      get 'users' => 'cuisines#users', id: /\d+/
+      post 'tags' => 'tags#create'
+      get 'cuisines' => 'tags#cuisines'
+      get 'specialties' => 'tags#specialties'
+      delete 'tags/:tag_id' => 'tags#destroy'
     end
   end
 
-  resources :users, only: [:update] do
+  get 'cuisines' => 'keywords#cuisines'
+  get 'specialties' => 'keywords#specialties'
+
+  get 'keywords/:id/users' => 'keywords#users'
+  match 'cuisines/:id/users', to: 'keywords#users', via: :get
+  match 'specialties/:id/users', to: 'keywords#users', via: :get
+
+  resources :users, only: [:update], concerns: [:followable, :taggable] do
     collection do
       post 'authorizations' => 'authorizations#create'
       get 'authorizations' => 'authorizations#index'
@@ -61,8 +81,6 @@ MorselApp::Application.routes.draw do
     member do
       put 'updateindustry' => 'users#updateindustry'
     end
-
-    get 'cuisines' => 'cuisines#index', user_id: /\d+/
   end
 
   resources :items, only: [:create, :show, :update, :destroy], concerns: [:commentable, :likeable]

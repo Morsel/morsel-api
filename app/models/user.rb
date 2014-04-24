@@ -41,9 +41,7 @@
 #
 
 class User < ActiveRecord::Base
-  include Authority::UserAbilities
-  include Authority::Abilities
-  include PhotoUploadable
+  include Authority::UserAbilities, Authority::Abilities, Followable, PhotoUploadable, Taggable
   rolify
 
   self.authorizer_name = 'UserAuthorizer'
@@ -55,8 +53,6 @@ class User < ActiveRecord::Base
   after_save :ensure_role
 
   has_many :authorizations
-  has_many :cuisine_users
-  has_many :cuisines, through: :cuisine_users
   has_many :comments, through: :items
   has_many  :facebook_authorizations,
             -> { where provider: 'facebook' },
@@ -68,6 +64,15 @@ class User < ActiveRecord::Base
             foreign_key: :user_id
   has_many :likes, foreign_key: :liker_id
   has_many :liked_items, through: :likes, source: :likeable, source_type: 'Item'
+
+  has_many :follows, foreign_key: :follower_id,
+                     dependent:   :destroy
+  has_many :followed_users, through: :follows, source: :followable, source_type: 'User'
+
+  has_many :reverse_follows, foreign_key: 'followable_id',
+                             class_name:  'Follow',
+                             dependent:   :destroy
+  has_many :followers, through: :reverse_follows, source: :follower
 
   has_many :items, foreign_key: :creator_id
   has_many :morsels, foreign_key: :creator_id
