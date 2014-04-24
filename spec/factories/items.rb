@@ -39,7 +39,7 @@ FactoryGirl.define do
         end
 
         after(:create) do |item, evaluator|
-          create_list(:like, evaluator.likes_count, item: item)
+          create_list(:item_like, evaluator.likes_count, likeable: item)
         end
       end
       factory :item_with_creator_and_comments do
@@ -48,7 +48,7 @@ FactoryGirl.define do
         end
 
         after(:create) do |item, evaluator|
-          create_list(:comment, evaluator.comments_count, item: item)
+          create_list(:item_comment, evaluator.comments_count, commentable: item)
         end
       end
     end

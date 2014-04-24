@@ -302,7 +302,7 @@ describe 'Items API' do
     let(:item) { FactoryGirl.create(:item_with_creator) }
 
     context 'current_user has liked Item' do
-      before { Like.create(item: item, user: turd_ferg) }
+      before { Like.create(likeable: item, user: turd_ferg) }
 
       it 'soft deletes the Like' do
         delete "/items/#{item.id}/like", api_key: api_key_for_user(turd_ferg), format: :json
@@ -323,7 +323,7 @@ describe 'Items API' do
     end
 
     context 'current_user is NOT Like creator' do
-      before { Like.create(item: item, user: turd_ferg) }
+      before { Like.create(likeable: item, user: turd_ferg) }
       it 'should NOT be authorized' do
         delete "/items/#{item.id}/like", api_key: api_key_for_user(FactoryGirl.create(:user)), format: :json
 
@@ -359,7 +359,7 @@ describe 'Items API' do
 
       first_comment = json_data.first
       expect(first_comment['creator']).to_not be_nil
-      expect(first_comment['item_id']).to eq(item_with_creator_and_comments.id)
+      expect(first_comment['commentable_id']).to eq(item_with_creator_and_comments.id)
     end
 
     it 'should be public' do
@@ -371,8 +371,8 @@ describe 'Items API' do
     context 'pagination' do
       before do
         30.times do
-          comment = FactoryGirl.create(:comment)
-          comment.item = item_with_creator_and_comments
+          comment = FactoryGirl.create(:item_comment)
+          comment.commentable = item_with_creator_and_comments
           comment.save
         end
       end
@@ -429,7 +429,6 @@ describe 'Items API' do
         end
       end
     end
-
   end
 
   describe 'POST /items/{:item_id}/comments comments#create' do
@@ -450,7 +449,7 @@ describe 'Items API' do
 
       expect(json_data['creator']).to_not be_nil
       expect(json_data['creator']['id']).to eq(chef.id)
-      expect(json_data['item_id']).to eq(new_comment.item.id)
+      expect(json_data['commentable_id']).to eq(new_comment.commentable.id)
       expect(chef.has_role?(:creator, new_comment))
     end
 
@@ -501,21 +500,24 @@ describe 'Items API' do
   end
 
   describe 'DELETE /comments/{:comment_id} comments#destroy' do
+    let(:existing_item) { FactoryGirl.create(:item_with_creator) }
     context 'current_user is the Comment creator' do
-      let(:comment_created_by_current_user) { FactoryGirl.create(:comment, user: chef) }
+      let(:endpoint) { "/items/#{existing_item.id}/comments/#{comment_created_by_current_user.id}" }
+      let(:comment_created_by_current_user) { FactoryGirl.create(:item_comment, user: chef) }
 
       it 'soft deletes the Comment' do
-        delete "/comments/#{comment_created_by_current_user.id}", api_key: api_key_for_user(chef), format: :json
+        delete endpoint, api_key: api_key_for_user(chef), format: :json
         expect(response).to be_success
         expect(Comment.find_by(id: comment_created_by_current_user.id)).to be_nil
       end
     end
 
     context 'current_user is the Item creator' do
-      let(:comment_on_item_created_by_current_user) { FactoryGirl.create(:comment, item: FactoryGirl.create(:item, creator: chef)) }
+      let(:endpoint) { "/items/#{existing_item.id}/comments/#{comment_on_item_created_by_current_user.id}" }
+      let(:comment_on_item_created_by_current_user) { FactoryGirl.create(:item_comment, commentable: FactoryGirl.create(:item, creator: chef)) }
 
       it 'soft deletes the Comment' do
-        delete "/comments/#{comment_on_item_created_by_current_user.id}", api_key: api_key_for_user(chef), format: :json
+        delete endpoint, api_key: api_key_for_user(chef), format: :json
 
         expect(response).to be_success
         expect(Comment.find_by(id: comment_on_item_created_by_current_user.id)).to be_nil
@@ -523,9 +525,11 @@ describe 'Items API' do
     end
 
     context 'current_user is not the Comment or Item creator' do
-      let(:comment) { FactoryGirl.create(:comment) }
+      let(:endpoint) { "/items/#{existing_item.id}/comments/#{comment.id}" }
+      let(:comment) { FactoryGirl.create(:item_comment) }
+
       it 'does NOT soft delete the Comment' do
-        delete "/comments/#{comment.id}", api_key: api_key_for_user(chef), format: :json
+        delete endpoint, api_key: api_key_for_user(chef), format: :json
 
         expect(response).to_not be_success
         expect(Comment.find_by(id: comment.id)).to_not be_nil

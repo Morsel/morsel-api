@@ -25,10 +25,6 @@ class UserSerializer < ActiveModel::Serializer
     TwitterUserDecorator.new(object).twitter_username
   end
 
-  def like_count
-    object.item_likes_for_my_items_by_others_count
-  end
-
   def item_count
     object.items.count
   end

@@ -4,19 +4,20 @@
 #
 # ### Columns
 #
-# Name              | Type               | Attributes
-# ----------------- | ------------------ | ---------------------------
-# **`id`**          | `integer`          | `not null, primary key`
-# **`user_id`**     | `integer`          |
-# **`item_id`**     | `integer`          |
-# **`deleted_at`**  | `datetime`         |
-# **`created_at`**  | `datetime`         |
-# **`updated_at`**  | `datetime`         |
+# Name                 | Type               | Attributes
+# -------------------- | ------------------ | ---------------------------
+# **`id`**             | `integer`          | `not null, primary key`
+# **`liker_id`**       | `integer`          |
+# **`likeable_id`**    | `integer`          |
+# **`deleted_at`**     | `datetime`         |
+# **`created_at`**     | `datetime`         |
+# **`updated_at`**     | `datetime`         |
+# **`likeable_type`**  | `string(255)`      |
 #
 
 FactoryGirl.define do
-  factory :like do
-    association(:user)
-    association(:item, factory: :item_with_creator)
+  factory :item_like, class: Like do
+    association(:liker, factory: :user)
+    association(:likeable, factory: :item_with_creator)
   end
 end

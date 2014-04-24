@@ -17,6 +17,22 @@ MorselApp::Application.routes.draw do
                 registrations: 'registrations'
               }
 
+  concern :commentable do
+    member do
+      post 'comments' => 'items#comment'
+      delete 'comments/:comment_id' => 'items#uncomment'
+      get 'comments' => 'items#comments'
+    end
+  end
+
+  concern :likeable do
+    member do
+      post 'like' => 'items#like'
+      delete 'like' => 'items#unlike'
+      get 'likers' => 'items#likers'
+    end
+  end
+
   resources :cuisines, only: [:index] do
     member do
       get 'users' => 'cuisines#users', id: /\d+/
@@ -49,14 +65,7 @@ MorselApp::Application.routes.draw do
     get 'cuisines' => 'cuisines#index', user_id: /\d+/
   end
 
-  resources :items, only: [:create, :show, :update, :destroy] do
-    resources :comments, only: [:create, :index]
-    post 'like' => 'likes#create'
-    delete 'like' => 'likes#destroy'
-    get 'likers' => 'items#likers'
-  end
-
-  resources :comments, only: [:destroy]
+  resources :items, only: [:create, :show, :update, :destroy], concerns: [:commentable, :likeable]
 
   resources :morsels, only: [:create, :index, :show, :update, :destroy] do
     collection do

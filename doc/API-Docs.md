@@ -35,7 +35,7 @@
   - [GET ```/items/{item_id}/likers``` - Likers](#get-itemsitem_idlikers---likers)
   - [POST ```/items/{item_id}/comments``` - Create Comment](#post-itemsitem_idcomments---create-comment)
   - [GET ```/items/{item_id}/comments``` - Item Comments](#get-itemsitem_idcomments---item-comments)
-  - [DELETE ```/comments/{comment_id}``` - Delete Comment](#delete-commentscomment_id---delete-comment)
+  - [DELETE ```/items/{item_id}/comments/{comment_id}``` - Delete Comment](#delete-itemsitem_idcommentscomment_id---delete-comment)
 - [Morsel Methods](#morsel-methods)
   - [POST ```/morsels``` - Create a new Morsel](#post-morsels---create-a-new-morsel)
   - [GET ```/morsels``` - Morsels](#get-morsels---morsels)
@@ -705,8 +705,8 @@ List the Comments for the Item with the specified ```item_id```
 <br />
 <br />
 
-## DELETE ```/comments/{comment_id}``` - Delete Comment
-Deletes the Comment with the specified ```comment_id``` if the authenticated User is the Comment or Item Creator
+## DELETE ```/items/{item_id}/comments/{comment_id}``` - Delete Comment
+Deletes the Comment with the specified `comment_id` for the `item_id` if the authenticated User is the Comment or Item Creator
 
 ### Response
 
@@ -934,7 +934,8 @@ Used by third-party services to ping the API.
       "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg"
     }
   },
-  "item_id": 5,
+  "commentable_id": 5,
+  "commentable_type": "Item",
   "created_at": "2014-01-07T18:37:19.661Z"
 }
 ```

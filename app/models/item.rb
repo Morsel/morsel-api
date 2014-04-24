@@ -23,19 +23,12 @@
 #
 
 class Item < ActiveRecord::Base
-  include Authority::Abilities
-  include PhotoUploadable
-  include TimelinePaginateable
-  include UserCreatable
+  include Authority::Abilities, Commentable, Likeable, PhotoUploadable, TimelinePaginateable, UserCreatable
 
   acts_as_paranoid
 
   belongs_to :creator, class_name: 'User', foreign_key: 'creator_id'
   has_many :activities, as: :subject, dependent: :destroy
-  has_many :commenters, through: :comments, source: :user
-  has_many :comments, dependent: :destroy
-  has_many :likers, through: :likes, source: :user
-  has_many :likes, dependent: :destroy
   belongs_to :morsel, touch: true
 
   before_destroy :nullify_primary_item_id_if_primary_item_on_morsel
@@ -47,14 +40,6 @@ class Item < ActiveRecord::Base
   scope :feed, -> { includes(:creator, :morsel) }
 
   validates :morsel, presence: true
-
-  def like_count
-    likes.count
-  end
-
-  def comment_count
-    comments.count
-  end
 
   def url
     # https://eatmorsel.com/marty/1-my-first-morsel/2

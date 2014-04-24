@@ -25,7 +25,7 @@ class ItemForFeedSerializer < ActiveModel::Serializer
   end
 
   def liked
-    current_user.present? && current_user.likes?(object)
+    current_user.present? && current_user.likes_item?(object)
   end
 
   def creator
