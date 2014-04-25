@@ -307,6 +307,19 @@ describe 'Users API' do
       expect(json_data['following']).to be_false
     end
 
+    context 'User has Morsel drafts' do
+      before do
+        user_with_morsels.morsels << FactoryGirl.create(:draft_morsel_with_items)
+      end
+
+      it '`morsel_count` should NOT include draft Morsels' do
+        get "/users/#{user_with_morsels.id}", format: :json
+
+        expect(response).to be_success
+        expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.published.count)
+      end
+    end
+
     context 'username passed instead of id' do
       it 'returns the User' do
         get "/users/#{user_with_morsels.username}", api_key: api_key_for_user(user_with_morsels), format: :json
@@ -355,6 +368,20 @@ describe 'Users API' do
 
         expect(response).to be_success
         expect(json_data['following']).to be_true
+        expect(json_data['following_count']).to eq(0)
+        expect(json_data['follower_count']).to eq(1)
+      end
+
+      context 'User is following another User' do
+        before do
+          Follow.create(followable_id: FactoryGirl.create(:user).id, followable_type: 'User', follower_id: user_with_morsels.id)
+        end
+
+        it 'returns the correct following_count' do
+          get "/users/#{user_with_morsels.id}", api_key: api_key_for_user(follower), format: :json
+          expect(json_data['following_count']).to eq(1)
+          expect(json_data['follower_count']).to eq(1)
+        end
       end
     end
   end

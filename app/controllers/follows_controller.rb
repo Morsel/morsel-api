@@ -36,7 +36,7 @@ class FollowsController < ApiController
 
   def following
     # TODO: Paginate
-    custom_respond_with User.joins("LEFT OUTER JOIN follows ON follows.followable_type = '#{followable_type}' AND follows.follower_id = users.id")
+    custom_respond_with User.joins("LEFT OUTER JOIN follows ON follows.followable_type = '#{followable_type}' AND follows.followable_id = users.id")
                         .where('follows.follower_id = ?', params[:id])
                         .order('follows.id DESC')
   end

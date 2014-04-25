@@ -12,7 +12,9 @@ class UserSerializer < ActiveModel::Serializer
              :twitter_username,
              :morsel_count,
              :like_count,
-             :following
+             :following,
+             :following_count,
+             :follower_count
 
   def photos
     object.photos_hash
@@ -24,10 +26,6 @@ class UserSerializer < ActiveModel::Serializer
 
   def twitter_username
     TwitterUserDecorator.new(object).twitter_username
-  end
-
-  def morsel_count
-    object.morsels.count
   end
 
   def following
