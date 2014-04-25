@@ -99,6 +99,10 @@ class User < ActiveRecord::Base
     liked_items.include?(item)
   end
 
+  def following_user?(user)
+    followed_users.include?(user)
+  end
+
   def photos_hash
     if photo_url.present?
       {

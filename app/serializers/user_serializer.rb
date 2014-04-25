@@ -11,7 +11,8 @@ class UserSerializer < ActiveModel::Serializer
              :facebook_uid,
              :twitter_username,
              :morsel_count,
-             :like_count
+             :like_count,
+             :following
 
   def photos
     object.photos_hash
@@ -27,5 +28,9 @@ class UserSerializer < ActiveModel::Serializer
 
   def morsel_count
     object.morsels.count
+  end
+
+  def following
+    current_user.present? && current_user.following_user?(object)
   end
 end

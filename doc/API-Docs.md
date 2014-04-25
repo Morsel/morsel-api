@@ -1303,7 +1303,8 @@ api_key && morsel_id exist
   "facebook_uid": "1234567890",
   "twitter_username": "morsel_marty",
   "item_count": 1,
-  "like_count": 3
+  "like_count": 3,
+  "following": false
 }
 ```
 
