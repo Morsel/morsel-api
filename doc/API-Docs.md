@@ -31,7 +31,7 @@
   - [POST ```/users/{user_id}/follow``` - Follow User](#post-usersuser_idfollow---follow-user)
   - [DELETE ```/users/{user_id}/follow``` - Unfollow User](#delete-usersuser_idfollow---unfollow-user)
   - [GET ```/users/{user_id}/followers``` - User Followers](#get-usersuser_idfollowers---user-followers)
-  - [GET ```/users/{user_id}/followed_users``` - User Followed Users](#get-usersuser_idfollowed_users---user-followed-users)
+  - [GET ```/users/{user_id}/following``` - User Followed Users](#get-usersuser_idfollowing---user-followed-users)
 - [Item Methods](#item-methods)
   - [POST ```/items``` - Create a new Item](#post-items---create-a-new-item)
   - [GET ```/items/{item_id}``` - Item](#get-itemsitem_id---item)
@@ -643,7 +643,7 @@ Returns the followers for the User with the specified ```user_id```.
 <br />
 <br />
 
-## GET ```/users/{user_id}/followed_users``` - User Followed Users
+## GET ```/users/{user_id}/following``` - User Followed Users
 Returns the Users that the User with the specified ```user_id``` is following
 
 ### Response
