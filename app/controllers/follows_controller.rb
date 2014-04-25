@@ -1,4 +1,5 @@
 class FollowsController < ApiController
+  PUBLIC_ACTIONS = [:followers, :followed_users]
   authorize_actions_for Follow, actions: { followers: :read, following: :read }
 
   def create
