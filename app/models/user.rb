@@ -99,6 +99,18 @@ class User < ActiveRecord::Base
     liked_items.include?(item)
   end
 
+  def morsel_count
+    morsels.published.count
+  end
+
+  def follower_count
+    followers.count
+  end
+
+  def following_count
+    followed_users.count
+  end
+
   def following_user?(user)
     followed_users.include?(user)
   end
