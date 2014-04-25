@@ -291,6 +291,7 @@ describe 'Users API' do
 
       expect(json_data['like_count']).to eq(number_of_likes)
       expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.count)
+      expect(json_data['following']).to be_false
     end
 
     it 'should be public' do
@@ -303,6 +304,7 @@ describe 'Users API' do
 
       expect(json_data['like_count']).to eq(number_of_likes)
       expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.count)
+      expect(json_data['following']).to be_false
     end
 
     context 'username passed instead of id' do
@@ -339,6 +341,20 @@ describe 'Users API' do
         expect(photos['_72x72']).to_not be_nil
         expect(photos['_80x80']).to_not be_nil
         expect(photos['_40x40']).to_not be_nil
+      end
+    end
+
+    context 'current_user is following User' do
+      let(:follower) { FactoryGirl.create(:user) }
+      before do
+        Follow.create(followable_id: user_with_morsels.id, followable_type: 'User', follower_id: follower.id)
+      end
+
+      it 'returns following=true' do
+        get "/users/#{user_with_morsels.id}", api_key: api_key_for_user(follower), format: :json
+
+        expect(response).to be_success
+        expect(json_data['following']).to be_true
       end
     end
   end

@@ -1,18 +1,8 @@
 class UsersController < ApiController
-  skip_before_filter :authenticate_user_from_token!, only: [:show, :checkusername, :reserveusername, :setrole, :unsubscribe]
+  PUBLIC_ACTIONS = [:show, :checkusername, :reserveusername, :setrole, :unsubscribe]
 
   def me
     custom_respond_with current_user, serializer: UserWithPrivateAttributesSerializer
-  end
-
-  # TODO: DEPRECATE
-  def checkusername
-    username = params[:username]
-    if ReservedPaths.non_username_paths.include?(username) || User.where('lower(username) = ?', username.downcase).count > 0
-      render_json true
-    else
-      render_json false
-    end
   end
 
   def validateusername
