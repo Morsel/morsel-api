@@ -1,6 +1,6 @@
 class FollowsController < ApiController
   PUBLIC_ACTIONS = [:followers, :followed_users]
-  authorize_actions_for Follow, actions: { followers: :read, following: :read }
+  authorize_actions_for Follow, except: PUBLIC_ACTIONS, actions: { followers: :read, following: :read }
 
   def create
     if Follow.find_by(followable_id: params[:id], followable_type: followable_type, follower_id: current_user.id)
