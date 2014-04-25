@@ -1,24 +1,26 @@
 # ## Schema Information
 #
-# Table name: `cuisines`
+# Table name: `keywords`
 #
 # ### Columns
 #
 # Name              | Type               | Attributes
 # ----------------- | ------------------ | ---------------------------
 # **`id`**          | `integer`          | `not null, primary key`
+# **`type`**        | `string(255)`      |
 # **`name`**        | `string(255)`      |
 # **`deleted_at`**  | `datetime`         |
 # **`created_at`**  | `datetime`         |
 # **`updated_at`**  | `datetime`         |
 #
 
-class Cuisine < ActiveRecord::Base
+class Keyword < ActiveRecord::Base
   include TimelinePaginateable
   acts_as_paranoid
 
-  has_many :cuisine_users
-  has_many :users, through: :cuisine_users
+  has_many :tags, dependent: :destroy
+  has_many :tagged_users, through: :tags, source: :taggable, source_type: 'User'
+  alias_attribute :users, :tagged_users
 
   validates :name,
             presence: true

@@ -24,7 +24,14 @@
   - [GET ```/users/authorizations``` - User Authorizations](#get-usersauthorizations---user-authorizations)
   - [GET ```/users/activities``` - User Activities](#get-usersactivities---user-activities)
   - [GET ```/users/notifications``` - User Notifications](#get-usersnotifications---user-notifications)
+  - [POST ```/users/{user_id}/tags``` - Create User Tag](#post-usersuser_idtags---create-user-tag)
+  - [DELETE ```/users/{user_id}/tags/{tag_id}``` - Delete User Tag](#delete-usersuser_idtagstag_id---delete-user-tag)
   - [GET ```/users/{user_id}/cuisines``` - User Cuisines](#get-usersuser_idcuisines---user-cuisines)
+  - [GET ```/users/{user_id}/specialties``` - User Specialties](#get-usersuser_idspecialties---user-specialties)
+  - [POST ```/users/{user_id}/follow``` - Follow User](#post-usersuser_idfollow---follow-user)
+  - [DELETE ```/users/{user_id}/follow``` - Unfollow User](#delete-usersuser_idfollow---unfollow-user)
+  - [GET ```/users/{user_id}/followers``` - User Followers](#get-usersuser_idfollowers---user-followers)
+  - [GET ```/users/{user_id}/followed_users``` - User Followed Users](#get-usersuser_idfollowed_users---user-followed-users)
 - [Item Methods](#item-methods)
   - [POST ```/items``` - Create a new Item](#post-items---create-a-new-item)
   - [GET ```/items/{item_id}``` - Item](#get-itemsitem_id---item)
@@ -35,7 +42,7 @@
   - [GET ```/items/{item_id}/likers``` - Likers](#get-itemsitem_idlikers---likers)
   - [POST ```/items/{item_id}/comments``` - Create Comment](#post-itemsitem_idcomments---create-comment)
   - [GET ```/items/{item_id}/comments``` - Item Comments](#get-itemsitem_idcomments---item-comments)
-  - [DELETE ```/comments/{comment_id}``` - Delete Comment](#delete-commentscomment_id---delete-comment)
+  - [DELETE ```/items/{item_id}/comments/{comment_id}``` - Delete Comment](#delete-itemsitem_idcommentscomment_id---delete-comment)
 - [Morsel Methods](#morsel-methods)
   - [POST ```/morsels``` - Create a new Morsel](#post-morsels---create-a-new-morsel)
   - [GET ```/morsels``` - Morsels](#get-morsels---morsels)
@@ -44,9 +51,11 @@
   - [PUT ```/morsels/{morsel_id}``` - Update Morsel](#put-morselsmorsel_id---update-morsel)
   - [POST ```/morsels/{morsel_id}/publish``` - Publish Morsel](#post-morselsmorsel_idpublish---Publish-morsel)
   - [DELETE ```/morsels/{morsel_id}``` - Delete Morsel](#delete-morselsmorsel_id---delete-morsel)
-- [Cuisine Methods](#cuisine-methods)
+- [Keyword Methods](#keyword-methods)
   - [GET ```/cuisines``` - Cuisines](#get-cuisines---cuisines)
   - [GET ```/cuisines/{cuisine_id}/users``` - Cuisine Users](#get-cuisinescuisine_id---cuisine-users)
+  - [GET ```/specialties``` - Specialties](#get-specialties---specialties)
+  - [GET ```/specialties/{specialty_id}/users``` - Specialty Users](#get-specialtiesspecialty_id---specialty-users)
 - [Misc Methods](#misc-methods)
   - [GET ```/status``` - Status](#get-status---status)
   - [GET ```/configuration``` - Configuration](#get-configuration---configuration)
@@ -67,6 +76,9 @@
     - [User](#user)
     - [User (w/ Private Attributes)](#user-w-private-attributes)
     - [User (w/ Auth Token)](#user-w-auth-token)
+  - [Tag Objects](#tag-objects)
+    - [Tag](#tag)
+    - [Keyword](#keyword)
   - [Feed Objects](#feed-objects)
     - [Feed Item](#feed-item)
   - [Activity Objects](#activity-objects)
@@ -523,6 +535,42 @@ Returns the Authenticated User's Notifications. A Notification is created when s
 <br />
 <br />
 
+## POST ```/users/{user_id}/tags``` - Create User Tag
+Tags the User with the specified `user_id` with the Keyword for the specified `keyword_id`.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| tag[keyword_id] | Number | The `id` of the Keyword to tag with. | | X |
+
+### Response
+
+| __data__ |
+| -------- |
+| Created [Tag](#tag) |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __already tagged with that keyword__ | 400 (Bad Request) | The User has already been tagged with that Keyword |
+
+<br />
+<br />
+
+## DELETE ```/users/{user_id}/tags/{tag_id}``` - Delete User Tag
+Deletes the Tag with the specified `tag_id` for the User with the specified `user_id`
+
+### Response
+
+| Status Code |
+| ----------- |
+|         200 |
+
+<br />
+<br />
+
 ## GET ```/users/{user_id}/cuisines``` - User Cuisines
 Returns the Cuisines for the User with the specified ```user_id```.
 
@@ -530,10 +578,87 @@ Returns the Cuisines for the User with the specified ```user_id```.
 
 | __data__ |
 | -------- |
-| Array of [Cuisine](#cuisine) |
+| Array of [Keyword](#keyword) of type 'Cuisine' |
 
 <br />
 <br />
+
+## GET ```/users/{user_id}/specialties``` - User Specialties
+Returns the Specialties for the User with the specified ```user_id```.
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [Keyword](#keyword) of type 'Specialty' |
+
+<br />
+<br />
+
+## POST ```/users/{user_id}/follow``` - Follow User
+Follows the User with the specified ```user_id```.
+
+### Response
+
+| Status Code |
+| ----------- |
+|         201 |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __already followed__ | 400 (Bad Request) | Current User has already followed the User |
+
+<br />
+<br />
+
+## DELETE ```/users/{user_id}/follow``` - Unfollow User
+Unfollows the User with the specified ```user_id```.
+
+### Response
+
+| Status Code |
+| ----------- |
+|         200 |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __not followed__ | 400 (Bad Request) | Current User has not followed that User |
+
+<br />
+<br />
+
+## GET ```/users/{user_id}/followers``` - User Followers
+Returns the followers for the User with the specified ```user_id```.
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [User](#user) followers |
+
+<br />
+<br />
+
+## GET ```/users/{user_id}/followed_users``` - User Followed Users
+Returns the Users that the User with the specified ```user_id``` is following
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of followed [User](#user) |
+
+<br />
+<br />
+
+
+
+
+
 
 
 # Item Methods
@@ -705,8 +830,8 @@ List the Comments for the Item with the specified ```item_id```
 <br />
 <br />
 
-## DELETE ```/comments/{comment_id}``` - Delete Comment
-Deletes the Comment with the specified ```comment_id``` if the authenticated User is the Comment or Item Creator
+## DELETE ```/items/{item_id}/comments/{comment_id}``` - Delete Comment
+Deletes the Comment with the specified `comment_id` for the `item_id` if the authenticated User is the Comment or Item Creator
 
 ### Response
 
@@ -934,7 +1059,8 @@ Used by third-party services to ping the API.
       "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg"
     }
   },
-  "item_id": 5,
+  "commentable_id": 5,
+  "commentable_type": "Item",
   "created_at": "2014-01-07T18:37:19.661Z"
 }
 ```
@@ -1229,6 +1355,36 @@ This includes the same keys as [User (w/ Private Attributes)](#user-w-private-at
 ```
 
 
+## Tag Objects
+
+### Tag
+
+```json
+{
+  "id":11,
+  "created_at":"2014-03-25T21:18:02.349Z",
+  "updated_at":"2014-03-25T21:18:02.360Z",
+  "taggable_id":4,
+  "taggable_type":"User",
+  "keyword":{
+    "id":6,
+    "type":"Cuisine",
+    "name":"Polish"
+  }
+}
+```
+
+### Keyword
+
+```json
+{
+  "id":6,
+  "type":"Cuisine",
+  "name":"Polish"
+}
+```
+
+
 ## Activity Objects
 
 ### Activity
@@ -1283,6 +1439,7 @@ This includes the same keys as [User (w/ Private Attributes)](#user-w-private-at
   }
 }
 ```
+
 
 ## Notification Objects
 
@@ -1347,15 +1504,6 @@ This includes the same keys as [User (w/ Private Attributes)](#user-w-private-at
 
 
 ## Misc Objects
-
-### Cuisine
-
-```json
-{
-  "id": 7,
-  "name": "African"
-}
-```
 
 ### Configuration
 NOTE: "non_username_paths" is just a sample of the real list, for an up to date list of these reserved usernames, see NOTE: [lib/reserved_paths.rb](../lib/reserved_paths.rb)

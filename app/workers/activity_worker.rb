@@ -17,14 +17,24 @@ class ActivityWorker
         past_tense_action = 'commented on'
       elsif action_type == 'Like'
         past_tense_action = 'liked'
+      elsif action_type == 'Follow'
+        past_tense_action = 'followed'
       else
         raise 'InvalidAction'
       end
 
-      message = "#{creator.full_name} (#{creator.username}) #{past_tense_action} #{activity.subject.morsel_title_with_description}"
+      if subject_type == 'User'
+        subject_message = activity.subject.full_name
+      elsif subject_type == 'Item'
+        subject_message = activity.subject.morsel_title_with_description
+      else
+        raise 'InvalidSubject'
+      end
+
+      notification_message = "#{creator.full_name} (#{creator.username}) #{past_tense_action} #{subject_message}"
       Notification.create(
         payload: activity,
-        message: message.truncate(100, separator: ' ', omission: '... '),
+        message: notification_message.truncate(100, separator: ' ', omission: '... '),
         user_id: recipient_id
       )
     end

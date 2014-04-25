@@ -4,21 +4,22 @@
 #
 # ### Columns
 #
-# Name               | Type               | Attributes
-# ------------------ | ------------------ | ---------------------------
-# **`id`**           | `integer`          | `not null, primary key`
-# **`user_id`**      | `integer`          |
-# **`item_id`**      | `integer`          |
-# **`description`**  | `text`             |
-# **`deleted_at`**   | `datetime`         |
-# **`created_at`**   | `datetime`         |
-# **`updated_at`**   | `datetime`         |
+# Name                    | Type               | Attributes
+# ----------------------- | ------------------ | ---------------------------
+# **`id`**                | `integer`          | `not null, primary key`
+# **`commenter_id`**      | `integer`          |
+# **`commentable_id`**    | `integer`          |
+# **`description`**       | `text`             |
+# **`deleted_at`**        | `datetime`         |
+# **`created_at`**        | `datetime`         |
+# **`updated_at`**        | `datetime`         |
+# **`commentable_type`**  | `string(255)`      |
 #
 
 FactoryGirl.define do
-  factory :comment do
+  factory :item_comment, class: Comment do
     description { Faker::Lorem.sentence(rand(5..100)) }
-    association(:user)
-    association(:item, factory: :item_with_creator)
+    association(:commenter, factory: :user)
+    association(:commentable, factory: :item_with_creator)
   end
 end

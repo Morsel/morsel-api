@@ -41,9 +41,7 @@
 #
 
 class User < ActiveRecord::Base
-  include Authority::UserAbilities
-  include Authority::Abilities
-  include PhotoUploadable
+  include Authority::UserAbilities, Authority::Abilities, Followable, PhotoUploadable, Taggable
   rolify
 
   self.authorizer_name = 'UserAuthorizer'
@@ -55,8 +53,6 @@ class User < ActiveRecord::Base
   after_save :ensure_role
 
   has_many :authorizations
-  has_many :cuisine_users
-  has_many :cuisines, through: :cuisine_users
   has_many :comments, through: :items
   has_many  :facebook_authorizations,
             -> { where provider: 'facebook' },
@@ -66,8 +62,18 @@ class User < ActiveRecord::Base
             -> { where provider: 'twitter' },
             class_name: 'Authorization',
             foreign_key: :user_id
-  has_many :liked_items, source: :item, through: :likes
-  has_many :likes
+  has_many :likes, foreign_key: :liker_id
+  has_many :liked_items, through: :likes, source: :likeable, source_type: 'Item'
+
+  has_many :follows, foreign_key: :follower_id,
+                     dependent:   :destroy
+  has_many :followed_users, through: :follows, source: :followable, source_type: 'User'
+
+  has_many :reverse_follows, foreign_key: 'followable_id',
+                             class_name:  'Follow',
+                             dependent:   :destroy
+  has_many :followers, through: :reverse_follows, source: :follower
+
   has_many :items, foreign_key: :creator_id
   has_many :morsels, foreign_key: :creator_id
   has_many :activities, foreign_key: :creator_id
@@ -85,19 +91,11 @@ class User < ActiveRecord::Base
   mount_uploader :photo, UserPhotoUploader
   process_in_background :photo
 
-  def self.find_by_id_or_username(id_or_username)
-    if id_or_username.to_i > 0
-      find_by(id: id_or_username)
-    else
-      find_by('lower(username) = lower(?)', id_or_username)
-    end
+  def like_count
+    likes.count
   end
 
-  def item_likes_for_my_items_by_others_count
-    Like.where(item_id: item_ids).count
-  end
-
-  def likes?(item)
+  def likes_item?(item)
     liked_items.include?(item)
   end
 

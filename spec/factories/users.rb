@@ -51,6 +51,10 @@ FactoryGirl.define do
     password 'password'
     bio 'Hi! I like turtles!'
 
+    factory :admin do
+      admin true
+    end
+
     factory :turd_ferg, class: User do
       email 'turdferg@eatmorsel.com'
       username 'turdferg'

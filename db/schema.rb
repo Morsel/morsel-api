@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140421224933) do
+ActiveRecord::Schema.define(version: 20140424215504) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,31 +65,16 @@ ActiveRecord::Schema.define(version: 20140421224933) do
   add_index "authorizations", ["user_id"], name: "index_authorizations_on_user_id", using: :btree
 
   create_table "comments", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "item_id"
+    t.integer  "commenter_id"
+    t.integer  "commentable_id"
     t.text     "description"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "commentable_type"
   end
 
-  add_index "comments", ["user_id", "item_id"], name: "index_comments_on_user_id_and_item_id", using: :btree
-
-  create_table "cuisine_users", id: false, force: true do |t|
-    t.integer  "cuisine_id"
-    t.integer  "user_id"
-    t.datetime "deleted_at"
-  end
-
-  add_index "cuisine_users", ["cuisine_id"], name: "index_cuisine_users_on_cuisine_id", using: :btree
-  add_index "cuisine_users", ["user_id"], name: "index_cuisine_users_on_user_id", using: :btree
-
-  create_table "cuisines", force: true do |t|
-    t.string   "name"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
+  add_index "comments", ["commenter_id", "commentable_id"], name: "index_comments_on_commenter_id_and_commentable_id", using: :btree
 
   create_table "emails", force: true do |t|
     t.string   "class_name"
@@ -116,10 +101,14 @@ ActiveRecord::Schema.define(version: 20140421224933) do
 
   create_table "follows", force: true do |t|
     t.integer  "follower_id"
-    t.integer  "followed_id"
+    t.integer  "followable_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "followable_type"
+    t.datetime "deleted_at"
   end
+
+  add_index "follows", ["followable_id", "follower_id"], name: "index_follows_on_followable_id_and_follower_id", using: :btree
 
   create_table "items", force: true do |t|
     t.text     "description"
@@ -140,15 +129,26 @@ ActiveRecord::Schema.define(version: 20140421224933) do
   add_index "items", ["creator_id"], name: "index_items_on_creator_id", using: :btree
   add_index "items", ["morsel_id"], name: "index_items_on_post_id", using: :btree
 
-  create_table "likes", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "item_id"
+  create_table "keywords", force: true do |t|
+    t.string   "type"
+    t.string   "name"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "likes", ["user_id", "item_id"], name: "index_likes_on_user_id_and_item_id", using: :btree
+  add_index "keywords", ["type"], name: "index_keywords_on_type", using: :btree
+
+  create_table "likes", force: true do |t|
+    t.integer  "liker_id"
+    t.integer  "likeable_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "likeable_type"
+  end
+
+  add_index "likes", ["liker_id", "likeable_id"], name: "index_likes_on_liker_id_and_likeable_id", using: :btree
 
   create_table "morsels", force: true do |t|
     t.string   "title"
@@ -205,6 +205,18 @@ ActiveRecord::Schema.define(version: 20140421224933) do
   add_index "slugs", ["scope", "record_id"], name: "index_slugs_on_scope_and_record_id", using: :btree
   add_index "slugs", ["scope", "slug", "created_at"], name: "index_slugs_on_scope_and_slug_and_created_at", using: :btree
   add_index "slugs", ["scope", "slug"], name: "index_slugs_on_scope_and_slug", using: :btree
+
+  create_table "tags", force: true do |t|
+    t.integer  "tagger_id"
+    t.integer  "keyword_id"
+    t.integer  "taggable_id"
+    t.string   "taggable_type"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "tags", ["tagger_id", "taggable_id", "keyword_id"], name: "index_tags_on_tagger_id_and_taggable_id_and_keyword_id", using: :btree
 
   create_table "user_events", force: true do |t|
     t.integer  "user_id"

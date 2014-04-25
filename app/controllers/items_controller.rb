@@ -1,10 +1,9 @@
 class ItemsController < ApiController
-  PUBLIC_ACTIONS = [:index, :show]
-  authorize_actions_for Item, except: PUBLIC_ACTIONS
-  authority_actions likers: 'read'
-  respond_to :json
+  PUBLIC_ACTIONS = [:show]
 
   def create
+    Authority.enforce :create, Item, current_user
+
     item = Item.new(ItemParams.build(params))
     item.creator = current_user
 
@@ -20,11 +19,13 @@ class ItemsController < ApiController
   end
 
   def update
-    item_params = ItemParams.build(params)
-    item = Item.find params[:id]
-    authorize_action_for item
+    Authority.enforce :update, Item, current_user
 
-    if item.update(item_params)
+    item = Item.find params[:id]
+
+    Authority.enforce :update, item, current_user
+
+    if item.update(ItemParams.build(params))
       custom_respond_with item
     else
       render_json_errors item.errors
@@ -32,23 +33,16 @@ class ItemsController < ApiController
   end
 
   def destroy
+    Authority.enforce :delete, Item, current_user
+
     item = Item.find(params[:id])
-    authorize_action_for item
+    Authority.enforce :delete, item, current_user
 
     if item.destroy
       render_json 'OK'
     else
       render_json_errors(item.errors)
     end
-  end
-
-  def likers
-    likers = User.includes(:likes)
-                 .where('likes.item_id = ?', params[:item_id])
-                 .order('likes.id DESC')
-                 .references(:likes)
-
-    custom_respond_with likers
   end
 
   class ItemParams

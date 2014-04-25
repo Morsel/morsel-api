@@ -1,6 +1,14 @@
 require 'spec_helper'
 
 describe 'Users API' do
+  it_behaves_like 'TaggableController' do
+    let(:user) { FactoryGirl.create(:chef) }
+    let(:taggable_route) { '/users' }
+    let(:taggable) { user }
+    let(:keyword) { FactoryGirl.create(:keyword) }
+    let(:tag) { FactoryGirl.create(:user_tag, tagger: user) }
+  end
+
   describe 'GET /users/me users#me' do
     let(:user) { FactoryGirl.create(:user) }
 
@@ -9,9 +17,7 @@ describe 'Users API' do
 
       expect(response).to be_success
 
-      expect(json_data['id']).to eq(user.id)
-      expect(json_data['sign_in_count']).to_not be_nil
-      expect(json_data['staff']).to_not be_nil
+      expect_json_keys(json_data, user, %w(id username first_name last_name sign_in_count title bio staff email))
     end
 
     context 'has a Morsel draft' do
@@ -267,12 +273,9 @@ describe 'Users API' do
 
   describe 'GET /users/{:user_id|user_username} users#show' do
     let(:user_with_morsels) { FactoryGirl.create(:user_with_morsels) }
-    let(:number_of_item_likes) { rand(2..6) }
+    let(:number_of_likes) { rand(2..6) }
 
-    before do
-      item = user_with_morsels.items.first
-      number_of_item_likes.times { item.likers << FactoryGirl.create(:user) }
-    end
+    before { number_of_likes.times { Like.create(likeable: FactoryGirl.create(:item_with_creator), liker: user_with_morsels) }}
 
     it 'returns the User' do
       get "/users/#{user_with_morsels.id}", api_key: api_key_for_user(user_with_morsels), format: :json
@@ -280,14 +283,14 @@ describe 'Users API' do
       expect(response).to be_success
 
       expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name title bio industry))
-      expect_nil_json_keys(json_data, %w(password encrypted_password staff draft_count sign_in_count photo_processing auth_token))
+      expect_nil_json_keys(json_data, %w(password encrypted_password staff draft_count sign_in_count photo_processing auth_token email))
 
       expect(json_data['photos']).to be_nil
       expect(json_data['facebook_uid']).to eq(FacebookUserDecorator.new(user_with_morsels).facebook_uid)
       expect(json_data['twitter_username']).to eq(TwitterUserDecorator.new(user_with_morsels).twitter_username)
 
-      expect(json_data['like_count']).to eq(number_of_item_likes)
-      expect(json_data['item_count']).to eq(user_with_morsels.items.count)
+      expect(json_data['like_count']).to eq(number_of_likes)
+      expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.count)
     end
 
     it 'should be public' do
@@ -296,10 +299,10 @@ describe 'Users API' do
       expect(response).to be_success
 
       expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name title bio industry facebook_uid twitter_username))
-      expect_nil_json_keys(json_data, %w(password encrypted_password staff draft_count sign_in_count photo_processing auth_token))
+      expect_nil_json_keys(json_data, %w(password encrypted_password staff draft_count sign_in_count photo_processing auth_token email))
 
-      expect(json_data['like_count']).to eq(number_of_item_likes)
-      expect(json_data['item_count']).to eq(user_with_morsels.items.count)
+      expect(json_data['like_count']).to eq(number_of_likes)
+      expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.count)
     end
 
     context 'username passed instead of id' do
@@ -309,14 +312,14 @@ describe 'Users API' do
         expect(response).to be_success
 
         expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name title bio industry))
-        expect_nil_json_keys(json_data, %w(password encrypted_password staff draft_count sign_in_count photo_processing auth_token))
+        expect_nil_json_keys(json_data, %w(password encrypted_password staff draft_count sign_in_count photo_processing auth_token email))
 
         expect(json_data['photos']).to be_nil
         expect(json_data['facebook_uid']).to eq(FacebookUserDecorator.new(user_with_morsels).facebook_uid)
         expect(json_data['twitter_username']).to eq(TwitterUserDecorator.new(user_with_morsels).twitter_username)
 
-        expect(json_data['like_count']).to eq(number_of_item_likes)
-        expect(json_data['item_count']).to eq(user_with_morsels.items.count)
+        expect(json_data['like_count']).to eq(number_of_likes)
+        expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.count)
       end
     end
 
@@ -351,6 +354,7 @@ describe 'Users API' do
       expect(response).to be_success
 
       expect(json_data['first_name']).to eq(new_first_name)
+      expect(json_data['email']).to eq(turd_ferg.email)
       expect(User.first.first_name).to eq(new_first_name)
     end
   end

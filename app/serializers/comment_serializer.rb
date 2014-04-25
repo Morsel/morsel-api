@@ -2,12 +2,9 @@ class CommentSerializer < ActiveModel::Serializer
   attributes :id,
              :description,
              :created_at,
-             :item_id,
+             :commentable_id,
+             :commentable_type,
              :creator
-
-  def item_id
-    object.item.id
-  end
 
   def creator
     user = object.user
