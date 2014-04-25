@@ -30,7 +30,7 @@ MorselApp::Application.routes.draw do
     member do
       post 'follow' => 'follows#create'
       get 'followers' => 'follows#followers'
-      get 'followed_users' => 'follows#followed_users'
+      get 'following' => 'follows#following'
       delete 'follow' => 'follows#destroy'
     end
   end
