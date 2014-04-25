@@ -11,9 +11,9 @@ class UserSerializer < ActiveModel::Serializer
              :facebook_uid,
              :twitter_username,
              :morsel_count,
-             :like_count,
+             :liked_items_count,
              :following,
-             :following_count,
+             :followed_users_count,
              :follower_count
 
   def photos

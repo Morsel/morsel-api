@@ -1,5 +1,5 @@
 class UsersController < ApiController
-  PUBLIC_ACTIONS = [:show, :checkusername, :reserveusername, :setrole, :unsubscribe]
+  PUBLIC_ACTIONS = [:show, :checkusername, :reserveusername, :setrole, :unsubscribe, :followed_users, :liked_items]
 
   def me
     custom_respond_with current_user, serializer: UserWithPrivateAttributesSerializer
@@ -71,6 +71,18 @@ class UsersController < ApiController
     else
       render_json_errors(user.errors)
     end
+  end
+
+  def followed_users
+    custom_respond_with User.joins("LEFT OUTER JOIN follows ON follows.followable_type = 'User' AND follows.followable_id = users.id")
+                        .where('follows.follower_id = ?', params[:id])
+                        .order('follows.id DESC')
+  end
+
+  def liked_items
+    custom_respond_with Item.joins("LEFT OUTER JOIN likes ON likes.likeable_type = 'Item' AND likes.likeable_id = items.id")
+                        .where('likes.liker_id = ?', params[:id])
+                        .order('likes.id DESC')
   end
 
   class UserParams

@@ -23,6 +23,7 @@
   - [GET ```/users/authorizations``` - User Authorizations](#get-usersauthorizations---user-authorizations)
   - [GET ```/users/activities``` - User Activities](#get-usersactivities---user-activities)
   - [GET ```/users/notifications``` - User Notifications](#get-usersnotifications---user-notifications)
+  - [GET ```/users/{user_id}/likes``` - User Likes](#get-usersuser_idlikes---user-likes)
   - [POST ```/users/{user_id}/tags``` - Create User Tag](#post-usersuser_idtags---create-user-tag)
   - [DELETE ```/users/{user_id}/tags/{tag_id}``` - Delete User Tag](#delete-usersuser_idtagstag_id---delete-user-tag)
   - [GET ```/users/{user_id}/cuisines``` - User Cuisines](#get-usersuser_idcuisines---user-cuisines)
@@ -30,7 +31,7 @@
   - [POST ```/users/{user_id}/follow``` - Follow User](#post-usersuser_idfollow---follow-user)
   - [DELETE ```/users/{user_id}/follow``` - Unfollow User](#delete-usersuser_idfollow---unfollow-user)
   - [GET ```/users/{user_id}/followers``` - User Followers](#get-usersuser_idfollowers---user-followers)
-  - [GET ```/users/{user_id}/following``` - User Followed Users](#get-usersuser_idfollowing---user-followed-users)
+  - [GET ```/users/{user_id}/followed_users``` - User Followed Users](#get-usersuser_idfollowed_users---user-followed-users)
 - [Item Methods](#item-methods)
   - [POST ```/items``` - Create a new Item](#post-items---create-a-new-item)
   - [GET ```/items/{item_id}``` - Item](#get-itemsitem_id---item)
@@ -513,6 +514,18 @@ Returns the Authenticated User's Notifications. A Notification is created when s
 <br />
 <br />
 
+## GET ```/users/{user_id}/likes``` - User Likes
+Returns the Likeables that the User with the specified `user_id` has liked
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [Likeable](#notification) |
+
+<br />
+<br />
+
 ## POST ```/users/{user_id}/tags``` - Create User Tag
 Tags the User with the specified `user_id` with the Keyword for the specified `keyword_id`.
 
@@ -621,7 +634,7 @@ Returns the followers for the User with the specified ```user_id```.
 <br />
 <br />
 
-## GET ```/users/{user_id}/following``` - User Followed Users
+## GET ```/users/{user_id}/followed_users``` - User Followed Users
 Returns the Users that the User with the specified ```user_id``` is following
 
 ### Response
@@ -632,11 +645,6 @@ Returns the Users that the User with the specified ```user_id``` is following
 
 <br />
 <br />
-
-
-
-
-
 
 
 # Item Methods
@@ -1280,9 +1288,11 @@ api_key && morsel_id exist
   },
   "facebook_uid": "1234567890",
   "twitter_username": "morsel_marty",
-  "item_count": 1,
-  "like_count": 3,
-  "following": false
+  "morsel_count": 1,
+  "liked_items_count": 3,
+  "following": false,
+  "followed_users_count": 3,
+  "follower_count": 3
 }
 ```
 
@@ -1294,7 +1304,8 @@ This includes the same keys as [User](#user), along with:
   "staff": true,
   "draft_count": 0,
   "sign_in_count": 1,
-  "photo_processing": null
+  "photo_processing": null,
+  "email": "buttsackmcgee@eatmorsel.com"
 }
 ```
 

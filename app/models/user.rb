@@ -91,8 +91,8 @@ class User < ActiveRecord::Base
   mount_uploader :photo, UserPhotoUploader
   process_in_background :photo
 
-  def like_count
-    likes.count
+  def liked_items_count
+    liked_items.count
   end
 
   def likes_item?(item)
@@ -107,7 +107,7 @@ class User < ActiveRecord::Base
     followers.count
   end
 
-  def following_count
+  def followed_users_count
     followed_users.count
   end
 

@@ -289,9 +289,9 @@ describe 'Users API' do
       expect(json_data['facebook_uid']).to eq(FacebookUserDecorator.new(user_with_morsels).facebook_uid)
       expect(json_data['twitter_username']).to eq(TwitterUserDecorator.new(user_with_morsels).twitter_username)
 
-      expect(json_data['like_count']).to eq(number_of_likes)
+      expect(json_data['liked_items_count']).to eq(number_of_likes)
       expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.count)
-      expect(json_data['following']).to be_false
+      expect(json_data['followed_users_count']).to be_false
     end
 
     it 'should be public' do
@@ -302,9 +302,9 @@ describe 'Users API' do
       expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name title bio industry facebook_uid twitter_username))
       expect_nil_json_keys(json_data, %w(password encrypted_password staff draft_count sign_in_count photo_processing auth_token email))
 
-      expect(json_data['like_count']).to eq(number_of_likes)
+      expect(json_data['liked_items_count']).to eq(number_of_likes)
       expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.count)
-      expect(json_data['following']).to be_false
+      expect(json_data['followed_users_count']).to be_false
     end
 
     context 'User has Morsel drafts' do
@@ -333,7 +333,7 @@ describe 'Users API' do
         expect(json_data['facebook_uid']).to eq(FacebookUserDecorator.new(user_with_morsels).facebook_uid)
         expect(json_data['twitter_username']).to eq(TwitterUserDecorator.new(user_with_morsels).twitter_username)
 
-        expect(json_data['like_count']).to eq(number_of_likes)
+        expect(json_data['liked_items_count']).to eq(number_of_likes)
         expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.count)
       end
     end
@@ -368,7 +368,7 @@ describe 'Users API' do
 
         expect(response).to be_success
         expect(json_data['following']).to be_true
-        expect(json_data['following_count']).to eq(0)
+        expect(json_data['followed_users_count']).to eq(0)
         expect(json_data['follower_count']).to eq(1)
       end
 
@@ -379,10 +379,59 @@ describe 'Users API' do
 
         it 'returns the correct following_count' do
           get "/users/#{user_with_morsels.id}", api_key: api_key_for_user(follower), format: :json
-          expect(json_data['following_count']).to eq(1)
+          expect(json_data['followed_users_count']).to eq(1)
           expect(json_data['follower_count']).to eq(1)
         end
       end
+    end
+  end
+
+  describe 'GET /users/{:user_id}/liked_items' do
+    let(:endpoint) { "/users/#{turd_ferg.id}/liked_items" }
+    let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
+    let(:liked_items_count) { rand(2..6) }
+
+    before { liked_items_count.times { Like.create(likeable: FactoryGirl.create(:item_with_creator, morsel: FactoryGirl.create(:morsel_with_creator)), liker: turd_ferg) }}
+
+    it 'returns the Items that the User has liked' do
+      get endpoint, api_key: api_key_for_user(turd_ferg), format: :json
+
+      expect(response).to be_success
+
+      expect(json_data.count).to eq(liked_items_count)
+    end
+  end
+
+  describe 'GET /users/{:user_id}/followed_users' do
+    let(:endpoint) { "/users/#{turd_ferg.id}/followed_users" }
+    let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
+    let(:followed_users_count) { rand(2..6) }
+
+    before { followed_users_count.times { Follow.create(followable: FactoryGirl.create(:user), follower: turd_ferg) }}
+
+    it 'returns the Users that the User has followed' do
+      get endpoint, api_key: api_key_for_user(turd_ferg), format: :json
+
+      expect(response).to be_success
+
+      expect(json_data.count).to eq(followed_users_count)
+    end
+  end
+
+  # Note: Should extract into a ControllerFollowableSharedExamples
+  describe 'GET /users/{:user_id}/followers' do
+    let(:endpoint) { "/users/#{turd_ferg.id}/followers" }
+    let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
+    let(:followers_count) { rand(2..6) }
+
+    before { followers_count.times { Follow.create(followable: turd_ferg, follower: FactoryGirl.create(:user)) }}
+
+    it 'returns the Users that are following the User' do
+      get endpoint, api_key: api_key_for_user(turd_ferg), format: :json
+
+      expect(response).to be_success
+
+      expect(json_data.count).to eq(followers_count)
     end
   end
 
