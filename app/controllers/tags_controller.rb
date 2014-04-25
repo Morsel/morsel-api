@@ -13,10 +13,11 @@ class TagsController < ApiController
   end
 
   def create
-    if Tag.find_by({taggable_id: params[:id], taggable_type: taggable_type, tagger_id: current_user.id, keyword_id: params[:keyword_id]})
+    tag_params = TagParams.build(params)
+    if Tag.find_by({taggable_id: params[:id], taggable_type: taggable_type, tagger_id: current_user.id, keyword_id: tag_params[:keyword_id]})
       render_json_errors({"#{taggable_type.downcase}" => ['already tagged with that keyword'] })
     else
-      tag = Tag.new({taggable_id: params[:id], taggable_type: taggable_type, tagger_id: current_user.id, keyword_id: params[:keyword_id]})
+      tag = Tag.new({taggable_id: params[:id], taggable_type: taggable_type, tagger_id: current_user.id, keyword_id: tag_params[:keyword_id]})
 
       if tag.save
         custom_respond_with tag
@@ -43,5 +44,11 @@ class TagsController < ApiController
 
   def taggable_type
     request.path.split('/').second.classify
+  end
+
+  class TagParams
+    def self.build(params)
+      params.require(:tag).permit(:keyword_id)
+    end
   end
 end

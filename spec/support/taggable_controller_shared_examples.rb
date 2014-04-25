@@ -2,7 +2,7 @@ shared_examples 'TaggableController' do
   describe 'POST /taggable/:id/tags' do
     let(:endpoint) { "#{taggable_route}/#{taggable.id}/tags" }
     it 'creates a Tag' do
-      post endpoint, keyword_id: keyword.id, api_key: api_key_for_user(user), format: :json
+      post endpoint, tag: { keyword_id: keyword.id}, api_key: api_key_for_user(user), format: :json
 
       expect(response).to be_success
       expect(json_data['id']).to_not be_nil
