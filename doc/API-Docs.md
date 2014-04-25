@@ -14,7 +14,6 @@
   - [POST ```/users/sign_in``` - User Authentication](#post-userssign_in---user-authentication)
   - [GET ```/users/me``` - Me](#get-usersme---me)
   - [POST ```/users/unsubscribe``` - Unsubscribe](#post-usersunsubscribe---unsubscribe)
-  - [GET ```/users/checkusername``` - Check Username](#get-userscheckusername---check-username)
   - [POST ```/users/reserveusername``` - Reserve Username](#post-usersreserveusername---reserve-username)
   - [PUT ```/users/{user_id}/updateindustry``` - Update Industry](#put-usersuser_idupdateindustry---update-industry)
   - [GET ```/users/{user_id|user_username}``` - User](#get-usersuser_iduser_username---user)
@@ -303,27 +302,6 @@ Unsubscribes the User with the specified user_id from all emails
 | Status Code |
 | ----------- |
 |         200 |
-
-<br />
-<br />
-
-## DEPRECATED
-## GET ```/users/checkusername``` - Check Username
-Returns ```true``` if the username already exists, otherwise ```false```.
-
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| username | String | The username to check | | X |
-
-### Response
-
-| Condition | __data__ |
-| --------- | -------- |
-| Username does exist | true |
-| Username does NOT exist | false |
-| Username is invalid | Errors |
 
 <br />
 <br />
