@@ -83,6 +83,7 @@
     - [User (w/ Private Attributes)](#user-w-private-attributes)
     - [User (w/ Auth Token)](#user-w-auth-token)
     - [Followed User)](#followed-user)
+    - [User Follower)](#user-follower)
   - [Tag Objects](#tag-objects)
     - [Tag](#tag)
     - [Keyword](#keyword)
@@ -643,7 +644,7 @@ Returns the followers for the User with the specified ```user_id```.
 
 | __data__ |
 | -------- |
-| Array of [User](#user) followers |
+| Array of [User Follower](#user-follower)s |
 
 <br />
 <br />
@@ -1296,6 +1297,16 @@ This includes the same keys as [User (w/ Private Attributes)](#user-w-private-at
 
 ### Followed User
 Response for any Follow User related requests.
+This includes the same keys as [User](#user), along with:
+
+```json
+{
+  "followed_at": "2014-04-28T16:50:42.352Z"
+}
+```
+
+### User Follower
+Response for any User Follower related requests.
 This includes the same keys as [User](#user), along with:
 
 ```json
