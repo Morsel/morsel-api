@@ -524,7 +524,7 @@ Returns the Authenticated User's Notifications. A Notification is created when s
 <br />
 
 ## GET ```/users/{user_id}/likeables``` - User Likeables
-Returns the Items that the User with the specified ```user_id``` has liked along with a `liked_at` DateTime key
+Returns the Likeables that the User with the specified ```user_id``` has liked along with a `liked_at` DateTime key
 
 ### Request
 
@@ -650,7 +650,7 @@ Returns the followers for the User with the specified ```user_id```.
 <br />
 
 ## GET ```/users/{user_id}/followables``` - User Followables
-Returns the Users that the User with the specified ```user_id``` is following along with a `followed_at` DateTime key
+Returns the Followables that the User with the specified ```user_id``` is following along with a `followed_at` DateTime key
 
 ### Request
 
