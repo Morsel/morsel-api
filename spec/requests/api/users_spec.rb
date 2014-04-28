@@ -407,7 +407,9 @@ describe 'Users API' do
     let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
     let(:followed_users_count) { rand(2..6) }
 
-    before { followed_users_count.times { Follow.create(followable: FactoryGirl.create(:user), follower: turd_ferg) }}
+    before do
+      followed_users_count.times { Follow.create(followable: FactoryGirl.create(:user), follower: turd_ferg) }
+    end
 
     it 'returns the Users that the User has followed' do
       get endpoint, api_key: api_key_for_user(turd_ferg), format: :json
@@ -415,6 +417,19 @@ describe 'Users API' do
       expect(response).to be_success
 
       expect(json_data.count).to eq(followed_users_count)
+    end
+
+    context 'unfollowed last User' do
+      before do
+        Follow.last.destroy
+      end
+      it 'returns one less followed user' do
+        get endpoint, api_key: api_key_for_user(turd_ferg), format: :json
+
+        expect(response).to be_success
+
+        expect(json_data.count).to eq(followed_users_count - 1)
+      end
     end
   end
 
@@ -432,6 +447,19 @@ describe 'Users API' do
       expect(response).to be_success
 
       expect(json_data.count).to eq(followers_count)
+    end
+
+    context 'last User unfollowed User' do
+      before do
+        Follow.last.destroy
+      end
+      it 'returns one less follower' do
+        get endpoint, api_key: api_key_for_user(turd_ferg), format: :json
+
+        expect(response).to be_success
+
+        expect(json_data.count).to eq(followers_count - 1)
+      end
     end
   end
 

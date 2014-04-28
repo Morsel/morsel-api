@@ -42,6 +42,7 @@
 
 class User < ActiveRecord::Base
   include Authority::UserAbilities, Authority::Abilities, Followable, PhotoUploadable, Taggable
+  acts_as_paranoid
   rolify
 
   self.authorizer_name = 'UserAuthorizer'

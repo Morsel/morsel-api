@@ -74,13 +74,13 @@ class UsersController < ApiController
   end
 
   def followed_users
-    custom_respond_with User.joins("LEFT OUTER JOIN follows ON follows.followable_type = 'User' AND follows.followable_id = users.id")
+    custom_respond_with User.joins("LEFT OUTER JOIN follows ON follows.followable_type = 'User' AND follows.followable_id = users.id AND follows.deleted_at is NULL AND users.deleted_at is NULL")
                         .where('follows.follower_id = ?', params[:id])
                         .order('follows.id DESC')
   end
 
   def liked_items
-    custom_respond_with Item.joins("LEFT OUTER JOIN likes ON likes.likeable_type = 'Item' AND likes.likeable_id = items.id")
+    custom_respond_with Item.joins("LEFT OUTER JOIN likes ON likes.likeable_type = 'Item' AND likes.likeable_id = items.id AND likes.deleted_at is NULL AND users.deleted_at is NULL")
                         .where('likes.liker_id = ?', params[:id])
                         .order('likes.id DESC')
   end
