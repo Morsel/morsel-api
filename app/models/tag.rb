@@ -28,5 +28,6 @@ class Tag < ActiveRecord::Base
   belongs_to :keyword
   delegate :name, to: :keyword
 
+  validates :keyword, presence: true
   validates :taggable, presence: true
 end

@@ -291,7 +291,6 @@ describe 'Users API' do
 
       expect(json_data['liked_items_count']).to eq(number_of_likes)
       expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.count)
-      expect(json_data['followed_users_count']).to be_false
     end
 
     it 'should be public' do
@@ -304,7 +303,6 @@ describe 'Users API' do
 
       expect(json_data['liked_items_count']).to eq(number_of_likes)
       expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.count)
-      expect(json_data['followed_users_count']).to be_false
     end
 
     context 'User has Morsel drafts' do
@@ -386,54 +384,59 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /users/{:user_id}/liked_items' do
-    let(:endpoint) { "/users/#{turd_ferg.id}/liked_items" }
-    let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
-    let(:liked_items_count) { rand(2..6) }
+  describe 'GET /users/{:user_id}/likeables' do
+    context 'type=Item' do
+      let(:endpoint) { "/users/#{turd_ferg.id}/likeables?type=Item" }
+      let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
+      let(:liked_items_count) { rand(2..6) }
 
-    before { liked_items_count.times { Like.create(likeable: FactoryGirl.create(:item_with_creator, morsel: FactoryGirl.create(:morsel_with_creator)), liker: turd_ferg) }}
+      before { liked_items_count.times { Like.create(likeable: FactoryGirl.create(:item_with_creator, morsel: FactoryGirl.create(:morsel_with_creator)), liker: turd_ferg) }}
 
-    it 'returns the Items that the User has liked' do
-      get endpoint, api_key: api_key_for_user(turd_ferg), format: :json
-
-      expect(response).to be_success
-
-      expect(json_data.count).to eq(liked_items_count)
-    end
-  end
-
-  describe 'GET /users/{:user_id}/followed_users' do
-    let(:endpoint) { "/users/#{turd_ferg.id}/followed_users" }
-    let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
-    let(:followed_users_count) { rand(2..6) }
-
-    before do
-      followed_users_count.times { Follow.create(followable: FactoryGirl.create(:user), follower: turd_ferg) }
-    end
-
-    it 'returns the Users that the User has followed' do
-      get endpoint, api_key: api_key_for_user(turd_ferg), format: :json
-
-      expect(response).to be_success
-
-      expect(json_data.count).to eq(followed_users_count)
-    end
-
-    context 'unfollowed last User' do
-      before do
-        Follow.last.destroy
-      end
-      it 'returns one less followed user' do
+      it 'returns the Items that the User has liked' do
         get endpoint, api_key: api_key_for_user(turd_ferg), format: :json
 
         expect(response).to be_success
 
-        expect(json_data.count).to eq(followed_users_count - 1)
+        expect(json_data.count).to eq(liked_items_count)
+        expect(json_data.first['liked_at']).to eq(Like.last.created_at.as_json)
       end
     end
   end
 
-  # Note: Should extract into a ControllerFollowableSharedExamples
+  describe 'GET /users/{:user_id}/followables' do
+    context 'type=User' do
+      let(:endpoint) { "/users/#{turd_ferg.id}/followables?type=User" }
+      let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
+      let(:followed_users_count) { rand(2..6) }
+
+      before do
+        followed_users_count.times { Follow.create(followable: FactoryGirl.create(:user), follower: turd_ferg) }
+      end
+
+      it 'returns the Users that the User has followed' do
+        get endpoint, api_key: api_key_for_user(turd_ferg), format: :json
+
+        expect(response).to be_success
+
+        expect(json_data.count).to eq(followed_users_count)
+        expect(json_data.first['followed_at']).to eq(Follow.last.created_at.as_json)
+      end
+
+      context 'unfollowed last User' do
+        before do
+          Follow.last.destroy
+        end
+        it 'returns one less followed user' do
+          get endpoint, api_key: api_key_for_user(turd_ferg), format: :json
+
+          expect(response).to be_success
+
+          expect(json_data.count).to eq(followed_users_count - 1)
+        end
+      end
+    end
+  end
+
   describe 'GET /users/{:user_id}/followers' do
     let(:endpoint) { "/users/#{turd_ferg.id}/followers" }
     let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }

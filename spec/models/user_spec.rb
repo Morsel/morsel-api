@@ -55,7 +55,9 @@ describe User do
   it { should respond_to(:sign_in_count) }
   it { should respond_to(:authentication_token) }
   it { should respond_to(:photo) }
-  it { should respond_to(:like_count) }
+  it { should respond_to(:liked_items_count) }
+  it { should respond_to(:follower_count) }
+  it { should respond_to(:followed_users_count) }
   it { should respond_to(:bio) }
 
   its(:authentication_token) { should be_nil }
@@ -132,7 +134,7 @@ describe User do
     end
   end
 
-  describe '#like_count' do
+  describe '#liked_items_count' do
     context 'items have been liked' do
       subject(:user_with_morsels) { FactoryGirl.create(:user_with_morsels) }
       let(:number_of_likes) { rand(2..6) }
@@ -140,7 +142,7 @@ describe User do
       before { number_of_likes.times { Like.create(likeable: FactoryGirl.create(:item_with_creator), liker: user_with_morsels) }}
 
       it 'returns the total number of Likes for the user' do
-        expect(user_with_morsels.like_count).to eq(number_of_likes)
+        expect(user_with_morsels.liked_items_count).to eq(number_of_likes)
       end
     end
   end

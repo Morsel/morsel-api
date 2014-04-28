@@ -29,8 +29,8 @@ class LikesController < ApiController
   def likers
     # TODO: Paginate
     custom_respond_with User.joins("LEFT OUTER JOIN likes ON likes.likeable_type = '#{likeable_type}' AND likes.liker_id = users.id AND likes.deleted_at is NULL AND users.deleted_at is NULL")
-                        .where('likes.likeable_id = ?', params[:id])
-                        .order('likes.id DESC')
+                          .where('likes.likeable_id = ?', params[:id])
+                          .order('likes.id DESC')
   end
 
   private

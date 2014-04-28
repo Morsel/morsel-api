@@ -11,6 +11,14 @@ shared_examples 'TaggableController' do
       expect_json_keys(json_data, new_tag, %w(id taggable_id taggable_type))
       expect(json_data['keyword']['name']).to eq(new_tag.name)
     end
+
+    context 'keyword_id is omitted' do
+      it 'returns an error' do
+        post endpoint, tag: { }, api_key: api_key_for_user(user), format: :json
+
+        expect(response).to_not be_success
+      end
+    end
   end
 
   describe 'GET /taggable/:id/cuisines' do

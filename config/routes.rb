@@ -79,8 +79,8 @@ MorselApp::Application.routes.draw do
 
     member do
       put 'updateindustry' => 'users#updateindustry'
-      get 'followed_users' => 'users#followed_users'
-      get 'liked_items' => 'users#liked_items'
+      get 'followables' => 'users#followables'
+      get 'likeables' => 'users#likeables'
     end
   end
 
