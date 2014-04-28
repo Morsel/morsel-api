@@ -450,6 +450,7 @@ describe 'Users API' do
       expect(response).to be_success
 
       expect(json_data.count).to eq(followers_count)
+      expect(json_data.first['followed_at']).to eq(Follow.last.created_at.as_json)
     end
 
     context 'last User unfollowed User' do
