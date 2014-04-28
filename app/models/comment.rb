@@ -36,4 +36,5 @@ class Comment < ActiveRecord::Base
 
   validates :commenter, presence: true
   validates :commentable, presence: true
+  validates :description, presence: true
 end

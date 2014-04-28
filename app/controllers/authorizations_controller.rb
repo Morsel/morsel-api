@@ -4,7 +4,7 @@ class AuthorizationsController < ApiController
 
   def create
     authorization_params = AuthorizationParams.build(params)
-    provider = authorization_params['provider']
+    provider = authorization_params.fetch(:provider)
     if provider == 'facebook'
       authorization = FacebookUserDecorator.new(current_user).build_facebook_authorization(authorization_params)
     elsif provider == 'twitter'

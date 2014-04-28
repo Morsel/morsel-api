@@ -5,10 +5,14 @@
   - [Errors](#errors)
   - [Pagination](#pagination)
   - [About the API Documentation](#about-the-api-documentation)
+
 - [Authentication](#authentication)
+
 - [Constants](#constants)
+
 - [Feed Methods](#feed-methods)
   - [GET ```/feed``` - Feed](#get-feed---feed)
+
 - [User Methods](#user-methods)
   - [POST ```/users``` - Create a new User](#post-users---create-a-new-user)
   - [POST ```/users/sign_in``` - User Authentication](#post-userssign_in---user-authentication)
@@ -23,7 +27,7 @@
   - [GET ```/users/authorizations``` - User Authorizations](#get-usersauthorizations---user-authorizations)
   - [GET ```/users/activities``` - User Activities](#get-usersactivities---user-activities)
   - [GET ```/users/notifications``` - User Notifications](#get-usersnotifications---user-notifications)
-  - [GET ```/users/{user_id}/likes``` - User Likes](#get-usersuser_idlikes---user-likes)
+  - [GET ```/users/{user_id}/likeables``` - User Likeables](#get-usersuser_idlikeables---user-likeables)
   - [POST ```/users/{user_id}/tags``` - Create User Tag](#post-usersuser_idtags---create-user-tag)
   - [DELETE ```/users/{user_id}/tags/{tag_id}``` - Delete User Tag](#delete-usersuser_idtagstag_id---delete-user-tag)
   - [GET ```/users/{user_id}/cuisines``` - User Cuisines](#get-usersuser_idcuisines---user-cuisines)
@@ -31,7 +35,8 @@
   - [POST ```/users/{user_id}/follow``` - Follow User](#post-usersuser_idfollow---follow-user)
   - [DELETE ```/users/{user_id}/follow``` - Unfollow User](#delete-usersuser_idfollow---unfollow-user)
   - [GET ```/users/{user_id}/followers``` - User Followers](#get-usersuser_idfollowers---user-followers)
-  - [GET ```/users/{user_id}/followed_users``` - User Followed Users](#get-usersuser_idfollowed_users---user-followed-users)
+  - [GET ```/users/{user_id}/followables``` - User Followables](#get-usersuser_idfollowables---user-followables)
+
 - [Item Methods](#item-methods)
   - [POST ```/items``` - Create a new Item](#post-items---create-a-new-item)
   - [GET ```/items/{item_id}``` - Item](#get-itemsitem_id---item)
@@ -43,6 +48,7 @@
   - [POST ```/items/{item_id}/comments``` - Create Comment](#post-itemsitem_idcomments---create-comment)
   - [GET ```/items/{item_id}/comments``` - Item Comments](#get-itemsitem_idcomments---item-comments)
   - [DELETE ```/items/{item_id}/comments/{comment_id}``` - Delete Comment](#delete-itemsitem_idcommentscomment_id---delete-comment)
+
 - [Morsel Methods](#morsel-methods)
   - [POST ```/morsels``` - Create a new Morsel](#post-morsels---create-a-new-morsel)
   - [GET ```/morsels``` - Morsels](#get-morsels---morsels)
@@ -51,14 +57,17 @@
   - [PUT ```/morsels/{morsel_id}``` - Update Morsel](#put-morselsmorsel_id---update-morsel)
   - [POST ```/morsels/{morsel_id}/publish``` - Publish Morsel](#post-morselsmorsel_idpublish---Publish-morsel)
   - [DELETE ```/morsels/{morsel_id}``` - Delete Morsel](#delete-morselsmorsel_id---delete-morsel)
+
 - [Keyword Methods](#keyword-methods)
   - [GET ```/cuisines``` - Cuisines](#get-cuisines---cuisines)
   - [GET ```/cuisines/{cuisine_id}/users``` - Cuisine Users](#get-cuisinescuisine_id---cuisine-users)
   - [GET ```/specialties``` - Specialties](#get-specialties---specialties)
   - [GET ```/specialties/{specialty_id}/users``` - Specialty Users](#get-specialtiesspecialty_id---specialty-users)
+
 - [Misc Methods](#misc-methods)
   - [GET ```/status``` - Status](#get-status---status)
   - [GET ```/configuration``` - Configuration](#get-configuration---configuration)
+
 - [Response Objects](#response-objects)
   - [Authorization Objects](#authorization-objects)
     - [Authorization](#authorization)
@@ -66,16 +75,14 @@
     - [Comment](#comment)
   - [Item Objects](#item-objects)
     - [Item](#item)
-    - [Item (for Feed)](#item-for-feed)
-    - [Item (w/ Morsel)](#item-w-morsel)
-    - [Item (Authenticated)](#item-authenticated)
-    - [Item (Authenticated w/ Morsel)](#item-authenticated-w-morsel)
+    - [Liked Item](#liked-item)
   - [Morsel Objects](#morsel-objects)
     - [Morsel](#morsel)
   - [User Objects](#user-objects)
     - [User](#user)
     - [User (w/ Private Attributes)](#user-w-private-attributes)
     - [User (w/ Auth Token)](#user-w-auth-token)
+    - [Followed User)](#followed-user)
   - [Tag Objects](#tag-objects)
     - [Tag](#tag)
     - [Keyword](#keyword)
@@ -87,6 +94,7 @@
     - [Notification](#notification)
   - [Misc Objects](#misc-objects)
     - [Configuration](#configuration)
+
 - [Notes](#notes)
   - [sort_order](#sort_order)
 
@@ -514,14 +522,20 @@ Returns the Authenticated User's Notifications. A Notification is created when s
 <br />
 <br />
 
-## GET ```/users/{user_id}/likes``` - User Likes
-Returns the Likeables that the User with the specified `user_id` has liked
+## GET ```/users/{user_id}/likeables``` - User Likeables
+Returns the Items that the User with the specified ```user_id``` has liked along with a `liked_at` DateTime key
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| type | String | The type of likeables to return. Currently only 'Item' is acceptable. | | X |
 
 ### Response
 
-| __data__ |
-| -------- |
-| Array of [Likeable](#notification) |
+| type= | __data__ |
+| --------- | -------- |
+| Item | Array of [Liked Item](#liked-item)s |
 
 <br />
 <br />
@@ -634,14 +648,20 @@ Returns the followers for the User with the specified ```user_id```.
 <br />
 <br />
 
-## GET ```/users/{user_id}/followed_users``` - User Followed Users
-Returns the Users that the User with the specified ```user_id``` is following
+## GET ```/users/{user_id}/followables``` - User Followables
+Returns the Users that the User with the specified ```user_id``` is following along with a `followed_at` DateTime key
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| type | String | The type of followables to return. Currently only 'User' is acceptable. | | X |
 
 ### Response
 
-| __data__ |
-| -------- |
-| Array of followed [User](#user) |
+| type= | __data__ |
+| --------- | -------- |
+| User | Array of [Followed User](#follow-user)s |
 
 <br />
 <br />
@@ -667,7 +687,7 @@ Image processing is done in a background job. `photo_processing` will be set to 
 
 | Condition | __data__ |
 | --------- | -------- |
-| Authenticated | Created [Item (Authenticated)](#item-authenticated) |
+| Authenticated | Created [Item](#item) |
 | Default | Created [Item](#item) |
 
 <br />
@@ -680,7 +700,7 @@ Returns Item with the specified ```item_id```
 
 | __data__ |
 | -------- |
-| [Item (Authenticated)](#item-authenticated) |
+| [Item](#item) |
 
 <br />
 <br />
@@ -701,7 +721,7 @@ Updates the Item with the specified ```item_id```
 
 | __data__ |
 | -------- |
-| [Item (Authenticated)](#item-authenticated) |
+| [Item](#item) |
 
 <br />
 <br />
@@ -1073,136 +1093,92 @@ Used by third-party services to ping the API.
       "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
       "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
     },
-    "photo_processing": null
+    "photo_processing": null,
+    "liked": false
   }
 ```
 
-### Item (for Feed)
+### Liked Item
+Response for any Like Item related requests.
+This includes the same keys as [Item](#item), along with:
 
 ```json
-  {
-    "id": 2,
-    "description": null,
-    "created_at": "2014-01-07T16:34:43.071Z",
-    "updated_at": "2014-01-07T16:34:43.071Z",
-    "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
+{
+  "liked_at": "2014-04-28T16:50:42.352Z",
+  "creator": {
+    "id": 3,
+    "username": "turdferg",
+    "first_name": "Turd",
+    "last_name": "Ferguson",
+    "created_at": "2014-01-07T18:35:57.877Z",
+    "updated_at": "2014-01-07T18:35:57.877Z",
+    "title": "Executive Chef at Jeopardy",
+    "bio": "Suck It, Trebek",
     "photos": {
-      "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_80x80":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_100x100":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_240x240":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_480x480":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
+      "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+      "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+      "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+      "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+    }
+  },
+  "morsel": {
+    "id": 4,
+    "title": "Butter Rocks!",
+    "creator_id": 3,
+    "created_at": "2014-01-07T16:34:44.862Z",
+    "updated_at": "2014-01-07T16:34:44.862Z",
+    "slug": "butter-rocks",
+    "draft": false,
+    "primary_item_id": 2,
+    "published_at": "2014-01-07T16:34:44.862Z",
+    "photos": {
+      "_800x600":"https://morsel-staging.s3.amazonaws.com/morsel-images/4/648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
     },
-    "photo_processing": null,
-    "in_progression": false,
-    "liked": false,
+    "url": "http://eatmorsel.com/turdferg/4-butter-rocks",
+    "facebook_mrsl": "http://mrsl.co/facebook",
+    "twitter_mrsl": "http://mrsl.co/twitter",
     "creator": {
       "id": 3,
       "username": "turdferg",
       "first_name": "Turd",
       "last_name": "Ferguson",
+      "created_at": "2014-01-07T18:35:57.877Z",
+      "updated_at": "2014-01-07T18:35:57.877Z",
+      "title": "Executive Chef at Jeopardy",
+      "bio": "Suck It, Trebek",
       "photos": {
         "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
         "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
         "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
         "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-      },
-      "photo_processing": null
+      }
     },
-    "morsel": {
-      "id": 4,
-      "title": "Butter Rocks!",
-      "slug": "butter-rocks"
-      "created_at": "2014-01-07T16:34:44.862Z",
-    }
+    "items": [
+      {
+        "id": 2,
+        "description": null,
+        "creator_id": 3,
+        "created_at": "2014-01-07T16:34:43.071Z",
+        "updated_at": "2014-01-07T16:34:43.071Z",
+        "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
+        "photos": {
+          "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+          "_80x80":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+          "_100x100":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+          "_240x240":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+          "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+          "_480x480":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+          "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+          "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
+        },
+        "sort_order": 1,
+        "url": "http://eatmorsel.com/turdferg/4-butter-rocks/1"
+      }
+    ]
   }
+}
 ```
 
-### Item (w/ Morsel)
-morsel_id exists
-
-```json
-  {
-    "id": 2,
-    "description": null,
-    "creator_id": 1,
-    "created_at": "2014-01-07T16:34:43.071Z",
-    "updated_at": "2014-01-07T16:34:43.071Z",
-    "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
-    "photos": {
-      "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_80x80":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_100x100":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_240x240":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_480x480":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
-    },
-    "photo_processing": null,
-    "morsel_id": 4,
-    "sort_order": 1,
-    "url": "http://eatmorsel.com/marty/1-butter/1"
-  }
-```
-
-### Item (Authenticated)
-api_key exists
-
-```json
-  {
-    "id": 2,
-    "description": null,
-    "creator_id": 1,
-    "created_at": "2014-01-07T16:34:43.071Z",
-    "updated_at": "2014-01-07T16:34:43.071Z",
-    "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
-    "photos": {
-      "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_80x80":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_100x100":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_240x240":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_480x480":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
-    },
-    "photo_processing": null,
-    "liked": false,
-  }
-```
-
-### Item (Authenticated w/ Morsel)
-api_key && morsel_id exist
-
-```json
-  {
-    "id": 2,
-    "description": null,
-    "creator_id": 1,
-    "created_at": "2014-01-07T16:34:43.071Z",
-    "updated_at": "2014-01-07T16:34:43.071Z",
-    "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
-    "photos": {
-      "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_80x80":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_100x100":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_240x240":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_480x480":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
-    },
-    "photo_processing": null,
-    "morsel_id": 4,
-    "sort_order": 1,
-    "url": "http://eatmorsel.com/marty/1-butter/1",
-    "liked": false,
-  }
-```
 
 ## Morsel Objects
 
@@ -1318,6 +1294,15 @@ This includes the same keys as [User (w/ Private Attributes)](#user-w-private-at
 }
 ```
 
+### Followed User
+Response for any Follow User related requests.
+This includes the same keys as [User](#user), along with:
+
+```json
+{
+  "followed_at": "2014-04-28T16:50:42.352Z"
+}
+```
 
 ## Feed Objects
 

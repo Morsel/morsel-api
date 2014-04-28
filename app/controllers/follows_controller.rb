@@ -1,5 +1,5 @@
 class FollowsController < ApiController
-  PUBLIC_ACTIONS = [:followers, :followed_users]
+  PUBLIC_ACTIONS = [:followers]
   authorize_actions_for Follow, except: PUBLIC_ACTIONS, actions: { followers: :read, following: :read }
 
   def create
@@ -30,8 +30,8 @@ class FollowsController < ApiController
   def followers
     # TODO: Paginate
     custom_respond_with User.joins("LEFT OUTER JOIN follows ON follows.followable_type = '#{followable_type}' AND follows.follower_id = users.id AND follows.deleted_at is NULL AND users.deleted_at is NULL")
-                        .where('follows.followable_id = ?', params[:id])
-                        .order('follows.id DESC')
+                          .where('follows.followable_id = ?', params[:id])
+                          .order('follows.id DESC')
   end
 
   private

@@ -1,5 +1,5 @@
 class UsersController < ApiController
-  PUBLIC_ACTIONS = [:show, :checkusername, :reserveusername, :setrole, :unsubscribe, :followed_users, :liked_items]
+  PUBLIC_ACTIONS = [:show, :checkusername, :reserveusername, :setrole, :unsubscribe, :followables, :likeables]
 
   def me
     custom_respond_with current_user, serializer: UserWithPrivateAttributesSerializer
@@ -73,16 +73,34 @@ class UsersController < ApiController
     end
   end
 
-  def followed_users
-    custom_respond_with User.joins("LEFT OUTER JOIN follows ON follows.followable_type = 'User' AND follows.followable_id = users.id AND follows.deleted_at is NULL AND users.deleted_at is NULL")
-                        .where('follows.follower_id = ?', params[:id])
-                        .order('follows.id DESC')
+  def followables
+    followable_type = params.fetch(:type)
+    if followable_type == 'User'
+      serializer = FollowedUserSerializer
+    end
+
+    if serializer
+      custom_respond_with User.joins("LEFT OUTER JOIN follows ON follows.followable_type = '#{followable_type}' AND follows.followable_id = users.id AND follows.deleted_at is NULL AND users.deleted_at is NULL")
+                            .where('follows.follower_id = ?', params[:id])
+                            .order('follows.id DESC'),
+                          each_serializer: serializer,
+                          context: {follower_id: params[:id]}
+    end
   end
 
-  def liked_items
-    custom_respond_with Item.joins("LEFT OUTER JOIN likes ON likes.likeable_type = 'Item' AND likes.likeable_id = items.id AND likes.deleted_at is NULL AND items.deleted_at is NULL")
-                        .where('likes.liker_id = ?', params[:id])
-                        .order('likes.id DESC')
+  def likeables
+    likeable_type = params.fetch(:type)
+    if likeable_type == 'Item'
+      serializer = LikedItemSerializer
+    end
+
+    if serializer
+      custom_respond_with Item.joins("LEFT OUTER JOIN likes ON likes.likeable_type = '#{likeable_type}' AND likes.likeable_id = items.id AND likes.deleted_at is NULL AND items.deleted_at is NULL")
+                            .where('likes.liker_id = ?', params[:id])
+                            .order('likes.id DESC'),
+                          each_serializer: serializer,
+                          context: {liker_id: params[:id]}
+    end
   end
 
   class UserParams
