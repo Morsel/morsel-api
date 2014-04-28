@@ -80,7 +80,7 @@ class UsersController < ApiController
   end
 
   def liked_items
-    custom_respond_with Item.joins("LEFT OUTER JOIN likes ON likes.likeable_type = 'Item' AND likes.likeable_id = items.id AND likes.deleted_at is NULL AND users.deleted_at is NULL")
+    custom_respond_with Item.joins("LEFT OUTER JOIN likes ON likes.likeable_type = 'Item' AND likes.likeable_id = items.id AND likes.deleted_at is NULL AND items.deleted_at is NULL")
                         .where('likes.liker_id = ?', params[:id])
                         .order('likes.id DESC')
   end
