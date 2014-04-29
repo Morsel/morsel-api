@@ -1,3 +1,21 @@
+# ## Schema Information
+#
+# Table name: `tags`
+#
+# ### Columns
+#
+# Name                 | Type               | Attributes
+# -------------------- | ------------------ | ---------------------------
+# **`id`**             | `integer`          | `not null, primary key`
+# **`tagger_id`**      | `integer`          |
+# **`keyword_id`**     | `integer`          |
+# **`taggable_id`**    | `integer`          |
+# **`taggable_type`**  | `string(255)`      |
+# **`deleted_at`**     | `datetime`         |
+# **`created_at`**     | `datetime`         |
+# **`updated_at`**     | `datetime`         |
+#
+
 require 'spec_helper'
 
 describe Tag do

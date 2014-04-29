@@ -192,9 +192,7 @@ describe Morsel do
     context 'with comments' do
       let(:comments_count) { rand(3..6) }
       before do
-        comments_count.times do
-          morsel_with_items.items.sample.commenters << FactoryGirl.create(:user)
-        end
+        comments_count.times { Comment.create(commenter: FactoryGirl.create(:user), commentable: morsel_with_items.items.sample, description: Faker::Lorem.sentence(rand(1..3))) }
       end
 
       describe '.total_comment_count' do

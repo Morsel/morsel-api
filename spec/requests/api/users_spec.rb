@@ -10,14 +10,15 @@ describe 'Users API' do
   end
 
   describe 'GET /users/me users#me' do
+    let(:endpoint) { '/users/me' }
     let(:user) { FactoryGirl.create(:user) }
 
     it 'returns the authenticated User' do
-      get '/users/me', api_key: api_key_for_user(user), format: :json
+      get endpoint, api_key: api_key_for_user(user), format: :json
 
       expect(response).to be_success
 
-      expect_json_keys(json_data, user, %w(id username first_name last_name sign_in_count title bio staff email))
+      expect_json_keys(json_data, user, %w(id username first_name last_name sign_in_count bio staff email))
     end
 
     context 'has a Morsel draft' do
@@ -27,7 +28,7 @@ describe 'Users API' do
       end
 
       it 'returns 1 for draft_count' do
-        get '/users/me', api_key: api_key_for_user(user_with_morsels), format: :json
+        get endpoint, api_key: api_key_for_user(user_with_morsels), format: :json
 
         expect(response).to be_success
 
@@ -37,7 +38,7 @@ describe 'Users API' do
 
     context 'invalid api_key' do
       it 'returns an unauthorized error' do
-        get '/users/me', api_key: '1:234567890', format: :json
+        get endpoint, api_key: '1:234567890', format: :json
 
         expect(response).to_not be_success
       end
@@ -45,9 +46,10 @@ describe 'Users API' do
   end
 
   describe 'GET /users/validateusername users#validateusername' do
+    let(:endpoint) { '/users/validateusername' }
     let(:user) { FactoryGirl.create(:user) }
     it 'returns true if the username does NOT exist' do
-      get '/users/validateusername', username: 'not_a_username', format: :json
+      get endpoint, username: 'not_a_username', format: :json
 
       expect(response).to be_success
 
@@ -55,35 +57,35 @@ describe 'Users API' do
     end
 
     it 'returns an error if the username is nil' do
-      get '/users/validateusername', format: :json
+      get endpoint, format: :json
 
       expect(response).to_not be_success
       expect(json_errors['username']).to include('is required')
     end
 
     it 'returns an error if the username is too long' do
-      get '/users/validateusername', username: 'longlonglonglong', format: :json
+      get endpoint, username: 'longlonglonglong', format: :json
 
       expect(response).to_not be_success
       expect(json_errors['username']).to include('must be less than 16 characters')
     end
 
     it 'returns an error for spaces' do
-      get '/users/validateusername', username: 'Bob Dole', format: :json
+      get endpoint, username: 'Bob Dole', format: :json
 
       expect(response).to_not be_success
       expect(json_errors['username']).to include('cannot contain spaces')
     end
 
     it 'returns an error if the username already exists' do
-      get '/users/validateusername', username: user.username, format: :json
+      get endpoint, username: user.username, format: :json
 
       expect(response).to_not be_success
       expect(json_errors['username']).to include('has already been taken')
     end
 
     it 'ignores case' do
-      get '/users/validateusername', username: user.username.swapcase, format: :json
+      get endpoint, username: user.username.swapcase, format: :json
 
       expect(response).to_not be_success
       expect(json_errors['username']).to include('has already been taken')
@@ -92,7 +94,7 @@ describe 'Users API' do
     context 'username is a reserved path' do
       let(:sample_reserved_path) { ReservedPaths.non_username_paths.sample }
       it 'returns true to say the username already exists' do
-        get '/users/validateusername', username: sample_reserved_path, format: :json
+        get endpoint, username: sample_reserved_path, format: :json
 
         expect(response).to_not be_success
         expect(json_errors['username']).to include('has already been taken')
@@ -101,12 +103,13 @@ describe 'Users API' do
   end
 
   describe 'POST /users/reserveusername users#reserveusername' do
+    let(:endpoint) { '/users/reserveusername' }
     let(:user) { FactoryGirl.create(:user) }
     let(:fake_email) { Faker::Internet.email }
     let(:fake_username) { "user_#{Faker::Lorem.characters(10)}" }
 
     it 'creates a user with the specified username and email' do
-      post '/users/reserveusername',  user: {
+      post endpoint,  user: {
                                         email: fake_email,
                                         username: fake_username
                                       },
@@ -126,7 +129,7 @@ describe 'Users API' do
     it 'sends an email' do
       expect{
         Sidekiq::Testing.inline! {
-          post '/users/reserveusername',  user: {
+          post endpoint,  user: {
                                             email: fake_email,
                                             username: fake_username
                                           },
@@ -137,7 +140,7 @@ describe 'Users API' do
 
     it 'creates a user_event' do
       expect {
-        post '/users/reserveusername',  user: {
+        post endpoint,  user: {
                                           email: fake_email,
                                           username: fake_username
                                         },
@@ -159,7 +162,7 @@ describe 'Users API' do
 
     context 'email already registered' do
       it 'returns an error' do
-        post '/users/reserveusername',  user: {
+        post endpoint,  user: {
                                           email: user.email,
                                           username: fake_username
                                         },
@@ -172,7 +175,7 @@ describe 'Users API' do
 
     context 'username already registered' do
       it 'returns an error' do
-        post '/users/reserveusername',  user: {
+        post endpoint,  user: {
                                           email: fake_email,
                                           username: user.username
                                         },
@@ -185,25 +188,27 @@ describe 'Users API' do
   end
 
   describe 'PUT /users/:user_id/updateindustry users#updateindustry' do
+    let(:endpoint) { "/users/#{user.id}/updateindustry" }
     let(:user) { FactoryGirl.create(:user) }
 
     it 'sets the industry for the specified User' do
-      put "/users/#{user.id}/updateindustry", user: { industry: 'media' }, format: :json
+      put endpoint, user: { industry: 'media' }, format: :json
       expect(response).to be_success
       expect(User.find(user.id).industry).to eq('media')
     end
 
     context 'invalid industry passed' do
       it 'throws an error' do
-        put "/users/#{user.id}/updateindustry", user: { industry: 'butt' }, format: :json
+        put endpoint, user: { industry: 'butt' }, format: :json
         expect(response).to_not be_success
       end
     end
   end
 
   describe 'POST /users registrations#create' do
+    let(:endpoint) { '/users' }
     it 'creates a new User' do
-      post '/users', format: :json, user: { email: Faker::Internet.email,
+      post endpoint, format: :json, user: { email: Faker::Internet.email,
                                             password: 'password',
                                             first_name: 'Foo',
                                             last_name: 'Bar',
@@ -219,7 +224,7 @@ describe 'Users API' do
       expect(json_data['id']).to_not be_nil
       new_user = User.find json_data['id']
 
-      expect_json_keys(json_data, new_user, %w(id username first_name last_name sign_in_count title bio))
+      expect_json_keys(json_data, new_user, %w(id username first_name last_name sign_in_count bio))
       expect(json_data['auth_token']).to eq(new_user.authentication_token)
       expect(json_data['photos']).to_not be_nil
       expect_nil_json_keys(json_data, %w(password encrypted_password))
@@ -227,7 +232,7 @@ describe 'Users API' do
 
     it 'creates a user_event' do
       expect {
-        post '/users', user: { email: Faker::Internet.email, password: 'password',
+        post endpoint, user: { email: Faker::Internet.email, password: 'password',
                         first_name: 'Foo', last_name: 'Bar', username: "user_#{Faker::Lorem.characters(10)}",
                         bio: 'Foo to the Stars'
                        },
@@ -257,7 +262,7 @@ describe 'Users API' do
 
       expect(response).to be_success
 
-      expect_json_keys(json_data, user, %w(id username first_name last_name title bio))
+      expect_json_keys(json_data, user, %w(id username first_name last_name bio))
       expect(json_data['auth_token']).to eq(user.authentication_token)
       expect(json_data['photos']).to be_nil
       expect(json_data['sign_in_count']).to eq(1)
@@ -272,17 +277,18 @@ describe 'Users API' do
   end
 
   describe 'GET /users/{:user_id|user_username} users#show' do
+    let(:endpoint) { "/users/#{user_with_morsels.id}" }
     let(:user_with_morsels) { FactoryGirl.create(:user_with_morsels) }
     let(:number_of_likes) { rand(2..6) }
 
     before { number_of_likes.times { Like.create(likeable: FactoryGirl.create(:item_with_creator), liker: user_with_morsels) }}
 
     it 'returns the User' do
-      get "/users/#{user_with_morsels.id}", api_key: api_key_for_user(user_with_morsels), format: :json
+      get endpoint, api_key: api_key_for_user(user_with_morsels), format: :json
 
       expect(response).to be_success
 
-      expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name title bio industry))
+      expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name bio industry))
       expect_nil_json_keys(json_data, %w(password encrypted_password staff draft_count sign_in_count photo_processing auth_token email))
 
       expect(json_data['photos']).to be_nil
@@ -294,11 +300,11 @@ describe 'Users API' do
     end
 
     it 'should be public' do
-      get "/users/#{user_with_morsels.id}", format: :json
+      get endpoint, format: :json
 
       expect(response).to be_success
 
-      expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name title bio industry facebook_uid twitter_username))
+      expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name bio industry facebook_uid twitter_username))
       expect_nil_json_keys(json_data, %w(password encrypted_password staff draft_count sign_in_count photo_processing auth_token email))
 
       expect(json_data['liked_items_count']).to eq(number_of_likes)
@@ -311,7 +317,7 @@ describe 'Users API' do
       end
 
       it '`morsel_count` should NOT include draft Morsels' do
-        get "/users/#{user_with_morsels.id}", format: :json
+        get endpoint, format: :json
 
         expect(response).to be_success
         expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.published.count)
@@ -324,7 +330,7 @@ describe 'Users API' do
 
         expect(response).to be_success
 
-        expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name title bio industry))
+        expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name bio industry))
         expect_nil_json_keys(json_data, %w(password encrypted_password staff draft_count sign_in_count photo_processing auth_token email))
 
         expect(json_data['photos']).to be_nil
@@ -343,7 +349,7 @@ describe 'Users API' do
       end
 
       it 'returns the User with the appropriate image sizes' do
-        get "/users/#{user_with_morsels.id}", api_key: api_key_for_user(user_with_morsels), format: :json
+        get endpoint, api_key: api_key_for_user(user_with_morsels), format: :json
 
         expect(response).to be_success
 
@@ -362,7 +368,7 @@ describe 'Users API' do
       end
 
       it 'returns following=true' do
-        get "/users/#{user_with_morsels.id}", api_key: api_key_for_user(follower), format: :json
+        get endpoint, api_key: api_key_for_user(follower), format: :json
 
         expect(response).to be_success
         expect(json_data['following']).to be_true
@@ -376,7 +382,7 @@ describe 'Users API' do
         end
 
         it 'returns the correct following_count' do
-          get "/users/#{user_with_morsels.id}", api_key: api_key_for_user(follower), format: :json
+          get endpoint, api_key: api_key_for_user(follower), format: :json
           expect(json_data['followed_users_count']).to eq(1)
           expect(json_data['follower_count']).to eq(1)
         end
@@ -468,12 +474,13 @@ describe 'Users API' do
   end
 
   describe 'PUT /users/{:user_id} users#update' do
+    let(:endpoint) { "/users/#{turd_ferg.id}" }
     let(:turd_ferg) { FactoryGirl.create(:turd_ferg) }
 
     it 'updates the User' do
       new_first_name = 'Bob'
 
-      put "/users/#{turd_ferg.id}", api_key: api_key_for_user(turd_ferg), format: :json, user: { first_name: new_first_name }
+      put endpoint, api_key: api_key_for_user(turd_ferg), format: :json, user: { first_name: new_first_name }
 
       expect(response).to be_success
 
@@ -484,9 +491,9 @@ describe 'Users API' do
   end
 
   describe 'GET /users/{:user_id|user_username}/morsels' do
+    let(:endpoint) { "/users/#{user_with_morsels.id}/morsels" }
     let(:morsels_count) { 3 }
     let(:user_with_morsels) { FactoryGirl.create(:user_with_morsels, morsels_count: morsels_count) }
-    let(:endpoint) { "/users/#{user_with_morsels.id}/morsels" }
 
     it_behaves_like 'TimelinePaginateable' do
       let(:user) { FactoryGirl.create(:user_with_morsels) }
@@ -546,13 +553,14 @@ describe 'Users API' do
     end
 
     it 'returns the current_user\'s Authorizations' do
-      get "/users/authorizations", api_key: api_key_for_user(user), format: :json
+      get endpoint, api_key: api_key_for_user(user), format: :json
 
       expect(response).to be_success
     end
   end
 
   describe 'POST /users/authorizations' do
+    let(:endpoint) { '/users/authorizations' }
     let(:chef) { FactoryGirl.create(:chef) }
 
     context 'Twitter' do
@@ -568,7 +576,7 @@ describe 'Users API' do
         twitter_user.stub(:screen_name).and_return(dummy_screen_name)
         twitter_user.stub(:url).and_return("https://twitter.com/#{dummy_screen_name}")
 
-        post '/users/authorizations', api_key: api_key_for_user(chef),
+        post endpoint, api_key: api_key_for_user(chef),
                                       provider: 'twitter',
                                       token: dummy_token,
                                       secret: dummy_secret,
@@ -603,7 +611,7 @@ describe 'Users API' do
 
         client.stub(:get_object).and_return(facebook_user)
 
-        post '/users/authorizations', api_key: api_key_for_user(chef),
+        post endpoint, api_key: api_key_for_user(chef),
                                       provider: 'facebook',
                                       token: dummy_token,
                                       format: :json
@@ -625,11 +633,12 @@ describe 'Users API' do
   end
 
   describe 'GET /users/unsubscribe users#unsubscribe' do
+    let(:endpoint) { '/users/unsubscribe' }
     let(:user) { FactoryGirl.create(:user) }
 
     it 'unsubscribes the user' do
       expect(user.unsubscribed).to be_false
-      post '/users/unsubscribe', email: user.email
+      post endpoint, email: user.email
       expect(response).to be_success
       user.reload
       expect(user.unsubscribed).to be_true

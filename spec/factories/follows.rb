@@ -15,20 +15,9 @@
 # **`deleted_at`**       | `datetime`         |
 #
 
-class Follow < ActiveRecord::Base
-  include Authority::Abilities, UserCreatable
-
-  include Activityable
-  def self.activity_notification; true end
-  def subject; followable end
-
-  acts_as_paranoid
-
-  belongs_to :followable, polymorphic: true
-  belongs_to :follower, class_name: 'User'
-  alias_attribute :creator, :follower
-  alias_attribute :user, :follower
-
-  validates :follower_id, uniqueness: { scope: [:deleted_at, :followable_id] }
-  validates :followable, presence: true
+FactoryGirl.define do
+  factory :user_follow, class: Follow do
+    association(:follower, factory: :user)
+    association(:followable, factory: :user)
+  end
 end

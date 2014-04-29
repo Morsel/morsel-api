@@ -6,12 +6,13 @@ describe 'Items API' do
   let(:items_count) { 4 }
 
   describe 'POST /items items#create' do
+    let(:endpoint) { '/items' }
     let(:chef) { FactoryGirl.create(:chef) }
     let(:nonce) { '1234567890-1234-1234-1234-1234567890123' }
     let(:some_morsel) { FactoryGirl.create(:morsel_with_creator) }
 
     it 'creates an Item' do
-      post '/items',  api_key: api_key_for_user(chef),
+      post endpoint,  api_key: api_key_for_user(chef),
                         format: :json,
                         item: {
                           description: 'It\'s not a toomarh!',
@@ -37,7 +38,7 @@ describe 'Items API' do
       let(:morsel_with_items) { FactoryGirl.create(:morsel_with_items) }
 
       it 'changes the sort_order' do
-        post '/items',  api_key: api_key_for_user(chef),
+        post endpoint,  api_key: api_key_for_user(chef),
                           format: :json,
                           item: {
                             description: 'Parabol.',
@@ -58,7 +59,7 @@ describe 'Items API' do
           let(:descriptions) { [ 'Should be first', 'Should be second', 'Should be third'] }
 
           before do
-            post '/items',  api_key: api_key_for_user(chef),
+            post endpoint,  api_key: api_key_for_user(chef),
                               format: :json,
                               item: {
                                 description: descriptions[1],
@@ -66,7 +67,7 @@ describe 'Items API' do
                                 morsel_id: existing_morsel.id
                               }
 
-            post '/items',  api_key: api_key_for_user(chef),
+            post endpoint,  api_key: api_key_for_user(chef),
                               format: :json,
                               item: {
                                 description: descriptions[0],
@@ -74,7 +75,7 @@ describe 'Items API' do
                                 morsel_id: existing_morsel.id
                               }
 
-            post '/items',  api_key: api_key_for_user(chef),
+            post endpoint,  api_key: api_key_for_user(chef),
                               format: :json,
                               item: {
                                 description: descriptions[2],
@@ -94,7 +95,7 @@ describe 'Items API' do
 
     context 'current_user is NOT a :chef' do
       it 'should NOT be authorized' do
-        post '/items',  api_key: api_key_for_user(FactoryGirl.create(:user)),
+        post endpoint,  api_key: api_key_for_user(FactoryGirl.create(:user)),
                           format: :json,
                           item: {
                             description: 'Holy Diver',
@@ -108,10 +109,11 @@ describe 'Items API' do
   end
 
   describe 'GET /items/{:item_id} items#show' do
+    let(:endpoint) { "/items/#{item_with_creator_and_morsel.id}" }
     let(:item_with_creator_and_morsel) { FactoryGirl.create(:item_with_creator_and_morsel) }
 
     it 'returns the Item' do
-      get "/items/#{item_with_creator_and_morsel.id}", api_key: api_key_for_user(turd_ferg), format: :json
+      get endpoint, api_key: api_key_for_user(turd_ferg), format: :json
 
       expect(response).to be_success
 
@@ -127,7 +129,7 @@ describe 'Items API' do
       end
 
       it 'returns the User with the appropriate image sizes' do
-        get "/items/#{item_with_creator_and_morsel.id}", api_key: api_key_for_user(turd_ferg), format: :json
+        get endpoint, api_key: api_key_for_user(turd_ferg), format: :json
 
         expect(response).to be_success
 
@@ -140,18 +142,19 @@ describe 'Items API' do
     end
 
     it 'should be public' do
-      get "/items/#{item_with_creator_and_morsel.id}", format: :json
+      get endpoint, format: :json
 
       expect(response).to be_success
     end
   end
 
   describe 'PUT /items/{:item_id} items#update' do
+    let(:endpoint) { "/items/#{existing_item.id}" }
     let(:existing_item) { FactoryGirl.create(:item_with_creator_and_morsel, creator: chef) }
     let(:new_description) { 'The proof is in the puddin' }
 
     it 'updates the Item' do
-      put "/items/#{existing_item.id}", api_key: api_key_for_user(chef),
+      put endpoint, api_key: api_key_for_user(chef),
                                             format: :json,
                                             item: { description: new_description }
 
@@ -163,7 +166,7 @@ describe 'Items API' do
 
     context 'current_user is NOT Item creator' do
       it 'should NOT be authorized' do
-        put "/items/#{existing_item.id}", api_key: api_key_for_user(FactoryGirl.create(:user)),
+        put endpoint, api_key: api_key_for_user(FactoryGirl.create(:user)),
                                               format: :json,
                                               item: { description: new_description }
 
@@ -211,10 +214,11 @@ describe 'Items API' do
   end
 
   describe 'DELETE /items/{:item_id} items#destroy' do
+    let(:endpoint) { "/items/#{existing_item.id}" }
     let(:existing_item) { FactoryGirl.create(:item_with_creator, creator: chef) }
 
     it 'soft deletes the Item' do
-      delete "/items/#{existing_item.id}", api_key: api_key_for_user(chef), format: :json
+      delete endpoint, api_key: api_key_for_user(chef), format: :json
 
       expect(response).to be_success
       expect(Item.find_by(id: existing_item.id)).to be_nil
@@ -222,7 +226,7 @@ describe 'Items API' do
 
     context 'current_user is NOT Item creator' do
       it 'should NOT be authorized' do
-        delete "/items/#{existing_item.id}", api_key: api_key_for_user(FactoryGirl.create(:user)), format: :json
+        delete endpoint, api_key: api_key_for_user(FactoryGirl.create(:user)), format: :json
 
         expect(response).to_not be_success
       end
@@ -230,10 +234,11 @@ describe 'Items API' do
   end
 
   describe 'POST /items/{:item_id}/like' do
+    let(:endpoint) { "/items/#{item.id}/like" }
     let(:item) { FactoryGirl.create(:item_with_creator) }
 
     it 'likes the Item for current_user' do
-      post "/items/#{item.id}/like", api_key: api_key_for_user(chef), format: :json
+      post endpoint, api_key: api_key_for_user(chef), format: :json
 
       expect(response).to be_success
       expect(item.likers).to include(chef)
@@ -241,7 +246,7 @@ describe 'Items API' do
 
     it 'creates an Activity and Notification' do
       Sidekiq::Testing.inline! do
-        post "/items/#{item.id}/like", api_key: api_key_for_user(chef), format: :json
+        post endpoint, api_key: api_key_for_user(chef), format: :json
       end
 
       expect(response).to be_success
@@ -265,7 +270,7 @@ describe 'Items API' do
       end
 
       it 'returns an error' do
-        post "/items/#{item.id}/like", api_key: api_key_for_user(turd_ferg), format: :json
+        post endpoint, api_key: api_key_for_user(turd_ferg), format: :json
 
         expect(response).to_not be_success
         expect(response.status).to eq(422)
@@ -280,7 +285,7 @@ describe 'Items API' do
       end
 
       it 'likes the Item for the current_user' do
-        post "/items/#{item.id}/like", api_key: api_key_for_user(turd_ferg), format: :json
+        post endpoint, api_key: api_key_for_user(turd_ferg), format: :json
 
         expect(response).to be_success
         expect(response.status).to eq(201)
@@ -290,7 +295,7 @@ describe 'Items API' do
 
     context 'current_user is NOT a :chef' do
       it 'should be authorized' do
-        post "/items/#{item.id}/like", api_key: api_key_for_user(FactoryGirl.create(:user)), format: :json
+        post endpoint, api_key: api_key_for_user(FactoryGirl.create(:user)), format: :json
 
         expect(response).to be_success
       end
@@ -299,13 +304,14 @@ describe 'Items API' do
   end
 
   describe 'DELETE /items/{:item_id}/like likes#destroy' do
+    let(:endpoint) { "/items/#{item.id}/like" }
     let(:item) { FactoryGirl.create(:item_with_creator) }
 
     context 'current_user has liked Item' do
       before { Like.create(likeable: item, user: turd_ferg) }
 
       it 'soft deletes the Like' do
-        delete "/items/#{item.id}/like", api_key: api_key_for_user(turd_ferg), format: :json
+        delete endpoint, api_key: api_key_for_user(turd_ferg), format: :json
 
         expect(response).to be_success
         expect(item.likers).to_not include(turd_ferg)
@@ -314,7 +320,7 @@ describe 'Items API' do
 
     context 'current_user has NOT liked Item' do
       it 'does NOT soft delete the Like' do
-        delete "/items/#{item.id}/like", api_key: api_key_for_user(turd_ferg), format: :json
+        delete endpoint, api_key: api_key_for_user(turd_ferg), format: :json
 
         expect(response).to_not be_success
         expect(response.status).to eq(422)
@@ -325,7 +331,7 @@ describe 'Items API' do
     context 'current_user is NOT Like creator' do
       before { Like.create(likeable: item, user: turd_ferg) }
       it 'should NOT be authorized' do
-        delete "/items/#{item.id}/like", api_key: api_key_for_user(FactoryGirl.create(:user)), format: :json
+        delete endpoint, api_key: api_key_for_user(FactoryGirl.create(:user)), format: :json
 
         expect(response).to_not be_success
       end
@@ -333,10 +339,10 @@ describe 'Items API' do
   end
 
   describe 'GET /items/{:item_id}/likers items#likers' do
+    let(:endpoint) { "/items/#{item_id}/likers" }
     let(:likes_count) { 3 }
     let(:item_with_likers) { FactoryGirl.create(:item_with_likers, likes_count: likes_count) }
     let(:item_id) { item_with_likers.id }
-    let(:endpoint) { "/items/#{item_id}/likers" }
 
     it 'returns a list of Likers for the Item' do
       get endpoint, api_key: api_key_for_user(turd_ferg), format: :json
@@ -348,10 +354,11 @@ describe 'Items API' do
   end
 
   describe 'GET /items/{:item_id}/comments comments#index' do
+    let(:endpoint) { "/items/#{item_with_creator_and_comments.id}/comments" }
     let(:item_with_creator_and_comments) { FactoryGirl.create(:item_with_creator_and_comments) }
 
     it 'returns a list of Comments for the Item' do
-      get "/items/#{item_with_creator_and_comments.id}/comments", api_key: api_key_for_user(turd_ferg), format: :json
+      get endpoint, api_key: api_key_for_user(turd_ferg), format: :json
 
       expect(response).to be_success
 
@@ -363,79 +370,31 @@ describe 'Items API' do
     end
 
     it 'should be public' do
-      get "/items/#{item_with_creator_and_comments.id}/comments", format: :json
+      get endpoint, format: :json
 
       expect(response).to be_success
     end
 
-    context 'pagination' do
+    it_behaves_like 'TimelinePaginateable' do
+      let(:user) { FactoryGirl.create(:user) }
+      let(:paginateable_object_class) { Comment }
       before do
+        paginateable_object_class.delete_all
         30.times do
           comment = FactoryGirl.create(:item_comment)
           comment.commentable = item_with_creator_and_comments
           comment.save
         end
       end
-
-      describe 'max_id' do
-        it 'returns results up to and including max_id' do
-          expected_count = rand(3..6)
-          max_id = Comment.first.id + expected_count - 1
-          get "/items/#{item_with_creator_and_comments.id}/comments", api_key: api_key_for_user(turd_ferg),
-                                                                          max_id: max_id,
-                                                                          format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(expected_count)
-          expect(json_data.first['id']).to eq(max_id)
-        end
-      end
-
-      describe 'since_id' do
-        it 'returns results since since_id' do
-          expected_count = rand(3..6)
-          since_id = Comment.last.id - expected_count
-          get "/items/#{item_with_creator_and_comments.id}/comments", api_key: api_key_for_user(turd_ferg),
-                                                                          since_id: since_id,
-                                                                          format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(expected_count)
-          expect(json_data.last['id']).to eq(since_id + 1)
-        end
-      end
-
-      describe 'count' do
-        it 'defaults to 20' do
-          get "/items/#{item_with_creator_and_comments.id}/comments", api_key: api_key_for_user(turd_ferg),
-                                                                          format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(20)
-        end
-
-        it 'limits the result' do
-          expected_count = rand(3..6)
-          get "/items/#{item_with_creator_and_comments.id}/comments", api_key: api_key_for_user(turd_ferg),
-                                                                          count: expected_count,
-                                                                          format: :json
-
-          expect(response).to be_success
-
-          expect(json_data.count).to eq(expected_count)
-        end
-      end
     end
   end
 
   describe 'POST /items/{:item_id}/comments comments#create' do
+    let(:endpoint) { "/items/#{existing_item.id}/comments" }
     let(:existing_item) { FactoryGirl.create(:item_with_creator) }
 
     it 'creates a Comment for the Item' do
-      post "/items/#{existing_item.id}/comments", api_key: api_key_for_user(chef),
+      post endpoint, api_key: api_key_for_user(chef),
                                                       format: :json,
                                                       comment: {
                                                         description: 'Drop it like it\'s hot.' }
@@ -455,7 +414,7 @@ describe 'Items API' do
 
     it 'creates an Activity and Notification' do
       Sidekiq::Testing.inline! do
-        post "/items/#{existing_item.id}/comments", api_key: api_key_for_user(chef),
+        post endpoint, api_key: api_key_for_user(chef),
                                                         format: :json,
                                                         comment: {
                                                           description: 'Drop it like it\'s hot.' }
@@ -477,8 +436,9 @@ describe 'Items API' do
     end
 
     context 'missing Item' do
+      let(:endpoint) { "/items/0/comments" }
       it 'should fail' do
-        post '/items/0/comments', api_key: api_key_for_user(chef),
+        post endpoint, api_key: api_key_for_user(chef),
                                     format: :json,
                                     comment: {
                                       description: 'Drop it like it\'s hot.' }
@@ -489,7 +449,7 @@ describe 'Items API' do
 
     context 'current_user is NOT a :chef' do
       it 'should NOT be authorized' do
-        post "/items/#{existing_item.id}/comments", api_key: api_key_for_user(FactoryGirl.create(:user)),
+        post endpoint, api_key: api_key_for_user(FactoryGirl.create(:user)),
                                                         format: :json,
                                                         comment: {
                                                           description: 'Drop it like it\'s hot.' }

@@ -68,9 +68,7 @@ describe Item do
     context 'with comments' do
       let(:comments_count) { rand(3..6) }
       before do
-        comments_count.times do
-          item.commenters << FactoryGirl.create(:user)
-        end
+        comments_count.times { Comment.create(commenter: FactoryGirl.create(:user), commentable: item, description: Faker::Lorem.sentence(rand(1..3))) }
       end
 
       describe '.total_comment_count' do

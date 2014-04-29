@@ -4,7 +4,6 @@ class UserSerializer < ActiveModel::Serializer
              :first_name,
              :last_name,
              :created_at,
-             :title,
              :bio,
              :industry,
              :photos,

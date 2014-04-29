@@ -27,7 +27,6 @@
 # **`photo_content_type`**      | `string(255)`      |
 # **`photo_file_size`**         | `string(255)`      |
 # **`photo_updated_at`**        | `datetime`         |
-# **`title`**                   | `string(255)`      |
 # **`provider`**                | `string(255)`      |
 # **`uid`**                     | `string(255)`      |
 # **`username`**                | `string(255)`      |
@@ -38,6 +37,7 @@
 # **`unsubscribed`**            | `boolean`          | `default(FALSE)`
 # **`photo_processing`**        | `boolean`          |
 # **`staff`**                   | `boolean`          | `default(FALSE)`
+# **`deleted_at`**              | `datetime`         |
 #
 
 # Read about factories at https://github.com/thoughtbot/factory_girl
@@ -61,7 +61,6 @@ FactoryGirl.define do
       first_name 'Turd'
       last_name 'Ferguson'
       password 'test1234'
-      title 'Suck it Trebek'
     end
 
     factory :chef, class: User do
