@@ -11,7 +11,6 @@ ActiveAdmin.register User do
     column :email
     column :username
     column :full_name
-    column :title
     column :industry
     column :admin
     column :active

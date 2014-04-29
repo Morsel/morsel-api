@@ -15,20 +15,20 @@
 # **`deleted_at`**       | `datetime`         |
 #
 
-class Follow < ActiveRecord::Base
-  include Authority::Abilities, UserCreatable
+require 'spec_helper'
 
-  include Activityable
-  def self.activity_notification; true end
-  def subject; followable end
+describe Follow do
+  subject(:user_follow) { FactoryGirl.build(:user_follow) }
 
-  acts_as_paranoid
+  it { should respond_to(:follower) }
+  it { should respond_to(:followable) }
 
-  belongs_to :followable, polymorphic: true
-  belongs_to :follower, class_name: 'User'
-  alias_attribute :creator, :follower
-  alias_attribute :user, :follower
+  it_behaves_like 'Activityable' do
+    let(:activityable_object) { user_follow }
+  end
 
-  validates :follower_id, uniqueness: { scope: [:deleted_at, :followable_id] }
-  validates :followable, presence: true
+  it_behaves_like 'UserCreatable' do
+    let(:user_creatable_object) { FactoryGirl.build(:user_follow) }
+    let(:user) { user_creatable_object.user }
+  end
 end
