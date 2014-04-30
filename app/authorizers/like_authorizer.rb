@@ -1,6 +1,6 @@
 class LikeAuthorizer < ApplicationAuthorizer
   def self.creatable_by?(user)
-    # Anyone can CREATE a Like
-    true
+    # Any User can CREATE a Like
+    user.present?
   end
 end

@@ -28,6 +28,8 @@ class Tag < ActiveRecord::Base
   belongs_to :keyword
   delegate :name, to: :keyword
 
+  self.authorizer_name = 'TagAuthorizer'
+
   validates :keyword, presence: true
   validates :taggable, presence: true
 end
