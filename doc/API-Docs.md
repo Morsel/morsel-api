@@ -584,7 +584,7 @@ Returns the Cuisines for the User with the specified ```user_id```.
 
 | __data__ |
 | -------- |
-| Array of [Keyword](#keyword) of type 'Cuisine' |
+| Array of [Tag](#tag) of keyword type 'Cuisine' |
 
 <br />
 <br />
@@ -596,7 +596,7 @@ Returns the Specialties for the User with the specified ```user_id```.
 
 | __data__ |
 | -------- |
-| Array of [Keyword](#keyword) of type 'Specialty' |
+| Array of [Tag](#tag) of keyword type 'Specialty' |
 
 <br />
 <br />
