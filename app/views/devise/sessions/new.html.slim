@@ -1,6 +1,6 @@
 = form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'form-signin', role: 'form' }) do |f|
   h2.form-signin-heading Sign In
-  = f.email_field :email, autofocus: true, required: true, class: 'form-control top', placeholder: 'Email Address'
+  = f.text_field :login, autofocus: true, required: true, class: 'form-control top', placeholder: 'Email Address or Username'
   = f.password_field :password, required: true, class: 'form-control bottom', placeholder: 'Password'
   - if devise_mapping.rememberable?
     label.checkbox
