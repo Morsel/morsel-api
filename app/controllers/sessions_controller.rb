@@ -11,7 +11,7 @@ class SessionsController < Devise::SessionsController
       if params[:user].blank?
         invalid_login_attempt(:unprocessable_entity)
       else
-        user = User.find_for_database_authentication(email: params[:user][:email])
+        user = User.find_for_database_authentication(login: (params[:user][:email] || params[:user][:username]))
         return invalid_login_attempt unless user
 
         if user.valid_password?(params[:user][:password])
@@ -28,6 +28,6 @@ class SessionsController < Devise::SessionsController
   private
 
   def invalid_login_attempt(http_status = :unauthorized)
-    render_json_errors({ base: ['email or password is invalid'] }, http_status)
+    render_json_errors({ base: ['login or password is invalid'] }, http_status)
   end
 end

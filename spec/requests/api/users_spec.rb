@@ -368,10 +368,20 @@ describe 'Users API' do
       expect_nil_json_keys(json_data, %w(password encrypted_password))
     end
 
-    it 'returns \'email or password\' error if invalid credentials' do
+    it 'accepts a username instead of an email' do
+      post endpoint, format: :json, user: { username: user.username, password: 'password' }
+      expect(response).to be_success
+    end
+
+    it 'accepts \'login\' as a generic parameter for email or username' do
+      post endpoint, format: :json, user: { login: user.username, password: 'password' }
+      expect(response).to be_success
+    end
+
+    it 'returns \'login or password\' error if invalid credentials' do
       post endpoint, format: :json, user: { email: 'butt', password: 'sack' }
       expect(response).to_not be_success
-      expect(json_errors['base'].first).to eq('email or password is invalid')
+      expect(json_errors['base'].first).to eq('login or password is invalid')
     end
   end
 
