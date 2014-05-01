@@ -31,6 +31,7 @@ module MorselApp
     config.autoload_paths += Dir[File.join(Rails.root, 'lib', 'responders', '*.rb')].each { |l| require l }
     config.autoload_paths += Dir[File.join(Rails.root, 'lib', '*.rb')].each { |l| require l }
     config.autoload_paths += Dir["#{config.root}/app/models/**/"]
+    config.autoload_paths += Dir["#{config.root}/app/services/**/"]
     config.autoload_paths += Dir["#{config.root}/app/serializers/concerns/**/"]
 
     # Settings in config/environments/* take precedence over those specified here.

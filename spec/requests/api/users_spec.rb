@@ -251,6 +251,105 @@ describe 'Users API' do
       expect(user_event.client_device).to eq('rspec')
       expect(user_event.client_version).to eq('1.2.3')
     end
+
+    context 'authorization is passed' do
+      it 'returns an error if an invalid authorization is passed' do
+        post endpoint, format: :json, user: {
+                                        email: Faker::Internet.email,
+                                        password: 'password',
+                                        first_name: 'Foo',
+                                        last_name: 'Bar',
+                                        username: "user_#{Faker::Lorem.characters(10)}",
+                                        bio: 'Foo to the Stars',
+                                        industry: 'diner',
+                                        photo: Rack::Test::UploadedFile.new(
+                                          File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
+                                      },
+                                      authorization: {
+                                        provider: 'myspace'
+                                      }
+
+          expect(response).to_not be_success
+      end
+
+      context 'Facebook' do
+        it 'creates a new Facebook authorization for the new User' do
+          dummy_name = 'Facebook User'
+          dummy_token = 'token'
+          dummy_fb_uid = '123456'
+          client = double('Koala::Facebook::API')
+          Koala::Facebook::API.stub(:new).and_return(client)
+          facebook_user = double('Hash')
+          facebook_user.stub(:[]).with('id').and_return(dummy_fb_uid)
+          facebook_user.stub(:[]).with('name').and_return(dummy_name)
+          facebook_user.stub(:[]).with('link').and_return("https://facebook.com/#{dummy_name}")
+
+          client.stub(:get_object).and_return(facebook_user)
+
+          post endpoint, format: :json, user: {
+                                          email: Faker::Internet.email,
+                                          password: 'password',
+                                          first_name: 'Foo',
+                                          last_name: 'Bar',
+                                          username: "user_#{Faker::Lorem.characters(10)}",
+                                          bio: 'Foo to the Stars',
+                                          industry: 'diner',
+                                          photo: Rack::Test::UploadedFile.new(
+                                            File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
+                                        },
+                                        authorization: {
+                                          provider: 'facebook',
+                                          token: dummy_token
+                                        }
+
+          expect(response).to be_success
+
+          new_user = User.find json_data['id']
+          new_facebook_user = FacebookUserDecorator.new(new_user)
+          expect(new_facebook_user.facebook_authorizations.count).to eq(1)
+          expect(new_facebook_user.facebook_uid).to eq(dummy_fb_uid)
+        end
+      end
+
+      context 'Twitter' do
+        it 'creates a new Twitter authorization for the new User' do
+          dummy_screen_name = 'twitter_screen_name'
+          dummy_secret = 'secret'
+          dummy_token = 'token'
+          client = double('Twitter::REST::Client')
+          twitter_user = double('Twitter::User')
+          Twitter::Client.stub(:new).and_return(client)
+          client.stub(:current_user).and_return(twitter_user)
+          twitter_user.stub(:id).and_return(123)
+          twitter_user.stub(:screen_name).and_return(dummy_screen_name)
+          twitter_user.stub(:url).and_return("https://twitter.com/#{dummy_screen_name}")
+
+          post endpoint, format: :json, user: {
+                                          email: Faker::Internet.email,
+                                          password: 'password',
+                                          first_name: 'Foo',
+                                          last_name: 'Bar',
+                                          username: "user_#{Faker::Lorem.characters(10)}",
+                                          bio: 'Foo to the Stars',
+                                          industry: 'diner',
+                                          photo: Rack::Test::UploadedFile.new(
+                                            File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
+                                        },
+                                        authorization: {
+                                          provider: 'twitter',
+                                          token: dummy_token,
+                                          secret: dummy_secret
+                                        }
+
+          expect(response).to be_success
+
+          new_user = User.find json_data['id']
+          new_twitter_user = TwitterUserDecorator.new(new_user)
+          expect(new_twitter_user.twitter_authorizations.count).to eq(1)
+          expect(new_twitter_user.twitter_username).to eq(dummy_screen_name)
+        end
+      end
+    end
   end
 
   describe 'POST /users/sign_in sessions#create' do

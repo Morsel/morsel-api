@@ -53,7 +53,8 @@ class User < ActiveRecord::Base
   before_save :ensure_authentication_token
   after_save :ensure_role
 
-  has_many :authorizations
+  has_many :authorizations, inverse_of: :user
+
   has_many :comments, through: :items
   has_many  :facebook_authorizations,
             -> { where provider: 'facebook' },

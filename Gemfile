@@ -43,6 +43,7 @@ gem 'slugged', '~> 2.0'
 gem 'turbolinks'
 gem "twitter", "~> 5.5.1"
 gem 'uglifier', '>= 1.3.0'
+gem 'virtus'
 
 group :development do
   gem 'better_errors'
