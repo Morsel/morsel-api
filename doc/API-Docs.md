@@ -271,7 +271,9 @@ Authenticates a User and returns an authentication_token
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| user[email] | String | The email address for the User | | X |
+| user[email] | String | The email address for the User. | | X |
+| user[username] | String | The username for the User. Can be used instead of an email. | | |
+| user[login] | String | A generic attribute that can be the email or username. | | |
 | user[password] | String | The password for the User. Minimum 8 characters. | | X |
 
 ### Response
@@ -284,7 +286,7 @@ Authenticates a User and returns an authentication_token
 
 | Message | Status | Description |
 | ------- | ------ | ----------- |
-| __Invalid email or password__ | 401 (Unauthorized) or 422 (Unprocessable Entity) | The email or password specified are invalid |
+| __login or password is invali__ | 401 (Unauthorized) or 422 (Unprocessable Entity) | The email, username, or password specified are invalid |
 
 <br />
 <br />
