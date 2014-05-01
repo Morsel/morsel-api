@@ -251,6 +251,9 @@ Image processing is done in a background job. `photo_processing` will be set to 
 | user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
 | user[bio] | String | The bio for the new User. Maximum 255 characters. | | |
 | __utmz | String | Google Analytics information to pass to the server | | |
+| authorization[provider] | String | The provider the User is authorizing. Currently the only valid values are 'facebook' and 'twitter'. | | |
+| authorization[token] | String | The User's Access Token for the service. | | |
+| authorization[secret] | String | The User's Access Token Secret for the service. Only required for Twitter. | | |
 
 ### Response
 

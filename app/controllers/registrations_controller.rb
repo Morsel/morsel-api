@@ -6,6 +6,8 @@ class RegistrationsController < Devise::RegistrationsController
   def create
     user = User.new(UsersController::UserParams.build(params))
 
+    CreateAuthorization.call(AuthorizationsController::AuthorizationParams.build(params[:authorization]).merge({user: user})) if params[:authorization].present?
+
     if user.save
       create_user_event(:created_account, user.id)
       custom_respond_with user, serializer: UserWithAuthTokenSerializer

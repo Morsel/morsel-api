@@ -3,13 +3,7 @@ class AuthorizationsController < ApiController
   authorize_actions_for Authorization
 
   def create
-    authorization_params = AuthorizationParams.build(params)
-    provider = authorization_params.fetch(:provider)
-    if provider == 'facebook'
-      authorization = FacebookUserDecorator.new(current_user).build_facebook_authorization(authorization_params)
-    elsif provider == 'twitter'
-      authorization = TwitterUserDecorator.new(current_user).build_twitter_authorization(authorization_params)
-    end
+    authorization = CreateAuthorization.call(AuthorizationParams.build(params).merge({user: current_user}))
 
     if authorization.save
       custom_respond_with authorization
@@ -30,7 +24,7 @@ class AuthorizationsController < ApiController
 
   class AuthorizationParams
     def self.build(params)
-      params.require(:secret) if params[:provider] == 'twitter'
+      params.fetch(:secret) if params[:provider] == 'twitter'
       params.permit(:provider, :uid, :user_id, :token, :secret)
     end
   end
