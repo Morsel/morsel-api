@@ -1,6 +1,6 @@
 # ## Schema Information
 #
-# Table name: `authorizations`
+# Table name: `authentications`
 #
 # ### Columns
 #
@@ -20,8 +20,8 @@
 
 require 'spec_helper'
 
-describe Authorization do
-  subject(:authorization) { FactoryGirl.build(:facebook_authorization) }
+describe Authentication do
+  subject(:authentication) { FactoryGirl.build(:facebook_authentication) }
 
   it { should respond_to(:provider) }
   it { should respond_to(:uid) }
@@ -34,34 +34,34 @@ describe Authorization do
   it { should be_valid }
 
   it_behaves_like 'UserCreatable' do
-    let(:user_creatable_object) { FactoryGirl.build(:facebook_authorization) }
+    let(:user_creatable_object) { FactoryGirl.build(:facebook_authentication) }
     let(:user) { user_creatable_object.user }
   end
 
   describe 'provider' do
     context 'does not exist' do
-      before { authorization.provider = nil }
+      before { authentication.provider = nil }
       it { should_not be_valid }
     end
 
     context 'is blank' do
-      before { authorization.provider = '' }
+      before { authentication.provider = '' }
       it { should_not be_valid }
     end
 
     context 'is not a valid provider' do
-      before { authorization.provider = 'taco_bell' } # Be sure to change this if Taco Bell becomes an OAuth2 provider
+      before { authentication.provider = 'taco_bell' } # Be sure to change this if Taco Bell becomes an OAuth2 provider
       it { should_not be_valid }
     end
   end
 
   describe 'secret' do
     context 'does not exist' do
-      before { authorization.secret = nil }
+      before { authentication.secret = nil }
       it { should be_valid }
 
       context 'Twitter' do
-        before { authorization.provider = 'twitter' }
+        before { authentication.provider = 'twitter' }
         it { should_not be_valid }
       end
     end
@@ -69,21 +69,21 @@ describe Authorization do
 
   describe 'token' do
     context 'does not exist' do
-      before { authorization.token = nil }
+      before { authentication.token = nil }
       it { should_not be_valid }
     end
   end
 
   describe 'uid' do
     context 'does not exist' do
-      before { authorization.uid = nil }
+      before { authentication.uid = nil }
       it { should_not be_valid }
     end
 
     context 'is not unique' do
       before do
-        authorization_with_same_uid = authorization.dup
-        authorization_with_same_uid.save
+        authentication_with_same_uid = authentication.dup
+        authentication_with_same_uid.save
       end
       it { should_not be_valid }
     end
@@ -91,7 +91,7 @@ describe Authorization do
 
   describe 'user' do
     context 'does not exist' do
-      before { authorization.user = nil }
+      before { authentication.user = nil }
       it { should_not be_valid }
     end
   end

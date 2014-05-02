@@ -1,6 +1,6 @@
 # ## Schema Information
 #
-# Table name: `authorizations`
+# Table name: `authentications`
 #
 # ### Columns
 #
@@ -18,7 +18,7 @@
 # **`updated_at`**  | `datetime`         |
 #
 
-class Authorization < ActiveRecord::Base
+class Authentication < ActiveRecord::Base
   include Authority::Abilities
   include TimelinePaginateable
   include UserCreatable

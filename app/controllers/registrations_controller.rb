@@ -6,7 +6,7 @@ class RegistrationsController < Devise::RegistrationsController
   def create
     user = User.new(UsersController::UserParams.build(params))
 
-    CreateAuthorization.call(AuthorizationsController::AuthorizationParams.build(params[:authorization]).merge({user: user})) if params[:authorization].present?
+    CreateAuthentication.call(AuthenticationsController::AuthenticationParams.build(params[:authentication]).merge({user: user})) if params[:authentication].present?
 
     if user.save
       create_user_event(:created_account, user.id)

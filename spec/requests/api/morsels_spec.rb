@@ -228,8 +228,8 @@ describe 'Morsels API' do
       MorselCollageGeneratorDecorator.any_instance.should_receive(:generate).exactly(1).times.and_return { existing_draft_morsel.update(photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))))}
       Mrsl.should_receive(:shorten).exactly(2).times.and_call_original
       FeedItem.should_receive(:new).exactly(1).times.and_call_original
-      FacebookUserDecorator.any_instance.should_not_receive(:post_facebook_photo_url)
-      TwitterUserDecorator.any_instance.should_not_receive(:post_twitter_photo_url)
+      FacebookAuthenticatedUserDecorator.any_instance.should_not_receive(:post_facebook_photo_url)
+      TwitterAuthenticatedUserDecorator.any_instance.should_not_receive(:post_twitter_photo_url)
 
       Sidekiq::Testing.inline! {
         post endpoint,  api_key: api_key_for_user(chef),
@@ -256,8 +256,8 @@ describe 'Morsels API' do
     end
 
     context 'post_to_facebook included in parameters' do
-      let(:chef_with_facebook_authorization) { FactoryGirl.create(:chef_with_facebook_authorization) }
-      let(:existing_draft_morsel) { FactoryGirl.create(:draft_morsel_with_items, creator: chef_with_facebook_authorization, build_feed_item: false, include_mrsl: false) }
+      let(:chef_with_facebook_authentication) { FactoryGirl.create(:chef_with_facebook_authentication) }
+      let(:existing_draft_morsel) { FactoryGirl.create(:draft_morsel_with_items, creator: chef_with_facebook_authentication, build_feed_item: false, include_mrsl: false) }
 
       it 'posts to Facebook' do
         stub_facebook_client
@@ -266,11 +266,11 @@ describe 'Morsels API' do
         MorselCollageGeneratorDecorator.any_instance.should_receive(:generate).exactly(1).times.and_return { existing_draft_morsel.update(photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))))}
         Mrsl.should_receive(:shorten).exactly(2).times.and_call_original
         FeedItem.should_receive(:new).exactly(1).times.and_call_original
-        FacebookUserDecorator.any_instance.should_receive(:post_facebook_photo_url).exactly(1).times.and_call_original
-        TwitterUserDecorator.any_instance.should_not_receive(:post_twitter_photo_url)
+        FacebookAuthenticatedUserDecorator.any_instance.should_receive(:post_facebook_photo_url).exactly(1).times.and_call_original
+        TwitterAuthenticatedUserDecorator.any_instance.should_not_receive(:post_twitter_photo_url)
 
         Sidekiq::Testing.inline! {
-          post endpoint,  api_key: api_key_for_user(chef_with_facebook_authorization),
+          post endpoint,  api_key: api_key_for_user(chef_with_facebook_authentication),
                           format: :json,
                           post_to_facebook: true
         }
@@ -282,8 +282,8 @@ describe 'Morsels API' do
     end
 
     context 'post_to_twitter included in parameters' do
-      let(:chef_with_twitter_authorization) { FactoryGirl.create(:chef_with_twitter_authorization) }
-      let(:existing_draft_morsel) { FactoryGirl.create(:draft_morsel_with_items, creator: chef_with_twitter_authorization, build_feed_item: false, include_mrsl: false) }
+      let(:chef_with_twitter_authentication) { FactoryGirl.create(:chef_with_twitter_authentication) }
+      let(:existing_draft_morsel) { FactoryGirl.create(:draft_morsel_with_items, creator: chef_with_twitter_authentication, build_feed_item: false, include_mrsl: false) }
 
       it 'posts a Tweet' do
         stub_twitter_client
@@ -292,11 +292,11 @@ describe 'Morsels API' do
         MorselCollageGeneratorDecorator.any_instance.should_receive(:generate).exactly(1).times.and_return { existing_draft_morsel.update(photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))))}
         Mrsl.should_receive(:shorten).exactly(2).times.and_call_original
         FeedItem.should_receive(:new).exactly(1).times.and_call_original
-        FacebookUserDecorator.any_instance.should_not_receive(:post_facebook_photo_url)
-        TwitterUserDecorator.any_instance.should_receive(:post_twitter_photo_url).exactly(1).times.and_call_original
+        FacebookAuthenticatedUserDecorator.any_instance.should_not_receive(:post_facebook_photo_url)
+        TwitterAuthenticatedUserDecorator.any_instance.should_receive(:post_twitter_photo_url).exactly(1).times.and_call_original
 
         Sidekiq::Testing.inline! {
-          post endpoint,  api_key: api_key_for_user(chef_with_twitter_authorization),
+          post endpoint,  api_key: api_key_for_user(chef_with_twitter_authentication),
                           format: :json,
                           post_to_twitter: true
         }

@@ -43,9 +43,9 @@ class UsersController < ApiController
 
   def show
     if params[:id].present?
-      user = User.includes(:authorizations, :morsels, :items).find params[:id]
+      user = User.includes(:authentications, :morsels, :items).find params[:id]
     elsif params[:username].present?
-      user = User.includes(:authorizations, :morsels, :items).find_by('lower(username) = lower(?)', params[:username])
+      user = User.includes(:authentications, :morsels, :items).find_by('lower(username) = lower(?)', params[:username])
     end
     raise ActiveRecord::RecordNotFound if user.nil? || !user.active?
 
