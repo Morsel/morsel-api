@@ -24,12 +24,7 @@
 #
 
 class Morsel < ActiveRecord::Base
-  include Authority::Abilities
-  include Feedable
-  include Mrslable
-  include PhotoUploadable
-  include TimelinePaginateable
-  include UserCreatable
+  include Authority::Abilities, Feedable, Mrslable, PhotoUploadable, TimelinePaginateable, UserCreatable
 
   acts_as_paranoid
   is_sluggable :title

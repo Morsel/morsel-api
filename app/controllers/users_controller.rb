@@ -80,9 +80,10 @@ class UsersController < ApiController
     end
 
     if serializer
+      # TODO: Paginate
       custom_respond_with User.joins("LEFT OUTER JOIN follows ON follows.followable_type = '#{followable_type}' AND follows.followable_id = users.id AND follows.deleted_at is NULL AND users.deleted_at is NULL")
-                            .where('follows.follower_id = ?', params[:id])
-                            .order('follows.id DESC'),
+                              .where('follows.follower_id = ?', params[:id])
+                              .order('follows.id DESC'),
                           each_serializer: serializer,
                           context: {follower_id: params[:id]}
     end
@@ -95,9 +96,10 @@ class UsersController < ApiController
     end
 
     if serializer
+      # TODO: Paginate
       custom_respond_with Item.joins("LEFT OUTER JOIN likes ON likes.likeable_type = '#{likeable_type}' AND likes.likeable_id = items.id AND likes.deleted_at is NULL AND items.deleted_at is NULL")
-                            .where('likes.liker_id = ?', params[:id])
-                            .order('likes.id DESC'),
+                              .where('likes.liker_id = ?', params[:id])
+                              .order('items.id DESC'),
                           each_serializer: serializer,
                           context: {liker_id: params[:id]}
     end
