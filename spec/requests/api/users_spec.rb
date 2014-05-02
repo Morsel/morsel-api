@@ -205,6 +205,36 @@ describe 'Users API' do
     end
   end
 
+  describe 'GET /users/checkauthentication authentications#check' do
+    let(:endpoint) { '/users/checkauthentication' }
+
+    it 'returns false' do
+      get endpoint, authentication: {
+                      provider: 'facebook',
+                      uid: 1234
+                    }
+
+      expect(response).to be_success
+
+      expect(json_data).to eq(false)
+    end
+
+    context 'Authentication exists' do
+      let(:facebook_authentication) { FactoryGirl.create(:facebook_authentication) }
+
+      it 'returns true' do
+        get endpoint, authentication: {
+                        provider: facebook_authentication.provider,
+                        uid: facebook_authentication.uid
+                      }
+
+        expect(response).to be_success
+
+        expect(json_data).to eq(false)
+      end
+    end
+  end
+
   describe 'POST /users registrations#create' do
     let(:endpoint) { '/users' }
     it 'creates a new User' do

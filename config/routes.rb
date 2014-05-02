@@ -62,7 +62,7 @@ MorselApp::Application.routes.draw do
     collection do
       post 'authentications' => 'authentications#create'
       get 'authentications' => 'authentications#index'
-      get 'checkusername(/:username)' => 'users#checkusername' # DEPRECATED
+      get 'checkauthentication' => 'authentications#check'
       get 'validateusername(/:username)' => 'users#validateusername'
       post 'reserveusername(/:username)' => 'users#reserveusername'
       get 'me' => 'users#me'

@@ -1,6 +1,6 @@
 class AuthenticationsController < ApiController
-  respond_to :json
-  authorize_actions_for Authentication
+  PUBLIC_ACTIONS = [:check]
+  authorize_actions_for Authentication, except: PUBLIC_ACTIONS
 
   def create
     authentication = CreateAuthentication.call(AuthenticationParams.build(params).merge({user: current_user}))
@@ -17,6 +17,12 @@ class AuthenticationsController < ApiController
                                      .where(user_id: current_user.id)
                                      .limit(pagination_count)
                                      .order('id DESC')
+  end
+
+  def check
+    authentication_params = AuthenticationParams.build(params)
+    count = User.joins(:authentications).where('authentications.provider = ? AND authentications.uid = ?', authentication_params[:provider], authentication_params[:uid]).count
+    render_json(count > 0)
   end
 
   class AuthenticationParams

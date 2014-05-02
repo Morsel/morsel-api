@@ -18,6 +18,7 @@
   - [POST ```/users/sign_in``` - User Authentication](#post-userssign_in---user-authentication)
   - [GET ```/users/me``` - Me](#get-usersme---me)
   - [POST ```/users/unsubscribe``` - Unsubscribe](#post-usersunsubscribe---unsubscribe)
+  - [GET ```/users/validateusername``` - Validate Username](#get-usersvalidateusername---validate-username)
   - [POST ```/users/reserveusername``` - Reserve Username](#post-usersreserveusername---reserve-username)
   - [PUT ```/users/{user_id}/updateindustry``` - Update Industry](#put-usersuser_idupdateindustry---update-industry)
   - [GET ```/users/{user_id|user_username}``` - User](#get-usersuser_iduser_username---user)
@@ -25,6 +26,7 @@
   - [GET ```/users/{user_id|user_username}/morsels``` - User Morsels](#get-usersuser_iduser_usernamemorsels---user-morsels)
   - [POST ```/users/authentications``` - Create User Authentications](#post-usersauthentications---create-user-authentications)
   - [GET ```/users/authentications``` - User Authentications](#get-usersauthentications---user-authentications)
+  - [GET ```/users/checkauthentication``` - Check Authentication](#post-userscheckauthentication---check-authentication)
   - [GET ```/users/activities``` - User Activities](#get-usersactivities---user-activities)
   - [GET ```/users/notifications``` - User Notifications](#get-usersnotifications---user-notifications)
   - [GET ```/users/{user_id}/likeables``` - User Likeables](#get-usersuser_idlikeables---user-likeables)
@@ -329,7 +331,7 @@ Unsubscribes the User with the specified user_id from all emails
 <br />
 <br />
 
-## GET ```/users/validateusername``` - Check Username
+## GET ```/users/validateusername``` - Validate Username
 Returns ```true``` if the username is valid, otherwise errors.
 
 ### Request
@@ -492,6 +494,26 @@ Returns the current User's authentications
 | __data__ |
 | -------- |
 | Array of [Authentication](#authentication) |
+
+<br />
+<br />
+
+## GET ```/users/checkauthentication``` - Check Authentication
+Returns ```true``` if the authentication exists, otherwise false.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | |
+| authentication[uid] | Number | The User's ID for the service. | | |
+
+### Response
+
+| Condition | __data__ |
+| --------- | -------- |
+| Authentication exists | true |
+| Authentication does NOT exists | false |
 
 <br />
 <br />
