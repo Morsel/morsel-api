@@ -25,19 +25,19 @@ class MorselsController < ApiController
 
       raise ActiveRecord::RecordNotFound if user.nil?
       morsels = Morsel.includes(:items, :creator)
-                  .published
-                  .since(params[:since_id])
-                  .max(params[:max_id])
-                  .where('creator_id = ?', user.id)
-                  .limit(pagination_count)
-                  .order('id DESC')
+                      .published
+                      .since(params[:since_id])
+                      .max(params[:max_id])
+                      .where('creator_id = ?', user.id)
+                      .limit(pagination_count)
+                      .order('id DESC')
     else
       morsels = Morsel.includes(:items, :creator)
-                  .published
-                  .since(params[:since_id])
-                  .max(params[:max_id])
-                  .limit(pagination_count)
-                  .order('id DESC')
+                      .published
+                      .since(params[:since_id])
+                      .max(params[:max_id])
+                      .limit(pagination_count)
+                      .order('id DESC')
     end
 
     custom_respond_with morsels
@@ -45,12 +45,12 @@ class MorselsController < ApiController
 
   def drafts
     morsels = Morsel.includes(:items, :creator)
-                  .drafts
-                  .since(params[:since_id])
-                  .max(params[:max_id])
-                  .where('creator_id = ?', current_user.id)
-                  .limit(pagination_count)
-                  .order('updated_at DESC')
+                    .drafts
+                    .since(params[:since_id])
+                    .max(params[:max_id])
+                    .where('creator_id = ?', current_user.id)
+                    .limit(pagination_count)
+                    .order('updated_at DESC')
 
     custom_respond_with morsels
   end

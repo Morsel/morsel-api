@@ -3,11 +3,15 @@ class TagsController < ApiController
   authorize_actions_for Tag, except: PUBLIC_ACTIONS
 
   def cuisines
-    custom_respond_with Tag.joins(:keyword).where('keywords.type = ? AND tags.taggable_type = ? AND tags.taggable_id = ?', 'Cuisine', taggable_type, params[:id]).order('id ASC')
+    custom_respond_with Tag.joins(:keyword)
+                           .where('keywords.type = ? AND tags.taggable_type = ? AND tags.taggable_id = ?', 'Cuisine', taggable_type, params[:id])
+                           .order('id ASC')
   end
 
   def specialties
-    custom_respond_with Tag.joins(:keyword).where('keywords.type = ? AND tags.taggable_type = ? AND tags.taggable_id = ?', 'Specialty', taggable_type, params[:id]).order('id ASC')
+    custom_respond_with Tag.joins(:keyword)
+                           .where('keywords.type = ? AND tags.taggable_type = ? AND tags.taggable_id = ?', 'Specialty', taggable_type, params[:id])
+                           .order('id ASC')
   end
 
   def create

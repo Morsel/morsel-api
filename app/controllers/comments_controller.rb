@@ -14,10 +14,10 @@ class CommentsController < ApiController
 
   def index
     custom_respond_with Comment.since(params[:since_id])
-                        .max(params[:max_id])
-                        .where('commentable_type = ? AND commentable_id = ?', commentable_type, params[:id])
-                        .limit(pagination_count)
-                        .order('id DESC')
+                               .max(params[:max_id])
+                               .where('commentable_type = ? AND commentable_id = ?', commentable_type, params[:id])
+                               .limit(pagination_count)
+                               .order('id DESC')
   end
 
   def destroy
