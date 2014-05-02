@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140428230909) do
+ActiveRecord::Schema.define(version: 20140502175746) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,7 +49,7 @@ ActiveRecord::Schema.define(version: 20140428230909) do
   add_index "activities", ["recipient_id"], name: "index_activities_on_recipient_id", using: :btree
   add_index "activities", ["subject_id"], name: "index_activities_on_subject_id", using: :btree
 
-  create_table "authorizations", force: true do |t|
+  create_table "authentications", force: true do |t|
     t.string   "provider"
     t.string   "uid"
     t.integer  "user_id"
@@ -61,8 +61,8 @@ ActiveRecord::Schema.define(version: 20140428230909) do
     t.datetime "updated_at"
   end
 
-  add_index "authorizations", ["uid", "name"], name: "index_authorizations_on_uid_and_name", using: :btree
-  add_index "authorizations", ["user_id"], name: "index_authorizations_on_user_id", using: :btree
+  add_index "authentications", ["uid", "name"], name: "index_authentications_on_uid_and_name", using: :btree
+  add_index "authentications", ["user_id"], name: "index_authentications_on_user_id", using: :btree
 
   create_table "comments", force: true do |t|
     t.integer  "commenter_id"

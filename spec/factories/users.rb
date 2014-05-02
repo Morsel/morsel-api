@@ -70,15 +70,15 @@ FactoryGirl.define do
         photo Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
       end
 
-      factory :chef_with_facebook_authorization do
+      factory :chef_with_facebook_authentication do
         after(:create) do |chef|
-          create_list(:facebook_authorization, 1, user: chef)
+          create_list(:facebook_authentication, 1, user: chef)
         end
       end
 
-      factory :chef_with_twitter_authorization do
+      factory :chef_with_twitter_authentication do
         after(:create) do |chef|
-          create_list(:twitter_authorization, 1, user: chef)
+          create_list(:twitter_authentication, 1, user: chef)
         end
       end
     end

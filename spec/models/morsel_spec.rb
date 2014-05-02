@@ -130,7 +130,7 @@ describe Morsel do
     it { should include(' on @eatmorsel') }
 
     context 'User has a Twitter username' do
-      let(:morsel_with_creator) { FactoryGirl.create(:morsel_with_creator, creator: FactoryGirl.create(:chef_with_twitter_authorization)) }
+      let(:morsel_with_creator) { FactoryGirl.create(:morsel_with_creator, creator: FactoryGirl.create(:chef_with_twitter_authentication)) }
       subject(:twitter_message) { morsel_with_creator.twitter_message }
 
       it { should include('@twitter_screen_name') }

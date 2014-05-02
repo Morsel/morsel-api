@@ -198,23 +198,23 @@ describe User do
 
   context 'Authorizations' do
     context 'Facebook' do
-      subject(:chef_with_facebook_authorization) { FacebookUserDecorator.new(FactoryGirl.create(:chef_with_facebook_authorization)) }
+      subject(:chef_with_facebook_authentication) { FacebookAuthenticatedUserDecorator.new(FactoryGirl.create(:chef_with_facebook_authentication)) }
 
-      its(:facebook_authorizations) { should_not be_empty }
+      its(:facebook_authentications) { should_not be_empty }
 
-      its(:facebook_authorization) { should_not be_nil }
-      its(:authorized_with_facebook?) { should be_true }
+      its(:facebook_authentication) { should_not be_nil }
+      its(:authenticated_with_facebook?) { should be_true }
       its(:facebook_client) { should_not be_nil }
       its(:facebook_uid) { should_not be_nil }
     end
 
     context 'Twitter' do
-      subject(:chef_with_twitter_authorization) { TwitterUserDecorator.new(FactoryGirl.create(:chef_with_twitter_authorization)) }
+      subject(:chef_with_twitter_authentication) { TwitterAuthenticatedUserDecorator.new(FactoryGirl.create(:chef_with_twitter_authentication)) }
 
-      its(:twitter_authorizations) { should_not be_empty }
+      its(:twitter_authentications) { should_not be_empty }
 
-      its(:twitter_authorization) { should_not be_nil }
-      its(:authorized_with_twitter?) { should be_true }
+      its(:twitter_authentication) { should_not be_nil }
+      its(:authenticated_with_twitter?) { should be_true }
       its(:user_twitter_client) { should_not be_nil }
       its(:twitter_username) { should_not be_nil }
     end

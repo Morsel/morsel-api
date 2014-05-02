@@ -68,8 +68,8 @@ class Morsel < ActiveRecord::Base
   end
 
   def twitter_message
-    if TwitterUserDecorator.new(creator).twitter_username.present?
-      twitter_username_or_full_name = "@#{TwitterUserDecorator.new(creator).twitter_username}"
+    if TwitterAuthenticatedUserDecorator.new(creator).twitter_username.present?
+      twitter_username_or_full_name = "@#{TwitterAuthenticatedUserDecorator.new(creator).twitter_username}"
     else
       twitter_username_or_full_name = creator.full_name
     end

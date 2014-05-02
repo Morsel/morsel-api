@@ -60,8 +60,8 @@ MorselApp::Application.routes.draw do
 
   resources :users, only: [:update], concerns: [:followable, :taggable] do
     collection do
-      post 'authorizations' => 'authorizations#create'
-      get 'authorizations' => 'authorizations#index'
+      post 'authentications' => 'authentications#create'
+      get 'authentications' => 'authentications#index'
       get 'checkusername(/:username)' => 'users#checkusername' # DEPRECATED
       get 'validateusername(/:username)' => 'users#validateusername'
       post 'reserveusername(/:username)' => 'users#reserveusername'

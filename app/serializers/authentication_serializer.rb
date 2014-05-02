@@ -1,4 +1,4 @@
-class AuthorizationSerializer < ActiveModel::Serializer
+class AuthenticationSerializer < ActiveModel::Serializer
   attributes :id,
              :provider,
              :uid,

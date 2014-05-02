@@ -252,8 +252,8 @@ describe 'Users API' do
       expect(user_event.client_version).to eq('1.2.3')
     end
 
-    context 'authorization is passed' do
-      it 'returns an error if an invalid authorization is passed' do
+    context 'authentication is passed' do
+      it 'returns an error if an invalid authentication is passed' do
         post endpoint, format: :json, user: {
                                         email: Faker::Internet.email,
                                         password: 'password',
@@ -265,7 +265,7 @@ describe 'Users API' do
                                         photo: Rack::Test::UploadedFile.new(
                                           File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
                                       },
-                                      authorization: {
+                                      authentication: {
                                         provider: 'myspace'
                                       }
 
@@ -273,7 +273,7 @@ describe 'Users API' do
       end
 
       context 'Facebook' do
-        it 'creates a new Facebook authorization for the new User' do
+        it 'creates a new Facebook authentication for the new User' do
           dummy_name = 'Facebook User'
           dummy_token = 'token'
           dummy_fb_uid = '123456'
@@ -297,7 +297,7 @@ describe 'Users API' do
                                           photo: Rack::Test::UploadedFile.new(
                                             File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
                                         },
-                                        authorization: {
+                                        authentication: {
                                           provider: 'facebook',
                                           token: dummy_token
                                         }
@@ -305,14 +305,14 @@ describe 'Users API' do
           expect(response).to be_success
 
           new_user = User.find json_data['id']
-          new_facebook_user = FacebookUserDecorator.new(new_user)
-          expect(new_facebook_user.facebook_authorizations.count).to eq(1)
+          new_facebook_user = FacebookAuthenticatedUserDecorator.new(new_user)
+          expect(new_facebook_user.facebook_authentications.count).to eq(1)
           expect(new_facebook_user.facebook_uid).to eq(dummy_fb_uid)
         end
       end
 
       context 'Twitter' do
-        it 'creates a new Twitter authorization for the new User' do
+        it 'creates a new Twitter authentication for the new User' do
           dummy_screen_name = 'twitter_screen_name'
           dummy_secret = 'secret'
           dummy_token = 'token'
@@ -335,7 +335,7 @@ describe 'Users API' do
                                           photo: Rack::Test::UploadedFile.new(
                                             File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
                                         },
-                                        authorization: {
+                                        authentication: {
                                           provider: 'twitter',
                                           token: dummy_token,
                                           secret: dummy_secret
@@ -344,8 +344,8 @@ describe 'Users API' do
           expect(response).to be_success
 
           new_user = User.find json_data['id']
-          new_twitter_user = TwitterUserDecorator.new(new_user)
-          expect(new_twitter_user.twitter_authorizations.count).to eq(1)
+          new_twitter_user = TwitterAuthenticatedUserDecorator.new(new_user)
+          expect(new_twitter_user.twitter_authentications.count).to eq(1)
           expect(new_twitter_user.twitter_username).to eq(dummy_screen_name)
         end
       end
@@ -356,32 +356,75 @@ describe 'Users API' do
     let(:endpoint) { '/users/sign_in' }
     let(:user) { FactoryGirl.create(:user) }
 
-    it 'signs in the User' do
-      post endpoint, format: :json, user: { email: user.email, password: 'password' }
+    context 'email/username and password' do
+      it 'signs in the User' do
+        post endpoint, format: :json, user: { email: user.email, password: 'password' }
 
-      expect(response).to be_success
+        expect(response).to be_success
 
-      expect_json_keys(json_data, user, %w(id username first_name last_name bio))
-      expect(json_data['auth_token']).to eq(user.authentication_token)
-      expect(json_data['photos']).to be_nil
-      expect(json_data['sign_in_count']).to eq(1)
-      expect_nil_json_keys(json_data, %w(password encrypted_password))
+        expect_json_keys(json_data, user, %w(id username first_name last_name bio))
+        expect(json_data['auth_token']).to eq(user.authentication_token)
+        expect(json_data['photos']).to be_nil
+        expect(json_data['sign_in_count']).to eq(1)
+        expect_nil_json_keys(json_data, %w(password encrypted_password))
+      end
+
+      it 'accepts a username instead of an email' do
+        post endpoint, format: :json, user: { username: user.username, password: 'password' }
+        expect(response).to be_success
+      end
+
+      it 'accepts \'login\' as a generic parameter for email or username' do
+        post endpoint, format: :json, user: { login: user.username, password: 'password' }
+        expect(response).to be_success
+      end
+
+      it 'returns \'login or password\' error if invalid credentials' do
+        post endpoint, format: :json, user: { email: 'butt', password: 'sack' }
+        expect(response).to_not be_success
+        expect(json_errors['base'].first).to eq('login or password is invalid')
+      end
     end
 
-    it 'accepts a username instead of an email' do
-      post endpoint, format: :json, user: { username: user.username, password: 'password' }
-      expect(response).to be_success
+    context 'facebook authentication' do
+      let(:facebook_authentication) { FactoryGirl.create(:facebook_authentication, user: user) }
+      it 'signs in the User' do
+        stub_facebook_client
+        post endpoint,  format: :json,
+                        authentication: {
+                          provider: facebook_authentication.provider,
+                          token: facebook_authentication.token
+                        }
+
+        expect(response).to be_success
+
+        expect_json_keys(json_data, user, %w(id username first_name last_name bio))
+        expect(json_data['auth_token']).to eq(user.authentication_token)
+        expect(json_data['photos']).to be_nil
+        expect(json_data['sign_in_count']).to eq(1)
+        expect_nil_json_keys(json_data, %w(password encrypted_password))
+      end
     end
 
-    it 'accepts \'login\' as a generic parameter for email or username' do
-      post endpoint, format: :json, user: { login: user.username, password: 'password' }
-      expect(response).to be_success
-    end
+    context 'twitter authentication' do
+      let(:twitter_authentication) { FactoryGirl.create(:twitter_authentication, user: user) }
+      it 'signs in the User' do
+        stub_twitter_client
+        post endpoint,  format: :json,
+                        authentication: {
+                          provider: twitter_authentication.provider,
+                          token: twitter_authentication.token,
+                          secret: twitter_authentication.secret
+                        }
 
-    it 'returns \'login or password\' error if invalid credentials' do
-      post endpoint, format: :json, user: { email: 'butt', password: 'sack' }
-      expect(response).to_not be_success
-      expect(json_errors['base'].first).to eq('login or password is invalid')
+        expect(response).to be_success
+
+        expect_json_keys(json_data, user, %w(id username first_name last_name bio))
+        expect(json_data['auth_token']).to eq(user.authentication_token)
+        expect(json_data['photos']).to be_nil
+        expect(json_data['sign_in_count']).to eq(1)
+        expect_nil_json_keys(json_data, %w(password encrypted_password))
+      end
     end
   end
 
@@ -401,8 +444,8 @@ describe 'Users API' do
       expect_nil_json_keys(json_data, %w(password encrypted_password staff draft_count sign_in_count photo_processing auth_token email))
 
       expect(json_data['photos']).to be_nil
-      expect(json_data['facebook_uid']).to eq(FacebookUserDecorator.new(user_with_morsels).facebook_uid)
-      expect(json_data['twitter_username']).to eq(TwitterUserDecorator.new(user_with_morsels).twitter_username)
+      expect(json_data['facebook_uid']).to eq(FacebookAuthenticatedUserDecorator.new(user_with_morsels).facebook_uid)
+      expect(json_data['twitter_username']).to eq(TwitterAuthenticatedUserDecorator.new(user_with_morsels).twitter_username)
 
       expect(json_data['liked_items_count']).to eq(number_of_likes)
       expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.count)
@@ -443,8 +486,8 @@ describe 'Users API' do
         expect_nil_json_keys(json_data, %w(password encrypted_password staff draft_count sign_in_count photo_processing auth_token email))
 
         expect(json_data['photos']).to be_nil
-        expect(json_data['facebook_uid']).to eq(FacebookUserDecorator.new(user_with_morsels).facebook_uid)
-        expect(json_data['twitter_username']).to eq(TwitterUserDecorator.new(user_with_morsels).twitter_username)
+        expect(json_data['facebook_uid']).to eq(FacebookAuthenticatedUserDecorator.new(user_with_morsels).facebook_uid)
+        expect(json_data['twitter_username']).to eq(TwitterAuthenticatedUserDecorator.new(user_with_morsels).twitter_username)
 
         expect(json_data['liked_items_count']).to eq(number_of_likes)
         expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.count)
@@ -648,32 +691,32 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /users/authorizations' do
-    let(:endpoint) { '/users/authorizations' }
+  describe 'GET /users/authentications' do
+    let(:endpoint) { '/users/authentications' }
     let(:user) { FactoryGirl.create(:user) }
 
     it_behaves_like 'TimelinePaginateable' do
-      let(:paginateable_object_class) { Authorization }
+      let(:paginateable_object_class) { Authentication }
       before do
         paginateable_object_class.delete_all
-        15.times { FactoryGirl.create(:facebook_authorization, user: user) }
-        15.times { FactoryGirl.create(:twitter_authorization, user: user) }
+        15.times { FactoryGirl.create(:facebook_authentication, user: user) }
+        15.times { FactoryGirl.create(:twitter_authentication, user: user) }
       end
     end
 
-    it 'returns the current_user\'s Authorizations' do
+    it 'returns the current_user\'s Authentications' do
       get endpoint, api_key: api_key_for_user(user), format: :json
 
       expect(response).to be_success
     end
   end
 
-  describe 'POST /users/authorizations' do
-    let(:endpoint) { '/users/authorizations' }
+  describe 'POST /users/authentications' do
+    let(:endpoint) { '/users/authentications' }
     let(:chef) { FactoryGirl.create(:chef) }
 
     context 'Twitter' do
-      it 'creates a new Twitter authorization' do
+      it 'creates a new Twitter authentication' do
         dummy_screen_name = 'twitter_screen_name'
         dummy_secret = 'secret'
         dummy_token = 'token'
@@ -700,14 +743,14 @@ describe 'Users API' do
         expect(json_data['user_id']).to eq(chef.id)
         expect(json_data['name']).to eq(dummy_screen_name)
 
-        twitter_chef = TwitterUserDecorator.new(chef)
-        expect(twitter_chef.twitter_authorizations.count).to eq(1)
+        twitter_chef = TwitterAuthenticatedUserDecorator.new(chef)
+        expect(twitter_chef.twitter_authentications.count).to eq(1)
         expect(twitter_chef.twitter_username).to eq(dummy_screen_name)
       end
     end
 
     context 'Facebook' do
-      it 'creates a new Facebook authorization' do
+      it 'creates a new Facebook authentication' do
         dummy_name = 'Facebook User'
         dummy_token = 'token'
         dummy_fb_uid = '123456'
@@ -734,8 +777,8 @@ describe 'Users API' do
         expect(json_data['user_id']).to eq(chef.id)
         expect(json_data['name']).to eq(dummy_name)
 
-        facebook_chef = FacebookUserDecorator.new(chef)
-        expect(facebook_chef.facebook_authorizations.count).to eq(1)
+        facebook_chef = FacebookAuthenticatedUserDecorator.new(chef)
+        expect(facebook_chef.facebook_authentications.count).to eq(1)
         expect(facebook_chef.facebook_uid).to eq(dummy_fb_uid)
       end
     end

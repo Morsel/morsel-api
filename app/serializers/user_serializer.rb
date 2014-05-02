@@ -20,11 +20,11 @@ class UserSerializer < ActiveModel::Serializer
   end
 
   def facebook_uid
-    FacebookUserDecorator.new(object).facebook_uid
+    FacebookAuthenticatedUserDecorator.new(object).facebook_uid
   end
 
   def twitter_username
-    TwitterUserDecorator.new(object).twitter_username
+    TwitterAuthenticatedUserDecorator.new(object).twitter_username
   end
 
   def following

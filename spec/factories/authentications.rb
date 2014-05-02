@@ -1,6 +1,6 @@
 # ## Schema Information
 #
-# Table name: `authorizations`
+# Table name: `authentications`
 #
 # ### Columns
 #
@@ -21,19 +21,19 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
-  factory :authorization do
+  factory :authentication do
     link 'link'
     uid { Faker::Lorem.characters(10) }
     association :user
 
-    factory :facebook_authorization do
+    factory :facebook_authentication do
       provider 'facebook'
       name 'facebook.user'
       link 'facebook.com/facebook.user'
       token { Faker::Lorem.characters(20) }
     end
 
-    factory :twitter_authorization do
+    factory :twitter_authentication do
       provider 'twitter'
       name 'twitter_screen_name'
       link 'twitter.com/twitter_screen_name'

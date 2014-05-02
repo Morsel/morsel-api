@@ -1,26 +1,25 @@
-class AuthorizationsController < ApiController
+class AuthenticationsController < ApiController
   respond_to :json
-  authorize_actions_for Authorization
+  authorize_actions_for Authentication
 
   def create
-    authorization = CreateAuthorization.call(AuthorizationParams.build(params).merge({user: current_user}))
-
-    if authorization.save
-      custom_respond_with authorization
+    authentication = CreateAuthentication.call(AuthenticationParams.build(params).merge({user: current_user}))
+    if authentication.save
+      custom_respond_with authentication
     else
-      render_json_errors(authorization.errors)
+      render_json_errors(authentication.errors)
     end
   end
 
   def index
-    custom_respond_with Authorization.since(params[:since_id])
+    custom_respond_with Authentication.since(params[:since_id])
                                      .max(params[:max_id])
                                      .where(user_id: current_user.id)
                                      .limit(pagination_count)
                                      .order('id DESC')
   end
 
-  class AuthorizationParams
+  class AuthenticationParams
     def self.build(params)
       params.fetch(:secret) if params[:provider] == 'twitter'
       params.permit(:provider, :uid, :user_id, :token, :secret)

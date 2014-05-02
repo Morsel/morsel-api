@@ -23,8 +23,8 @@
   - [GET ```/users/{user_id|user_username}``` - User](#get-usersuser_iduser_username---user)
   - [PUT ```/users/{user_id}``` - Update User](#put-usersuser_id---update-user)
   - [GET ```/users/{user_id|user_username}/morsels``` - User Morsels](#get-usersuser_iduser_usernamemorsels---user-morsels)
-  - [POST ```/users/authorizations``` - Create User Authorizations](#post-usersauthorizations---create-user-authorizations)
-  - [GET ```/users/authorizations``` - User Authorizations](#get-usersauthorizations---user-authorizations)
+  - [POST ```/users/authentications``` - Create User Authentications](#post-usersauthentications---create-user-authentications)
+  - [GET ```/users/authentications``` - User Authentications](#get-usersauthentications---user-authentications)
   - [GET ```/users/activities``` - User Activities](#get-usersactivities---user-activities)
   - [GET ```/users/notifications``` - User Notifications](#get-usersnotifications---user-notifications)
   - [GET ```/users/{user_id}/likeables``` - User Likeables](#get-usersuser_idlikeables---user-likeables)
@@ -69,8 +69,8 @@
   - [GET ```/configuration``` - Configuration](#get-configuration---configuration)
 
 - [Response Objects](#response-objects)
-  - [Authorization Objects](#authorization-objects)
-    - [Authorization](#authorization)
+  - [Authentication Objects](#authentication-objects)
+    - [Authentication](#authentication)
   - [Comment Objects](#comment-objects)
     - [Comment](#comment)
   - [Item Objects](#item-objects)
@@ -251,9 +251,9 @@ Image processing is done in a background job. `photo_processing` will be set to 
 | user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
 | user[bio] | String | The bio for the new User. Maximum 255 characters. | | |
 | __utmz | String | Google Analytics information to pass to the server | | |
-| authorization[provider] | String | The provider the User is authorizing. Currently the only valid values are 'facebook' and 'twitter'. | | |
-| authorization[token] | String | The User's Access Token for the service. | | |
-| authorization[secret] | String | The User's Access Token Secret for the service. Only required for Twitter. | | |
+| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | |
+| authentication[token] | String | The User's Access Token for the service. | | |
+| authentication[secret] | String | The User's Access Token Secret for the service. Only required for Twitter. | | |
 
 ### Response
 
@@ -265,16 +265,24 @@ Image processing is done in a background job. `photo_processing` will be set to 
 <br />
 
 ## POST ```/users/sign_in``` - User Authentication
-Authenticates a User and returns an authentication_token
+Authenticates a User using one of the request parameters below and returns an authentication_token
 
 ### Request
 
+#### Sign In w/ (Email OR Username) AND Password
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | user[email] | String | The email address for the User. | | X |
 | user[username] | String | The username for the User. Can be used instead of an email. | | |
 | user[login] | String | A generic attribute that can be the email or username. | | |
 | user[password] | String | The password for the User. Minimum 8 characters. | | X |
+
+#### Sign In w/ Authentication
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | |
+| authentication[token] | String | The User's Access Token for the service. | | |
+| authentication[secret] | String | The User's Access Token Secret for the service. Only required for Twitter. | | |
 
 ### Response
 
@@ -448,42 +456,42 @@ Returns the Morsels for the User with the specified ```user_id``` or ```user_use
 <br />
 <br />
 
-## POST ```/users/authorizations``` - Create User Authorizations
-Creates a new Authorization for the authenticated User
+## POST ```/users/authentications``` - Create User Authentications
+Creates a new Authentication for the authenticated User
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| authorization[provider] | String | The provider the User is authorizing. Currently the only valid values are 'facebook' and 'twitter'. | | X |
-| authorization[token] | String | The User's Access Token for the service. | | X |
-| authorization[secret] | String | The User's Access Token Secret for the service. Only required for Twitter. | | Twitter |
+| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | X |
+| authentication[token] | String | The User's Access Token for the service. | | X |
+| authentication[secret] | String | The User's Access Token Secret for the service. Only required for Twitter. | | Twitter |
 
 ### Response
 
 | __data__ |
 | -------- |
-| Created [Authorization](#authorization) |
+| Created [Authentication](#authentication) |
 
 <br />
 <br />
 
-## GET ```/users/authorizations``` - User Authorizations
-Returns the current User's authorizations
+## GET ```/users/authentications``` - User Authentications
+Returns the current User's authentications
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Authorizations up to and including this ```id``` | | |
-| since_id | Number | Return Authorizations since this ```id``` | | |
+| max_id | Number | Return Authentications up to and including this ```id``` | | |
+| since_id | Number | Return Authentications since this ```id``` | | |
 
 ### Response
 
 | __data__ |
 | -------- |
-| Array of [Authorization](#authorization) |
+| Array of [Authentication](#authentication) |
 
 <br />
 <br />
@@ -497,7 +505,7 @@ Returns the Authenticated User's Activities. An Activity is created when a User 
 | ------------------- | ------- | ----------- | ------- | --------- |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
 | max_id | Number | Return Activities up to and including this ```id``` | | |
-| since_id | Number | Return Authorizations since this ```id``` | | |
+| since_id | Number | Return Authentications since this ```id``` | | |
 
 ### Response
 
@@ -1034,9 +1042,9 @@ Used by third-party services to ping the API.
 
 # Response Objects
 
-## Authorization Objects
+## Authentication Objects
 
-### Authorization
+### Authentication
 
 ```json
 {

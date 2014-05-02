@@ -53,16 +53,16 @@ class User < ActiveRecord::Base
   before_save :ensure_authentication_token
   after_save :ensure_role
 
-  has_many :authorizations, inverse_of: :user
+  has_many :authentications, inverse_of: :user
 
   has_many :comments, through: :items
-  has_many  :facebook_authorizations,
+  has_many  :facebook_authentications,
             -> { where provider: 'facebook' },
-            class_name: 'Authorization',
+            class_name: 'Authentication',
             foreign_key: :user_id
-  has_many  :twitter_authorizations,
+  has_many  :twitter_authentications,
             -> { where provider: 'twitter' },
-            class_name: 'Authorization',
+            class_name: 'Authentication',
             foreign_key: :user_id
   has_many :likes, foreign_key: :liker_id
   has_many :liked_items, through: :likes, source: :likeable, source_type: 'Item'
