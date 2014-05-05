@@ -28,7 +28,8 @@
   - [GET ```/users/{user_id|user_username}/morsels``` - User Morsels](#get-usersuser_iduser_usernamemorsels---user-morsels)
   - [POST ```/users/authentications``` - Create User Authentications](#post-usersauthentications---create-user-authentications)
   - [GET ```/users/authentications``` - User Authentications](#get-usersauthentications---user-authentications)
-  - [GET ```/users/checkauthentication``` - Check Authentication](#post-userscheckauthentication---check-authentication)
+  - [DELETE ```/users/authentications/{authentication_id}``` - Delete User Authentications](#delete-usersauthenticationsauthentication_id---delete-user-authentications)
+  - [GET ```/users/check_authentication``` - Check Authentication](#post-userscheck_authentication---check-authentication)
   - [GET ```/users/activities``` - User Activities](#get-usersactivities---user-activities)
   - [GET ```/users/notifications``` - User Notifications](#get-usersnotifications---user-notifications)
   - [GET ```/users/{user_id}/likeables``` - User Likeables](#get-usersuser_idlikeables---user-likeables)
@@ -538,7 +539,19 @@ Returns the current User's authentications
 <br />
 <br />
 
-## GET ```/users/checkauthentication``` - Check Authentication
+## DELETE ```/users/authentications/{authentication_id}``` - Delete User Authentications
+Deletes the authentication with the specified `authentication_id`
+
+### Response
+
+| Status Code |
+| ----------- |
+|         200 |
+
+<br />
+<br />
+
+## GET ```/users/check_authentication``` - Check Authentication
 Returns ```true``` if the authentication exists, otherwise false.
 
 ### Request
