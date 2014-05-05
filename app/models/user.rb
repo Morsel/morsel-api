@@ -47,8 +47,7 @@ class User < ActiveRecord::Base
 
   self.authorizer_name = 'UserAuthorizer'
 
-  devise :database_authenticatable, :registerable, :rememberable, :trackable, :validatable
-  # :recoverable
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
 
   before_save :ensure_authentication_token
   after_save :ensure_role

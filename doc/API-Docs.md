@@ -16,6 +16,8 @@
 - [User Methods](#user-methods)
   - [POST ```/users``` - Create a new User](#post-users---create-a-new-user)
   - [POST ```/users/sign_in``` - User Authentication](#post-userssign_in---user-authentication)
+  - [POST ```/users/forgot_password``` - Forgot Password](#post-usersforgot_password---forgot-password)
+  - [POST ```/users/reset_password``` - Reset Password](#post-usersreset_password---reset-password)
   - [GET ```/users/me``` - Me](#get-usersme---me)
   - [POST ```/users/unsubscribe``` - Unsubscribe](#post-usersunsubscribe---unsubscribe)
   - [GET ```/users/validateusername``` - Validate Username](#get-usersvalidateusername---validate-username)
@@ -297,6 +299,44 @@ Authenticates a User using one of the request parameters below and returns an au
 | Message | Status | Description |
 | ------- | ------ | ----------- |
 | __login or password is invali__ | 401 (Unauthorized) or 422 (Unprocessable Entity) | The email, username, or password specified are invalid |
+
+<br />
+<br />
+
+## POST ```/users/forgot_password``` - Forgot Password
+Sends a Reset Password email for the User with the specified `email`.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| email | String | The email address for the User. | | X |
+
+### Response
+
+| Status Code |
+| ----------- |
+|         200 |
+
+<br />
+<br />
+
+## POST ```/users/reset_password``` - Reset Password
+Sets the password for the User with the specified `reset_password_token` to the `password` and `password_confirmation` provided.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| reset_password_token | String | The User's token from the Reset Password email. | | x |
+| password | String | The new password for the User. Minimum 8 characters. | | x |
+| password_confirmation | String | The new password for the User. Minimum 8 characters. | | x |
+
+### Response
+
+| Status Code |
+| ----------- |
+|         200 |
 
 <br />
 <br />
