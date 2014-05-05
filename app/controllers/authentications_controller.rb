@@ -19,6 +19,17 @@ class AuthenticationsController < ApiController
                                      .order('id DESC')
   end
 
+  def destroy
+    authentication = Authentication.find(params[:id])
+    authorize_action_for authentication
+
+    if authentication.destroy
+      render_json 'OK'
+    else
+      render_json_errors(authentication.errors)
+    end
+  end
+
   def check
     authentication_params = AuthenticationParams.build(params)
     count = User.joins(:authentications).where('authentications.provider = ? AND authentications.uid = ?', authentication_params[:provider], authentication_params[:uid]).count

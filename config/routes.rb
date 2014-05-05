@@ -60,9 +60,8 @@ MorselApp::Application.routes.draw do
 
   resources :users, only: [:update], concerns: [:followable, :taggable] do
     collection do
-      post 'authentications' => 'authentications#create'
-      get 'authentications' => 'authentications#index'
-      get 'checkauthentication' => 'authentications#check'
+      resources :authentications, only: [:create, :index, :destroy]
+      get 'check_authentication' => 'authentications#check'
       get 'validateusername(/:username)' => 'users#validateusername'
       post 'reserveusername(/:username)' => 'users#reserveusername'
       post 'forgot_password' => 'users#forgot_password'

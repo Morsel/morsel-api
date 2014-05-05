@@ -205,8 +205,8 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /users/checkauthentication authentications#check' do
-    let(:endpoint) { '/users/checkauthentication' }
+  describe 'GET /users/check_authentication authentications#check' do
+    let(:endpoint) { '/users/check_authentication' }
 
     it 'returns false' do
       get endpoint, authentication: {
@@ -787,7 +787,7 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /users/authentications' do
+  describe 'GET /users/authentications authentications#index' do
     let(:endpoint) { '/users/authentications' }
     let(:user) { FactoryGirl.create(:user) }
 
@@ -807,7 +807,7 @@ describe 'Users API' do
     end
   end
 
-  describe 'POST /users/authentications' do
+  describe 'POST /users/authentications authentications#create' do
     let(:endpoint) { '/users/authentications' }
     let(:chef) { FactoryGirl.create(:chef) }
     let(:screen_name) { 'eatmorsel' }
@@ -870,6 +870,17 @@ describe 'Users API' do
         expect(facebook_chef.facebook_authentications.count).to eq(1)
         expect(facebook_chef.facebook_uid).to eq(dummy_fb_uid)
       end
+    end
+  end
+
+  describe 'DELETE /users/authentications/{:authentication_id} authentications#destroy' do
+    let(:endpoint) { "/users/authentications/#{authentication.id}" }
+    let(:chef_with_facebook_authentication) { FactoryGirl.create(:chef_with_facebook_authentication) }
+    let(:authentication) { chef_with_facebook_authentication.authentications.first }
+
+    it 'destroys the authentication for the current_user' do
+      delete endpoint,  api_key: api_key_for_user(chef_with_facebook_authentication),
+                        format: :json
     end
   end
 
