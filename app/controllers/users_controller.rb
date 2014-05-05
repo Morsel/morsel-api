@@ -41,6 +41,25 @@ class UsersController < ApiController
     end
   end
 
+  def forgot_password
+    user = User.find_by(email: params.fetch(:email))
+    raise ActiveRecord::RecordNotFound if user.nil? || !user.active?
+
+    EmailUserDecorator.new(user).send_reserved_username_email
+    render_json('Sending reset password email.')
+  end
+
+  def reset_password
+    user = User.find_by reset_password_token: params.fetch(:reset_password_token)
+    raise ActiveRecord::RecordNotFound if user.nil? || !user.active? || !user.reset_password_period_valid?
+
+    if user.reset_password!(params.fetch(:password), params.fetch(:password_confirmation))
+      render_json 'OK'
+    else
+      render_json_errors(user.errors)
+    end
+  end
+
   def show
     if params[:id].present?
       user = User.includes(:authentications, :morsels, :items).find params[:id]

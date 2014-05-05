@@ -37,6 +37,12 @@ module Requests
       Twitter::Client.stub(:new).and_return(twitter_client)
       twitter_client.stub(:update_with_media).and_return(tweet)
 
+      twitter_user = double('Twitter::User')
+      twitter_client.stub(:current_user).and_return(twitter_user)
+      twitter_user.stub(:id).and_return(123)
+      twitter_user.stub(:screen_name).and_return('eatmorsel')
+      twitter_user.stub(:url).and_return("https://twitter.com/eatmorsel")
+
       twitter_client
     end
   end

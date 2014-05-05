@@ -16,6 +16,7 @@ module ReservedPaths
       blog
       business
       buttons
+      change_password
       checkusername
       chef
       city
@@ -34,6 +35,7 @@ module ReservedPaths
       find_users
       followers
       following
+      forgot_password
       friend_request
       friendrequest
       friends
@@ -61,6 +63,7 @@ module ReservedPaths
       notifications
       oauth
       password
+      passwords
       positions
       post
       press
@@ -68,10 +71,12 @@ module ReservedPaths
       products
       public_timeline
       replies
+      reset_password
       restaurant
       rules
       saved_searches
       search
+      security
       sent
       settings
       share

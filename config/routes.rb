@@ -65,6 +65,8 @@ MorselApp::Application.routes.draw do
       get 'checkauthentication' => 'authentications#check'
       get 'validateusername(/:username)' => 'users#validateusername'
       post 'reserveusername(/:username)' => 'users#reserveusername'
+      post 'forgot_password' => 'users#forgot_password'
+      post 'reset_password' => 'users#reset_password'
       get 'me' => 'users#me'
       post 'unsubscribe' => 'users#unsubscribe'
       get 'activities' => 'activities#index'

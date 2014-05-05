@@ -1,6 +1,7 @@
 developer_email: <%= ENV['DEVELOPER_EMAIL'] %>
 morsel:
   api_url: <%= ENV['MORSEL_API_URL'] %>
+  support_email_address: <%= ENV['MORSEL_SUPPORT_EMAIL_ADDRESS'] %>
   web_url: <%= ENV['MORSEL_WEB_URL'] %>
   twitter_username: <%= ENV['MORSEL_TWITTER_USERNAME'] %>
 pagination_default_count: <%= ENV['PAGINATION_DEFAULT_COUNT'] %>
@@ -17,6 +18,7 @@ facebook:
   app_secret: <%= ENV['FACEBOOK_APP_SECRET'] %>
 mandrill:
   api_key: <%= ENV['MANDRILL_API_KEY'] %>
+  user_name: <%= ENV['MANDRILL_USER_NAME'] %>
 new_relic:
   app_name: <%= ENV['NEW_RELIC_APP_NAME'] %>
   license_key: <%= ENV['NEW_RELIC_LICENSE_KEY'] %>

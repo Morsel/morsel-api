@@ -458,6 +458,72 @@ describe 'Users API' do
     end
   end
 
+  describe 'POST /users/forgot_password users#forgot_password' do
+    let(:endpoint) { '/users/forgot_password' }
+    let(:user) { FactoryGirl.create(:user) }
+
+    it 'sends an email' do
+      expect{
+        Sidekiq::Testing.inline! {
+          post endpoint,  email: user.email,
+                          format: :json
+        }
+      }.to change(MandrillMailer.deliveries, :count).by(1)
+
+      expect(response).to be_success
+    end
+
+    context 'email not found' do
+      it 'returns an error' do
+        post endpoint,  email: 'not_an_email',
+                        format: :json
+        expect(response).to_not be_success
+        expect(json_errors['base']).to include('Record not found')
+      end
+    end
+  end
+
+  describe 'POST /users/reset_password users#reset_password' do
+    let(:endpoint) { '/users/reset_password' }
+    let(:user) { FactoryGirl.create(:user) }
+    let(:new_password) { Faker::Lorem.characters(15) }
+
+    before { user.send_reset_password_instructions }
+
+    it 'resets the User\'s password' do
+      post endpoint,  reset_password_token: user.reset_password_token,
+                      password: new_password,
+                      password_confirmation: new_password
+
+      expect(response).to be_success
+
+      user.reload
+      expect(user.valid_password?(new_password)).to be_true
+    end
+
+    context 'invalid token' do
+      it 'returns an error' do
+        post endpoint,  reset_password_token: 'b4d_t0k3n',
+                        password: new_password,
+                        password_confirmation: new_password
+
+        expect(response).to_not be_success
+        expect(json_errors['base']).to include('Record not found')
+      end
+    end
+
+    context 'passwords do NOT match' do
+      it 'returns an error' do
+        post endpoint,  reset_password_token: user.reset_password_token,
+                        password: new_password,
+                        password_confirmation: 'not matching'
+
+        expect(response).to_not be_success
+        expect(json_errors['password_confirmation']).to include('doesn\'t match Password')
+      end
+    end
+  end
+
   describe 'GET /users/{:user_id|user_username} users#show' do
     let(:endpoint) { "/users/#{user_with_morsels.id}" }
     let(:user_with_morsels) { FactoryGirl.create(:user_with_morsels) }
@@ -744,38 +810,31 @@ describe 'Users API' do
   describe 'POST /users/authentications' do
     let(:endpoint) { '/users/authentications' }
     let(:chef) { FactoryGirl.create(:chef) }
+    let(:screen_name) { 'eatmorsel' }
+    let(:token) { 'token' }
+    let(:secret) { 'secret' }
 
     context 'Twitter' do
       it 'creates a new Twitter authentication' do
-        dummy_screen_name = 'twitter_screen_name'
-        dummy_secret = 'secret'
-        dummy_token = 'token'
-        client = double('Twitter::REST::Client')
-        twitter_user = double('Twitter::User')
-        Twitter::Client.stub(:new).and_return(client)
-        client.stub(:current_user).and_return(twitter_user)
-        twitter_user.stub(:id).and_return(123)
-        twitter_user.stub(:screen_name).and_return(dummy_screen_name)
-        twitter_user.stub(:url).and_return("https://twitter.com/#{dummy_screen_name}")
-
+        stub_twitter_client
         post endpoint, api_key: api_key_for_user(chef),
                                       provider: 'twitter',
-                                      token: dummy_token,
-                                      secret: dummy_secret,
+                                      token: token,
+                                      secret: secret,
                                       format: :json
 
         expect(response).to be_success
 
         expect(json_data['id']).to_not eq(123)
         expect(json_data['provider']).to eq('twitter')
-        expect(json_data['secret']).to eq(dummy_secret)
-        expect(json_data['token']).to eq(dummy_token)
+        expect(json_data['secret']).to eq(secret)
+        expect(json_data['token']).to eq(token)
         expect(json_data['user_id']).to eq(chef.id)
-        expect(json_data['name']).to eq(dummy_screen_name)
+        expect(json_data['name']).to eq(screen_name)
 
         twitter_chef = TwitterAuthenticatedUserDecorator.new(chef)
         expect(twitter_chef.twitter_authentications.count).to eq(1)
-        expect(twitter_chef.twitter_username).to eq(dummy_screen_name)
+        expect(twitter_chef.twitter_username).to eq(screen_name)
       end
     end
 
