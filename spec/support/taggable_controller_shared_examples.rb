@@ -2,9 +2,11 @@ shared_examples 'TaggableController' do
   describe 'POST /taggable/:id/tags' do
     let(:endpoint) { "#{taggable_route}/#{taggable.id}/tags" }
     it 'creates a Tag' do
-      post endpoint, tag: { keyword_id: keyword.id}, api_key: api_key_for_user(user), format: :json
+      post_endpoint tag: {
+                      keyword_id: keyword.id
+                    }
 
-      expect(response).to be_success
+      expect_success
       expect(json_data['id']).to_not be_nil
 
       new_tag = Tag.find json_data['id']
@@ -14,9 +16,9 @@ shared_examples 'TaggableController' do
 
     context 'keyword_id is omitted' do
       it 'returns an error' do
-        post endpoint, tag: { }, api_key: api_key_for_user(user), format: :json
+        post_endpoint tag: {}
 
-        expect(response).to_not be_success
+        expect_failure
       end
     end
   end
@@ -30,9 +32,9 @@ shared_examples 'TaggableController' do
     end
 
     it 'returns a list of Cuisine Tags for the taggable' do
-      get endpoint, keyword_id: keyword.id, api_key: api_key_for_user(user), format: :json
+      get_endpoint  keyword_id: keyword.id
 
-      expect(response).to be_success
+      expect_success
       expect(json_data.count).to eq(cuisine_tags_count)
     end
   end
@@ -46,9 +48,9 @@ shared_examples 'TaggableController' do
     end
 
     it 'returns a list of Specialty Tags for the taggable' do
-      get endpoint, keyword_id: keyword.id, api_key: api_key_for_user(user), format: :json
+      get_endpoint  keyword_id: keyword.id
 
-      expect(response).to be_success
+      expect_success
       expect(json_data.count).to eq(specialty_tags_count)
     end
   end
@@ -57,9 +59,9 @@ shared_examples 'TaggableController' do
     let(:endpoint) { "#{taggable_route}/#{taggable.id}/tags/#{tag.id}" }
 
     it 'soft deletes the Comment' do
-      delete endpoint, api_key: api_key_for_user(user), format: :json
+      delete_endpoint
 
-      expect(response).to be_success
+      expect_success
       expect(Tag.find_by(id: tag.id)).to be_nil
     end
   end

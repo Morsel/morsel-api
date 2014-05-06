@@ -3,7 +3,6 @@ require 'spec_helper'
 describe 'Feed API' do
   describe 'GET /feed' do
     let(:endpoint) { '/feed' }
-    let(:user) { FactoryGirl.create(:user) }
     let(:morsels_count) { 3 }
 
     it_behaves_like 'TimelinePaginateable' do
@@ -14,14 +13,12 @@ describe 'Feed API' do
       end
     end
 
-    before do
-      morsels_count.times { Sidekiq::Testing.inline! { FactoryGirl.create(:morsel_with_items) } }
-    end
+    before { morsels_count.times { Sidekiq::Testing.inline! { FactoryGirl.create(:morsel_with_items) } }}
 
     it 'returns the Feed' do
-      get endpoint, api_key: api_key_for_user(user), format: :json
+      get_endpoint
 
-      expect(response).to be_success
+      expect_success
       expect(json_data.count).to eq(morsels_count)
 
       first_feed_item = json_data.first
@@ -31,35 +28,23 @@ describe 'Feed API' do
       expect_json_keys(first_feed_item['subject'], Morsel.last, %w(id title draft))
     end
 
-    it 'should be public' do
-      get endpoint, format: :json
-
-      expect(response).to be_success
-    end
-
     context 'Morsel is deleted' do
-      before do
-        Morsel.last.destroy
-      end
+      before { Morsel.last.destroy }
 
       it 'removes the Feed Item' do
-        get endpoint, api_key: api_key_for_user(user),
-                 format: :json
-        expect(response).to be_success
+        get_endpoint
+        expect_success
         expect(json_data.count).to eq(morsels_count - 1)
       end
     end
 
     context 'Morsel is marked as draft' do
-      before do
-        Morsel.last.update(draft: true)
-      end
+      before { Morsel.last.update(draft: true) }
 
       it 'omits the Feed Item' do
-        get endpoint, api_key: api_key_for_user(user),
-                 format: :json
+        get_endpoint
 
-        expect(response).to be_success
+        expect_success
         expect(json_data.count).to eq(morsels_count - 1)
       end
     end

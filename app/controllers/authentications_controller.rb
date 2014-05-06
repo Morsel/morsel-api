@@ -32,7 +32,7 @@ class AuthenticationsController < ApiController
 
   def check
     authentication_params = AuthenticationParams.build(params)
-    count = User.joins(:authentications).where('authentications.provider = ? AND authentications.uid = ?', authentication_params[:provider], authentication_params[:uid]).count
+    count = User.joins(:authentications).where(authentications: { provider: authentication_params[:provider], token: authentication_params[:token] }).count
     render_json(count > 0)
   end
 

@@ -4,13 +4,13 @@ class TagsController < ApiController
 
   def cuisines
     custom_respond_with Tag.joins(:keyword)
-                           .where('keywords.type = ? AND tags.taggable_type = ? AND tags.taggable_id = ?', 'Cuisine', taggable_type, params[:id])
+                           .where(keywords: { type: 'Cuisine'}, tags: { taggable_type: taggable_type, taggable_id: params[:id] })
                            .order('id ASC')
   end
 
   def specialties
     custom_respond_with Tag.joins(:keyword)
-                           .where('keywords.type = ? AND tags.taggable_type = ? AND tags.taggable_id = ?', 'Specialty', taggable_type, params[:id])
+                           .where(keywords: { type: 'Specialty'}, tags: { taggable_type: taggable_type, taggable_id: params[:id] })
                            .order('id ASC')
   end
 

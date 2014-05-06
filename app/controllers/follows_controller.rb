@@ -28,9 +28,11 @@ class FollowsController < ApiController
   end
 
   def followers
-    # TODO: Paginate
-    custom_respond_with User.joins("LEFT OUTER JOIN follows ON follows.followable_type = '#{followable_type}' AND follows.follower_id = users.id AND follows.deleted_at is NULL AND users.deleted_at is NULL")
-                            .where('follows.followable_id = ?', params[:id])
+    custom_respond_with User.joins(:follows)
+                            .since(params[:since_id], 'users')
+                            .max(params[:max_id], 'users')
+                            .where(follows: { followable_id: params[:id] })
+                            .limit(pagination_count)
                             .order('follows.id DESC'),
                         each_serializer: UserFollowerSerializer,
                         context: {followable_id: params[:id]}

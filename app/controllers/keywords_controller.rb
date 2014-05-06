@@ -10,11 +10,12 @@ class KeywordsController < ApiController
     custom_respond_with Keyword.where(type: 'Specialty'), each_serializer: KeywordSerializer
   end
 
-  # get 'keywords/:id/users' => 'keywords#users'
   def users
-    # TODO: Paginate
-    custom_respond_with User.joins("LEFT OUTER JOIN tags ON tags.taggable_type = 'User' AND tags.taggable_id = users.id AND tags.deleted_at is NULL AND users.deleted_at is NULL")
-                            .where('tags.keyword_id = ?', params[:id])
-                            .order('users.id DESC')
+    custom_respond_with User.joins(:tags)
+                            .since(params[:since_id], 'users')
+                            .max(params[:max_id], 'users')
+                            .where(tags: { keyword_id: params[:id] })
+                            .limit(pagination_count)
+                            .order('tags.id DESC')
   end
 end
