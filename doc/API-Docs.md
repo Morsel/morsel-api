@@ -20,6 +20,7 @@
   - [POST ```/users/reset_password``` - Reset Password](#post-usersreset_password---reset-password)
   - [GET ```/users/me``` - Me](#get-usersme---me)
   - [POST ```/users/unsubscribe``` - Unsubscribe](#post-usersunsubscribe---unsubscribe)
+  - [GET ```/users/validate_email``` - Validate Email](#get-usersvalidate_email---validate-_email)
   - [GET ```/users/validateusername``` - Validate Username](#get-usersvalidateusername---validate-username)
   - [POST ```/users/reserveusername``` - Reserve Username](#post-usersreserveusername---reserve-username)
   - [PUT ```/users/{user_id}/updateindustry``` - Update Industry](#put-usersuser_idupdateindustry---update-industry)
@@ -397,6 +398,34 @@ Returns ```true``` if the username is valid, otherwise errors.
 | 'username': ['cannot contain spaces'] | 422 (Unprocessible Entity) | |
 | 'username': ['has already been taken'] | 422 (Unprocessible Entity) | username has already been taken or is a reserved path |
 | 'username': ['must start with a letter and can only contain alphanumeric characters and underscores'] | 422 (Unprocessible Entity) | |
+
+<br />
+<br />
+
+
+## GET ```/users/validate_email``` - Validate Email
+Returns ```true``` if the email is valid, otherwise errors.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| email | String | The email to validate | | X |
+
+### Response
+
+| Condition | __data__ |
+| --------- | -------- |
+| Email does NOT exist | true |
+| Email is invalid or already exists | Errors (see below) |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| 'email': ['is required'] | 422 (Unprocessible Entity) | email not passed |
+| 'email': ['has already been taken'] | 422 (Unprocessible Entity) | email has already been taken |
+| 'email': ['is invalid'] | 422 (Unprocessible Entity) | |
 
 <br />
 <br />
