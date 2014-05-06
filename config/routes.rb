@@ -62,6 +62,7 @@ MorselApp::Application.routes.draw do
     collection do
       resources :authentications, only: [:create, :index, :destroy]
       get 'check_authentication' => 'authentications#check'
+      get 'validate_email(/:email)' => 'users#validate_email'
       get 'validateusername(/:username)' => 'users#validateusername'
       post 'reserveusername(/:username)' => 'users#reserveusername'
       post 'forgot_password' => 'users#forgot_password'

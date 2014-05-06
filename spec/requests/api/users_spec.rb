@@ -44,6 +44,46 @@ describe 'Users API' do
     end
   end
 
+  describe 'GET /users/validate_email users#validate_email' do
+    let(:endpoint) { '/users/validate_email' }
+    let(:user) { FactoryGirl.create(:user) }
+
+    it 'returns true if the email does NOT exist' do
+      get_endpoint email: 'marty@rock.lobster'
+
+      expect_success
+      expect(json_data).to eq(true)
+    end
+
+    it 'returns an error if the email is nil' do
+      get_endpoint
+
+      expect_failure
+      expect(json_errors['email']).to include('is required')
+    end
+
+    it 'returns an error if the email is invalid' do
+      get_endpoint email: 'a_bad_email_address'
+
+      expect_failure
+      expect(json_errors['email']).to include('is invalid')
+    end
+
+    it 'returns an error if the email already exists' do
+      get_endpoint email: user.email
+
+      expect_failure
+      expect(json_errors['email']).to include('has already been taken')
+    end
+
+    it 'ignores case' do
+      get_endpoint email: user.email.swapcase
+
+      expect_failure
+      expect(json_errors['email']).to include('has already been taken')
+    end
+  end
+
   describe 'GET /users/validateusername users#validateusername' do
     let(:endpoint) { '/users/validateusername' }
     let(:user) { FactoryGirl.create(:user) }

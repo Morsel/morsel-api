@@ -87,6 +87,7 @@ class User < ActiveRecord::Base
               message: '%{value} is not a valid industry'
             }, allow_nil: true
 
+  validate :validate_email
   validate :validate_username
 
   mount_uploader :photo, UserPhotoUploader
@@ -147,6 +148,15 @@ class User < ActiveRecord::Base
       "#{first_name}"
     elsif last_name
       "#{last_name}"
+    end
+  end
+
+  def validate_email
+    if email.nil?
+      errors.add(:email, 'is required')
+    else
+      errors.add(:email, 'is invalid') unless email.match(/\A[^@]+@([^@\.]+\.)+[^@\.]+\z/)
+      errors.add(:email, 'has already been taken') if User.where('lower(email) = ? AND id != ?', email.downcase, id || 0).count > 0
     end
   end
 

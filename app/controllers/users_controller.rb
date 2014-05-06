@@ -1,8 +1,19 @@
 class UsersController < ApiController
-  PUBLIC_ACTIONS = [:show, :checkusername, :reserveusername, :setrole, :unsubscribe, :followables, :likeables]
+  PUBLIC_ACTIONS = [:show, :validate_email, :validateusername, :reserveusername, :setrole, :unsubscribe, :followables, :likeables]
 
   def me
     custom_respond_with current_user, serializer: UserWithPrivateAttributesSerializer
+  end
+
+  def validate_email
+    user = User.new(email: params[:email])
+    user.validate_email
+
+    if user.errors.empty?
+      render_json true
+    else
+      render_json_errors user.errors
+    end
   end
 
   def validateusername
