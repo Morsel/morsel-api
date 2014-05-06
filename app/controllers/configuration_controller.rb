@@ -1,13 +1,7 @@
 class ConfigurationController < ApiController
+  PUBLIC_ACTIONS = [:show]
+
   def show
-    render_json(json)
-  end
-
-  private
-
-  def json
-    {
-      non_username_paths: ReservedPaths.non_username_paths
-    }
+    render_json({ non_username_paths: ReservedPaths.non_username_paths })
   end
 end

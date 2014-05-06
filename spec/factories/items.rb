@@ -26,9 +26,9 @@ FactoryGirl.define do
   factory :item do
     association(:morsel)
     description { Faker::Lorem.sentence(rand(5..100)) }
-    photo Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
 
     factory :item_with_creator, class: Item do
+      photo Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
       association(:creator, factory: :user)
       factory :item_with_creator_and_morsel do
         association(:morsel, factory: :morsel_with_creator)

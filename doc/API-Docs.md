@@ -612,13 +612,16 @@ Returns the Authenticated User's Notifications. A Notification is created when s
 <br />
 
 ## GET ```/users/{user_id}/likeables``` - User Likeables
-Returns the Likeables that the User with the specified ```user_id``` has liked along with a `liked_at` DateTime key
+Returns the Likeables that the User with the specified `user_id` has liked along with a `liked_at` DateTime key
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | type | String | The type of likeables to return. Currently only 'Item' is acceptable. | | X |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return likeables of the specified `type` up to and including this `id` | | |
+| since_id | Number | Return likeables of the specified `type` since this `id` | | |
 
 ### Response
 
@@ -672,7 +675,7 @@ Returns the Cuisines for the User with the specified ```user_id```.
 
 | __data__ |
 | -------- |
-| Array of [Tag](#tag) of keyword type 'Cuisine' |
+| Array of [Tag](#tag) of keyword `type` 'Cuisine' |
 
 <br />
 <br />
@@ -684,7 +687,7 @@ Returns the Specialties for the User with the specified ```user_id```.
 
 | __data__ |
 | -------- |
-| Array of [Tag](#tag) of keyword type 'Specialty' |
+| Array of [Tag](#tag) of keyword `type` 'Specialty' |
 
 <br />
 <br />
@@ -728,6 +731,12 @@ Unfollows the User with the specified ```user_id```.
 ## GET ```/users/{user_id}/followers``` - User Followers
 Returns the followers for the User with the specified ```user_id```.
 
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Users up to and including this `id` | | |
+| since_id | Number | Return Users since this `id` | | |
+
 ### Response
 
 | __data__ |
@@ -738,13 +747,16 @@ Returns the followers for the User with the specified ```user_id```.
 <br />
 
 ## GET ```/users/{user_id}/followables``` - User Followables
-Returns the Followables that the User with the specified ```user_id``` is following along with a `followed_at` DateTime key
+Returns the Followables that the User with the specified `user_id` is following along with a `followed_at` DateTime key
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | type | String | The type of followables to return. Currently only 'User' is acceptable. | | X |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return followables of the specified `type` up to and including this `id` | | |
+| since_id | Number | Return followables of the specified `type` since this `id` | | |
 
 ### Response
 
@@ -865,6 +877,14 @@ Unlikes the Item with the specified ```item_id``` for the authenticated User
 
 ## GET ```/items/{item_id}/likers``` - Likers
 Returns the Users who have liked the Item with the specified ```item_id```
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Users up to and including this ```id``` | | |
+| since_id | Number | Return Users since this ```id``` | | |
 
 ### Response
 
@@ -1071,13 +1091,56 @@ Returns the list of Cuisines
 
 | __data__ |
 | -------- |
-| Array of [Cuisine](#cuisine) |
+| Array of [Keyword](#keyword) of `type` 'Cuisine' |
 
 <br />
 <br />
 
 ## GET ```/cuisines/{cuisine_id}/users``` - Cuisine Users
 Returns a list of Users who belong to the Cuisine with the specified `cuisine_id`
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Users up to and including this `id` | | |
+| since_id | Number | Return Users since this `id` | | |
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [User](#user) |
+
+<br />
+<br />
+
+
+# Specialty Methods
+
+## GET ```/specialties``` - Specialties
+Returns the list of Specialties
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [Keyword](#keyword) of `type` 'Specialty' |
+
+<br />
+<br />
+
+## GET ```/specialties/{specialty_id}/users``` - Specialty Users
+Returns a list of Users who belong to the Specialty with the specified `specialty_id`
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Users up to and including this `id` | | |
+| since_id | Number | Return Users since this `id` | | |
 
 ### Response
 

@@ -34,7 +34,7 @@ class SessionsController < Devise::SessionsController
   end
 
   def sign_in_with_authentication(authentication_params)
-    user = User.joins(:authentications).readonly(false).find_by('authentications.provider = ? AND authentications.token = ?', authentication_params[:provider], authentication_params[:token])
+    user = User.joins(:authentications).readonly(false).find_by(authentications: { provider: authentication_params[:provider], token: authentication_params[:token] })
     return invalid_login_attempt unless user
 
     if authentication_params[:provider] == 'facebook'
