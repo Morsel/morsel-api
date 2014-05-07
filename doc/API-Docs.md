@@ -324,7 +324,7 @@ Sends a Reset Password email for the User with the specified `email`.
 <br />
 
 ## POST ```/users/reset_password``` - Reset Password
-Sets the password for the User with the specified `reset_password_token` to the `password` and `password_confirmation` provided.
+Sets the password for the User with the specified `reset_password_token` to the `password` provided.
 
 ### Request
 
@@ -332,7 +332,6 @@ Sets the password for the User with the specified `reset_password_token` to the 
 | ------------------- | ------- | ----------- | ------- | --------- |
 | reset_password_token | String | The User's token from the Reset Password email. | | x |
 | password | String | The new password for the User. Minimum 8 characters. | | x |
-| password_confirmation | String | The new password for the User. Minimum 8 characters. | | x |
 
 ### Response
 

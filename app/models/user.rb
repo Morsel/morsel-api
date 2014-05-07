@@ -47,7 +47,7 @@ class User < ActiveRecord::Base
 
   self.authorizer_name = 'UserAuthorizer'
 
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable
 
   before_save :ensure_authentication_token
   after_save :ensure_role
@@ -89,6 +89,7 @@ class User < ActiveRecord::Base
 
   validate :validate_email
   validate :validate_username
+  validate :validate_password
 
   mount_uploader :photo, UserPhotoUploader
   process_in_background :photo
@@ -169,6 +170,18 @@ class User < ActiveRecord::Base
       errors.add(:username, 'has already been taken') if ReservedPaths.non_username_paths.include?(username)
       errors.add(:username, 'must start with a letter and can only contain alphanumeric characters and underscores') unless username.match(/\A[a-zA-Z][A-Za-z0-9_]+$\z/)
       errors.add(:username, 'has already been taken') if User.where('lower(username) = ? AND id != ?', username.downcase, id || 0).count > 0
+    end
+  end
+
+  def validate_password
+    if !persisted? && password.blank?
+      errors.add(:password, 'is required')
+    elsif password.present?
+      if password.length < 8
+        errors.add(:password, 'must be at least 8 characters')
+      elsif password.length >= 128
+        errors.add(:password, 'must be less than 128 characters')
+      end
     end
   end
 

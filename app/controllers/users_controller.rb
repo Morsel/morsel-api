@@ -64,7 +64,8 @@ class UsersController < ApiController
     user = User.find_by reset_password_token: params.fetch(:reset_password_token)
     raise ActiveRecord::RecordNotFound if user.nil? || !user.active? || !user.reset_password_period_valid?
 
-    if user.reset_password!(params.fetch(:password), params.fetch(:password_confirmation))
+    # Password confirmation is done client-side, so just pass the password again as the password_confirmation
+    if user.reset_password!(params.fetch(:password), params.fetch(:password))
       render_json 'OK'
     else
       render_json_errors(user.errors)
@@ -135,7 +136,7 @@ class UsersController < ApiController
 
   class UserParams
     def self.build(params)
-      params.require(:user).permit(:email, :username, :password, :password_confirmation,
+      params.require(:user).permit(:email, :username, :password,
                                    :first_name, :last_name, :photo, :bio, :industry)
     end
   end
