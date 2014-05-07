@@ -334,7 +334,7 @@ describe 'Users API' do
                         username: "user_#{Faker::Lorem.characters(10)}",
                         bio: 'Foo to the Stars',
                         industry: 'diner',
-                        photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
+                        photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
                       },
                       authentication: {
                         provider: 'myspace'
@@ -345,18 +345,7 @@ describe 'Users API' do
 
       context 'Facebook' do
         it 'creates a new Facebook authentication for the new User' do
-          dummy_name = 'Facebook User'
-          dummy_token = 'token'
-          dummy_fb_uid = '123456'
-          client = double('Koala::Facebook::API')
-          Koala::Facebook::API.stub(:new).and_return(client)
-          facebook_user = double('Hash')
-          facebook_user.stub(:[]).with('id').and_return(dummy_fb_uid)
-          facebook_user.stub(:[]).with('name').and_return(dummy_name)
-          facebook_user.stub(:[]).with('link').and_return("https://facebook.com/#{dummy_name}")
-
-          client.stub(:get_object).and_return(facebook_user)
-
+          stub_facebook_client
           post_endpoint user: {
                           email: Faker::Internet.email,
                           first_name: 'Foo',
@@ -368,7 +357,7 @@ describe 'Users API' do
                         },
                         authentication: {
                           provider: 'facebook',
-                          token: dummy_token
+                          token: 'dummy_token'
                         }
 
           expect_success
@@ -376,7 +365,32 @@ describe 'Users API' do
           new_user = User.find json_data['id']
           new_facebook_user = FacebookAuthenticatedUserDecorator.new(new_user)
           expect(new_facebook_user.facebook_authentications.count).to eq(1)
-          expect(new_facebook_user.facebook_uid).to eq(dummy_fb_uid)
+          expect(new_facebook_user.facebook_uid).to eq('facebook_user_id')
+        end
+
+        context 'authentication already exists' do
+          let(:authentication) { FactoryGirl.create(:facebook_authentication) }
+
+          it 'returns an error' do
+            authentication.update uid: 'facebook_user_id'
+            stub_facebook_client
+            post_endpoint user: {
+                            email: Faker::Internet.email,
+                            first_name: 'Foo',
+                            last_name: 'Bar',
+                            username: "user_#{Faker::Lorem.characters(10)}",
+                            bio: 'Foo to the Stars',
+                            industry: 'diner',
+                            photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
+                          },
+                          authentication: {
+                            provider: authentication.provider,
+                            token: authentication.token
+                          }
+
+            expect_failure
+            expect(json_errors['authentication']).to include('already exists')
+          end
         end
       end
 

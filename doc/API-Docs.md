@@ -253,7 +253,6 @@ Image processing is done in a background job. `photo_processing` will be set to 
 | user[password] | String | The password for the new User. Minimum 8 characters. If an authentication is passed and this field is omitted the User's password will be randomly generated. | | X |
 | user[first_name] | String | The first name for the new User. | | |
 | user[last_name] | String | The last name for the new User. | | |
-| user[title] | String | The title for the new User. In MTP this includes "at <Restaurant>" | | |
 | user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
 | user[bio] | String | The bio for the new User. Maximum 255 characters. | | |
 | __utmz | String | Google Analytics information to pass to the server | | |
@@ -300,7 +299,7 @@ Authenticates a User using one of the request parameters below and returns an au
 
 | Message | Status | Description |
 | ------- | ------ | ----------- |
-| __login or password is invali__ | 401 (Unauthorized) or 422 (Unprocessable Entity) | The email, username, or password specified are invalid |
+| __login or password is invalid__ | 401 (Unauthorized) or 422 (Unprocessable Entity) | The email, username, or password specified are invalid |
 
 <br />
 <br />
@@ -493,7 +492,6 @@ Updates the User with the specified ```user_id```
 | user[password] | String | The password for the new User. Minimum 8 characters. | | |
 | user[first_name] | String | The first name for the new User. | | |
 | user[last_name] | String | The last name for the new User. | | |
-| user[title] | String | The title for the new User. In MTP this includes "at <Restaurant>" | | |
 | user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
 | user[bio] | String | The bio for the new User. Maximum 255 characters | | |
 
@@ -1292,7 +1290,6 @@ This includes the same keys as [Item](#item), along with:
     "last_name": "Ferguson",
     "created_at": "2014-01-07T18:35:57.877Z",
     "updated_at": "2014-01-07T18:35:57.877Z",
-    "title": "Executive Chef at Jeopardy",
     "bio": "Suck It, Trebek",
     "photos": {
       "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
@@ -1324,7 +1321,6 @@ This includes the same keys as [Item](#item), along with:
       "last_name": "Ferguson",
       "created_at": "2014-01-07T18:35:57.877Z",
       "updated_at": "2014-01-07T18:35:57.877Z",
-      "title": "Executive Chef at Jeopardy",
       "bio": "Suck It, Trebek",
       "photos": {
         "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
@@ -1388,7 +1384,6 @@ This includes the same keys as [Item](#item), along with:
     "last_name": "Ferguson",
     "created_at": "2014-01-07T18:35:57.877Z",
     "updated_at": "2014-01-07T18:35:57.877Z",
-    "title": "Executive Chef at Jeopardy",
     "bio": "Suck It, Trebek",
     "photos": {
       "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
@@ -1434,7 +1429,6 @@ This includes the same keys as [Item](#item), along with:
   "first_name": "Turd",
   "last_name": "Ferguson",
   "created_at": "2014-01-07T18:35:57.877Z",
-  "title": "Executive Chef at Jeopardy",
   "bio": "Suck It, Trebek",
   "photos": {
     "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
@@ -1597,7 +1591,6 @@ This includes the same keys as [User](#user), along with:
     "first_name":"Kody",
     "last_name":"Fritsch",
     "created_at":"2014-03-13T17:01:38.219Z",
-    "title":null,
     "bio":"Hi! I like turtles!",
     "photos":null,
     "photo_processing":null
@@ -1658,7 +1651,6 @@ This includes the same keys as [User](#user), along with:
       "first_name":"Drew",
       "last_name":"Muller",
       "created_at":"2014-03-13T17:04:22.381Z",
-      "title":null,
       "bio":"Hi! I like turtles!",
       "photos":null,
       "photo_processing":null

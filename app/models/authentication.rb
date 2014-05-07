@@ -31,6 +31,6 @@ class Authentication < ActiveRecord::Base
 
   validates :secret, presence: true, if: proc { |a| a.provider == 'twitter' }
   validates :token, presence: true
-  validates :uid, presence: true, uniqueness: { scope: :provider }
+  validates :uid, presence: true, uniqueness: { scope: :provider, message: 'already exists' }
   validates :user, presence: true
 end
