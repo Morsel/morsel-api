@@ -254,6 +254,7 @@ Image processing is done in a background job. `photo_processing` will be set to 
 | user[first_name] | String | The first name for the new User. | | |
 | user[last_name] | String | The last name for the new User. | | |
 | user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
+| user[remote_photo_url] | String | URL to the profile photo for the new User. Can be GIF, JPG, or PNG. | | |
 | user[bio] | String | The bio for the new User. Maximum 255 characters. | | |
 | __utmz | String | Google Analytics information to pass to the server | | |
 | authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | |
@@ -493,6 +494,7 @@ Updates the User with the specified ```user_id```
 | user[first_name] | String | The first name for the new User. | | |
 | user[last_name] | String | The last name for the new User. | | |
 | user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
+| user[remote_photo_url] | String | URL to the profile photo for the new User. Can be GIF, JPG, or PNG. | | |
 | user[bio] | String | The bio for the new User. Maximum 255 characters | | |
 
 ### Response

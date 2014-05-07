@@ -50,6 +50,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable
 
   before_save :ensure_authentication_token
+  before_save :process_remote_photo_url
   after_save :ensure_role
 
   has_many :authentications, inverse_of: :user
@@ -216,6 +217,13 @@ class User < ActiveRecord::Base
       add_role(:staff)
     else
       remove_role(:staff)
+    end
+  end
+
+  def process_remote_photo_url
+    if remote_photo_url && photo_changed?
+      self.process_photo_upload = true
+      self.remote_photo_url = remote_photo_url
     end
   end
 end

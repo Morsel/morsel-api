@@ -137,7 +137,8 @@ class UsersController < ApiController
   class UserParams
     def self.build(params)
       params.require(:user).permit(:email, :username, :password,
-                                   :first_name, :last_name, :photo, :bio, :industry)
+                                   :first_name, :last_name, :bio, :industry,
+                                   :photo, :remote_photo_url)
     end
   end
 end
