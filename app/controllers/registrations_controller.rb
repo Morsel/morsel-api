@@ -6,7 +6,12 @@ class RegistrationsController < Devise::RegistrationsController
   def create
     user = User.new(UsersController::UserParams.build(params))
 
-    CreateAuthentication.call(AuthenticationsController::AuthenticationParams.build(params[:authentication]).merge({user: user})) if params[:authentication].present?
+    if params[:authentication].present?
+      CreateAuthentication.call(AuthenticationsController::AuthenticationParams.build(params[:authentication]).merge({user: user}))
+
+      # Set a temporary password if none is set
+      user.password ||= Devise.friendly_token
+    end
 
     if user.save
       create_user_event(:created_account, user.id)
