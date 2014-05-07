@@ -534,8 +534,7 @@ describe 'Users API' do
 
     it 'resets the User\'s password' do
       post_endpoint reset_password_token: user.reset_password_token,
-                    password: new_password,
-                    password_confirmation: new_password
+                    password: new_password
 
       expect_success
 
@@ -546,22 +545,10 @@ describe 'Users API' do
     context 'invalid token' do
       it 'returns an error' do
         post_endpoint reset_password_token: 'b4d_t0k3n',
-                      password: new_password,
-                      password_confirmation: new_password
+                      password: new_password
 
         expect_failure
         expect(json_errors['base']).to include('Record not found')
-      end
-    end
-
-    context 'passwords do NOT match' do
-      it 'returns an error' do
-        post_endpoint reset_password_token: user.reset_password_token,
-                      password: new_password,
-                      password_confirmation: 'not matching'
-
-        expect_failure
-        expect(json_errors['password_confirmation']).to include('doesn\'t match Password')
       end
     end
   end

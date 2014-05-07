@@ -49,7 +49,6 @@ describe User do
   it { should respond_to(:username) }
   it { should respond_to(:encrypted_password) }
   it { should respond_to(:password) }
-  it { should respond_to(:password_confirmation) }
   it { should respond_to(:first_name) }
   it { should respond_to(:last_name) }
   it { should respond_to(:sign_in_count) }
@@ -128,8 +127,8 @@ describe User do
       it { should_not be_valid }
     end
 
-    context 'does not match confirmation' do
-      before { user.password_confirmation = 'bar' }
+    context 'too long' do
+      before { user.password = Faker::Lorem.characters(130) }
       it { should_not be_valid }
     end
   end
