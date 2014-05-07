@@ -250,7 +250,7 @@ Image processing is done in a background job. `photo_processing` will be set to 
 | ------------------- | ------- | ----------- | ------- | --------- |
 | user[email] | String | The email address for the new User | | X |
 | user[username] | String | The username for the new User. Maximum 15 characters and must start with a letter. Regex: ```[a-zA-Z][A-Za-z0-9_]```| | X |
-| user[password] | String | The password for the new User. Minimum 8 characters. | | X |
+| user[password] | String | The password for the new User. Minimum 8 characters. If an authentication is passed and this field is omitted the User's password will be randomly generated. | | X |
 | user[first_name] | String | The first name for the new User. | | |
 | user[last_name] | String | The last name for the new User. | | |
 | user[title] | String | The title for the new User. In MTP this includes "at <Restaurant>" | | |

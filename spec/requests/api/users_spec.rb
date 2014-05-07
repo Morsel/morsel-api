@@ -329,7 +329,6 @@ describe 'Users API' do
       it 'returns an error if an invalid authentication is passed' do
         post_endpoint user: {
                         email: Faker::Internet.email,
-                        password: 'password',
                         first_name: 'Foo',
                         last_name: 'Bar',
                         username: "user_#{Faker::Lorem.characters(10)}",
@@ -360,7 +359,6 @@ describe 'Users API' do
 
           post_endpoint user: {
                           email: Faker::Internet.email,
-                          password: 'password',
                           first_name: 'Foo',
                           last_name: 'Bar',
                           username: "user_#{Faker::Lorem.characters(10)}",
@@ -397,7 +395,6 @@ describe 'Users API' do
 
           post_endpoint user: {
                           email: Faker::Internet.email,
-                          password: 'password',
                           first_name: 'Foo',
                           last_name: 'Bar',
                           username: "user_#{Faker::Lorem.characters(10)}",
