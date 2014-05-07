@@ -12,19 +12,18 @@ module Requests
     end
 
     def stub_facebook_client
-      dummy_name = 'Facebook User'
-
       facebook_user = double('Hash')
-      facebook_user.stub(:[]).with('id').and_return('12345_67890')
-      facebook_user.stub(:[]).with('name').and_return(dummy_name)
+      facebook_user.stub(:[]).with('id').and_return('facebook_user_id')
+      facebook_user.stub(:[]).with('name').and_return('facebook_user_name')
+      facebook_user.stub(:[]).with('link').and_return('facebook_user_link')
 
       facebook_client = double('Koala::Facebook::API')
 
       Koala::Facebook::API.stub(:new).and_return(facebook_client)
 
-      facebook_client.stub(:get_object).with('me').and_return('id' => '12345_67890')
-      facebook_client.stub(:put_connections).and_return('id' => '12345_67890')
-      facebook_client.stub(:put_picture).and_return('id' => '12345_67890')
+      facebook_client.stub(:get_object).with('me').and_return('id' => 'facebook_user_id')
+      facebook_client.stub(:put_connections).and_return('id' => 'facebook_user_id')
+      facebook_client.stub(:put_picture).and_return('id' => 'facebook_user_id')
 
       facebook_client
     end
