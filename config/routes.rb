@@ -51,6 +51,8 @@ MorselApp::Application.routes.draw do
     end
   end
 
+  get 'authentications/connections(/provider)' => 'authentications#connections'
+
   get 'cuisines' => 'keywords#cuisines'
   get 'specialties' => 'keywords#specialties'
 

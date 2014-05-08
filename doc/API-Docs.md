@@ -13,6 +13,9 @@
 - [Feed Methods](#feed-methods)
   - [GET ```/feed``` - Feed](#get-feed---feed)
 
+- [Authentication Methods](#authentication-methods)
+  - [GET ```/authentications/connections``` - Authentication Connections](#get-authenticationconnections---authentication-connections)
+
 - [User Methods](#user-methods)
   - [POST ```/users``` - Create a new User](#post-users---create-a-new-user)
   - [POST ```/users/sign_in``` - User Authentication](#post-userssign_in---user-authentication)
@@ -233,6 +236,32 @@ Returns the Feed for the authenticated User. The Feed consists of [Feed Item](#f
 | __data__ |
 | -------- |
 | Array of [Feed Item](#feed-item) |
+
+<br />
+<br />
+
+
+# Authentication Methods
+
+## GET ```/authentications/connections``` - Authentication Connections
+Returns the Users that haven't authenticated with the specified `provider` and have a `uid` that is in `uids`.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| provider | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | X |
+| uids | String | Comma-separated `uid` strings for the `provider` specified. e.g. "'12345','67890'" | | X |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Users up to and including this `id` | | |
+| since_id | Number | Return Users since this `id` | | |
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [User](#user)s found in `uids` for the specified `provider` |
+
 
 <br />
 <br />
