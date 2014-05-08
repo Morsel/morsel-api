@@ -38,8 +38,7 @@ class AuthenticationsController < ApiController
 
   class AuthenticationParams
     def self.build(params)
-      params.fetch(:secret) if params[:provider] == 'twitter'
-      params.permit(:provider, :uid, :user_id, :token, :secret)
+      params.require(:authentication).permit(:provider, :uid, :user_id, :token, :secret)
     end
   end
 end

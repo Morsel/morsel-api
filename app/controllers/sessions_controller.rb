@@ -11,7 +11,7 @@ class SessionsController < Devise::SessionsController
       if params[:user].present?
         return sign_in_with_login_and_password((params[:user][:email] || params[:user][:username]), params[:user][:password])
       elsif params[:authentication].present?
-        return sign_in_with_authentication(AuthenticationsController::AuthenticationParams.build(params[:authentication]))
+        return sign_in_with_authentication(AuthenticationsController::AuthenticationParams.build(params))
       else
         invalid_login_attempt(:unprocessable_entity)
       end

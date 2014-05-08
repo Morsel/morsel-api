@@ -272,7 +272,7 @@ describe 'Users API' do
                       }
 
         expect_success
-        expect(json_data).to eq(false)
+        expect(json_data).to eq(true)
       end
     end
   end
@@ -871,9 +871,11 @@ describe 'Users API' do
     context 'Twitter' do
       it 'creates a new Twitter authentication' do
         stub_twitter_client
-        post_endpoint provider: 'twitter',
-                      token: token,
-                      secret: secret
+        post_endpoint authentication: {
+                        provider: 'twitter',
+                        token: token,
+                        secret: secret
+                      }
 
         expect_success
 
@@ -904,8 +906,10 @@ describe 'Users API' do
 
         client.stub(:get_object).and_return(facebook_user)
 
-        post_endpoint provider: 'facebook',
-                      token: dummy_token
+        post_endpoint authentication: {
+                        provider: 'facebook',
+                        token: dummy_token
+                      }
 
         expect_success
 
