@@ -1,6 +1,7 @@
 class AuthenticationsController < ApiController
   PUBLIC_ACTIONS = [:check]
   authorize_actions_for Authentication, except: PUBLIC_ACTIONS
+  authority_actions connections: 'read'
 
   def create
     authentication = CreateAuthentication.call(AuthenticationParams.build(params).merge({user: current_user}))
@@ -34,6 +35,18 @@ class AuthenticationsController < ApiController
     authentication_params = AuthenticationParams.build(params)
     count = Authentication.where(provider: authentication_params[:provider], uid: authentication_params[:uid]).count
     render_json(count > 0)
+  end
+
+  def connections
+    provider = params.fetch(:provider)
+    uids = params.fetch(:uids)
+
+    custom_respond_with User.joins(:authentications)
+                            .since(params[:since_id])
+                            .max(params[:max_id])
+                            .where('authentications.provider = ? AND authentications.uid IN (?)', provider, uids)
+                            .limit(pagination_count)
+                            .order('id DESC')
   end
 
   class AuthenticationParams
