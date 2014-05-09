@@ -214,7 +214,7 @@ describe User do
 
       its(:twitter_authentication) { should_not be_nil }
       its(:authenticated_with_twitter?) { should be_true }
-      its(:user_twitter_client) { should_not be_nil }
+      its(:twitter_client) { should_not be_nil }
       its(:twitter_username) { should_not be_nil }
     end
   end
