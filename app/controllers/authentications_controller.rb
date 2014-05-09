@@ -51,7 +51,7 @@ class AuthenticationsController < ApiController
 
   class AuthenticationParams
     def self.build(params)
-      params.require(:authentication).permit(:provider, :uid, :user_id, :token, :secret)
+      params.require(:authentication).permit(:provider, :uid, :user_id, :token, :secret, :short_lived)
     end
   end
 end

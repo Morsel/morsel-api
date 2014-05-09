@@ -34,18 +34,27 @@ class SessionsController < Devise::SessionsController
   end
 
   def sign_in_with_authentication(authentication_params)
-    user = User.joins(:authentications).readonly(false).find_by(authentications: { provider: authentication_params[:provider], token: authentication_params[:token] })
-    return invalid_login_attempt unless user
+    authentication = Authentication.find_by(provider: authentication_params[:provider], uid: authentication_params[:uid])
+    return invalid_login_attempt unless authentication && authentication.user
+
+    authentication.token = authentication_params[:token]
+    authentication.secret = authentication_params[:secret]
+    authentication.short_lived = authentication_params[:short_lived]
 
     if authentication_params[:provider] == 'facebook'
-      return invalid_login_attempt unless FacebookAuthenticatedUserDecorator.new(user).facebook_valid?
+      return invalid_login_attempt unless FacebookAuthenticatedUserDecorator.new(authentication.user).facebook_valid?(authentication)
     elsif authentication_params[:provider] == 'twitter'
-      return invalid_login_attempt unless TwitterAuthenticatedUserDecorator.new(user).twitter_valid?
+      return invalid_login_attempt unless TwitterAuthenticatedUserDecorator.new(authentication.user).twitter_valid?(authentication)
     end
 
-    sign_in user, store: false
+    authentication.exchange_access_token
 
-    custom_respond_with user, serializer: UserWithAuthTokenSerializer
+    if authentication.save
+      sign_in authentication.user, store: false
+      custom_respond_with authentication.user, serializer: UserWithAuthTokenSerializer
+    else
+      render_json_errors(authentication.errors)
+    end
   end
 
   def invalid_login_attempt(http_status = :unauthorized)

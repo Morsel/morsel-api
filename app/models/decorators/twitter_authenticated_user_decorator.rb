@@ -1,6 +1,6 @@
 class TwitterAuthenticatedUserDecorator < SimpleDelegator
   def post_twitter_message(twitter_message)
-    user_twitter_client.update(twitter_message)
+    twitter_client.update(twitter_message)
   end
 
   def post_twitter_photo_url(twitter_photo_url, twitter_message)
@@ -10,7 +10,7 @@ class TwitterAuthenticatedUserDecorator < SimpleDelegator
       twitter_photo_file = URI.parse(twitter_photo_url).open
     end
     if twitter_photo_file
-      user_twitter_client.update_with_media(twitter_message, twitter_photo_file)
+      twitter_client.update_with_media(twitter_message, twitter_photo_file)
       twitter_photo_file.close
     end
   end
@@ -35,8 +35,8 @@ class TwitterAuthenticatedUserDecorator < SimpleDelegator
     authentication
   end
 
-  def twitter_valid?
-    user_twitter_client.current_user.present?
+  def twitter_valid? (authentication = twitter_authentication)
+    twitter_client(authentication).current_user.present?
   end
 
   private
@@ -49,11 +49,7 @@ class TwitterAuthenticatedUserDecorator < SimpleDelegator
     twitter_authentication && twitter_authentication.token.present? && twitter_authentication.secret.present?
   end
 
-  def user_twitter_client
-    twitter_client(twitter_authentication) if authenticated_with_twitter?
-  end
-
-  def twitter_client(authentication)
+  def twitter_client(authentication = twitter_authentication)
     Twitter::REST::Client.new do |config|
       config.consumer_key = Settings.twitter.consumer_key
       config.consumer_secret = Settings.twitter.consumer_secret
