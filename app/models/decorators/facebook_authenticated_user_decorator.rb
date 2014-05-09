@@ -20,6 +20,7 @@ class FacebookAuthenticatedUserDecorator < SimpleDelegator
       authentication.uid = facebook_user_object['id'].presence
       authentication.name = facebook_user_object['name'].presence
       authentication.link = facebook_user_object['link'].presence
+      authentication.exchange_access_token
     else
       authentication.errors.add(:token, 'is not valid')
     end

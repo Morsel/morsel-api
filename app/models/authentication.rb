@@ -23,6 +23,8 @@ class Authentication < ActiveRecord::Base
   include TimelinePaginateable
   include UserCreatable
 
+  attr_accessor :short_lived
+
   belongs_to :user
 
   validates :provider,  allow_blank: false,
@@ -33,4 +35,14 @@ class Authentication < ActiveRecord::Base
   validates :token, presence: true
   validates :uid, presence: true, uniqueness: { scope: :provider, message: 'already exists' }
   validates :user, presence: true
+
+  def exchange_access_token
+    self.token = Koala::Facebook::OAuth.new(Settings.facebook.app_id, Settings.facebook.app_secret).exchange_access_token(token) if short_lived?
+  end
+
+  private
+
+  def short_lived?
+    short_lived == 'true'
+  end
 end

@@ -28,6 +28,13 @@ module Requests
       facebook_client
     end
 
+    def stub_facebook_oauth(short_lived_token)
+      facebook_oauth = double('Koala::Facebook::OAuth')
+      Koala::Facebook::OAuth.stub(:new).and_return(facebook_oauth)
+
+      facebook_oauth.stub(:exchange_access_token).with(short_lived_token).and_return('new_access_token')
+    end
+
     def stub_twitter_client
       twitter_client = double('Twitter::REST::Client')
       tweet = double('Twitter::Tweet')

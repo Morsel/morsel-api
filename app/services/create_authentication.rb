@@ -7,6 +7,7 @@ class CreateAuthentication
   attribute :uid, String
   attribute :token, String
   attribute :secret, String
+  attribute :short_lived, String
 
   def call
     if provider == 'facebook'

@@ -39,12 +39,15 @@ class SessionsController < Devise::SessionsController
 
     authentication.token = authentication_params[:token]
     authentication.secret = authentication_params[:secret]
+    authentication.short_lived = authentication_params[:short_lived]
 
     if authentication_params[:provider] == 'facebook'
       return invalid_login_attempt unless FacebookAuthenticatedUserDecorator.new(authentication.user).facebook_valid?(authentication)
     elsif authentication_params[:provider] == 'twitter'
       return invalid_login_attempt unless TwitterAuthenticatedUserDecorator.new(authentication.user).twitter_valid?(authentication)
     end
+
+    authentication.exchange_access_token
 
     if authentication.save
       sign_in authentication.user, store: false

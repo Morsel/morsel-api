@@ -310,6 +310,7 @@ Image processing is done in a background job. `photo_processing` will be set to 
 | authentication[uid] | String | The User's ID for the provider. | | |
 | authentication[token] | String | The User's Access Token for the provider. | | |
 | authentication[secret] | String | The User's Access Token Secret for the provider. Only required for Twitter. | | |
+| authentication[short_lived] | Boolean | Set to `true` if the token passed is a short-lived token. | false | |
 
 ### Response
 
@@ -589,6 +590,7 @@ Creates a new Authentication for the authenticated User
 | authentication[uid] | String | The User's ID for the provider. | | X |
 | authentication[token] | String | The User's Access Token for the provider. | | X |
 | authentication[secret] | String | The User's Access Token Secret for the provider. Only required for Twitter. | | Twitter |
+| authentication[short_lived] | Boolean | Set to `true` if the token passed is a short-lived token. | false | |
 
 ### Response
 

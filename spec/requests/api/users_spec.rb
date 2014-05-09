@@ -316,6 +316,34 @@ describe 'Users API' do
       end
 
       context 'Facebook' do
+        context 'short-lived token is passed' do
+          let(:short_lived_token) { 'short_lived_token' }
+
+          it 'exchanges for a new token' do
+            stub_facebook_client
+            stub_facebook_oauth(short_lived_token)
+
+            post_endpoint user: {
+                            email: Faker::Internet.email,
+                            first_name: 'Foo',
+                            last_name: 'Bar',
+                            username: "user_#{Faker::Lorem.characters(10)}",
+                            bio: 'Foo to the Stars',
+                            industry: 'diner',
+                            photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
+                          },
+                          authentication: {
+                            provider: 'facebook',
+                            uid: 'facebook_uid',
+                            token: short_lived_token,
+                            short_lived: true
+                          }
+
+            expect_success
+            expect(Authentication.last.token).to eq('new_access_token')
+          end
+        end
+
         it 'creates a new Facebook authentication for the new User' do
           stub_facebook_client
           post_endpoint user: {
@@ -459,6 +487,26 @@ describe 'Users API' do
         expect(json_data['photos']).to be_nil
         expect(json_data['sign_in_count']).to eq(1)
         expect_nil_json_keys(json_data, %w(password encrypted_password))
+      end
+
+      context 'short-lived token is passed' do
+        let(:short_lived_token) { 'short_lived_token' }
+
+        it 'exchanges for a new token' do
+          stub_facebook_client
+          stub_facebook_oauth(short_lived_token)
+
+          post_endpoint authentication: {
+                          provider: facebook_authentication.provider,
+                          uid: facebook_authentication.uid,
+                          token: short_lived_token,
+                          short_lived: true
+                        }
+
+          expect_success
+          facebook_authentication.reload
+          expect(facebook_authentication.token).to eq('new_access_token')
+        end
       end
     end
 
@@ -839,6 +887,7 @@ describe 'Users API' do
         stub_twitter_client
         post_endpoint authentication: {
                         provider: 'twitter',
+                        uid: 'twitter_uid',
                         token: token,
                         secret: secret
                       }
@@ -859,6 +908,25 @@ describe 'Users API' do
     end
 
     context 'Facebook' do
+      context 'short-lived token is passed' do
+        let(:short_lived_token) { 'short_lived_token' }
+
+        it 'exchanges for a new token' do
+          stub_facebook_client
+          stub_facebook_oauth(short_lived_token)
+
+          post_endpoint authentication: {
+                          provider: 'facebook',
+                          uid: 'facebook_uid',
+                          token: short_lived_token,
+                          short_lived: true
+                        }
+
+          expect_success
+          expect(json_data['token']).to eq('new_access_token')
+        end
+      end
+
       it 'creates a new Facebook authentication' do
         dummy_name = 'Facebook User'
         dummy_token = 'token'
@@ -874,6 +942,7 @@ describe 'Users API' do
 
         post_endpoint authentication: {
                         provider: 'facebook',
+                        uid: 'facebook_uid',
                         token: dummy_token
                       }
 
