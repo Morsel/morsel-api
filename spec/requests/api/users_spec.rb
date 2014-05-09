@@ -1038,6 +1038,59 @@ describe 'Users API' do
     end
   end
 
+  describe 'GET /users/followables_activities' do
+    let(:endpoint) { '/users/followables_activities' }
+    let(:current_user) { FactoryGirl.create(:user) }
+    let(:followed_users) { [FactoryGirl.create(:user), FactoryGirl.create(:user)] }
+    let(:items_count) { 3 }
+    let(:some_morsel) { FactoryGirl.create(:morsel_with_items, items_count: items_count) }
+
+    before do
+      followed_users.each do |fu|
+        current_user.followed_users << fu
+      end
+
+      some_morsel.items.each do |item|
+        Sidekiq::Testing.inline! { item.likers << followed_users.sample }
+      end
+    end
+
+    it_behaves_like 'TimelinePaginateable' do
+      let(:paginateable_object_class) { Activity }
+      before do
+        paginateable_object_class.delete_all
+        30.times { FactoryGirl.create(:item_like_activity, creator_id: followed_users.sample.id) }
+      end
+    end
+
+    it 'returns the User\'s Followed Users\' recent activities' do
+      get_endpoint
+
+      expect_success
+      expect(json_data.count).to eq(items_count)
+
+      first_activity = json_data.first
+      expect(first_activity['action_type']).to eq('Like')
+      expect(first_activity['subject_type']).to eq('Item')
+
+      # Since the activities call returns the newest first, compare against the last Item in some_morsel
+      expect_json_keys(first_activity['subject'], some_morsel.items.last, %w(id description nonce))
+    end
+
+    context 'subject is deleted' do
+      before do
+        Like.last.destroy
+      end
+
+      it 'removes the Activity' do
+        get_endpoint
+
+        expect_success
+        expect(json_data.count).to eq(items_count - 1)
+      end
+    end
+  end
+
   describe 'GET /users/notifications' do
     let(:endpoint) { '/users/notifications' }
     let(:current_user) { FactoryGirl.create(:user) }
