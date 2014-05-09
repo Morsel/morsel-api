@@ -27,9 +27,9 @@ class FacebookAuthenticatedUserDecorator < SimpleDelegator
     authentication
   end
 
-  def facebook_valid?
+  def facebook_valid?(authentication = facebook_authentication)
     begin
-      if facebook_client.get_object("me")
+      if facebook_client(authentication).get_object("me")
         true
       else
         false
@@ -45,11 +45,11 @@ class FacebookAuthenticatedUserDecorator < SimpleDelegator
     facebook_authentications.first
   end
 
-  def authenticated_with_facebook?
-    facebook_authentication && facebook_authentication.token.present?
+  def authenticated_with_facebook?(authentication = facebook_authentication)
+    authentication && authentication.token.present?
   end
 
-  def facebook_client
-    Koala::Facebook::API.new(facebook_authentication.token) if authenticated_with_facebook?
+  def facebook_client(authentication = facebook_authentication)
+    Koala::Facebook::API.new(authentication.token) if authenticated_with_facebook?(authentication)
   end
 end

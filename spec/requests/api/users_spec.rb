@@ -249,34 +249,6 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /users/check_authentication authentications#check' do
-    let(:endpoint) { '/users/check_authentication' }
-
-    it 'returns false' do
-      get_endpoint  authentication: {
-                      provider: 'facebook',
-                      uid: 1234
-                    }
-
-      expect_success
-      expect(json_data).to eq(false)
-    end
-
-    context 'Authentication exists' do
-      let(:facebook_authentication) { FactoryGirl.create(:facebook_authentication) }
-
-      it 'returns true' do
-        get_endpoint  authentication: {
-                        provider: facebook_authentication.provider,
-                        uid: facebook_authentication.uid
-                      }
-
-        expect_success
-        expect(json_data).to eq(true)
-      end
-    end
-  end
-
   describe 'POST /users registrations#create' do
     let(:endpoint) { '/users' }
     it 'creates a new User' do
@@ -357,6 +329,7 @@ describe 'Users API' do
                         },
                         authentication: {
                           provider: 'facebook',
+                          uid: 'facebook_uid',
                           token: 'dummy_token'
                         }
 
@@ -366,31 +339,6 @@ describe 'Users API' do
           new_facebook_user = FacebookAuthenticatedUserDecorator.new(new_user)
           expect(new_facebook_user.facebook_authentications.count).to eq(1)
           expect(new_facebook_user.facebook_uid).to eq('facebook_user_id')
-        end
-
-        context 'authentication already exists' do
-          let(:authentication) { FactoryGirl.create(:facebook_authentication) }
-
-          it 'returns an error' do
-            authentication.update uid: 'facebook_user_id'
-            stub_facebook_client
-            post_endpoint user: {
-                            email: Faker::Internet.email,
-                            first_name: 'Foo',
-                            last_name: 'Bar',
-                            username: "user_#{Faker::Lorem.characters(10)}",
-                            bio: 'Foo to the Stars',
-                            industry: 'diner',
-                            photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
-                          },
-                          authentication: {
-                            provider: authentication.provider,
-                            token: authentication.token
-                          }
-
-            expect_failure
-            expect(json_errors['authentication']).to include('already exists')
-          end
         end
       end
 
@@ -418,6 +366,7 @@ describe 'Users API' do
                         },
                         authentication: {
                           provider: 'twitter',
+                          uid: 'twitter_uid',
                           token: dummy_token,
                           secret: dummy_secret
                         }
@@ -479,12 +428,28 @@ describe 'Users API' do
       end
     end
 
+    context 'authentication already exists' do
+      let(:authentication) { FactoryGirl.create(:facebook_authentication) }
+
+      it 'updates the authentication `token` and `secret`' do
+        stub_facebook_client
+        post_endpoint authentication: {
+                        provider: authentication.provider,
+                        uid: authentication.uid,
+                        token: 'new_token'
+                      }
+        authentication.reload
+        expect(authentication.token).to eq('new_token')
+      end
+    end
+
     context 'facebook authentication' do
       let(:facebook_authentication) { FactoryGirl.create(:facebook_authentication, user: user) }
       it 'signs in the User' do
         stub_facebook_client
         post_endpoint authentication: {
                         provider: facebook_authentication.provider,
+                        uid: facebook_authentication.uid,
                         token: facebook_authentication.token
                       }
 
@@ -503,6 +468,7 @@ describe 'Users API' do
         stub_twitter_client
         post_endpoint authentication: {
                         provider: twitter_authentication.provider,
+                        uid: twitter_authentication.uid,
                         token: twitter_authentication.token,
                         secret: twitter_authentication.secret
                       }

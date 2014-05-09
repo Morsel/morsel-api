@@ -28,7 +28,8 @@ FactoryGirl.define do
 
     factory :facebook_authentication do
       provider 'facebook'
-      name 'facebook.user'
+      name 'facebook_name'
+      uid { "fbuid_#{Faker::Number.number(10)}" }
       link 'facebook.com/facebook.user'
       token { Faker::Lorem.characters(20) }
     end
@@ -36,6 +37,7 @@ FactoryGirl.define do
     factory :twitter_authentication do
       provider 'twitter'
       name 'twitter_screen_name'
+      uid { "tuid_#{Faker::Number.number(10)}" }
       link 'twitter.com/twitter_screen_name'
       token { Faker::Lorem.characters(20) }
       secret { Faker::Lorem.characters(20) }

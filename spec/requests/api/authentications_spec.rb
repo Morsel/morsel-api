@@ -1,6 +1,34 @@
 require 'spec_helper'
 
 describe 'Authentications API Methods' do
+  describe 'GET /authentications/check authentications#check' do
+    let(:endpoint) { '/authentications/check' }
+
+    it 'returns false' do
+      get_endpoint  authentication: {
+                      provider: 'facebook',
+                      uid: 1234
+                    }
+
+      expect_success
+      expect(json_data).to eq(false)
+    end
+
+    context 'Authentication exists' do
+      let(:facebook_authentication) { FactoryGirl.create(:facebook_authentication) }
+
+      it 'returns true' do
+        get_endpoint  authentication: {
+                        provider: facebook_authentication.provider,
+                        uid: facebook_authentication.uid
+                      }
+
+        expect_success
+        expect(json_data).to eq(true)
+      end
+    end
+  end
+
   describe 'GET /authentications/connections authentications#connections' do
     let(:endpoint) { '/authentications/connections' }
     let(:current_user) { FactoryGirl.create(:user) }

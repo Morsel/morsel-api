@@ -14,7 +14,8 @@
   - [GET ```/feed``` - Feed](#get-feed---feed)
 
 - [Authentication Methods](#authentication-methods)
-  - [GET ```/authentications/connections``` - Authentication Connections](#get-authenticationconnections---authentication-connections)
+  - [GET ```/authentications/check``` - Authentication Check](#get-authenticationscheck---authentication-check)
+  - [GET ```/authentications/connections``` - Authentication Connections](#get-authenticationsconnections---authentication-connections)
 
 - [User Methods](#user-methods)
   - [POST ```/users``` - Create a new User](#post-users---create-a-new-user)
@@ -33,7 +34,6 @@
   - [POST ```/users/authentications``` - Create User Authentications](#post-usersauthentications---create-user-authentications)
   - [GET ```/users/authentications``` - User Authentications](#get-usersauthentications---user-authentications)
   - [DELETE ```/users/authentications/{authentication_id}``` - Delete User Authentications](#delete-usersauthenticationsauthentication_id---delete-user-authentications)
-  - [GET ```/users/check_authentication``` - Check Authentication](#post-userscheck_authentication---check-authentication)
   - [GET ```/users/activities``` - User Activities](#get-usersactivities---user-activities)
   - [GET ```/users/notifications``` - User Notifications](#get-usersnotifications---user-notifications)
   - [GET ```/users/{user_id}/likeables``` - User Likeables](#get-usersuser_idlikeables---user-likeables)
@@ -243,6 +243,26 @@ Returns the Feed for the authenticated User. The Feed consists of [Feed Item](#f
 
 # Authentication Methods
 
+## GET ```/authentications/check``` - Authentication Check
+Returns ```true``` if the authentication exists, otherwise false.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | |
+| authentication[uid] | Number | The User's ID for the provider. | | |
+
+### Response
+
+| Condition | __data__ |
+| --------- | -------- |
+| Authentication exists | true |
+| Authentication does NOT exists | false |
+
+<br />
+<br />
+
 ## GET ```/authentications/connections``` - Authentication Connections
 Returns the Users that haven't authenticated with the specified `provider` and have a `uid` that is in `uids`.
 
@@ -270,7 +290,7 @@ Returns the Users that haven't authenticated with the specified `provider` and h
 # User Methods
 
 ## POST ```/users``` - Create a new User
-Creates a new User and returns an authentication_token
+Creates a new User and returns an authentication_token.
 Image processing is done in a background job. `photo_processing` will be set to `null` when it has finished.
 
 ### Request
@@ -287,8 +307,9 @@ Image processing is done in a background job. `photo_processing` will be set to 
 | user[bio] | String | The bio for the new User. Maximum 255 characters. | | |
 | __utmz | String | Google Analytics information to pass to the server | | |
 | authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | |
-| authentication[token] | String | The User's Access Token for the service. | | |
-| authentication[secret] | String | The User's Access Token Secret for the service. Only required for Twitter. | | |
+| authentication[uid] | String | The User's ID for the provider. | | |
+| authentication[token] | String | The User's Access Token for the provider. | | |
+| authentication[secret] | String | The User's Access Token Secret for the provider. Only required for Twitter. | | |
 
 ### Response
 
@@ -300,7 +321,8 @@ Image processing is done in a background job. `photo_processing` will be set to 
 <br />
 
 ## POST ```/users/sign_in``` - User Authentication
-Authenticates a User using one of the request parameters below and returns an authentication_token
+Authenticates a User using one of the request parameters below and returns a [User (w/ Auth Token)](#user-w-auth-token).
+If the `Authentication` passed in [Sign In w/ Authentication](#sign-in-w--authentication) is valid, the previously stored `token` and `secret` values will be overwritten with the new ones passed in.
 
 ### Request
 
@@ -316,8 +338,8 @@ Authenticates a User using one of the request parameters below and returns an au
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | |
-| authentication[token] | String | The User's Access Token for the service. | | |
-| authentication[secret] | String | The User's Access Token Secret for the service. Only required for Twitter. | | |
+| authentication[token] | String | The User's Access Token for the provider. | | |
+| authentication[secret] | String | The User's Access Token Secret for the provider. Only required for Twitter. | | |
 
 ### Response
 
@@ -564,8 +586,9 @@ Creates a new Authentication for the authenticated User
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | X |
-| authentication[token] | String | The User's Access Token for the service. | | X |
-| authentication[secret] | String | The User's Access Token Secret for the service. Only required for Twitter. | | Twitter |
+| authentication[uid] | String | The User's ID for the provider. | | X |
+| authentication[token] | String | The User's Access Token for the provider. | | X |
+| authentication[secret] | String | The User's Access Token Secret for the provider. Only required for Twitter. | | Twitter |
 
 ### Response
 
@@ -604,26 +627,6 @@ Deletes the authentication with the specified `authentication_id`
 | Status Code |
 | ----------- |
 |         200 |
-
-<br />
-<br />
-
-## GET ```/users/check_authentication``` - Check Authentication
-Returns ```true``` if the authentication exists, otherwise false.
-
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | |
-| authentication[uid] | Number | The User's ID for the service. | | |
-
-### Response
-
-| Condition | __data__ |
-| --------- | -------- |
-| Authentication exists | true |
-| Authentication does NOT exists | false |
 
 <br />
 <br />
