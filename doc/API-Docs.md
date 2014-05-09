@@ -35,6 +35,7 @@
   - [GET ```/users/authentications``` - User Authentications](#get-usersauthentications---user-authentications)
   - [DELETE ```/users/authentications/{authentication_id}``` - Delete User Authentications](#delete-usersauthenticationsauthentication_id---delete-user-authentications)
   - [GET ```/users/activities``` - User Activities](#get-usersactivities---user-activities)
+  - [GET ```/users/followables_activities``` - User Followables Activities](#get-usersfollowables_activities---user-followables-activities)
   - [GET ```/users/notifications``` - User Notifications](#get-usersnotifications---user-notifications)
   - [GET ```/users/{user_id}/likeables``` - User Likeables](#get-usersuser_idlikeables---user-likeables)
   - [POST ```/users/{user_id}/tags``` - Create User Tag](#post-usersuser_idtags---create-user-tag)
@@ -213,6 +214,12 @@ The API uses two different levels of authentication, depending on the method.
 1. __None:__ No authentication. Anybody can query the method.
 2. __API key:__ Requires an API key. User API keys are in the following format: {user.id}:{user.auth_token} Example: api_key=3:25TLfL6tvc_Qzx52Zh9q
 
+
+# Terminology
+
+## current_user
+`current_user` refers to the User accessing the API via an `api_key`.
+
 # Constants
 ```
 TIMELINE_DEFAULT_LIMIT = 20
@@ -221,7 +228,7 @@ TIMELINE_DEFAULT_LIMIT = 20
 # Feed Methods
 
 ## GET ```/feed``` - Feed
-Returns the Feed for the authenticated User. The Feed consists of [Feed Item](#feed-item)s sorted by their created_at date, with the most recent one's appearing first.
+Returns the Feed for [current_user](#current_user). The Feed consists of [Feed Item](#feed-item)s sorted by their created_at date, with the most recent one's appearing first.
 
 ### Request
 
@@ -395,7 +402,7 @@ Sets the password for the User with the specified `reset_password_token` to the 
 <br />
 
 ## GET ```/users/me``` - Me
-Returns the authenticated User
+Returns [current_user](#current_user)
 
 ### Response
 
@@ -553,7 +560,7 @@ Updates the User with the specified ```user_id```
 
 | Condition | __data__ |
 | --------- | -------- |
-| Authenticated User's ID or Username | Updated [User (w/ Private Attributes)](#user-w-private-attributes) |
+| [current_user](#current_user)'s ID or Username | Updated [User (w/ Private Attributes)](#user-w-private-attributes) |
 | Everyone Else | Updated [User](#user) |
 
 <br />
@@ -580,7 +587,7 @@ Returns the Morsels for the User with the specified ```user_id``` or ```user_use
 <br />
 
 ## POST ```/users/authentications``` - Create User Authentications
-Creates a new Authentication for the authenticated User
+Creates a new Authentication for [current_user](#current_user)
 
 ### Request
 
@@ -634,7 +641,27 @@ Deletes the authentication with the specified `authentication_id`
 <br />
 
 ## GET ```/users/activities``` - User Activities
-Returns the Authenticated User's Activities. An Activity is created when a User likes or comments on a Item. Think Facebook's Activity Log (https://www.facebook.com/<username>/allactivity).
+Returns the [current_user](#current_user)'s Activities. An Activity is created when a User likes or comments on a Item. Think Facebook's Activity Log (https://www.facebook.com/<username>/allactivity).
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Activities up to and including this ```id``` | | |
+| since_id | Number | Return Authentications since this ```id``` | | |
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [Activity](#activity) |
+
+<br />
+<br />
+
+GET ```/users/followables_activities``` - User Followables Activities
+Returns the [current_user](#current_user)'s Followed Users' Activities.
 
 ### Request
 
@@ -654,7 +681,7 @@ Returns the Authenticated User's Activities. An Activity is created when a User 
 <br />
 
 ## GET ```/users/notifications``` - User Notifications
-Returns the Authenticated User's Notifications. A Notification is created when someone likes or comments on your Items. Think Facebook or Twitter Notifications.
+Returns the [current_user](#current_user)'s Notifications. A Notification is created when someone likes or comments on your Items. Think Facebook or Twitter Notifications.
 
 ### Request
 
@@ -902,7 +929,7 @@ Deletes the Item with the specified ```item_id```.
 <br />
 
 ## POST ```/items/{item_id}/like``` - Like Item
-Likes the Item with the specified ```item_id``` for the authenticated User
+Likes the Item with the specified ```item_id``` for [current_user](#current_user)
 
 ### Response
 
@@ -920,7 +947,7 @@ Likes the Item with the specified ```item_id``` for the authenticated User
 <br />
 
 ## DELETE ```/items/{item_id}/like``` - Unlike Item
-Unlikes the Item with the specified ```item_id``` for the authenticated User
+Unlikes the Item with the specified ```item_id``` for [current_user](#current_user)
 
 ### Response
 
@@ -1008,7 +1035,7 @@ List the Comments for the Item with the specified ```item_id```
 <br />
 
 ## DELETE ```/items/{item_id}/comments/{comment_id}``` - Delete Comment
-Deletes the Comment with the specified `comment_id` for the `item_id` if the authenticated User is the Comment or Item Creator
+Deletes the Comment with the specified `comment_id` for the `item_id` if [current_user](#current_user) is the Comment or Item Creator
 
 ### Response
 
@@ -1021,7 +1048,7 @@ Deletes the Comment with the specified `comment_id` for the `item_id` if the aut
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
 | __Comment not found__ | 404 (Not Found) | The Comment could not be found |
-| __Forbidden__ | 403 (Forbidden) | The Authenticated User is not authorized to delete the Comment |
+| __Forbidden__ | 403 (Forbidden) | The [current_user](#current_user) is not authorized to delete the Comment |
 
 <br />
 <br />
@@ -1069,7 +1096,7 @@ Returns the Morsels for all Users.
 <br />
 
 ## GET ```/morsels/drafts``` - Morsel Drafts
-Returns the Morsel Drafts for the authenticated User sorted by their updated_at, with the most recent one's appearing first.
+Returns the Morsel Drafts for [current_user](#current_user) sorted by their updated_at, with the most recent one's appearing first.
 
 ### Request
 
@@ -1131,8 +1158,8 @@ Publishes the Morsel with the specified ```morsel_id``` by setting a `published_
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | morsel[primary_item_id] | Number | The ID of the Item to set as the primary Item for this Morsel. Must be the ID of a Item that is part of the Morsel | | |
-| post_to_facebook | Boolean | Post to the current_user's Facebook wall with the Morsel's title and a link to the Morsel. | false | |
-| post_to_twitter | Boolean | Send a Tweet from the current_user with the Morsel's title and a link to the Morsel. If the title and description are too long they will be truncated to allow enough room for the link. | false | |
+| post_to_facebook | Boolean | Post to the [current_user](#current_user)'s Facebook wall with the Morsel's title and a link to the Morsel. | false | |
+| post_to_twitter | Boolean | Send a Tweet from the [current_user](#current_user) with the Morsel's title and a link to the Morsel. If the title and description are too long they will be truncated to allow enough room for the link. | false | |
 
 ### Response
 
