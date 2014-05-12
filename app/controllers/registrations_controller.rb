@@ -17,6 +17,9 @@ class RegistrationsController < Devise::RegistrationsController
 
       # Set a temporary password if none is set
       user.password ||= Devise.friendly_token
+
+      user.uid = authentication.uid
+      user.provider = authentication.provider
     end
 
     if user.valid? && authentication_errors.empty? && user.save

@@ -367,22 +367,14 @@ describe 'Users API' do
           new_facebook_user = FacebookAuthenticatedUserDecorator.new(new_user)
           expect(new_facebook_user.facebook_authentications.count).to eq(1)
           expect(new_facebook_user.facebook_uid).to eq('facebook_user_id')
+          expect(new_facebook_user.uid).to eq('facebook_user_id')
+          expect(new_facebook_user.provider).to eq('facebook')
         end
       end
 
       context 'Twitter' do
         it 'creates a new Twitter authentication for the new User' do
-          dummy_screen_name = 'twitter_screen_name'
-          dummy_secret = 'secret'
-          dummy_token = 'token'
-          client = double('Twitter::REST::Client')
-          twitter_user = double('Twitter::User')
-          Twitter::Client.stub(:new).and_return(client)
-          client.stub(:current_user).and_return(twitter_user)
-          twitter_user.stub(:id).and_return(123)
-          twitter_user.stub(:screen_name).and_return(dummy_screen_name)
-          twitter_user.stub(:url).and_return("https://twitter.com/#{dummy_screen_name}")
-
+          stub_twitter_client
           post_endpoint user: {
                           email: Faker::Internet.email,
                           first_name: 'Foo',
@@ -395,8 +387,8 @@ describe 'Users API' do
                         authentication: {
                           provider: 'twitter',
                           uid: 'twitter_uid',
-                          token: dummy_token,
-                          secret: dummy_secret
+                          token: 'dummy_token',
+                          secret: 'dummy_secret'
                         }
 
           expect_success
@@ -404,7 +396,9 @@ describe 'Users API' do
           new_user = User.find json_data['id']
           new_twitter_user = TwitterAuthenticatedUserDecorator.new(new_user)
           expect(new_twitter_user.twitter_authentications.count).to eq(1)
-          expect(new_twitter_user.twitter_username).to eq(dummy_screen_name)
+          expect(new_twitter_user.twitter_username).to eq('eatmorsel')
+          expect(new_twitter_user.uid).to eq('twitter_user_id')
+          expect(new_twitter_user.provider).to eq('twitter')
         end
       end
     end

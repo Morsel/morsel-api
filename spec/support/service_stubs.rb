@@ -45,7 +45,7 @@ module Requests
 
       twitter_user = double('Twitter::User')
       twitter_client.stub(:current_user).and_return(twitter_user)
-      twitter_user.stub(:id).and_return(123)
+      twitter_user.stub(:id).and_return('twitter_user_id')
       twitter_user.stub(:screen_name).and_return('eatmorsel')
       twitter_user.stub(:url).and_return("https://twitter.com/eatmorsel")
 
