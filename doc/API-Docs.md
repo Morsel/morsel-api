@@ -271,7 +271,7 @@ Returns ```true``` if the authentication exists, otherwise false.
 <br />
 
 ## GET ```/authentications/connections``` - Authentication Connections
-Returns the Users that haven't authenticated with the specified `provider` and have a `uid` that is in `uids`.
+Returns the Users that have authenticated with the specified `provider` and have a `uid` that is in `uids`.
 
 ### Request
 
