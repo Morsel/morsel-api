@@ -3,7 +3,7 @@ class CommentsController < ApiController
   authorize_actions_for Comment, except: PUBLIC_ACTIONS
 
   def create
-    comment = Comment.new({commentable_id: params[:id], commentable_type: commentable_type, commenter_id: current_user.id}.merge(CommentParams.build(params)))
+    comment = Comment.new({ commentable_id: params[:id], commentable_type: commentable_type, commenter_id: current_user.id }.merge(CommentParams.build(params)))
 
     if comment.save
       custom_respond_with comment

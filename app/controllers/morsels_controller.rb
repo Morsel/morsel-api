@@ -89,12 +89,12 @@ class MorselsController < ApiController
     morsel.primary_item_id = params[:morsel][:primary_item_id] if params[:morsel] && params[:morsel][:primary_item_id].present?
 
     if morsel.save
-      PublishMorselWorker.perform_async({
+      PublishMorselWorker.perform_async(
         morsel_id: morsel.id,
         user_id: current_user.id,
         post_to_facebook: params[:post_to_facebook],
         post_to_twitter: params[:post_to_twitter]
-      })
+      )
 
       custom_respond_with morsel
     else

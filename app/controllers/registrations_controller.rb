@@ -8,7 +8,7 @@ class RegistrationsController < Devise::RegistrationsController
 
     authentication_errors = []
     if params[:authentication].present?
-      authentication = CreateAuthentication.call(AuthenticationsController::AuthenticationParams.build(params).merge({user: user}))
+      authentication = CreateAuthentication.call(AuthenticationsController::AuthenticationParams.build(params).merge(user: user))
 
       unless authentication.valid?
         authentication_errors = authentication.errors.delete(:uid) if authentication.errors[:uid].include?('already exists')

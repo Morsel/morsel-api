@@ -4,7 +4,7 @@ class FacebookAuthenticatedUserDecorator < SimpleDelegator
   end
 
   def post_facebook_photo_url(facebook_photo_url, facebook_message)
-    facebook_client.put_picture(facebook_photo_url, {message: facebook_message})
+    facebook_client.put_picture(facebook_photo_url, message: facebook_message)
   end
 
   def facebook_uid
@@ -12,7 +12,7 @@ class FacebookAuthenticatedUserDecorator < SimpleDelegator
   end
 
   def build_facebook_authentication(authentication_params)
-    authentication = self.authentications.build(authentication_params)
+    authentication = authentications.build(authentication_params)
 
     facebook_user_object = Koala::Facebook::API.new(authentication.token).get_object('me')
 
@@ -29,15 +29,13 @@ class FacebookAuthenticatedUserDecorator < SimpleDelegator
   end
 
   def facebook_valid?(authentication = facebook_authentication)
-    begin
-      if facebook_client(authentication).get_object("me")
-        true
-      else
-        false
-      end
-    rescue Koala::Facebook::APIError
+    if facebook_client(authentication).get_object('me')
+      true
+    else
       false
     end
+  rescue Koala::Facebook::APIError
+      false
   end
 
   private

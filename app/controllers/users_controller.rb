@@ -108,14 +108,14 @@ class UsersController < ApiController
     followable_type = params.fetch(:type)
     if followable_type == 'User'
       serializer = FollowedUserSerializer
-      custom_respond_with User.joins("LEFT OUTER JOIN follows ON follows.followable_type = '#{followable_type}' AND follows.followable_id = users.id AND follows.deleted_at IS NULL AND users.deleted_at IS NULL")
+      custom_respond_with User.joins("LEFT OUTER JOIN follows ON follows.followable_type = 'User' AND follows.followable_id = users.id AND follows.deleted_at IS NULL AND users.deleted_at IS NULL")
                               .since(params[:since_id], 'users')
                               .max(params[:max_id], 'users')
                               .where(follows: { follower_id: params[:id] })
                               .limit(pagination_count)
                               .order('follows.id DESC'),
                           each_serializer: serializer,
-                          context: {follower_id: params[:id]}
+                          context: { follower_id: params[:id] }
     end
   end
 
@@ -123,14 +123,14 @@ class UsersController < ApiController
     likeable_type = params.fetch(:type)
     if likeable_type == 'Item'
       serializer = LikedItemSerializer
-      custom_respond_with Item.joins("LEFT OUTER JOIN likes ON likes.likeable_type = '#{likeable_type}' AND likes.likeable_id = items.id AND likes.deleted_at IS NULL AND items.deleted_at IS NULL")
+      custom_respond_with Item.joins("LEFT OUTER JOIN likes ON likes.likeable_type = 'Item' AND likes.likeable_id = items.id AND likes.deleted_at IS NULL AND items.deleted_at IS NULL")
                               .since(params[:since_id], 'items')
                               .max(params[:max_id], 'items')
                               .where(likes: { liker_id: params[:id] })
                               .limit(pagination_count)
                               .order('likes.id DESC'),
                           each_serializer: serializer,
-                          context: {liker_id: params[:id]}
+                          context: { liker_id: params[:id] }
     end
   end
 

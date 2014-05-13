@@ -4,23 +4,23 @@ class TagsController < ApiController
 
   def cuisines
     custom_respond_with Tag.joins(:keyword)
-                           .where(keywords: { type: 'Cuisine'}, tags: { taggable_type: taggable_type, taggable_id: params[:id] })
+                           .where(keywords: { type: 'Cuisine' }, tags: { taggable_type: taggable_type, taggable_id: params[:id] })
                            .order('id ASC')
   end
 
   def specialties
     custom_respond_with Tag.joins(:keyword)
-                           .where(keywords: { type: 'Specialty'}, tags: { taggable_type: taggable_type, taggable_id: params[:id] })
+                           .where(keywords: { type: 'Specialty' }, tags: { taggable_type: taggable_type, taggable_id: params[:id] })
                            .order('id ASC')
   end
 
   def create
     tag_params = TagParams.build(params)
 
-    if Tag.find_by({taggable_id: params[:id], taggable_type: taggable_type, tagger_id: current_user.id, keyword_id: tag_params.fetch(:keyword_id)})
-      render_json_errors({"#{taggable_type.downcase}" => ['already tagged with that keyword'] })
+    if Tag.find_by(taggable_id: params[:id], taggable_type: taggable_type, tagger_id: current_user.id, keyword_id: tag_params.fetch(:keyword_id))
+      render_json_errors("#{taggable_type.downcase}" => ['already tagged with that keyword'])
     else
-      tag = Tag.new({taggable_id: params[:id], taggable_type: taggable_type, tagger_id: current_user.id, keyword_id: tag_params.fetch(:keyword_id)})
+      tag = Tag.new(taggable_id: params[:id], taggable_type: taggable_type, tagger_id: current_user.id, keyword_id: tag_params.fetch(:keyword_id))
 
       if tag.save
         custom_respond_with tag

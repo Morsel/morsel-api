@@ -4,7 +4,7 @@ class FollowsController < ApiController
 
   def create
     if Follow.find_by(followable_id: params[:id], followable_type: followable_type, follower_id: current_user.id)
-      render_json_errors({"#{followable_type.downcase}" => ['already followed'] })
+      render_json_errors("#{followable_type.downcase}" => ['already followed'])
     else
       follow = Follow.new(followable_id: params[:id], followable_type: followable_type, follower_id: current_user.id)
       if follow.save
@@ -17,7 +17,7 @@ class FollowsController < ApiController
 
   def destroy
     follow = Follow.find_by(followable_id: params[:id], followable_type: followable_type, follower_id: current_user.id)
-    render_json_errors({ "#{followable_type.downcase}" => ['not followed'] }) && return unless follow
+    render_json_errors("#{followable_type.downcase}" => ['not followed']) && return unless follow
     authorize_action_for follow
 
     if follow.destroy
@@ -35,7 +35,7 @@ class FollowsController < ApiController
                             .limit(pagination_count)
                             .order('follows.id DESC'),
                         each_serializer: UserFollowerSerializer,
-                        context: {followable_id: params[:id]}
+                        context: { followable_id: params[:id] }
   end
 
   private

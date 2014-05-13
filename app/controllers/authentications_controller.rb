@@ -4,7 +4,7 @@ class AuthenticationsController < ApiController
   authority_actions connections: 'read'
 
   def create
-    authentication = CreateAuthentication.call(AuthenticationParams.build(params).merge({user: current_user}))
+    authentication = CreateAuthentication.call(AuthenticationParams.build(params).merge(user: current_user))
     if authentication.save
       custom_respond_with authentication
     else

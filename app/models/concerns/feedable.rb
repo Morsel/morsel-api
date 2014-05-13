@@ -10,11 +10,11 @@ module Feedable
   private
 
   def update_visibility
-    if self.feed_item
-      if self.published_at_changed? || self.draft_changed?
-        self.feed_item.update(visible: !self.draft)
-      elsif self.changed?
-        self.feed_item.touch
+    if feed_item
+      if published_at_changed? || draft_changed?
+        feed_item.update(visible: !draft)
+      elsif changed?
+        feed_item.touch
       end
     end
   end

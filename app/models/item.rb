@@ -70,14 +70,14 @@ class Item < ActiveRecord::Base
   private
 
   def check_sort_order
-    if self.sort_order_changed?
-      existing_item = Item.find_by(morsel: self.morsel, sort_order: self.sort_order)
+    if sort_order_changed?
+      existing_item = Item.find_by(morsel: morsel, sort_order: sort_order)
 
       # If the sort_order has been taken, increment the sort_order for every item >= sort_order
-      self.morsel.items.where('sort_order >= ?', self.sort_order).update_all('sort_order = sort_order + 1') if existing_item
+      self.morsel.items.where('sort_order >= ?', sort_order).update_all('sort_order = sort_order + 1') if existing_item
     end
 
-    self.sort_order = generate_sort_order if self.sort_order.blank?
+    self.sort_order = generate_sort_order if sort_order.blank?
   end
 
   def generate_sort_order
@@ -90,6 +90,6 @@ class Item < ActiveRecord::Base
   end
 
   def nullify_primary_item_id_if_primary_item_on_morsel
-    self.morsel.update(primary_item_id: nil) if self.morsel.primary_item_id == self.id
+    self.morsel.update(primary_item_id: nil) if morsel.primary_item_id == id
   end
 end

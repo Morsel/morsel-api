@@ -81,12 +81,12 @@ class User < ActiveRecord::Base
   has_many :activities, foreign_key: :creator_id
   has_many :notifications
 
-
   validates :industry,
             inclusion: {
               in: %w(chef media diner),
               message: '%{value} is not a valid industry'
-            }, allow_nil: true
+            },
+            allow_nil: true
 
   validate :validate_email
   validate :validate_username
@@ -98,14 +98,14 @@ class User < ActiveRecord::Base
   def self.find_first_by_auth_conditions(warden_conditions)
     conditions = warden_conditions.dup
     if login = conditions.delete(:login)
-      where(conditions).where(["lower(username) = :value OR lower(email) = :value", { :value => login.downcase }]).first
+      where(conditions).where(['lower(username) = :value OR lower(email) = :value', { value: login.downcase }]).first
     else
       where(conditions).first
     end
   end
 
   def login
-    self.username || self.email
+    username || email
   end
 
   def liked_items_count
