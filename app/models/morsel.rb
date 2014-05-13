@@ -48,17 +48,17 @@ class Morsel < ActiveRecord::Base
   scope :published, -> { where(draft: false) }
 
   def total_like_count
-     items.map(&:like_count).reduce(:+)
+    items.map(&:like_count).reduce(:+)
   end
 
   def total_comment_count
-     items.map(&:comment_count).reduce(:+)
+    items.map(&:comment_count).reduce(:+)
   end
 
   def photos_hash
     if photo_url.present?
       {
-        _800x600: photo_url,
+        _800x600: photo_url
       }
     end
   end

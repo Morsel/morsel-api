@@ -17,7 +17,6 @@ class ApiController < ActionController::Base
     render_json_errors({ api: ["Not authorized to #{error.action} #{error.resource.class}"] }, :forbidden)
   end
 
-
   def authenticate_admin_user!
     redirect_to new_user_session_path unless current_user.try(:admin?)
   end

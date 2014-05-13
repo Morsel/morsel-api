@@ -20,7 +20,7 @@ class TwitterAuthenticatedUserDecorator < SimpleDelegator
   end
 
   def build_twitter_authentication(authentication_params)
-    authentication = self.authentications.build(authentication_params)
+    authentication = authentications.build(authentication_params)
 
     twitter_client = twitter_client(authentication)
 
@@ -35,7 +35,7 @@ class TwitterAuthenticatedUserDecorator < SimpleDelegator
     authentication
   end
 
-  def twitter_valid? (authentication = twitter_authentication)
+  def twitter_valid?(authentication = twitter_authentication)
     twitter_client(authentication).current_user.present?
   end
 
