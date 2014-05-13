@@ -1,4 +1,6 @@
 ActiveAdmin.register User do
+  actions :index, :show
+
   config.clear_action_items!
   config.filters = false
 
