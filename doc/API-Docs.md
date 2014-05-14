@@ -345,9 +345,11 @@ If the `Authentication` passed in [Sign In w/ Authentication](#sign-in-w--authen
 #### Sign In w/ Authentication
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | |
-| authentication[token] | String | The User's Access Token for the provider. | | |
-| authentication[secret] | String | The User's Access Token Secret for the provider. Only required for Twitter. | | |
+| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | X |
+| authentication[uid] | String | The User's ID for the provider. | | X |
+| authentication[token] | String | The User's Access Token for the provider. | | X |
+| authentication[secret] | String | The User's Access Token Secret for the provider. Only required for Twitter. | | Twitter |
+| authentication[short_lived] | Boolean | Set to `true` if the token passed is a short-lived token. | false | |
 
 ### Response
 
