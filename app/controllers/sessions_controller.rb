@@ -9,7 +9,7 @@ class SessionsController < Devise::SessionsController
       super
     else
       if params[:user].present?
-        return sign_in_with_login_and_password((params[:user][:email] || params[:user][:username]), params[:user][:password])
+        return sign_in_with_login_and_password((params[:user][:email] || params[:user][:username] || params[:user][:login]), params[:user][:password])
       elsif params[:authentication].present?
         return sign_in_with_authentication(AuthenticationsController::AuthenticationParams.build(params))
       else
