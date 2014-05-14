@@ -28,14 +28,10 @@ class FacebookAuthenticatedUserDecorator < SimpleDelegator
     authentication
   end
 
-  def facebook_valid?(authentication = facebook_authentication)
-    if facebook_client(authentication).get_object('me')
-      true
-    else
-      false
-    end
+  def get_facebook_uid(authentication)
+    facebook_client(authentication).get_object('me')['id']
   rescue Koala::Facebook::APIError
-      false
+    nil
   end
 
   private

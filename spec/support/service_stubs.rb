@@ -11,9 +11,11 @@ module Requests
       bitly_client
     end
 
-    def stub_facebook_client
+    def stub_facebook_client(options = {})
+      options[:id] ||= 'facebook_user_id'
+
       facebook_user = double('Hash')
-      facebook_user.stub(:[]).with('id').and_return('facebook_user_id')
+      facebook_user.stub(:[]).with('id').and_return(options[:id])
       facebook_user.stub(:[]).with('name').and_return('facebook_user_name')
       facebook_user.stub(:[]).with('link').and_return('facebook_user_link')
 
@@ -21,9 +23,9 @@ module Requests
 
       Koala::Facebook::API.stub(:new).and_return(facebook_client)
 
-      facebook_client.stub(:get_object).with('me').and_return('id' => 'facebook_user_id')
-      facebook_client.stub(:put_connections).and_return('id' => 'facebook_user_id')
-      facebook_client.stub(:put_picture).and_return('id' => 'facebook_user_id')
+      facebook_client.stub(:get_object).with('me').and_return('id' => options[:id])
+      facebook_client.stub(:put_connections).and_return('id' => options[:id])
+      facebook_client.stub(:put_picture).and_return('id' => options[:id])
 
       facebook_client
     end
@@ -35,7 +37,9 @@ module Requests
       facebook_oauth.stub(:exchange_access_token).with(short_lived_token).and_return('new_access_token')
     end
 
-    def stub_twitter_client
+    def stub_twitter_client(options = {})
+      options[:id] ||= 'twitter_user_id'
+
       twitter_client = double('Twitter::REST::Client')
       tweet = double('Twitter::Tweet')
       tweet.stub(:url).and_return('https://twitter.com/eatmorsel/status/12345')
@@ -45,7 +49,7 @@ module Requests
 
       twitter_user = double('Twitter::User')
       twitter_client.stub(:current_user).and_return(twitter_user)
-      twitter_user.stub(:id).and_return('twitter_user_id')
+      twitter_user.stub(:id).and_return(options[:id])
       twitter_user.stub(:screen_name).and_return('eatmorsel')
       twitter_user.stub(:url).and_return("https://twitter.com/eatmorsel")
 

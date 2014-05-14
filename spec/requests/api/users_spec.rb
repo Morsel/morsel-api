@@ -471,21 +471,41 @@ describe 'Users API' do
       let(:authentication) { FactoryGirl.create(:facebook_authentication) }
 
       it 'updates the authentication `token` and `secret`' do
-        stub_facebook_client
+        stub_facebook_client(id: authentication.uid)
+
         post_endpoint authentication: {
                         provider: authentication.provider,
                         uid: authentication.uid,
                         token: 'new_token'
                       }
+
         authentication.reload
         expect(authentication.token).to eq('new_token')
+      end
+    end
+
+    context 'token for a different Facebook User passed' do
+      let(:authentication) { FactoryGirl.create(:facebook_authentication) }
+      let(:other_authentication) { FactoryGirl.create(:facebook_authentication) }
+      it 'throws an error' do
+        stub_facebook_client(id: other_authentication.uid)
+
+        post_endpoint authentication: {
+                        provider: authentication.provider,
+                        uid: authentication.uid,
+                        token: other_authentication.token
+                      }
+
+        expect_failure
+        expect(json_errors['base'].first).to eq('login or password is invalid')
       end
     end
 
     context 'facebook authentication' do
       let(:facebook_authentication) { FactoryGirl.create(:facebook_authentication, user: user) }
       it 'signs in the User' do
-        stub_facebook_client
+        stub_facebook_client(id: facebook_authentication.uid)
+
         post_endpoint authentication: {
                         provider: facebook_authentication.provider,
                         uid: facebook_authentication.uid,
@@ -511,7 +531,7 @@ describe 'Users API' do
         let(:short_lived_token) { 'short_lived_token' }
 
         it 'exchanges for a new token' do
-          stub_facebook_client
+          stub_facebook_client(id: facebook_authentication.uid)
           stub_facebook_oauth(short_lived_token)
 
           post_endpoint authentication: {
@@ -531,7 +551,7 @@ describe 'Users API' do
     context 'twitter authentication' do
       let(:twitter_authentication) { FactoryGirl.create(:twitter_authentication, user: user) }
       it 'signs in the User' do
-        stub_twitter_client
+        stub_twitter_client(id: twitter_authentication.uid)
         post_endpoint authentication: {
                         provider: twitter_authentication.provider,
                         uid: twitter_authentication.uid,
