@@ -30,7 +30,7 @@ describe 'Users API' do
         get_endpoint
 
         expect_success
-        expect(json_data['draft_count']).to eq(1)
+        expect_json_data_eq('draft_count' => 1)
       end
     end
 
@@ -40,6 +40,7 @@ describe 'Users API' do
         get_endpoint api_key: '1:234567890'
 
         expect_failure
+        expect_status 401
       end
     end
   end
@@ -267,11 +268,20 @@ describe 'Users API' do
       expect(json_data['id']).to_not be_nil
 
       new_user = User.find json_data['id']
-      expect_json_keys(json_data, new_user, %w(id username first_name last_name sign_in_count bio))
-      expect(json_data['auth_token']).to eq(new_user.authentication_token)
+      expect_json_data_eq({
+        'id' => new_user.id,
+        'username' => new_user.username,
+        'first_name' => new_user.first_name,
+        'last_name' => new_user.last_name,
+        'sign_in_count' => new_user.sign_in_count,
+        'bio' => new_user.bio,
+        'auth_token' => new_user.authentication_token,
+        'password' => nil,
+        'encrypted_password' => nil
+      })
+
       expect(json_data['photos']).to_not be_nil
-      expect_nil_json_keys(json_data, %w(password encrypted_password))
-    end
+     end
 
     it 'creates a user_event' do
       expect {
@@ -416,12 +426,19 @@ describe 'Users API' do
                       }
 
         expect_success
+        expect_json_data_eq({
+          'id' => user.id,
+          'username' => user.username,
+          'first_name' => user.first_name,
+          'last_name' => user.last_name,
+          'bio' => user.bio,
+          'auth_token' => user.authentication_token,
+          'sign_in_count' => 1,
+          'password' => nil,
+          'encrypted_password' => nil
+        })
 
-        expect_json_keys(json_data, user, %w(id username first_name last_name bio))
-        expect(json_data['auth_token']).to eq(user.authentication_token)
         expect(json_data['photos']).to be_nil
-        expect(json_data['sign_in_count']).to eq(1)
-        expect_nil_json_keys(json_data, %w(password encrypted_password))
       end
 
       it 'accepts a username instead of an email' do
@@ -476,11 +493,18 @@ describe 'Users API' do
                       }
 
         expect_success
-        expect_json_keys(json_data, user, %w(id username first_name last_name bio))
-        expect(json_data['auth_token']).to eq(user.authentication_token)
+        expect_json_data_eq({
+          'id' => user.id,
+          'username' => user.username,
+          'first_name' => user.first_name,
+          'last_name' => user.last_name,
+          'bio' => user.bio,
+          'auth_token' => user.authentication_token,
+          'sign_in_count' => 1,
+          'password' => nil,
+          'encrypted_password' => nil
+        })
         expect(json_data['photos']).to be_nil
-        expect(json_data['sign_in_count']).to eq(1)
-        expect_nil_json_keys(json_data, %w(password encrypted_password))
       end
 
       context 'short-lived token is passed' do
@@ -516,11 +540,18 @@ describe 'Users API' do
                       }
 
         expect_success
-        expect_json_keys(json_data, user, %w(id username first_name last_name bio))
-        expect(json_data['auth_token']).to eq(user.authentication_token)
+        expect_json_data_eq({
+          'id' => user.id,
+          'username' => user.username,
+          'first_name' => user.first_name,
+          'last_name' => user.last_name,
+          'bio' => user.bio,
+          'auth_token' => user.authentication_token,
+          'sign_in_count' => 1,
+          'password' => nil,
+          'encrypted_password' => nil
+        })
         expect(json_data['photos']).to be_nil
-        expect(json_data['sign_in_count']).to eq(1)
-        expect_nil_json_keys(json_data, %w(password encrypted_password))
       end
     end
   end
@@ -586,15 +617,22 @@ describe 'Users API' do
       get_endpoint
 
       expect_success
-      expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name bio industry))
-      expect_nil_json_keys(json_data, %w(password encrypted_password staff draft_count sign_in_count photo_processing auth_token email))
-
-      expect(json_data['photos']).to be_nil
-      expect(json_data['facebook_uid']).to eq(FacebookAuthenticatedUserDecorator.new(user_with_morsels).facebook_uid)
-      expect(json_data['twitter_username']).to eq(TwitterAuthenticatedUserDecorator.new(user_with_morsels).twitter_username)
-
-      expect(json_data['liked_items_count']).to eq(number_of_likes)
-      expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.count)
+      expect_json_data_eq({
+        'id' => user_with_morsels.id,
+        'username' => user_with_morsels.username,
+        'first_name' => user_with_morsels.first_name,
+        'last_name' => user_with_morsels.last_name,
+        'bio' => user_with_morsels.bio,
+        'industry' => user_with_morsels.industry,
+        'email' => nil,
+        'password' => nil,
+        'encrypted_password' => nil,
+        'photos' => nil,
+        'facebook_uid' => FacebookAuthenticatedUserDecorator.new(user_with_morsels).facebook_uid,
+        'twitter_username' => TwitterAuthenticatedUserDecorator.new(user_with_morsels).twitter_username,
+        'liked_items_count' => number_of_likes,
+        'morsel_count' => user_with_morsels.morsels.count
+      })
     end
 
     context 'User has Morsel drafts' do
@@ -606,7 +644,7 @@ describe 'Users API' do
         get_endpoint
 
         expect_success
-        expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.published.count)
+        expect_json_data_eq('morsel_count' => user_with_morsels.morsels.published.count)
       end
     end
 
@@ -616,15 +654,22 @@ describe 'Users API' do
         get_endpoint
 
         expect_success
-        expect_json_keys(json_data, user_with_morsels, %w(id username first_name last_name bio industry))
-        expect_nil_json_keys(json_data, %w(password encrypted_password staff draft_count sign_in_count photo_processing auth_token email))
-
-        expect(json_data['photos']).to be_nil
-        expect(json_data['facebook_uid']).to eq(FacebookAuthenticatedUserDecorator.new(user_with_morsels).facebook_uid)
-        expect(json_data['twitter_username']).to eq(TwitterAuthenticatedUserDecorator.new(user_with_morsels).twitter_username)
-
-        expect(json_data['liked_items_count']).to eq(number_of_likes)
-        expect(json_data['morsel_count']).to eq(user_with_morsels.morsels.count)
+        expect_json_data_eq({
+          'id' => user_with_morsels.id,
+          'username' => user_with_morsels.username,
+          'first_name' => user_with_morsels.first_name,
+          'last_name' => user_with_morsels.last_name,
+          'bio' => user_with_morsels.bio,
+          'industry' => user_with_morsels.industry,
+          'email' => nil,
+          'password' => nil,
+          'encrypted_password' => nil,
+          'photos' => nil,
+          'facebook_uid' => FacebookAuthenticatedUserDecorator.new(user_with_morsels).facebook_uid,
+          'twitter_username' => TwitterAuthenticatedUserDecorator.new(user_with_morsels).twitter_username,
+          'liked_items_count' => number_of_likes,
+          'morsel_count' => user_with_morsels.morsels.count
+        })
       end
     end
 
@@ -660,9 +705,11 @@ describe 'Users API' do
           get_endpoint
 
           expect_success
-          expect(json_data['following']).to be_true
-          expect(json_data['followed_users_count']).to eq(0)
-          expect(json_data['follower_count']).to eq(1)
+          expect_json_data_eq({
+            'following' => true,
+            'followed_users_count' => 0,
+            'follower_count' => 1
+          })
         end
 
         context 'User(A) is following another User(B)' do
@@ -672,8 +719,12 @@ describe 'Users API' do
 
           it 'returns the correct following_count' do
             get_endpoint
-            expect(json_data['followed_users_count']).to eq(1)
-            expect(json_data['follower_count']).to eq(1)
+
+            expect_success
+            expect_json_data_eq({
+              'followed_users_count' => 1,
+              'follower_count' => 1
+            })
           end
         end
       end
@@ -700,8 +751,8 @@ describe 'Users API' do
         get_endpoint
 
         expect_success
-        expect(json_data.count).to eq(liked_items_count)
-        expect(json_data.first['liked_at']).to eq(Like.last.created_at.as_json)
+        expect_json_data_count liked_items_count
+        expect_first_json_data_eq('liked_at' => Like.last.created_at.as_json)
       end
     end
   end
@@ -728,8 +779,8 @@ describe 'Users API' do
         get_endpoint
 
         expect_success
-        expect(json_data.count).to eq(followed_users_count)
-        expect(json_data.first['followed_at']).to eq(Follow.last.created_at.as_json)
+        expect_json_data_count followed_users_count
+        expect_first_json_data_eq('followed_at' => Follow.last.created_at.as_json)
       end
 
       context 'unfollowed last User' do
@@ -740,7 +791,7 @@ describe 'Users API' do
           get_endpoint
 
           expect_success
-          expect(json_data.count).to eq(followed_users_count - 1)
+          expect_json_data_count(followed_users_count - 1)
         end
       end
     end
@@ -766,8 +817,8 @@ describe 'Users API' do
 
       expect_success
 
-      expect(json_data.count).to eq(followers_count)
-      expect(json_data.first['followed_at']).to eq(Follow.last.created_at.as_json)
+      expect_json_data_count followers_count
+      expect_first_json_data_eq('followed_at' => Follow.last.created_at.as_json)
     end
 
     context 'last User unfollowed User' do
@@ -779,7 +830,9 @@ describe 'Users API' do
 
         expect_success
 
-        expect(json_data.count).to eq(followers_count - 1)
+        expect_json_data_count(followers_count - 1
+
+          )
       end
     end
   end
@@ -794,9 +847,11 @@ describe 'Users API' do
       put_endpoint user: { first_name: new_first_name }
 
       expect_success
+      expect_json_data_eq({
+        'first_name' => new_first_name,
+        'email' => current_user.email
+      })
 
-      expect(json_data['first_name']).to eq(new_first_name)
-      expect(json_data['email']).to eq(current_user.email)
       expect(User.first.first_name).to eq(new_first_name)
     end
   end
@@ -819,7 +874,7 @@ describe 'Users API' do
 
       expect_success
 
-      expect(json_data.count).to eq(user_with_morsels.morsels.count)
+      expect_json_data_count user_with_morsels.morsels.count
     end
 
     context 'has drafts' do
@@ -833,7 +888,7 @@ describe 'Users API' do
 
         expect_success
 
-        expect(json_data.count).to eq(morsels_count)
+        expect_json_data_count morsels_count
       end
     end
 
@@ -844,7 +899,7 @@ describe 'Users API' do
 
         expect_success
 
-        expect(json_data.count).to eq(user_with_morsels.morsels.count)
+        expect_json_data_count user_with_morsels.morsels.count
       end
     end
   end
@@ -867,6 +922,16 @@ describe 'Users API' do
 
       expect_success
     end
+
+    context 'invalid api_key' do
+      let(:current_user) { nil }
+      it 'returns an unauthorized error' do
+        get_endpoint api_key: '1:234567890'
+
+        expect_failure
+        expect_status 401
+      end
+    end
   end
 
   describe 'POST /users/authentications authentications#create' do
@@ -887,13 +952,14 @@ describe 'Users API' do
                       }
 
         expect_success
-
-        expect(json_data['id']).to_not eq(123)
-        expect(json_data['provider']).to eq('twitter')
-        expect(json_data['secret']).to eq(secret)
-        expect(json_data['token']).to eq(token)
-        expect(json_data['user_id']).to eq(current_user.id)
-        expect(json_data['name']).to eq(screen_name)
+        expect_json_data_eq({
+          'uid' => 'twitter_user_id',
+          'provider' => 'twitter',
+          'secret' => secret,
+          'token' => token,
+          'user_id' => current_user.id,
+          'name' => screen_name
+        })
 
         twitter_authenticated_user = TwitterAuthenticatedUserDecorator.new(current_user)
         expect(twitter_authenticated_user.twitter_authentications.count).to eq(1)
@@ -917,7 +983,7 @@ describe 'Users API' do
                         }
 
           expect_success
-          expect(json_data['token']).to eq('new_access_token')
+          expect_json_data_eq('token' => 'new_access_token')
         end
       end
 
@@ -942,12 +1008,14 @@ describe 'Users API' do
 
         expect_success
 
-        expect(json_data['uid']).to eq(dummy_fb_uid)
-        expect(json_data['provider']).to eq('facebook')
-        expect(json_data['secret']).to be_nil
-        expect(json_data['token']).to eq(dummy_token)
-        expect(json_data['user_id']).to eq(current_user.id)
-        expect(json_data['name']).to eq(dummy_name)
+        expect_json_data_eq ({
+          'uid' => dummy_fb_uid,
+          'provider' => 'facebook',
+          'secret' => nil,
+          'token' => dummy_token,
+          'user_id' => current_user.id,
+          'name' => dummy_name
+        })
 
         facebook_authenticated_user = FacebookAuthenticatedUserDecorator.new(current_user)
         expect(facebook_authenticated_user.facebook_authentications.count).to eq(1)
@@ -991,8 +1059,10 @@ describe 'Users API' do
     let(:some_morsel) { FactoryGirl.create(:morsel_with_items, items_count: items_count) }
 
     before do
-      some_morsel.items.each do |item|
-        Sidekiq::Testing.inline! { item.likers << current_user }
+      if current_user
+        some_morsel.items.each do |item|
+          Sidekiq::Testing.inline! { item.likers << current_user }
+        end
       end
     end
 
@@ -1008,14 +1078,18 @@ describe 'Users API' do
       get_endpoint
 
       expect_success
-      expect(json_data.count).to eq(items_count)
+      expect_json_data_count items_count
 
-      first_activity = json_data.first
-      expect(first_activity['action_type']).to eq('Like')
-      expect(first_activity['subject_type']).to eq('Item')
-
-      # Since the activities call returns the newest first, compare against the last Item in some_morsel
-      expect_json_keys(first_activity['subject'], some_morsel.items.last, %w(id description nonce))
+      last_item = some_morsel.items.last
+      expect_first_json_data_eq({
+        'action_type' => 'Like',
+        'subject_type' => 'Item',
+        'subject' => {
+          'id' => last_item.id,
+          'description' => last_item.description,
+          'nonce' => last_item.nonce
+        }
+      })
     end
 
     context 'subject is deleted' do
@@ -1027,7 +1101,17 @@ describe 'Users API' do
         get_endpoint
 
         expect_success
-        expect(json_data.count).to eq(items_count - 1)
+        expect_json_data_count(items_count - 1)
+      end
+    end
+
+    context 'invalid api_key' do
+      let(:current_user) { nil }
+      it 'returns an unauthorized error' do
+        get_endpoint api_key: '1:234567890'
+
+        expect_failure
+        expect_status 401
       end
     end
   end
@@ -1061,14 +1145,18 @@ describe 'Users API' do
       get_endpoint
 
       expect_success
-      expect(json_data.count).to eq(items_count)
+      expect_json_data_count items_count
 
-      first_activity = json_data.first
-      expect(first_activity['action_type']).to eq('Like')
-      expect(first_activity['subject_type']).to eq('Item')
-
-      # Since the activities call returns the newest first, compare against the last Item in some_morsel
-      expect_json_keys(first_activity['subject'], some_morsel.items.last, %w(id description nonce))
+      last_item = some_morsel.items.last
+      expect_first_json_data_eq({
+        'action_type' => 'Like',
+        'subject_type' => 'Item',
+        'subject' => {
+          'id' => last_item.id,
+          'description' => last_item.description,
+          'nonce' => last_item.nonce
+        }
+      })
     end
 
     context 'subject is deleted' do
@@ -1080,7 +1168,7 @@ describe 'Users API' do
         get_endpoint
 
         expect_success
-        expect(json_data.count).to eq(items_count - 1)
+        expect_json_data_count(items_count - 1)
       end
     end
   end
@@ -1105,17 +1193,22 @@ describe 'Users API' do
         get_endpoint
 
         expect_success
-        expect(json_data.count).to eq(notifications_count + 1)
+        expect_json_data_count(notifications_count + 1)
 
-        first_notification = json_data.first
         first_item = some_morsel.items.first
-        expect(first_notification['message']).to eq("#{last_user.full_name} (#{last_user.username}) liked #{first_item.morsel_title_with_description}".truncate(100, separator: ' ', omission: '... '))
-        expect(first_notification['payload_type']).to eq('Activity')
-        expect(first_notification['payload']['action_type']).to eq('Like')
-        expect(first_notification['payload']['subject_type']).to eq('Item')
-
-        # Since the notifications call returns the newest first, compare against the last Item in some_morsel
-        expect_json_keys(first_notification['payload']['subject'], first_item, %w(id description nonce))
+        expect_first_json_data_eq({
+          'message' => "#{last_user.full_name} (#{last_user.username}) liked #{first_item.morsel_title_with_description}".truncate(100, separator: ' ', omission: '... '),
+          'payload_type' => 'Activity',
+          'payload' => {
+            'action_type' => 'Like',
+            'subject_type' => 'Item',
+            'subject' => {
+              'id' => first_item.id,
+              'description' => first_item.description,
+              'nonce' => first_item.nonce
+            }
+          }
+        })
       end
 
       context 'Item is unliked' do
@@ -1127,7 +1220,7 @@ describe 'Users API' do
           get_endpoint
 
           expect_success
-          expect(json_data.count).to eq(notifications_count)
+          expect_json_data_count notifications_count
         end
       end
     end

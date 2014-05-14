@@ -14,4 +14,8 @@ class ActivitiesController < ApiController
                                 .limit(pagination_count)
                                 .order('id DESC')
   end
+
+  private
+
+  authorize_actions_for Activity, actions: { followables_activities: :read }
 end

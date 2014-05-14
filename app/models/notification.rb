@@ -18,7 +18,7 @@
 #
 
 class Notification < ActiveRecord::Base
-  include TimelinePaginateable
+  include Authority::Abilities, TimelinePaginateable
 
   acts_as_paranoid
   belongs_to :payload, polymorphic: true

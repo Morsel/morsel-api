@@ -16,8 +16,7 @@
 #
 
 class Like < ActiveRecord::Base
-  include Authority::Abilities
-  include UserCreatable
+  include Authority::Abilities, UserCreatable
 
   include Activityable
   def self.activity_notification; true end

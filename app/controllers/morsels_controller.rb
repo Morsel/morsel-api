@@ -1,9 +1,4 @@
 class MorselsController < ApiController
-  PUBLIC_ACTIONS = [:index, :show]
-  authorize_actions_for Morsel, except: PUBLIC_ACTIONS
-  authority_actions publish: 'update', drafts: 'read'
-  respond_to :json
-
   def create
     morsel = Morsel.new(MorselParams.build(params))
     morsel.creator = current_user
@@ -15,6 +10,7 @@ class MorselsController < ApiController
     end
   end
 
+  PUBLIC_ACTIONS << :index
   def index
     if params[:user_id].present? || params[:username].present?
       if params[:user_id].present?
@@ -55,6 +51,7 @@ class MorselsController < ApiController
     custom_respond_with morsels
   end
 
+  PUBLIC_ACTIONS << :show
   def show
     custom_respond_with Morsel.includes(:items, :creator).find(params[:id])
   end
@@ -107,4 +104,8 @@ class MorselsController < ApiController
       params.require(:morsel).permit(:title, :draft, :primary_item_id)
     end
   end
+
+  private
+
+  authorize_actions_for Morsel, except: PUBLIC_ACTIONS, actions: { publish: :update, drafts: :read }
 end

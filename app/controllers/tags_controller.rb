@@ -1,13 +1,12 @@
 class TagsController < ApiController
-  PUBLIC_ACTIONS = [:cuisines, :specialties]
-  authorize_actions_for Tag, except: PUBLIC_ACTIONS
-
+  PUBLIC_ACTIONS << :cuisines
   def cuisines
     custom_respond_with Tag.joins(:keyword)
                            .where(keywords: { type: 'Cuisine' }, tags: { taggable_type: taggable_type, taggable_id: params[:id] })
                            .order('id ASC')
   end
 
+  PUBLIC_ACTIONS << :specialties
   def specialties
     custom_respond_with Tag.joins(:keyword)
                            .where(keywords: { type: 'Specialty' }, tags: { taggable_type: taggable_type, taggable_id: params[:id] })
@@ -45,6 +44,8 @@ class TagsController < ApiController
 
   private
 
+  authorize_actions_for Tag, except: PUBLIC_ACTIONS
+
   def taggable_type
     request.path.split('/').second.classify
   end
@@ -54,4 +55,5 @@ class TagsController < ApiController
       params.require(:tag).permit(:keyword_id)
     end
   end
+
 end

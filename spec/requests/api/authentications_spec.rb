@@ -11,7 +11,7 @@ describe 'Authentications API Methods' do
                     }
 
       expect_success
-      expect(json_data).to eq(false)
+      expect_false_json_data
     end
 
     context 'Authentication exists' do
@@ -24,7 +24,7 @@ describe 'Authentications API Methods' do
                       }
 
         expect_success
-        expect(json_data).to eq(true)
+        expect_true_json_data
       end
     end
   end
@@ -55,7 +55,7 @@ describe 'Authentications API Methods' do
       get_endpoint provider: 'facebook', uids: "'123','456','789'"
 
       expect_success
-      expect(json_data.count).to be_zero
+      expect_json_data_count 0
     end
   end
 end

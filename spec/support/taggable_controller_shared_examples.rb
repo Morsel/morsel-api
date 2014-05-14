@@ -7,11 +7,13 @@ shared_examples 'TaggableController' do
                     }
 
       expect_success
-      expect(json_data['id']).to_not be_nil
-
       new_tag = Tag.find json_data['id']
-      expect_json_keys(json_data, new_tag, %w(id taggable_id taggable_type))
-      expect(json_data['keyword']['name']).to eq(new_tag.name)
+      expect_json_data_eq({
+        'id' => new_tag.id,
+        'taggable_id' => new_tag.taggable_id,
+        'taggable_type' => new_tag.taggable_type,
+        'keyword' => { 'name' => new_tag.name }
+      })
     end
 
     context 'keyword_id is omitted' do
@@ -35,7 +37,7 @@ shared_examples 'TaggableController' do
       get_endpoint  keyword_id: keyword.id
 
       expect_success
-      expect(json_data.count).to eq(cuisine_tags_count)
+      expect_json_data_count cuisine_tags_count
     end
   end
 
@@ -51,7 +53,7 @@ shared_examples 'TaggableController' do
       get_endpoint  keyword_id: keyword.id
 
       expect_success
-      expect(json_data.count).to eq(specialty_tags_count)
+      expect_json_data_count specialty_tags_count
     end
   end
 

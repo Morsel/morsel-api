@@ -16,11 +16,15 @@ describe 'Items API' do
                     }
 
       expect_success
-      expect(json_data['id']).to_not be_nil
-      expect(json_data['photos']).to_not be_nil
 
       new_item = Item.find json_data['id']
-      expect_json_keys(json_data, new_item, %w(id description creator_id))
+      expect_json_data_eq({
+        'id' => new_item.id,
+        'description' => new_item.description,
+        'creator_id' => new_item.creator_id
+      })
+      expect(json_data['photos']).to_not be_nil
+
       expect(new_item.morsel).to eq(morsel)
       expect(new_item.nonce).to eq(nonce)
     end
@@ -82,7 +86,7 @@ describe 'Items API' do
                         morsel_id: morsel.id
                       }
 
-        expect(response).to_not be_success
+        expect_failure
       end
     end
   end
@@ -99,7 +103,7 @@ describe 'Items API' do
         get_endpoint
 
         expect_success
-        expect(json_data['liked']).to be_true
+        expect_json_data_eq('liked' => true)
       end
     end
 
@@ -107,8 +111,12 @@ describe 'Items API' do
       get_endpoint
 
       expect_success
-      expect_json_keys(json_data, item, %w(id description creator_id))
-      expect(json_data['liked']).to be_false
+      expect_json_data_eq({
+        'id' => item.id,
+        'description' => item.description,
+        'creator_id' => item.creator_id,
+        'liked' => false
+      })
       expect(json_data['photos']).to_not be_nil
     end
 
@@ -141,7 +149,7 @@ describe 'Items API' do
                     }
 
       expect_success
-      expect(json_data['description']).to eq(new_description)
+      expect_json_data_eq('description' => new_description)
       expect(Item.find(item.id).description).to eq(new_description)
     end
 
@@ -342,7 +350,7 @@ describe 'Items API' do
       get_endpoint
 
       expect_success
-      expect(json_data.count).to eq(comments_count)
+      expect_json_data_count comments_count
 
       first_comment = json_data.first
       expect(first_comment['creator']).to_not be_nil
@@ -372,10 +380,14 @@ describe 'Items API' do
       expect(json_data['id']).to_not be_nil
 
       new_comment = Comment.find(json_data['id'])
-      expect_json_keys(json_data, new_comment, %w(id description))
-      expect(json_data['creator']).to_not be_nil
-      expect(json_data['creator']['id']).to eq(current_user.id)
-      expect(json_data['commentable_id']).to eq(new_comment.commentable.id)
+      expect_json_data_eq({
+        'id' => new_comment.id,
+        'description' => new_comment.description,
+        'commentable_id' => new_comment.commentable.id,
+        'creator' => {
+          'id' => current_user.id
+        }
+      })
       expect(current_user.has_role?(:creator, new_comment))
     end
 

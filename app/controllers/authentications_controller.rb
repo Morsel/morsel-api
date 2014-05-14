@@ -1,8 +1,4 @@
 class AuthenticationsController < ApiController
-  PUBLIC_ACTIONS = [:check]
-  authorize_actions_for Authentication, except: PUBLIC_ACTIONS
-  authority_actions connections: 'read'
-
   def create
     authentication = CreateAuthentication.call(AuthenticationParams.build(params).merge(user: current_user))
     if authentication.save
@@ -31,6 +27,7 @@ class AuthenticationsController < ApiController
     end
   end
 
+  PUBLIC_ACTIONS << :check
   def check
     authentication_params = AuthenticationParams.build(params)
     count = Authentication.where(provider: authentication_params[:provider], uid: authentication_params[:uid]).count
@@ -54,4 +51,8 @@ class AuthenticationsController < ApiController
       params.require(:authentication).permit(:provider, :uid, :user_id, :token, :secret, :short_lived)
     end
   end
+
+  private
+
+  authorize_actions_for Authentication, except: PUBLIC_ACTIONS, actions: { connections: :read }
 end
