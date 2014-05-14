@@ -19,9 +19,7 @@
 #
 
 class Authentication < ActiveRecord::Base
-  include Authority::Abilities
-  include TimelinePaginateable
-  include UserCreatable
+  include Authority::Abilities, TimelinePaginateable, UserCreatable
 
   attr_accessor :short_lived
 

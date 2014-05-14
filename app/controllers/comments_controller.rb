@@ -1,7 +1,4 @@
 class CommentsController < ApiController
-  PUBLIC_ACTIONS = [:index]
-  authorize_actions_for Comment, except: PUBLIC_ACTIONS
-
   def create
     comment = Comment.new({ commentable_id: params[:id], commentable_type: commentable_type, commenter_id: current_user.id }.merge(CommentParams.build(params)))
 
@@ -12,6 +9,7 @@ class CommentsController < ApiController
     end
   end
 
+  PUBLIC_ACTIONS << :index
   def index
     custom_respond_with Comment.since(params[:since_id])
                                .max(params[:max_id])
@@ -34,6 +32,8 @@ class CommentsController < ApiController
   end
 
   private
+
+  authorize_actions_for Comment, except: PUBLIC_ACTIONS
 
   def commentable_type
     request.path.split('/').second.classify

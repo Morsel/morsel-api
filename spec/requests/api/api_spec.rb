@@ -17,7 +17,7 @@ describe 'Misc. API Methods' do
       get_endpoint
 
       expect_success
-      expect(json_data['non_username_paths']).to eq(ReservedPaths.non_username_paths)
+      expect_json_data_eq('non_username_paths' => ReservedPaths.non_username_paths)
     end
   end
 end

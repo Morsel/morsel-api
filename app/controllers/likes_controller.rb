@@ -1,7 +1,4 @@
 class LikesController < ApiController
-  PUBLIC_ACTIONS = [:likers]
-  authorize_actions_for Like, except: PUBLIC_ACTIONS
-
   def create
     if Like.find_by(likeable_id: params[:id], likeable_type: likeable_type, liker_id: current_user.id)
       render_json_errors("#{likeable_type.downcase}" => ['already liked'])
@@ -27,6 +24,7 @@ class LikesController < ApiController
     end
   end
 
+  PUBLIC_ACTIONS << :likers
   def likers
     custom_respond_with User.joins(:likes)
                             .since(params[:since_id], 'users')
@@ -37,6 +35,8 @@ class LikesController < ApiController
   end
 
   private
+
+  authorize_actions_for Like, except: PUBLIC_ACTIONS
 
   def likeable_type
     request.path.split('/').second.classify

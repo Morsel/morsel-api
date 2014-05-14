@@ -15,7 +15,7 @@
 #
 
 class Keyword < ActiveRecord::Base
-  include TimelinePaginateable
+  include Authority::Abilities, TimelinePaginateable
   acts_as_paranoid
 
   has_many :tags, dependent: :destroy

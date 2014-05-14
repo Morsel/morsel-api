@@ -8,4 +8,8 @@ class NotificationsController < ApiController
 
     custom_respond_with notifications
   end
+
+  private
+
+  authorize_actions_for Notification
 end

@@ -12,6 +12,40 @@ module Requests
       json['errors']
     end
 
+    def expect_true_json_data
+      expect(json_data).to eq(true)
+    end
+
+    def expect_false_json_data
+      expect(json_data).to eq(false)
+    end
+
+    def expect_json_eq(json, hash)
+      hash.each do |k,v|
+        if json[k].is_a? Hash
+          expect_json_eq(json[k], v)
+        else
+          expect(json[k]).to eq(v), "Expected #{k} = #{v}, got #{json[k]}"
+        end
+      end
+    end
+
+    def expect_json_data_eq(hash)
+      expect_json_eq(json_data, hash)
+    end
+
+    def expect_first_json_data_eq(hash)
+      expect_json_eq(json_data.first, hash)
+    end
+
+    def expect_last_json_data_eq(hash)
+      expect_json_eq(json_data.last, hash)
+    end
+
+    def expect_json_data_count(count)
+      expect(json_data.count).to eq(count)
+    end
+
     def expect_json_keys(json, obj, keys)
       keys.each do |key|
         expect(json[key]).to eq(obj[key])
@@ -38,6 +72,10 @@ module Requests
 
     def expect_failure
       expect(response).to_not be_success
+    end
+
+    def expect_status(status)
+      expect(response.status).to eq(status)
     end
 
     # Creates [get|post|delete|put]_endpoint methods

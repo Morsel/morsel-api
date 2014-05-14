@@ -19,13 +19,17 @@ describe 'Feed API' do
       get_endpoint
 
       expect_success
-      expect(json_data.count).to eq(morsels_count)
+      expect_json_data_count morsels_count
 
-      first_feed_item = json_data.first
-      expect(first_feed_item['subject_type']).to eq('Morsel')
-
-      # Since the feed call returns the newest first, compare against the last Morsel
-      expect_json_keys(first_feed_item['subject'], Morsel.last, %w(id title draft))
+      last_morsel = Morsel.last
+      expect_first_json_data_eq({
+        'subject_type' => 'Morsel',
+        'subject' => {
+          'id' => last_morsel.id,
+          'title' => last_morsel.title,
+          'draft' => last_morsel.draft
+        }
+      })
     end
 
     context 'Morsel is deleted' do
@@ -33,8 +37,9 @@ describe 'Feed API' do
 
       it 'removes the Feed Item' do
         get_endpoint
+
         expect_success
-        expect(json_data.count).to eq(morsels_count - 1)
+        expect_json_data_count(morsels_count - 1)
       end
     end
 
@@ -45,7 +50,7 @@ describe 'Feed API' do
         get_endpoint
 
         expect_success
-        expect(json_data.count).to eq(morsels_count - 1)
+        expect_json_data_count(morsels_count - 1)
       end
     end
   end

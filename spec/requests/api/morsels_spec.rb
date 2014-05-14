@@ -11,11 +11,15 @@ describe 'Morsels API' do
                     }
 
       expect_success
-      expect(json_data['id']).to_not be_nil
 
       new_morsel = Morsel.find json_data['id']
-      expect_json_keys(json_data, new_morsel, %w(id title creator_id))
-      expect(json_data['title']).to eq(expected_title)
+      expect_json_data_eq({
+        'id' => new_morsel.id,
+        'title' => new_morsel.title,
+        'creator_id' => new_morsel.creator_id,
+        'title' => expected_title,
+      })
+
       expect(json_data['photos']).to be_nil
       expect(new_morsel.draft).to be_true
     end
@@ -28,11 +32,15 @@ describe 'Morsels API' do
                       }
 
         expect_success
-        expect(json_data['id']).to_not be_nil
 
         new_morsel = Morsel.find json_data['id']
-        expect_json_keys(json_data, new_morsel, %w(id title creator_id))
-        expect(json_data['title']).to eq(expected_title)
+        expect_json_data_eq({
+          'id' => new_morsel.id,
+          'title' => new_morsel.title,
+          'creator_id' => new_morsel.creator_id,
+          'title' => expected_title,
+        })
+
         expect(new_morsel.draft).to be_true
       end
     end
@@ -60,8 +68,12 @@ describe 'Morsels API' do
       get_endpoint
 
       expect_success
-      expect_json_keys(json_data, morsel_with_items, %w(id title creator_id))
-      expect(json_data['slug']).to eq(morsel_with_items.cached_slug)
+      expect_json_data_eq({
+        'id' => morsel_with_items.id,
+        'title' => morsel_with_items.title,
+        'creator_id' => morsel_with_items.creator_id,
+        'slug' => morsel_with_items.cached_slug
+      })
       expect(json_data['items'].count).to eq(items_count)
     end
 
@@ -73,7 +85,11 @@ describe 'Morsels API' do
         get_endpoint
 
         expect_success
-        expect_json_keys(json_data, morsel_with_creator_and_photo, %w(id title creator_id))
+        expect_json_data_eq({
+          'id' => morsel_with_creator_and_photo.id,
+          'title' => morsel_with_creator_and_photo.title,
+          'creator_id' => morsel_with_creator_and_photo.creator_id
+        })
 
         photos = json_data['photos']
         expect(photos['_800x600']).to_not be_nil
@@ -93,8 +109,11 @@ describe 'Morsels API' do
                     }
 
       expect_success
-      expect(json_data['title']).to eq(new_title)
-      expect(json_data['draft']).to eq(false)
+      expect_json_data_eq({
+        'id' => existing_morsel.id,
+        'title' => new_title,
+        'draft' => false
+      })
 
       new_morsel = Morsel.find(existing_morsel.id)
       expect(new_morsel.title).to eq(new_title)
@@ -110,7 +129,8 @@ describe 'Morsels API' do
                     }
 
       expect_success
-      expect(json_data['draft']).to eq(false)
+      expect_json_data_eq('draft' => false)
+
       new_morsel = Morsel.find(existing_morsel.id)
       expect(new_morsel.draft).to eq(false)
     end
@@ -124,11 +144,14 @@ describe 'Morsels API' do
                       }
 
         expect_success
-        expect(json_data['id']).to_not be_nil
 
         new_morsel = Morsel.find json_data['id']
-        expect_json_keys(json_data, new_morsel, %w(id title creator_id))
-        expect(json_data['primary_item_id']).to eq(some_item.id)
+        expect_json_data_eq({
+          'id' => new_morsel.id,
+          'title' => new_morsel.title,
+          'creator_id' => new_morsel.creator_id,
+          'primary_item_id' => some_item.id
+        })
         expect(new_morsel.primary_item_id).to eq(some_item.id)
       end
 
@@ -217,7 +240,7 @@ describe 'Morsels API' do
       Sidekiq::Testing.inline! { post_endpoint }
 
       expect_success
-      expect(json_data['draft']).to eq(false)
+      expect_json_data_eq('draft' => false)
 
       new_morsel = Morsel.find(draft_morsel.id)
       expect(new_morsel.draft).to eq(false)
@@ -229,7 +252,7 @@ describe 'Morsels API' do
                     }
 
       expect_success
-      expect(json_data['primary_item_id']).to eq(draft_morsel.items.first.id)
+      expect_json_data_eq('primary_item_id' => draft_morsel.items.first.id)
 
       new_morsel = Morsel.find(draft_morsel.id)
       expect(new_morsel.primary_item_id).to eq(draft_morsel.items.first.id)
@@ -306,11 +329,10 @@ describe 'Morsels API' do
       get_endpoint
 
       expect_success
-      expect(json_data.count).to eq(draft_morsels_count)
-
-      first_morsel = json_data.first
-      expect(first_morsel['draft']).to be_true
-      expect(first_morsel['creator']).to_not be_nil
+      expect_json_data_count draft_morsels_count
+      expect_first_json_data_eq({
+        'draft' => true
+      })
     end
 
     it 'returns morsel_id, sort_order, and url for each Item' do

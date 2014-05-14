@@ -23,7 +23,7 @@ class ApiController < ActionController::Base
 
   private
 
-  PUBLIC_ACTIONS = []
+  PUBLIC_ACTIONS ||= []
 
   # api_key is expected to be in the format: "#{user.id}:#{user.authentication_token}"
   def authenticate_user_from_token!
@@ -41,11 +41,11 @@ class ApiController < ActionController::Base
       else
         unauthorized_token
       end
-    elsif PUBLIC_ACTIONS.include? params[:action]
-      true
-    else
-      false
+    elsif self.class::PUBLIC_ACTIONS.exclude? params[:action].to_sym
+      unauthorized_token
     end
+  rescue ActiveRecord::RecordNotFound
+    unauthorized_token
   end
 
   def pagination_count

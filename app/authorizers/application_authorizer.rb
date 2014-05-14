@@ -10,7 +10,7 @@ class ApplicationAuthorizer < Authority::Authorizer
 
   def self.readable_by?(user)
     # By default, anyone can READ resources
-    true
+    user.present?
   end
 
   def self.updatable_by?(user)

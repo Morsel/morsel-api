@@ -1,6 +1,4 @@
 class ItemsController < ApiController
-  PUBLIC_ACTIONS = [:show]
-
   def create
     Authority.enforce :create, Item, current_user
 
@@ -14,6 +12,7 @@ class ItemsController < ApiController
     end
   end
 
+  PUBLIC_ACTIONS << :show
   def show
     custom_respond_with Item.find(params[:id])
   end

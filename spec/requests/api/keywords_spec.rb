@@ -11,7 +11,7 @@ describe 'Keywords API' do
       get_endpoint
 
       expect_success
-      expect(json_data.count).to eq(cuisines_count)
+      expect_json_data_count cuisines_count
     end
   end
 
@@ -25,7 +25,7 @@ describe 'Keywords API' do
       get_endpoint
 
       expect_success
-      expect(json_data.count).to eq(specialties_count)
+      expect_json_data_count specialties_count
     end
   end
 
@@ -49,7 +49,7 @@ describe 'Keywords API' do
       get_endpoint
 
       expect_success
-      expect(json_data.count).to eq(users_count)
+      expect_json_data_count users_count
     end
   end
 
@@ -73,7 +73,7 @@ describe 'Keywords API' do
       get_endpoint
 
       expect_success
-      expect(json_data.count).to eq(users_count)
+      expect_json_data_count users_count
     end
   end
 
@@ -97,7 +97,7 @@ describe 'Keywords API' do
       get_endpoint
 
       expect_success
-      expect(json_data.count).to eq(users_count)
+      expect_json_data_count users_count
     end
   end
 end

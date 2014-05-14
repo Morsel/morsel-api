@@ -1,6 +1,5 @@
 class FeedController < ApiController
-  PUBLIC_ACTIONS = [:index]
-
+  PUBLIC_ACTIONS << :index
   def index
     custom_respond_with FeedItem.since(params[:since_id])
                                 .max(params[:max_id])
