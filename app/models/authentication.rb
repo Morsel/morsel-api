@@ -29,13 +29,21 @@ class Authentication < ActiveRecord::Base
                         inclusion: %w(facebook twitter),
                         presence: true
 
-  validates :secret, presence: true, if: proc { |a| a.provider == 'twitter' }
+  validates :secret, presence: true, if: proc { |a| a.twitter? }
   validates :token, presence: true
   validates :uid, presence: true, uniqueness: { scope: :provider, message: 'already exists' }
   validates :user, presence: true
 
   def exchange_access_token
-    self.token = Koala::Facebook::OAuth.new(Settings.facebook.app_id, Settings.facebook.app_secret).exchange_access_token(token) if short_lived?
+    self.token = Koala::Facebook::OAuth.new(Settings.facebook.app_id, Settings.facebook.app_secret).exchange_access_token(token) if short_lived? && facebook?
+  end
+
+  def facebook?
+    provider == 'facebook'
+  end
+
+  def twitter?
+    provider == 'twitter'
   end
 
   private

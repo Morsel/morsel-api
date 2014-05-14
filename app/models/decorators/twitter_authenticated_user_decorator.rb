@@ -35,8 +35,10 @@ class TwitterAuthenticatedUserDecorator < SimpleDelegator
     authentication
   end
 
-  def twitter_valid?(authentication = twitter_authentication)
-    twitter_client(authentication).current_user.present?
+  def get_twitter_uid(authentication)
+    twitter_client(authentication).current_user.id
+  rescue NoMethodError
+    nil
   end
 
   private
