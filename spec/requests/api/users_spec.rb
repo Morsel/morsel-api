@@ -422,7 +422,7 @@ describe 'Users API' do
       it 'signs in the User' do
         post_endpoint user: {
                         email: user.email,
-                        password: 'password'
+                        password: user.password
                       }
 
         expect_success
@@ -444,7 +444,7 @@ describe 'Users API' do
       it 'accepts a username instead of an email' do
         post_endpoint user: {
                         username: user.username,
-                        password: 'password'
+                        password: user.password
                       }
         expect_success
       end
@@ -452,7 +452,7 @@ describe 'Users API' do
       it 'accepts \'login\' as a generic parameter for email or username' do
         post_endpoint user: {
                         login: user.username,
-                        password: 'password'
+                        password: user.password
                       }
         expect_success
       end

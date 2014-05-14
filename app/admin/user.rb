@@ -1,8 +1,11 @@
 ActiveAdmin.register User do
   actions :index, :show
+  filter :email
+  filter :username
+  filter :first_name
+  filter :last_name
 
   config.clear_action_items!
-  config.filters = false
 
   index do
     selectable_column
