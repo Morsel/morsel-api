@@ -146,14 +146,14 @@ class UsersController < ApiController
   def likeables
     likeable_type = params.fetch(:type)
     if likeable_type == 'Item'
-      serializer = LikedItemSerializer
       custom_respond_with Item.joins("LEFT OUTER JOIN likes ON likes.likeable_type = 'Item' AND likes.likeable_id = items.id AND likes.deleted_at IS NULL AND items.deleted_at IS NULL")
+                              .includes(:creator, :morsel)
                               .since(params[:since_id], 'items')
                               .max(params[:max_id], 'items')
                               .where(likes: { liker_id: params[:id] })
                               .limit(pagination_count)
                               .order('likes.id DESC'),
-                          each_serializer: serializer,
+                          each_serializer: LikedItemSerializer,
                           context: {
                             liker_id: params[:id],
                             likeable_type: likeable_type
