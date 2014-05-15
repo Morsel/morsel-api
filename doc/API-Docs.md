@@ -261,7 +261,7 @@ Returns ```true``` if the authentication exists, otherwise false.
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | |
-| authentication[uid] | Number | The User's ID for the provider. | | |
+| authentication[uid] | String | The User's ID for the provider. | | |
 
 ### Response
 
