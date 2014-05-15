@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140502175746) do
+ActiveRecord::Schema.define(version: 20140515225146) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(version: 20140502175746) do
   add_index "activities", ["creator_id"], name: "index_activities_on_creator_id", using: :btree
   add_index "activities", ["recipient_id"], name: "index_activities_on_recipient_id", using: :btree
   add_index "activities", ["subject_id"], name: "index_activities_on_subject_id", using: :btree
+  add_index "activities", ["subject_type", "action_type"], name: "index_activities_on_subject_type_and_action_type", using: :btree
 
   create_table "authentications", force: true do |t|
     t.string   "provider"
@@ -74,6 +75,7 @@ ActiveRecord::Schema.define(version: 20140502175746) do
     t.string   "commentable_type"
   end
 
+  add_index "comments", ["commentable_type"], name: "index_comments_on_commentable_type", using: :btree
   add_index "comments", ["commenter_id", "commentable_id"], name: "index_comments_on_commenter_id_and_commentable_id", using: :btree
 
   create_table "emails", force: true do |t|
@@ -109,6 +111,7 @@ ActiveRecord::Schema.define(version: 20140502175746) do
   end
 
   add_index "follows", ["followable_id", "follower_id"], name: "index_follows_on_followable_id_and_follower_id", using: :btree
+  add_index "follows", ["followable_type"], name: "index_follows_on_followable_type", using: :btree
 
   create_table "items", force: true do |t|
     t.text     "description"
@@ -148,6 +151,7 @@ ActiveRecord::Schema.define(version: 20140502175746) do
     t.string   "likeable_type"
   end
 
+  add_index "likes", ["likeable_type"], name: "index_likes_on_likeable_type", using: :btree
   add_index "likes", ["liker_id", "likeable_id"], name: "index_likes_on_liker_id_and_likeable_id", using: :btree
 
   create_table "morsels", force: true do |t|
@@ -181,6 +185,7 @@ ActiveRecord::Schema.define(version: 20140502175746) do
     t.datetime "updated_at"
   end
 
+  add_index "notifications", ["payload_type"], name: "index_notifications_on_payload_type", using: :btree
   add_index "notifications", ["user_id"], name: "index_notifications_on_user_id", using: :btree
 
   create_table "roles", force: true do |t|
@@ -216,6 +221,7 @@ ActiveRecord::Schema.define(version: 20140502175746) do
     t.datetime "updated_at"
   end
 
+  add_index "tags", ["taggable_type"], name: "index_tags_on_taggable_type", using: :btree
   add_index "tags", ["tagger_id", "taggable_id", "keyword_id"], name: "index_tags_on_tagger_id_and_taggable_id_and_keyword_id", using: :btree
 
   create_table "user_events", force: true do |t|
