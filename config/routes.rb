@@ -29,8 +29,8 @@ MorselApp::Application.routes.draw do
   concern :followable do
     member do
       post 'follow' => 'follows#create'
-      get 'followers' => 'follows#followers'
       delete 'follow' => 'follows#destroy'
+      get 'followers' => 'follows#followers'
     end
   end
 
@@ -59,7 +59,11 @@ MorselApp::Application.routes.draw do
   get 'cuisines' => 'keywords#cuisines'
   get 'specialties' => 'keywords#specialties'
 
-  get 'keywords/:id/users' => 'keywords#users'
+  resources :keywords, only: [:show], concerns: [:followable] do
+    member do
+      get 'users' => 'keywords#users'
+    end
+  end
   match 'cuisines/:id/users', to: 'keywords#users', via: :get
   match 'specialties/:id/users', to: 'keywords#users', via: :get
 

@@ -1,12 +1,18 @@
 require 'spec_helper'
 
 describe 'Users API' do
+  it_behaves_like 'FollowableController' do
+    let(:current_user) { FactoryGirl.create(:chef) }
+    let(:followable_route) { '/users' }
+    let(:followable) { FactoryGirl.create(:user) }
+  end
+
   it_behaves_like 'TaggableController' do
     let(:current_user) { FactoryGirl.create(:chef) }
     let(:taggable_route) { '/users' }
     let(:taggable) { current_user }
     let(:keyword) { FactoryGirl.create(:keyword) }
-    let(:tag) { FactoryGirl.create(:user_tag, tagger: current_user) }
+    let(:existing_tag) { FactoryGirl.create(:user_tag, tagger: current_user) }
   end
 
   describe 'GET /users/me users#me' do
@@ -465,6 +471,20 @@ describe 'Users API' do
         expect_failure
         expect(json_errors['base'].first).to eq('login or password is invalid')
       end
+
+      context 'inactive User' do
+        before { user.update(active: false) }
+
+        it 'returns an error' do
+          post_endpoint user: {
+                          email: user.email,
+                          password: user.password
+                        }
+
+          expect_failure
+          expect(json_errors['base'].first).to eq('login or password is invalid')
+        end
+      end
     end
 
     context 'authentication already exists' do
@@ -626,7 +646,7 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /users/{:user_id|user_username} users#show' do
+  describe 'GET /users/:id|:username users#show' do
     let(:endpoint) { "/users/#{user_with_morsels.id}" }
     let(:user_with_morsels) { FactoryGirl.create(:user_with_morsels) }
     let(:number_of_likes) { rand(2..6) }
@@ -727,7 +747,7 @@ describe 'Users API' do
           expect_success
           expect_json_data_eq({
             'following' => true,
-            'followed_users_count' => 0,
+            'followed_user_count' => 0,
             'follower_count' => 1
           })
         end
@@ -742,7 +762,7 @@ describe 'Users API' do
 
             expect_success
             expect_json_data_eq({
-              'followed_users_count' => 1,
+              'followed_user_count' => 1,
               'follower_count' => 1
             })
           end
@@ -751,7 +771,7 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /users/{:user_id}/likeables' do
+  describe 'GET /users/:id/likeables' do
     context 'type=Item' do
       let(:endpoint) { "/users/#{liker.id}/likeables?type=Item" }
       let(:liker) { FactoryGirl.create(:user) }
@@ -777,7 +797,46 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /users/{:user_id}/followables' do
+  describe 'GET /users/:id/followables' do
+    context 'type=Keyword' do
+      let(:endpoint) { "/users/#{follower.id}/followables?type=Keyword" }
+      let(:follower) { FactoryGirl.create(:user) }
+      let(:followed_keywords_count) { rand(2..6) }
+
+      before do
+        followed_keywords_count.times { FactoryGirl.create(:keyword_follow, followable: FactoryGirl.create(:keyword), follower: follower) }
+      end
+
+      it_behaves_like 'TimelinePaginateable' do
+        let(:paginateable_object_class) { Keyword }
+        before do
+          paginateable_object_class.delete_all
+          30.times { FactoryGirl.create(:keyword_follow, follower: follower) }
+        end
+      end
+
+      it 'returns the Keywords that the User has followed' do
+        get_endpoint
+
+        expect_success
+
+        expect_json_data_count followed_keywords_count
+        expect_first_json_data_eq('followed_at' => Follow.last.created_at.as_json)
+      end
+
+      context 'unfollowed last Keyword' do
+        before do
+          Follow.last.destroy
+        end
+        it 'returns one less followed user' do
+          get_endpoint
+
+          expect_success
+          expect_json_data_count(followed_keywords_count - 1)
+        end
+      end
+    end
+
     context 'type=User' do
       let(:endpoint) { "/users/#{follower.id}/followables?type=User" }
       let(:follower) { FactoryGirl.create(:user) }
@@ -817,47 +876,7 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /users/{:user_id}/followers' do
-    let(:endpoint) { "/users/#{followed_user.id}/followers" }
-    let(:followed_user) { FactoryGirl.create(:user) }
-    let(:followers_count) { rand(2..6) }
-
-    before { followers_count.times { FactoryGirl.create(:user_follow, followable: followed_user) }}
-
-    it_behaves_like 'TimelinePaginateable' do
-      let(:paginateable_object_class) { User }
-      before do
-        paginateable_object_class.delete_all
-        30.times { FactoryGirl.create(:user_follow, followable: followed_user) }
-      end
-    end
-
-    it 'returns the Users that are following the User' do
-      get_endpoint
-
-      expect_success
-
-      expect_json_data_count followers_count
-      expect_first_json_data_eq('followed_at' => Follow.last.created_at.as_json)
-    end
-
-    context 'last User unfollowed User' do
-      before do
-        Follow.last.destroy
-      end
-      it 'returns one less follower' do
-        get_endpoint
-
-        expect_success
-
-        expect_json_data_count(followers_count - 1
-
-          )
-      end
-    end
-  end
-
-  describe 'PUT /users/{:user_id} users#update' do
+  describe 'PUT /users/:id users#update' do
     let(:endpoint) { "/users/#{current_user.id}" }
     let(:current_user) { FactoryGirl.create(:user) }
 
@@ -876,7 +895,7 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /users/{:user_id|user_username}/morsels' do
+  describe 'GET /users/:id|:username/morsels' do
     let(:endpoint) { "/users/#{user_with_morsels.id}/morsels" }
     let(:morsels_count) { 3 }
     let(:user_with_morsels) { FactoryGirl.create(:user_with_morsels, morsels_count: morsels_count) }
@@ -1044,7 +1063,7 @@ describe 'Users API' do
     end
   end
 
-  describe 'DELETE /users/authentications/{:authentication_id} authentications#destroy' do
+  describe 'DELETE /users/authentications/:id authentications#destroy' do
     let(:endpoint) { "/users/authentications/#{authentication.id}" }
     let(:current_user) { FactoryGirl.create(:chef_with_facebook_authentication) }
     let(:authentication) { current_user.authentications.first }

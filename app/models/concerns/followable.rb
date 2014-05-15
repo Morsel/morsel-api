@@ -2,8 +2,8 @@ module Followable
   extend ActiveSupport::Concern
 
   included do
-    has_many :followers, through: :follows, class_name: 'User'
-    has_many :follows, as: :followable, dependent: :destroy
+    has_many :follower_follows, as: :followable, class_name: 'Follow', dependent: :destroy
+    has_many :followers, through: :follower_follows, class_name: 'User'
   end
 
   def follower_count

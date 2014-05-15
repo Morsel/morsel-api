@@ -12,7 +12,7 @@ class UserSerializer < ActiveModel::Serializer
              :morsel_count,
              :liked_items_count,
              :following,
-             :followed_users_count,
+             :followed_user_count,
              :follower_count
 
   def photos

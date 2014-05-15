@@ -26,14 +26,17 @@ class FollowsController < ApiController
 
   PUBLIC_ACTIONS << :followers
   def followers
-    custom_respond_with User.joins(:follows)
+    custom_respond_with User.joins(:followable_follows)
                             .since(params[:since_id], 'users')
                             .max(params[:max_id], 'users')
-                            .where(follows: { followable_id: params[:id] })
+                            .where(follows: { followable_id: params[:id], followable_type: followable_type })
                             .limit(pagination_count)
                             .order('follows.id DESC'),
                         each_serializer: UserFollowerSerializer,
-                        context: { followable_id: params[:id] }
+                        context: {
+                          followable_id: params[:id],
+                          followable_type: followable_type
+                        }
   end
 
   private

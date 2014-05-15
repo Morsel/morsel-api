@@ -31,14 +31,13 @@ class TagsController < ApiController
 
   def destroy
     tag = Tag.find_by(id: params[:tag_id])
-    if tag
-      authorize_action_for tag
+    record_not_found && return unless tag
+    authorize_action_for tag
 
-      if tag.destroy
-        custom_respond_with 'OK'
-      else
-        render_json_errors tag.errors
-      end
+    if tag.destroy
+      render_json 'OK'
+    else
+      render_json_errors tag.errors
     end
   end
 

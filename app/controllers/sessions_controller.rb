@@ -24,7 +24,7 @@ class SessionsController < Devise::SessionsController
     user = User.find_for_database_authentication(login: login)
     return invalid_login_attempt unless user
 
-    if user.valid_password?(password)
+    if user.valid_password?(password) && user.active?
       sign_in user, store: false
 
       custom_respond_with user, serializer: UserWithAuthTokenSerializer

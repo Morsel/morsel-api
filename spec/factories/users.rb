@@ -50,6 +50,7 @@ FactoryGirl.define do
     last_name { Faker::Name.last_name }
     password 'password'
     bio 'Hi! I like turtles!'
+    active true
 
     factory :admin do
       admin true

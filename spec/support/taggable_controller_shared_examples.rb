@@ -9,9 +9,9 @@ shared_examples 'TaggableController' do
       expect_success
       new_tag = Tag.find json_data['id']
       expect_json_data_eq({
-        'id' => new_tag.id,
-        'taggable_id' => new_tag.taggable_id,
-        'taggable_type' => new_tag.taggable_type,
+        'id' => new_existing_tag.id,
+        'taggable_id' => new_existing_tag.taggable_id,
+        'taggable_type' => new_existing_tag.taggable_type,
         'keyword' => { 'name' => new_tag.name }
       })
     end
@@ -58,13 +58,23 @@ shared_examples 'TaggableController' do
   end
 
   describe 'DELETE /taggable/:id/tags/:tag_id' do
-    let(:endpoint) { "#{taggable_route}/#{taggable.id}/tags/#{tag.id}" }
+    let(:endpoint) { "#{taggable_route}/#{taggable.id}/tags/#{existing_tag.id}" }
 
     it 'soft deletes the Comment' do
       delete_endpoint
 
       expect_success
-      expect(Tag.find_by(id: tag.id)).to be_nil
+      expect(Tag.find_by(id: existing_tag.id)).to be_nil
+    end
+
+    context 'Tag doesn\'t exist' do
+      let(:tag) { FactoryGirl.build(:user_tag, tagger: current_user, id: 10000) }
+      it 'returns an error' do
+        delete_endpoint
+
+        expect_failure
+        expect(json_errors['base']).to include('Record not found')
+      end
     end
   end
 end

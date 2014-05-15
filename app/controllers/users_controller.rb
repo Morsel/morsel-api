@@ -113,16 +113,32 @@ class UsersController < ApiController
   PUBLIC_ACTIONS << :followables
   def followables
     followable_type = params.fetch(:type)
-    if followable_type == 'User'
-      serializer = FollowedUserSerializer
+
+    if followable_type == 'Keyword'
+      custom_respond_with Keyword.joins("LEFT OUTER JOIN follows ON follows.followable_type = 'Keyword' AND follows.followable_id = keywords.id AND follows.deleted_at IS NULL AND keywords.deleted_at IS NULL")
+                              .since(params[:since_id], 'keywords')
+                              .max(params[:max_id], 'keywords')
+                              .where(follows: { follower_id: params[:id] })
+                              .limit(pagination_count)
+                              .order('follows.id DESC'),
+                          each_serializer: FollowedKeywordSerializer,
+                          context: {
+                            follower_id: params[:id],
+                            followable_type: followable_type
+                          }
+
+    elsif followable_type == 'User'
       custom_respond_with User.joins("LEFT OUTER JOIN follows ON follows.followable_type = 'User' AND follows.followable_id = users.id AND follows.deleted_at IS NULL AND users.deleted_at IS NULL")
                               .since(params[:since_id], 'users')
                               .max(params[:max_id], 'users')
                               .where(follows: { follower_id: params[:id] })
                               .limit(pagination_count)
                               .order('follows.id DESC'),
-                          each_serializer: serializer,
-                          context: { follower_id: params[:id] }
+                          each_serializer: FollowedUserSerializer,
+                          context: {
+                            follower_id: params[:id],
+                            followable_type: followable_type
+                          }
     end
   end
 
@@ -138,7 +154,10 @@ class UsersController < ApiController
                               .limit(pagination_count)
                               .order('likes.id DESC'),
                           each_serializer: serializer,
-                          context: { liker_id: params[:id] }
+                          context: {
+                            liker_id: params[:id],
+                            likeable_type: likeable_type
+                          }
     end
   end
 

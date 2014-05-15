@@ -56,7 +56,7 @@ describe User do
   it { should respond_to(:photo) }
   it { should respond_to(:liked_items_count) }
   it { should respond_to(:follower_count) }
-  it { should respond_to(:followed_users_count) }
+  it { should respond_to(:followed_user_count) }
   it { should respond_to(:bio) }
 
   its(:authentication_token) { should be_nil }

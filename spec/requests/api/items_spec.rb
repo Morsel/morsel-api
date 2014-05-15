@@ -478,5 +478,18 @@ describe 'Items API' do
         expect(json_errors['api'].first).to eq('Not authorized to delete Comment')
       end
     end
+
+    context 'Comment doesn\'t exist' do
+      let(:endpoint) { "/items/#{item.id}/comments/#{comment.id}" }
+      let(:current_user) { FactoryGirl.create(:chef) }
+      let(:comment) { FactoryGirl.build(:user_tag, tagger: current_user, id: 10000) }
+
+      it 'returns an error' do
+        delete_endpoint
+
+        expect_failure
+        expect(json_errors['base']).to include('Record not found')
+      end
+    end
   end
 end
