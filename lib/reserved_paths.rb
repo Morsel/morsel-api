@@ -64,6 +64,8 @@ module ReservedPaths
       oauth
       password
       passwords
+      place
+      places
       positions
       post
       press
