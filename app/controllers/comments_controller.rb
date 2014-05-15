@@ -20,14 +20,13 @@ class CommentsController < ApiController
 
   def destroy
     comment = Comment.find_by(id: params[:comment_id])
-    if comment
-      authorize_action_for comment
+    record_not_found && return unless comment
+    authorize_action_for comment
 
-      if comment.destroy
-        custom_respond_with 'OK'
-      else
-        render_json_errors comment.errors
-      end
+    if comment.destroy
+      render_json 'OK'
+    else
+      render_json_errors comment.errors
     end
   end
 

@@ -69,6 +69,9 @@
   - [DELETE ```/morsels/{morsel_id}``` - Delete Morsel](#delete-morselsmorsel_id---delete-morsel)
 
 - [Keyword Methods](#keyword-methods)
+  - [POST ```/keywords/{keyword_id}/follow``` - Follow Keyword](#post-keywordskeyword_idfollow---follow-keyword)
+  - [DELETE ```/keywords/{keyword_id}/follow``` - Unfollow Keyword](#delete-keywordskeyword_idfollow---unfollow-keyword)
+  - [GET ```/keywords/{keyword_id}/followers``` - Keyword Followers](#get-keywordskeyword_idfollowers---keyword-followers)
   - [GET ```/cuisines``` - Cuisines](#get-cuisines---cuisines)
   - [GET ```/cuisines/{cuisine_id}/users``` - Cuisine Users](#get-cuisinescuisine_id---cuisine-users)
   - [GET ```/specialties``` - Specialties](#get-specialties---specialties)
@@ -637,7 +640,7 @@ Deletes the authentication with the specified `authentication_id`
 
 | Status Code |
 | ----------- |
-|         200 |
+|         204 |
 
 <br />
 <br />
@@ -754,7 +757,7 @@ Deletes the Tag with the specified `tag_id` for the User with the specified `use
 
 | Status Code |
 | ----------- |
-|         200 |
+|         204 |
 
 <br />
 <br />
@@ -796,7 +799,7 @@ Follows the User with the specified ```user_id```.
 
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
-| __already followed__ | 400 (Bad Request) | Current User has already followed the User |
+| __already followed__ | 400 (Bad Request) | current_user has already followed the User |
 
 <br />
 <br />
@@ -808,13 +811,13 @@ Unfollows the User with the specified ```user_id```.
 
 | Status Code |
 | ----------- |
-|         200 |
+|         204 |
 
 ### Unique Errors
 
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
-| __not followed__ | 400 (Bad Request) | Current User has not followed that User |
+| __not followed__ | 400 (Bad Request) | current_user has not followed that User |
 
 <br />
 <br />
@@ -838,13 +841,13 @@ Returns the followers for the User with the specified ```user_id```.
 <br />
 
 ## GET ```/users/{user_id}/followables``` - User Followables
-Returns the Followables that the User with the specified `user_id` is following along with a `followed_at` DateTime key
+Returns the Followables that the User with the specified `user_id` is following along with a `followed_at` DateTime.
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| type | String | The type of followables to return. Currently only 'User' is acceptable. | | X |
+| type | String | The type of followables to return. Currently only `Keyword` and `User` is acceptable. | | X |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
 | max_id | Number | Return followables of the specified `type` up to and including this `id` | | |
 | since_id | Number | Return followables of the specified `type` since this `id` | | |
@@ -853,7 +856,8 @@ Returns the Followables that the User with the specified `user_id` is following 
 
 | type= | __data__ |
 | --------- | -------- |
-| User | Array of [Followed User](#follow-user)s |
+| Keyword | Array of [Followed Keyword](#followed-keyword)s |
+| User | Array of [Followed User](#followed-user)s |
 
 <br />
 <br />
@@ -925,7 +929,7 @@ Deletes the Item with the specified ```item_id```.
 
 | Status Code |
 | ----------- |
-|         200 |
+|         204 |
 
 <br />
 <br />
@@ -955,7 +959,7 @@ Unlikes the Item with the specified ```item_id``` for [current_user](#current_us
 
 | Status Code |
 | ----------- |
-|         200 |
+|         204 |
 
 ### Unique Errors
 
@@ -1043,7 +1047,7 @@ Deletes the Comment with the specified `comment_id` for the `item_id` if [curren
 
 | Status Code |
 | ----------- |
-|         200 |
+|         204 |
 
 ### Unique Errors
 
@@ -1173,7 +1177,61 @@ Publishes the Morsel with the specified ```morsel_id``` by setting a `published_
 <br />
 
 
-# Cuisine Methods
+# Keyword Methods
+
+## POST `/keywords/{keyword_id}/follow` - Follow Keyword
+Follows the Keyword with the specified `keyword_id`.
+
+### Response
+
+| Status Code |
+| ----------- |
+|         201 |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __already followed__ | 400 (Bad Request) | current_user has already followed the Keyword |
+
+<br />
+<br />
+
+## DELETE `/keywords/{keyword_id}/follow` - Unfollow Keyword
+Unfollows the Keyword with the specified `keyword_id`.
+
+### Response
+
+| Status Code |
+| ----------- |
+|         204 |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __not followed__ | 400 (Bad Request) | current_user has not followed that Keyword |
+
+<br />
+<br />
+
+## GET ```/keywords/{keyword_id}/followers``` - Keyword Followers
+Returns the followers for the Keyword with the specified `keyword_id`.
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Users up to and including this `id` | | |
+| since_id | Number | Return Users since this `id` | | |
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [User Follower](#user-follower)s |
+
+<br />
+<br />
 
 ## GET ```/cuisines``` - Cuisines
 Returns the list of Cuisines
@@ -1206,9 +1264,6 @@ Returns a list of Users who belong to the Cuisine with the specified `cuisine_id
 
 <br />
 <br />
-
-
-# Specialty Methods
 
 ## GET ```/specialties``` - Specialties
 Returns the list of Specialties
@@ -1506,7 +1561,7 @@ This includes the same keys as [Item](#item), along with:
   "morsel_count": 1,
   "liked_items_count": 3,
   "following": false,
-  "followed_users_count": 3,
+  "followed_user_count": 3,
   "follower_count": 3
 }
 ```
@@ -1605,6 +1660,16 @@ This includes the same keys as [User](#user), along with:
   "id":6,
   "type":"Cuisine",
   "name":"Polish"
+}
+```
+
+### Followed Keyword
+Response for any Follow Keyword related requests.
+This includes the same keys as [Keyword](#keyword), along with:
+
+```json
+{
+  "followed_at": "2014-04-28T16:50:42.352Z"
 }
 ```
 

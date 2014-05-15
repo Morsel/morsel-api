@@ -64,17 +64,13 @@ class User < ActiveRecord::Base
             -> { where provider: 'twitter' },
             class_name: 'Authentication',
             foreign_key: :user_id
+
   has_many :likes, foreign_key: :liker_id
   has_many :liked_items, through: :likes, source: :likeable, source_type: 'Item'
 
-  has_many :follows, foreign_key: :follower_id,
-                     dependent:   :destroy
-  has_many :followed_users, through: :follows, source: :followable, source_type: 'User'
-
-  has_many :reverse_follows, foreign_key: 'followable_id',
-                             class_name:  'Follow',
-                             dependent:   :destroy
-  has_many :followers, through: :reverse_follows, source: :follower
+  has_many :followable_follows, foreign_key: :follower_id, class_name: 'Follow', dependent: :destroy
+  has_many :followed_users, through: :followable_follows, source: :followable, source_type: 'User'
+  has_many :followed_keywords, through: :followable_follows, source: :followable, source_type: 'Keyword'
 
   has_many :items, foreign_key: :creator_id
   has_many :morsels, foreign_key: :creator_id
@@ -124,7 +120,7 @@ class User < ActiveRecord::Base
     followers.count
   end
 
-  def followed_users_count
+  def followed_user_count
     followed_users.count
   end
 

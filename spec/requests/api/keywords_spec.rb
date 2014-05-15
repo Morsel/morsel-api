@@ -1,6 +1,12 @@
 require 'spec_helper'
 
 describe 'Keywords API' do
+  it_behaves_like 'FollowableController' do
+    let(:current_user) { FactoryGirl.create(:chef) }
+    let(:followable_route) { '/keywords' }
+    let(:followable) { FactoryGirl.create(:keyword) }
+  end
+
   describe 'GET /cuisines' do
     let(:endpoint) { '/cuisines' }
     let(:cuisines_count) { rand(3..6) }

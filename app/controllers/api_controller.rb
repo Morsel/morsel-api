@@ -52,7 +52,7 @@ class ApiController < ActionController::Base
     params[:count] || Settings.pagination_default_count || 20
   end
 
-  def record_not_found(error)
+  def record_not_found(error = nil)
     render_json_errors({ base: ['Record not found'] }, :not_found)
   end
 
