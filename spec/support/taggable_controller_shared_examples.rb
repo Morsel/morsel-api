@@ -9,9 +9,9 @@ shared_examples 'TaggableController' do
       expect_success
       new_tag = Tag.find json_data['id']
       expect_json_data_eq({
-        'id' => new_existing_tag.id,
-        'taggable_id' => new_existing_tag.taggable_id,
-        'taggable_type' => new_existing_tag.taggable_type,
+        'id' => new_tag.id,
+        'taggable_id' => new_tag.taggable_id,
+        'taggable_type' => new_tag.taggable_type,
         'keyword' => { 'name' => new_tag.name }
       })
     end
@@ -68,7 +68,9 @@ shared_examples 'TaggableController' do
     end
 
     context 'Tag doesn\'t exist' do
-      let(:tag) { FactoryGirl.build(:user_tag, tagger: current_user, id: 10000) }
+      let(:new_tag) { FactoryGirl.build(:user_tag, tagger: current_user, id: 10000) }
+      let(:endpoint) { "#{taggable_route}/#{taggable.id}/tags/#{new_tag.id}" }
+
       it 'returns an error' do
         delete_endpoint
 
