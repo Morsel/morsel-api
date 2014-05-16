@@ -1569,6 +1569,8 @@ This includes the same keys as [User](#user), along with:
   "created_at":"2014-03-25T21:18:02.349Z",
   "updated_at":"2014-03-25T21:18:02.360Z",
   "subject_type":"Morsel",
+  "user_id": 1,
+  "featured": false,
   "subject":{
     "id":6,
     "title":"Eum perspiciatis tempora omnis ab qui.",
