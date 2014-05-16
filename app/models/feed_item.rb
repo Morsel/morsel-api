@@ -13,6 +13,8 @@
 # **`visible`**       | `boolean`          | `default(FALSE)`
 # **`created_at`**    | `datetime`         |
 # **`updated_at`**    | `datetime`         |
+# **`user_id`**       | `integer`          |
+# **`featured`**      | `boolean`          | `default(FALSE)`
 #
 
 class FeedItem < ActiveRecord::Base
@@ -20,6 +22,19 @@ class FeedItem < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :subject, polymorphic: true
+  belongs_to :user
 
-  scope :visible_items, -> { where(visible: true) }
+  scope :visible, -> { where(visible: true) }
+  scope :featured, -> { where(featured: true) }
+
+  def self.personalized_for(user_id)
+    where(%Q[
+      user_id IN (SELECT followable_id
+                  FROM follows
+                  WHERE follower_id = :user_id
+                    AND followable_type = 'User')
+      OR user_id = :user_id
+      OR featured = true
+      ], user_id: user_id)
+  end
 end

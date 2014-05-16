@@ -13,6 +13,8 @@
 # **`visible`**       | `boolean`          | `default(FALSE)`
 # **`created_at`**    | `datetime`         |
 # **`updated_at`**    | `datetime`         |
+# **`user_id`**       | `integer`          |
+# **`featured`**      | `boolean`          | `default(FALSE)`
 #
 
 require 'spec_helper'

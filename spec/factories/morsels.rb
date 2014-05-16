@@ -49,13 +49,14 @@ FactoryGirl.define do
       factory :morsel_with_items, class: Morsel do
         ignore do
           build_feed_item true
+          featured_feed_item false
           items_count 3
         end
 
         after(:create) do |morsel, evaluator|
           create_list(:item, evaluator.items_count, morsel: morsel, creator: morsel.creator)
           morsel.primary_item_id = morsel.item_ids.last
-          morsel.build_feed_item(subject_id: morsel.id, subject_type: 'Morsel', visible: true) if evaluator.build_feed_item
+          morsel.build_feed_item(subject_id: morsel.id, subject_type: 'Morsel', visible: true, user: morsel.creator, featured: evaluator.featured_feed_item) if evaluator.build_feed_item
           morsel.save
         end
 

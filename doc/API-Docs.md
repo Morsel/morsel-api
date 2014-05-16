@@ -233,7 +233,7 @@ TIMELINE_DEFAULT_LIMIT = 20
 # Feed Methods
 
 ## GET ```/feed``` - Feed
-Returns the Feed for [current_user](#current_user). The Feed consists of [Feed Item](#feed-item)s sorted by their created_at date, with the most recent one's appearing first.
+Returns the Feed. If [current_user](#current_user) exists, the results will include your Feed Items, any followed Users' Feed Items, and any Feed Items marked as `featured`. If no [current_user](#current_user) exists only Feed Items marked as `featured` will be returned. In either case results are sorted by their `created_at` date, with the most recent one's appearing first.
 
 ### Request
 
