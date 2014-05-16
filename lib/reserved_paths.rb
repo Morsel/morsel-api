@@ -16,7 +16,7 @@ module ReservedPaths
       blog
       business
       buttons
-      change_password
+      change-password
       checkusername
       chef
       city
@@ -25,25 +25,25 @@ module ReservedPaths
       contact
       contacts
       devices
-      direct_messages
+      direct-messages
       download
       downloads
       eatmorsel
       faq
       favorites
       feed
-      find_users
+      find-users
       followers
       following
-      forgot_password
-      friend_request
+      forgot-password
+      friend-request
       friendrequest
       friends
       goodies
       help
       home
       how-it-works
-      im_account
+      im-account
       inbox
       invitations
       invite
@@ -56,13 +56,14 @@ module ReservedPaths
       logout
       me
       media
-      media_signup
+      media-signup
       mentions
       messages
       morsel
       notifications
       oauth
       password
+      password-reset
       passwords
       place
       places
@@ -71,12 +72,12 @@ module ReservedPaths
       press
       privacy
       products
-      public_timeline
+      public-timeline
       replies
-      reset_password
+      reset-password
       restaurant
       rules
-      saved_searches
+      saved-searches
       search
       security
       sent
@@ -84,7 +85,7 @@ module ReservedPaths
       share
       signin
       signup
-      similar_to
+      similar-to
       sitemap
       statistics
       tag
@@ -97,7 +98,7 @@ module ReservedPaths
       user
       users
       welcome
-      who_to_follow
+      who-to-follow
       widgets
     )
   end
