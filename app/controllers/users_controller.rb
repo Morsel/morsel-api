@@ -57,9 +57,7 @@ class UsersController < ApiController
   PUBLIC_ACTIONS << :forgot_password
   def forgot_password
     user = User.find_by(email: params.fetch(:email))
-    raise ActiveRecord::RecordNotFound if user.nil? || !user.active?
-
-    EmailUserDecorator.new(user).send_forgot_password_email
+    EmailUserDecorator.new(user).send_forgot_password_email if user
     render_json('Sending reset password email.')
   end
 
