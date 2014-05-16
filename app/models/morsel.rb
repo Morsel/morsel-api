@@ -31,6 +31,9 @@ class Morsel < ActiveRecord::Base
   alias_attribute :slug, :cached_slug
 
   belongs_to  :creator, class_name: 'User', foreign_key: 'creator_id'
+  alias_attribute :user, :creator
+  alias_attribute :user_id, :creator_id
+
   has_many    :items, -> { order('sort_order ASC') }, dependent: :destroy
   belongs_to  :primary_item, class_name: 'Item'
 

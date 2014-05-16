@@ -13,10 +13,14 @@
 # **`visible`**       | `boolean`          | `default(FALSE)`
 # **`created_at`**    | `datetime`         |
 # **`updated_at`**    | `datetime`         |
+# **`user_id`**       | `integer`          |
+# **`featured`**      | `boolean`          | `default(FALSE)`
 #
 
 FactoryGirl.define do
   factory :morsel_feed_item, class: FeedItem do
+    association(:subject, factory: :morsel)
+    association(:user, factory: :user)
     factory :visible_morsel_feed_item, class: FeedItem do
       visible true
     end
