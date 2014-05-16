@@ -32,7 +32,8 @@ class FeedItem < ActiveRecord::Base
       user_id IN (SELECT followable_id
                   FROM follows
                   WHERE follower_id = :user_id
-                    AND followable_type = 'User')
+                    AND followable_type = 'User'
+                    AND deleted_at IS NULL)
       OR user_id = :user_id
       OR featured = true
       ], user_id: user_id)
