@@ -3,17 +3,7 @@ class CommentSerializer < ActiveModel::Serializer
              :description,
              :created_at,
              :commentable_id,
-             :commentable_type,
-             :creator
+             :commentable_type
 
-  def creator
-    user = object.user
-    {
-      id: user.id,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      username: user.username,
-      photos: user.photos_hash
-    }
-  end
+  has_one :creator, serializer: SlimUserSerializer
 end

@@ -46,21 +46,6 @@ class Item < ActiveRecord::Base
     "#{morsel.url_for_item(self)}"
   end
 
-  def photos_hash
-    if photo_url.present?
-      {
-        _50x50:   photo_url(:_50x50),
-        _80x80:   photo_url(:_80x80),
-        _100x100: photo_url(:_100x100),
-        _240x240: photo_url(:_240x240),
-        _320x320: photo_url(:_320x320),
-        _480x480: photo_url(:_480x480),
-        _640x640: photo_url(:_640x640),
-        _992x992: photo_url(:_992x992)
-      }
-    end
-  end
-
   def morsel_title_with_description
     message = ''
     message << "#{morsel.title}: " if morsel && morsel.title?

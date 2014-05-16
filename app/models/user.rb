@@ -128,17 +128,6 @@ class User < ActiveRecord::Base
     followed_users.include?(user)
   end
 
-  def photos_hash
-    if photo_url.present?
-      {
-        _40x40: photo_url(:_40x40),
-        _72x72: photo_url(:_72x72),
-        _80x80: photo_url(:_80x80),
-        _144x144: photo_url(:_144x144)
-      }
-    end
-  end
-
   def full_name
     if first_name && last_name
       "#{first_name} #{last_name}"

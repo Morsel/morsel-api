@@ -1,11 +1,12 @@
 class ItemSerializer < ActiveModel::Serializer
+  include PhotoUploadableSerializerAttributes
+
   attributes :id,
              :description,
              :creator_id,
              :updated_at,
              :created_at,
              :nonce,
-             :photos,
              :photo_processing,
              :sort_order,
              :url,
@@ -16,9 +17,5 @@ class ItemSerializer < ActiveModel::Serializer
 
   def liked
     current_user.present? && current_user.likes_item?(object)
-  end
-
-  def photos
-    object.photos_hash
   end
 end
