@@ -90,8 +90,10 @@
     - [Item](#item)
     - [Liked Item](#liked-item)
   - [Morsel Objects](#morsel-objects)
+    - [Slim Morsel](#slim-morsel)
     - [Morsel](#morsel)
   - [User Objects](#user-objects)
+    - [Slim User](#slim-user)
     - [User](#user)
     - [User (w/ Private Attributes)](#user-w-private-attributes)
     - [User (w/ Auth Token)](#user-w-auth-token)
@@ -1399,95 +1401,37 @@ Used by third-party services to ping the API.
 ### Liked Item
 Response for any Like Item related requests.
 This includes the same keys as [Item](#item), along with:
+* `creator`: [Slim User](#slim-user)
+* `morsel`: [Slim Morsel](#slim-morsel)
+* and:
 
 ```json
 {
-  "liked_at": "2014-04-28T16:50:42.352Z",
-  "creator": {
-    "id": 3,
-    "username": "turdferg",
-    "first_name": "Turd",
-    "last_name": "Ferguson",
-    "created_at": "2014-01-07T18:35:57.877Z",
-    "updated_at": "2014-01-07T18:35:57.877Z",
-    "bio": "Suck It, Trebek",
-    "photos": {
-      "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-    }
-  },
-  "morsel": {
-    "id": 4,
-    "title": "Butter Rocks!",
-    "creator_id": 3,
-    "created_at": "2014-01-07T16:34:44.862Z",
-    "updated_at": "2014-01-07T16:34:44.862Z",
-    "slug": "butter-rocks",
-    "draft": false,
-    "primary_item_id": 2,
-    "published_at": "2014-01-07T16:34:44.862Z",
-    "photos": {
-      "_800x600":"https://morsel-staging.s3.amazonaws.com/morsel-images/4/648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
-    },
-    "url": "http://eatmorsel.com/turdferg/4-butter-rocks",
-    "facebook_mrsl": "http://mrsl.co/facebook",
-    "twitter_mrsl": "http://mrsl.co/twitter",
-    "creator": {
-      "id": 3,
-      "username": "turdferg",
-      "first_name": "Turd",
-      "last_name": "Ferguson",
-      "created_at": "2014-01-07T18:35:57.877Z",
-      "updated_at": "2014-01-07T18:35:57.877Z",
-      "bio": "Suck It, Trebek",
-      "photos": {
-        "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-        "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-      }
-    },
-    "items": [
-      {
-        "id": 2,
-        "description": null,
-        "creator_id": 3,
-        "created_at": "2014-01-07T16:34:43.071Z",
-        "updated_at": "2014-01-07T16:34:43.071Z",
-        "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
-        "photos": {
-          "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-          "_80x80":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-          "_100x100":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-          "_240x240":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-          "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-          "_480x480":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-          "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-          "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
-        },
-        "sort_order": 1,
-        "url": "http://eatmorsel.com/turdferg/4-butter-rocks/1"
-      }
-    ]
-  }
+  "liked_at": "2014-04-28T16:50:42.352Z"
+
 }
 ```
 
 
 ## Morsel Objects
 
-### Morsel
+### Slim Morsel
 
 ```json
 {
   "id": 4,
   "title": "Butter Rocks!",
+  "slug": "butter-rocks"
+}
+
+### Morsel
+This includes the same keys as [Slim Morsel](#slim-morsel), along with:
+
+```json
+{
   "creator_id": 3,
   "created_at": "2014-01-07T16:34:44.862Z",
   "updated_at": "2014-01-07T16:34:44.862Z",
-  "slug": "butter-rocks",
   "draft": false,
   "primary_item_id": 2,
   "published_at": "2014-01-07T16:34:44.862Z",
@@ -1540,14 +1484,21 @@ This includes the same keys as [Item](#item), along with:
 
 ## User Objects
 
-### User
+### Slim User
 
 ```json
 {
   "id": 3,
   "username": "turdferg",
   "first_name": "Turd",
-  "last_name": "Ferguson",
+  "last_name": "Ferguson"
+}
+
+### User
+This includes the same keys as [Slim User](#slim-user), along with:
+
+```json
+{
   "created_at": "2014-01-07T18:35:57.877Z",
   "bio": "Suck It, Trebek",
   "photos": {

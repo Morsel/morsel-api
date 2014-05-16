@@ -1,4 +1,6 @@
 class UserSerializer < ActiveModel::Serializer
+  include PhotoUploadableSerializerAttributes
+
   attributes :id,
              :username,
              :first_name,
@@ -6,7 +8,6 @@ class UserSerializer < ActiveModel::Serializer
              :created_at,
              :bio,
              :industry,
-             :photos,
              :facebook_uid,
              :twitter_username,
              :morsel_count,
@@ -14,10 +15,6 @@ class UserSerializer < ActiveModel::Serializer
              :following,
              :followed_user_count,
              :follower_count
-
-  def photos
-    object.photos_hash
-  end
 
   def facebook_uid
     FacebookAuthenticatedUserDecorator.new(object).facebook_uid

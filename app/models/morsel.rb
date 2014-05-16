@@ -28,6 +28,7 @@ class Morsel < ActiveRecord::Base
 
   acts_as_paranoid
   is_sluggable :title
+  alias_attribute :slug, :cached_slug
 
   belongs_to  :creator, class_name: 'User', foreign_key: 'creator_id'
   has_many    :items, -> { order('sort_order ASC') }, dependent: :destroy
@@ -53,14 +54,6 @@ class Morsel < ActiveRecord::Base
 
   def total_comment_count
     items.map(&:comment_count).reduce(:+)
-  end
-
-  def photos_hash
-    if photo_url.present?
-      {
-        _800x600: photo_url
-      }
-    end
   end
 
   def facebook_message
