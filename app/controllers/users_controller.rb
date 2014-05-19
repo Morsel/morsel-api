@@ -1,4 +1,37 @@
 class UsersController < ApiController
+  PUBLIC_ACTIONS << :show
+  def show
+    if params[:id].present?
+      user = User.includes(:authentications, :morsels, :items).find params[:id]
+    elsif params[:username].present?
+      user = User.includes(:authentications, :morsels, :items).find_by('lower(username) = lower(?)', params[:username])
+    end
+    raise ActiveRecord::RecordNotFound if user.nil? || !user.active?
+
+    custom_respond_with user
+  end
+
+  def update
+    user = User.find(params[:id])
+    authorize_action_for user
+
+    user_params = UserParams.build(params)
+    current_password = user_params.delete(:current_password)
+
+    if password_required?(user, params) && !user.valid_password?(current_password)
+      render_json_errors(user.errors)
+    elsif user.update_attributes(user_params)
+      # if password was changed, return the new auth_token
+      if user_params[:password].present?
+        custom_respond_with user, serializer: UserWithAuthTokenSerializer
+      else
+        custom_respond_with user, serializer: UserWithPrivateAttributesSerializer
+      end
+    else
+      render_json_errors(user.errors)
+    end
+  end
+
   def me
     custom_respond_with current_user, serializer: UserWithPrivateAttributesSerializer
   end
@@ -75,29 +108,6 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << :show
-  def show
-    if params[:id].present?
-      user = User.includes(:authentications, :morsels, :items).find params[:id]
-    elsif params[:username].present?
-      user = User.includes(:authentications, :morsels, :items).find_by('lower(username) = lower(?)', params[:username])
-    end
-    raise ActiveRecord::RecordNotFound if user.nil? || !user.active?
-
-    custom_respond_with user
-  end
-
-  def update
-    user = User.find(params[:id])
-    authorize_action_for user
-
-    if user.update_attributes(UserParams.build(params))
-      custom_respond_with user, serializer: UserWithPrivateAttributesSerializer
-    else
-      render_json_errors(user.errors)
-    end
-  end
-
   PUBLIC_ACTIONS << :unsubscribe
   def unsubscribe
     user = User.find_by(email: params[:email])
@@ -162,13 +172,21 @@ class UsersController < ApiController
 
   class UserParams
     def self.build(params)
-      params.require(:user).permit(:email, :username, :password,
+      params.require(:user).permit(:email, :username, :password, :current_password,
                                    :first_name, :last_name, :bio, :industry,
                                    :photo, :remote_photo_url)
     end
   end
 
   private
+
+  def password_required?(user, params)
+    user.errors.add(:current_password, 'is required to change email') if params[:user][:email].present? && user.email != params[:user][:email]
+    user.errors.add(:current_password, 'is required to change username') if params[:user][:username].present? && user.username != params[:user][:username]
+    user.errors.add(:current_password, 'is required to change password') if params[:user][:password].present?
+
+    user.errors.count > 0
+  end
 
   authorize_actions_for User, except: PUBLIC_ACTIONS, actions: { me: :read }
 end
