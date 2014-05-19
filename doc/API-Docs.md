@@ -390,7 +390,7 @@ Sends a Reset Password email for the User with the specified `email`.
 <br />
 
 ## POST ```/users/reset_password``` - Reset Password
-Sets the password for the User with the specified `reset_password_token` to the `password` provided.
+Sets the password for the User with the specified `reset_password_token` to the `password` provided. Changing a `password` will regenerate the User's `authentication_token`.
 
 ### Request
 
@@ -548,27 +548,28 @@ Returns the User with the specified ```user_id``` or ```user_username``` if the 
 <br />
 
 ## PUT ```/users/{user_id}``` - Update User
-Updates the User with the specified ```user_id```
+Updates the User with the specified ```user_id```. If a new `email`, `username`, or `password` is specified, `current_password` is required.
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| user[email] | String | The email address for the new User | | |
-| user[username] | String | The username for the new User. Better if you don't allow the User to change this. | | |
-| user[password] | String | The password for the new User. Minimum 8 characters. | | |
-| user[first_name] | String | The first name for the new User. | | |
-| user[last_name] | String | The last name for the new User. | | |
-| user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
-| user[remote_photo_url] | String | URL to the profile photo for the new User. Can be GIF, JPG, or PNG. | | |
-| user[bio] | String | The bio for the new User. Maximum 255 characters | | |
+| user[email] | String | The new email address for the User | | |
+| user[username] | String | The new username for the User. Better if you don't allow the User to change this. | | |
+| user[password] | String | The new password for the User. Minimum 8 characters. | | |
+| user[first_name] | String | The new first name for the User. | | |
+| user[last_name] | String | The new last name for the User. | | |
+| user[photo] | File | The new profile photo for the User. Can be GIF, JPG, or PNG. | | |
+| user[remote_photo_url] | String | URL to the new profile photo for the User. Can be GIF, JPG, or PNG. | | |
+| user[bio] | String | The new bio for the User. Maximum 255 characters | | |
+| user[current_password] | String | The current password for the User. Required for sensitive changes such as `email`, `username`, or `password`.| | |
 
 ### Response
 
 | Condition | __data__ |
 | --------- | -------- |
-| [current_user](#current_user)'s ID or Username | Updated [User (w/ Private Attributes)](#user-w-private-attributes) |
-| Everyone Else | Updated [User](#user) |
+| `password` changed | Updated [User (w/ Auth Token)](#user-w-auth-token) |
+| Default | Updated [User (w/ Private Attributes)](#user-w-private-attributes) |
 
 <br />
 <br />

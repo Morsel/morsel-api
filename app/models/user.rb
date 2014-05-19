@@ -49,7 +49,7 @@ class User < ActiveRecord::Base
 
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable
 
-  before_save :ensure_authentication_token
+  before_validation :ensure_authentication_token
   before_save :process_remote_photo_url
   after_save :ensure_role
 
@@ -174,7 +174,8 @@ class User < ActiveRecord::Base
   private
 
   def ensure_authentication_token
-    self.authentication_token = generate_authentication_token if authentication_token.blank?
+    # If the User is new or they are changing their password, regenerate authentication_token
+    self.authentication_token = generate_authentication_token if authentication_token.blank? || password.present?
   end
 
   def generate_authentication_token
