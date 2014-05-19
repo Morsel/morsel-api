@@ -63,7 +63,8 @@ class UsersController < ApiController
 
   PUBLIC_ACTIONS << :reset_password
   def reset_password
-    user = User.find_by reset_password_token: params.fetch(:reset_password_token)
+    reset_password_token = Devise.token_generator.digest(User, :reset_password_token, params.fetch(:reset_password_token))
+    user = User.find_by reset_password_token: reset_password_token
     raise ActiveRecord::RecordNotFound if user.nil? || !user.active? || !user.reset_password_period_valid?
 
     # Password confirmation is done client-side, so just pass the password again as the password_confirmation
