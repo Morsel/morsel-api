@@ -603,17 +603,15 @@ describe 'Users API' do
     it 'sends an email' do
       expect{
         Sidekiq::Testing.inline! { post_endpoint email: user.email }
-      }.to change(MandrillMailer.deliveries, :count).by(1)
+      }.to change(Devise::Mailer.deliveries, :count).by(1)
 
       expect_success
     end
 
     context 'email not found' do
-      it 'returns an error' do
-        post endpoint,  email: 'not_an_email',
-                        format: :json
-        expect_failure
-        expect(json_errors['base']).to include('Record not found')
+      it 'still succeeds' do
+        post_endpoint email: 'not_an_email'
+        expect_success
       end
     end
   end
@@ -622,11 +620,12 @@ describe 'Users API' do
     let(:endpoint) { '/users/reset_password' }
     let(:user) { FactoryGirl.create(:user) }
     let(:new_password) { Faker::Lorem.characters(15) }
+    let(:raw_token) { user.send_reset_password_instructions }
 
-    before { user.send_reset_password_instructions }
+    before { raw_token }
 
     it 'resets the User\'s password' do
-      post_endpoint reset_password_token: user.reset_password_token,
+      post_endpoint reset_password_token: raw_token,
                     password: new_password
 
       expect_success
