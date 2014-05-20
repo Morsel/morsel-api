@@ -6,7 +6,7 @@
   - [Pagination](#pagination)
   - [About the API Documentation](#about-the-api-documentation)
 
-- [Authentication](#authentication)
+- [API Authentication](#api-authentication)
 
 - [Constants](#constants)
 
@@ -14,6 +14,10 @@
   - [GET ```/feed``` - Feed](#get-feed---feed)
 
 - [Authentication Methods](#authentication-methods)
+  - [POST ```/authentications``` - Create Authentication](#post-authentications---create-authentication)
+  - [GET ```/authentications``` - Authentications](#get-authentications---authentications)
+  - [PUT ```/authentications/{authentication_id}``` - Update Authentication](#put-authenticationsauthentication_id---update-authentication)
+  - [DELETE ```/authentications/{authentication_id}``` - Delete Authentication](#delete-authenticationsauthentication_id---delete-authentication)
   - [GET ```/authentications/check``` - Authentication Check](#get-authenticationscheck---authentication-check)
   - [GET ```/authentications/connections``` - Authentication Connections](#get-authenticationsconnections---authentication-connections)
 
@@ -31,9 +35,6 @@
   - [GET ```/users/{user_id|user_username}``` - User](#get-usersuser_iduser_username---user)
   - [PUT ```/users/{user_id}``` - Update User](#put-usersuser_id---update-user)
   - [GET ```/users/{user_id|user_username}/morsels``` - User Morsels](#get-usersuser_iduser_usernamemorsels---user-morsels)
-  - [POST ```/users/authentications``` - Create User Authentications](#post-usersauthentications---create-user-authentications)
-  - [GET ```/users/authentications``` - User Authentications](#get-usersauthentications---user-authentications)
-  - [DELETE ```/users/authentications/{authentication_id}``` - Delete User Authentications](#delete-usersauthenticationsauthentication_id---delete-user-authentications)
   - [GET ```/users/activities``` - User Activities](#get-usersactivities---user-activities)
   - [GET ```/users/followables_activities``` - User Followables Activities](#get-usersfollowables_activities---user-followables-activities)
   - [GET ```/users/notifications``` - User Notifications](#get-usersnotifications---user-notifications)
@@ -213,7 +214,7 @@ __URI Conventions__
 | Square brackets []  | Optional Item | API_HOST/feed?[count] <br /><i>Specifying a `count` is optional</i> |
 
 
-# Authentication
+# API Authentication
 The API uses two different levels of authentication, depending on the method.
 
 1. __None:__ No authentication. Anybody can query the method.
@@ -254,6 +255,72 @@ Returns the Feed. If [current_user](#current_user) exists, the results will incl
 
 
 # Authentication Methods
+
+## POST ```/authentications``` - Create Authentication
+Creates a new Authentication for [current_user](#current_user)
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook', 'instagram', and 'twitter'. | | X |
+| authentication[uid] | String | The User's ID for the provider. | | X |
+| authentication[token] | String | The User's Access Token for the provider. | | X |
+| authentication[secret] | String | The User's Access Token Secret for the provider. Only required for Twitter. | | Twitter |
+| authentication[short_lived] | Boolean | Set to `true` if the token passed is a short-lived token. | false | |
+
+### Response
+
+| __data__ |
+| -------- |
+| Created [Authentication](#authentication) |
+
+<br />
+<br />
+
+## GET ```/authentications``` - Authentications
+Returns authentications for [current_user](#current_user)
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Authentications up to and including this ```id``` | | |
+| since_id | Number | Return Authentications since this ```id``` | | |
+
+### Response
+
+| __data__ |
+| -------- |
+| Array of [Authentication](#authentication) |
+
+<br />
+<br />
+
+## PUT ```/authentications/{authentication_id}``` - Update Authentication
+Updates the authentication with the specified `authentication_id`
+
+### Response
+
+| __data__ |
+| -------- |
+| Updated [Authentication](#authentication) |
+
+<br />
+<br />
+
+## DELETE ```/authentications/{authentication_id}``` - Delete Authentication
+Deletes the authentication with the specified `authentication_id`
+
+### Response
+
+| Status Code |
+| ----------- |
+|         204 |
+
+<br />
+<br />
 
 ## GET ```/authentications/check``` - Authentication Check
 Returns ```true``` if the authentication exists, otherwise false.
@@ -590,60 +657,6 @@ Returns the Morsels for the User with the specified ```user_id``` or ```user_use
 | __data__ |
 | -------- |
 | Array of [Morsel](#morsel) |
-
-<br />
-<br />
-
-## POST ```/users/authentications``` - Create User Authentications
-Creates a new Authentication for [current_user](#current_user)
-
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook', 'instagram', and 'twitter'. | | X |
-| authentication[uid] | String | The User's ID for the provider. | | X |
-| authentication[token] | String | The User's Access Token for the provider. | | X |
-| authentication[secret] | String | The User's Access Token Secret for the provider. Only required for Twitter. | | Twitter |
-| authentication[short_lived] | Boolean | Set to `true` if the token passed is a short-lived token. | false | |
-
-### Response
-
-| __data__ |
-| -------- |
-| Created [Authentication](#authentication) |
-
-<br />
-<br />
-
-## GET ```/users/authentications``` - User Authentications
-Returns the current User's authentications
-
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Authentications up to and including this ```id``` | | |
-| since_id | Number | Return Authentications since this ```id``` | | |
-
-### Response
-
-| __data__ |
-| -------- |
-| Array of [Authentication](#authentication) |
-
-<br />
-<br />
-
-## DELETE ```/users/authentications/{authentication_id}``` - Delete User Authentications
-Deletes the authentication with the specified `authentication_id`
-
-### Response
-
-| Status Code |
-| ----------- |
-|         204 |
 
 <br />
 <br />

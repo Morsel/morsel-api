@@ -424,17 +424,6 @@ describe 'Items API' do
         expect_failure
       end
     end
-
-    context 'current_user is NOT a :chef' do
-      let(:current_user) { FactoryGirl.create(:user) }
-      it 'should NOT be authorized' do
-        post_endpoint comment: {
-                        description: 'Drop it like it\'s hot.'
-                      }
-
-        expect_failure
-      end
-    end
   end
 
   describe 'DELETE /comments/{:comment_id} comments#destroy' do
