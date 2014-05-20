@@ -16,6 +16,20 @@ class AuthenticationsController < ApiController
                                      .order('id DESC')
   end
 
+  def update
+    authentication = Authentication.find(params[:id])
+    authorize_action_for authentication
+
+    authentication.attributes = AuthenticationParams.build(params)
+    return render_json_errors({ authentication: ['is not valid'] }) unless ValidateAuthentication.call(authentication: authentication)
+
+    if authentication.update(AuthenticationParams.build(params))
+      custom_respond_with authentication
+    else
+      render_json_errors authentication.errors
+    end
+  end
+
   def destroy
     authentication = Authentication.find(params[:id])
     authorize_action_for authentication

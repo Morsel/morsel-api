@@ -51,9 +51,11 @@ MorselApp::Application.routes.draw do
     end
   end
 
-  scope :authentications do
-    get 'check' => 'authentications#check'
-    get 'connections(/provider)' => 'authentications#connections'
+  resources :authentications, only: [:create, :index, :update, :destroy] do
+    collection do
+      get 'check' => 'authentications#check'
+      get 'connections(/provider)' => 'authentications#connections'
+    end
   end
 
   get 'cuisines' => 'keywords#cuisines'
@@ -69,7 +71,6 @@ MorselApp::Application.routes.draw do
 
   resources :users, only: [:update], concerns: [:followable, :taggable] do
     collection do
-      resources :authentications, only: [:create, :index, :destroy]
       get 'validate_email(/:email)' => 'users#validate_email'
       get 'validateusername(/:username)' => 'users#validateusername'
       post 'reserveusername(/:username)' => 'users#reserveusername'

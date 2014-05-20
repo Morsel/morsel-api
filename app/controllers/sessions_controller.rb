@@ -41,14 +41,7 @@ class SessionsController < Devise::SessionsController
     authentication.secret = authentication_params[:secret]
     authentication.short_lived = authentication_params[:short_lived]
 
-    if authentication.facebook?
-      validated_uid = FacebookAuthenticatedUserDecorator.new(authentication.user).get_facebook_uid(authentication)
-    elsif authentication.twitter?
-      validated_uid = TwitterAuthenticatedUserDecorator.new(authentication.user).get_twitter_uid(authentication)
-    end
-
-    # Need to make sure that the token passed belong to the uid passed
-    return invalid_login_attempt if validated_uid != authentication.uid
+    return invalid_login_attempt unless ValidateAuthentication.call(authentication: authentication)
 
     authentication.exchange_access_token
 
