@@ -1046,7 +1046,7 @@ describe 'Users API' do
 
   describe 'POST /users/authentications authentications#create' do
     let(:endpoint) { '/users/authentications' }
-    let(:current_user) { FactoryGirl.create(:chef) }
+    let(:current_user) { FactoryGirl.create(:user) }
     let(:screen_name) { 'eatmorsel' }
     let(:token) { 'token' }
     let(:secret) { 'secret' }
