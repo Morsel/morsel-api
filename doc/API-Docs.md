@@ -1494,6 +1494,7 @@ This includes the same keys as [Slim Morsel](#slim-morsel), along with:
   "first_name": "Turd",
   "last_name": "Ferguson"
 }
+```
 
 ### User
 This includes the same keys as [Slim User](#slim-user), along with:
