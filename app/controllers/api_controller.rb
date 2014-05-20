@@ -12,6 +12,7 @@ class ApiController < ActionController::Base
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from ActionController::ParameterMissing, with: :parameter_missing
+  rescue_from Twitter::Error::TooManyRequests, with: :too_many_requests
 
   rescue_from Authority::SecurityViolation do |error|
     render_json_errors({ api: ["Not authorized to #{error.action} #{error.resource.class}"] }, :forbidden)
@@ -58,6 +59,10 @@ class ApiController < ActionController::Base
 
   def parameter_missing(error)
     render_json_errors({ api: [error.message] }, :not_found)
+  end
+
+  def too_many_requests
+    render_json_errors({ api: ['too many requests'] }, :too_many_requests)
   end
 
   def unauthorized_token
