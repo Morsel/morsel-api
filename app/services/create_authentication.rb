@@ -12,6 +12,8 @@ class CreateAuthentication
   def call
     if provider == 'facebook'
       FacebookAuthenticatedUserDecorator.new(user).build_facebook_authentication(authentication_attributes)
+    elsif provider == 'instagram'
+      InstagramAuthenticatedUserDecorator.new(user).build_instagram_authentication(authentication_attributes)
     elsif provider == 'twitter'
       TwitterAuthenticatedUserDecorator.new(user).build_twitter_authentication(authentication_attributes)
     else

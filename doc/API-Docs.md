@@ -262,7 +262,7 @@ Returns ```true``` if the authentication exists, otherwise false.
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | |
+| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook', 'instagram', and 'twitter'. | | |
 | authentication[uid] | String | The User's ID for the provider. | | |
 
 ### Response
@@ -282,7 +282,7 @@ Returns the Users that have authenticated with the specified `provider` and have
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| provider | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | X |
+| provider | String | The authentication provider. Currently the only valid values are 'facebook', 'instagram', and 'twitter'. | | X |
 | uids | String | Comma-separated `uid` strings for the `provider` specified. e.g. "'12345','67890'" | | X |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
 | max_id | Number | Return Users up to and including this `id` | | |
@@ -318,7 +318,7 @@ Image processing is done in a background job. `photo_processing` will be set to 
 | user[remote_photo_url] | String | URL to the profile photo for the new User. Can be GIF, JPG, or PNG. | | |
 | user[bio] | String | The bio for the new User. Maximum 255 characters. | | |
 | __utmz | String | Google Analytics information to pass to the server | | |
-| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | |
+| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook', 'instagram', and 'twitter'. | | |
 | authentication[uid] | String | The User's ID for the provider. | | |
 | authentication[token] | String | The User's Access Token for the provider. | | |
 | authentication[secret] | String | The User's Access Token Secret for the provider. Only required for Twitter. | | |
@@ -350,7 +350,7 @@ If the `Authentication` passed in [Sign In w/ Authentication](#sign-in-w--authen
 #### Sign In w/ Authentication
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | X |
+| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook', 'instagram', and 'twitter'. | | X |
 | authentication[uid] | String | The User's ID for the provider. | | X |
 | authentication[token] | String | The User's Access Token for the provider. | | X |
 | authentication[secret] | String | The User's Access Token Secret for the provider. Only required for Twitter. | | Twitter |
@@ -601,7 +601,7 @@ Creates a new Authentication for [current_user](#current_user)
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook' and 'twitter'. | | X |
+| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook', 'instagram', and 'twitter'. | | X |
 | authentication[uid] | String | The User's ID for the provider. | | X |
 | authentication[token] | String | The User's Access Token for the provider. | | X |
 | authentication[secret] | String | The User's Access Token Secret for the provider. Only required for Twitter. | | Twitter |

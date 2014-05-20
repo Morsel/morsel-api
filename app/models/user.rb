@@ -60,6 +60,10 @@ class User < ActiveRecord::Base
             -> { where provider: 'facebook' },
             class_name: 'Authentication',
             foreign_key: :user_id
+  has_many  :instagram_authentications,
+            -> { where provider: 'instagram' },
+            class_name: 'Authentication',
+            foreign_key: :user_id
   has_many  :twitter_authentications,
             -> { where provider: 'twitter' },
             class_name: 'Authentication',

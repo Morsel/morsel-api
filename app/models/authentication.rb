@@ -26,7 +26,7 @@ class Authentication < ActiveRecord::Base
   belongs_to :user
 
   validates :provider,  allow_blank: false,
-                        inclusion: %w(facebook twitter),
+                        inclusion: %w(facebook instagram twitter),
                         presence: true
 
   validates :secret, presence: true, if: proc { |a| a.twitter? }
@@ -40,6 +40,10 @@ class Authentication < ActiveRecord::Base
 
   def facebook?
     provider == 'facebook'
+  end
+
+  def instagram?
+    provider == 'instagram'
   end
 
   def twitter?
