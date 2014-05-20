@@ -23,11 +23,11 @@ class TwitterAuthenticatedUserDecorator < SimpleDelegator
     authentication = authentications.build(authentication_params)
 
     twitter_client = twitter_client(authentication)
-
-    if twitter_client.current_user.present?
-      authentication.uid = twitter_client.current_user.id
-      authentication.name = twitter_client.current_user.screen_name
-      authentication.link = twitter_client.current_user.url.to_s
+    twitter_current_user = twitter_client.current_user
+    if twitter_current_user.present?
+      authentication.uid = twitter_current_user.id
+      authentication.name = twitter_current_user.screen_name
+      authentication.link = twitter_current_user.url.to_s
     else
       authentication.errors.add(:token, 'is not valid') if authentication.uid?
     end
