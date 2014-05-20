@@ -173,6 +173,8 @@ GEM
       i18n (~> 0.5)
     faraday (0.9.0)
       multipart-post (>= 1.2, < 3)
+    faraday_middleware (0.9.1)
+      faraday (>= 0.7.4, < 0.10)
     fastercsv (1.5.5)
     ffi (1.9.3)
     formatador (0.2.4)
@@ -215,6 +217,7 @@ GEM
     has_scope (0.6.0.rc)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
+    hashie (2.1.1)
     highline (1.6.21)
     hike (1.2.3)
     hirefire-resource (0.3.2)
@@ -229,6 +232,11 @@ GEM
     inherited_resources (1.4.1)
       has_scope (~> 0.6.0.rc)
       responders (~> 1.0.0.rc)
+    instagram (1.0.0)
+      faraday (>= 0.7, < 0.10)
+      faraday_middleware (>= 0.8, < 0.10)
+      hashie (>= 0.4.0)
+      multi_json (~> 1.0, >= 1.0.3)
     jbuilder (1.5.3)
       activesupport (>= 3.0.0)
       multi_json (>= 1.2.0)
@@ -519,6 +527,7 @@ DEPENDENCIES
   guard-shell
   guard-sidekiq
   hirefire-resource (~> 0.3.2)
+  instagram (~> 1.0.0)
   jbuilder (~> 1.2)
   jquery-rails
   koala (~> 1.8.0rc1)

@@ -55,5 +55,21 @@ module Requests
 
       twitter_client
     end
+
+    def stub_instagram_client(options = {})
+      options[:id] ||= 'instagram_user_id'
+
+      instagram_client = double('Instagram::Client')
+
+      Instagram::Client.stub(:new).and_return(instagram_client)
+
+      instagram_user = double('Hash')
+      instagram_client.stub(:user).and_return(instagram_user)
+      instagram_user.stub(:id).and_return(options[:id])
+      instagram_user.stub(:username).and_return('eatmorsel')
+      instagram_user.stub(:url).and_return("https://instagram.com/eatmorsel")
+
+      instagram_client
+    end
   end
 end

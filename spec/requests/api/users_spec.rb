@@ -1056,7 +1056,7 @@ describe 'Users API' do
         stub_twitter_client
         post_endpoint authentication: {
                         provider: 'twitter',
-                        uid: 'twitter_uid',
+                        uid: 'twitter_user_id',
                         token: token,
                         secret: secret
                       }
@@ -1074,6 +1074,32 @@ describe 'Users API' do
         twitter_authenticated_user = TwitterAuthenticatedUserDecorator.new(current_user)
         expect(twitter_authenticated_user.twitter_authentications.count).to eq(1)
         expect(twitter_authenticated_user.twitter_username).to eq(screen_name)
+      end
+    end
+
+    context 'Instagram' do
+      it 'creates a new Instagram authentication' do
+        stub_instagram_client
+        post_endpoint authentication: {
+                        provider: 'instagram',
+                        uid: 'instagram_user_id',
+                        token: token,
+                        secret: secret
+                      }
+
+        expect_success
+        expect_json_data_eq({
+          'uid' => 'instagram_user_id',
+          'provider' => 'instagram',
+          'secret' => secret,
+          'token' => token,
+          'user_id' => current_user.id,
+          'name' => screen_name
+        })
+
+        instagram_authenticated_user = InstagramAuthenticatedUserDecorator.new(current_user)
+        expect(instagram_authenticated_user.instagram_authentications.count).to eq(1)
+        expect(instagram_authenticated_user.instagram_username).to eq(screen_name)
       end
     end
 

@@ -21,6 +21,7 @@ gem 'devise', "~> 3.2.2"
 # gem 'doorkeeper', '~> 0.7.0'
 # gem 'formtastic'
 gem 'hirefire-resource', '~> 0.3.2'
+gem 'instagram', '~> 1.0.0'
 gem 'jbuilder', '~> 1.2'
 gem 'jquery-rails'
 gem "koala", "~> 1.8.0rc1"
