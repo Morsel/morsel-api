@@ -426,7 +426,7 @@ describe 'Items API' do
     end
   end
 
-  describe 'DELETE /comments/{:comment_id} comments#destroy' do
+  describe 'DELETE /items/{:item_id}/comments/{:comment_id} comments#destroy' do
     let(:item) { FactoryGirl.create(:item_with_creator) }
 
     context 'current_user is the Comment creator' do
@@ -469,9 +469,8 @@ describe 'Items API' do
     end
 
     context 'Comment doesn\'t exist' do
-      let(:endpoint) { "/items/#{item.id}/comments/#{comment.id}" }
+      let(:endpoint) { "/items/#{item.id}/comments/0" }
       let(:current_user) { FactoryGirl.create(:chef) }
-      let(:comment) { FactoryGirl.build(:user_tag, tagger: current_user, id: 10000) }
 
       it 'returns an error' do
         delete_endpoint

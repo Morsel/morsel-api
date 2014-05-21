@@ -29,7 +29,7 @@ shared_examples 'FollowableController' do
 
         expect_failure
         expect_status 422
-        expect(json_errors[followable.class.to_s.downcase].first).to eq('already followed')
+        expect(json_errors[followable.class.base_class.to_s.underscore].first).to eq('already followed')
       end
     end
 
@@ -67,7 +67,7 @@ shared_examples 'FollowableController' do
         delete_endpoint
 
         expect_failure
-        expect(json_errors[followable.class.to_s.downcase].first).to eq('not followed')
+        expect(json_errors[followable.class.base_class.to_s.underscore].first).to eq('not followed')
       end
     end
   end

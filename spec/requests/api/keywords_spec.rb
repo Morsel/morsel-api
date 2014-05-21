@@ -4,7 +4,7 @@ describe 'Keywords API' do
   it_behaves_like 'FollowableController' do
     let(:current_user) { FactoryGirl.create(:chef) }
     let(:followable_route) { '/keywords' }
-    let(:followable) { FactoryGirl.create(:keyword) }
+    let(:followable) { FactoryGirl.create(:cuisine) }
   end
 
   describe 'GET /cuisines' do
@@ -37,17 +37,17 @@ describe 'Keywords API' do
 
   describe 'GET /keywords/:id/users' do
     let(:endpoint) { "/keywords/#{keyword.id}/users" }
-    let(:keyword) { FactoryGirl.create(:keyword) }
+    let(:keyword) { FactoryGirl.create(:cuisine) }
     let(:users_count) { rand(3..6) }
     let(:tagger) { FactoryGirl.create(:user) }
 
-    before { users_count.times { FactoryGirl.create(:user_tag, tagger: tagger, keyword: keyword) }}
+    before { users_count.times { FactoryGirl.create(:user_cuisine_tag, tagger: tagger, keyword: keyword) }}
 
     it_behaves_like 'TimelinePaginateable' do
       let(:paginateable_object_class) { User }
       before do
         paginateable_object_class.delete_all
-        30.times { FactoryGirl.create(:user_tag, tagger: tagger, keyword: keyword) }
+        30.times { FactoryGirl.create(:user_cuisine_tag, tagger: tagger, keyword: keyword) }
       end
     end
 
@@ -65,13 +65,13 @@ describe 'Keywords API' do
     let(:users_count) { rand(3..6) }
     let(:tagger) { FactoryGirl.create(:user) }
 
-    before { users_count.times { FactoryGirl.create(:user_tag, tagger: tagger, keyword: cuisine) }}
+    before { users_count.times { FactoryGirl.create(:user_cuisine_tag, tagger: tagger, keyword: cuisine) }}
 
     it_behaves_like 'TimelinePaginateable' do
       let(:paginateable_object_class) { User }
       before do
         paginateable_object_class.delete_all
-        30.times { FactoryGirl.create(:user_tag, tagger: tagger, keyword: cuisine) }
+        30.times { FactoryGirl.create(:user_cuisine_tag, tagger: tagger, keyword: cuisine) }
       end
     end
 
@@ -89,13 +89,13 @@ describe 'Keywords API' do
     let(:users_count) { rand(3..6) }
     let(:tagger) { FactoryGirl.create(:user) }
 
-    before { users_count.times { FactoryGirl.create(:user_tag, tagger: tagger, keyword: specialty) }}
+    before { users_count.times { FactoryGirl.create(:user_specialty_tag, tagger: tagger, keyword: specialty) }}
 
     it_behaves_like 'TimelinePaginateable' do
       let(:paginateable_object_class) { User }
       before do
         paginateable_object_class.delete_all
-        30.times { FactoryGirl.create(:user_tag, tagger: tagger, keyword: specialty) }
+        30.times { FactoryGirl.create(:user_specialty_tag, tagger: tagger, keyword: specialty) }
       end
     end
 

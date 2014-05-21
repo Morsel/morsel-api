@@ -47,6 +47,7 @@ class User < ActiveRecord::Base
   rolify
 
   self.authorizer_name = 'UserAuthorizer'
+  def self.allowed_keyword_types; %w(Cuisine Specialty) end
 
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable
 

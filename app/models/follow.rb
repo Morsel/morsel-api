@@ -31,4 +31,13 @@ class Follow < ActiveRecord::Base
 
   validates :follower_id, uniqueness: { scope: [:deleted_at, :followable_id] }
   validates :followable, presence: true
+
+  def followable_type=(sType)
+    base_class = sType.constantize.try(:base_class)
+    if base_class
+      super(base_class.to_s)
+    else
+      super(sType)
+    end
+  end
 end

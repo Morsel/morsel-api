@@ -68,8 +68,7 @@ shared_examples 'TaggableController' do
     end
 
     context 'Tag doesn\'t exist' do
-      let(:new_tag) { FactoryGirl.build(:user_tag, tagger: current_user, id: 10000) }
-      let(:endpoint) { "#{taggable_route}/#{taggable.id}/tags/#{new_tag.id}" }
+      let(:endpoint) { "#{taggable_route}/#{taggable.id}/tags/0" }
 
       it 'returns an error' do
         delete_endpoint

@@ -32,4 +32,9 @@ class Tag < ActiveRecord::Base
 
   validates :keyword, presence: true
   validates :taggable, presence: true
+  validate :validate_keyword_type
+
+  def validate_keyword_type
+    errors.add(:keyword_type, "not allowed for #{taggable.class}") unless taggable.class.allowed_keyword_types.include?(keyword.type)
+  end
 end

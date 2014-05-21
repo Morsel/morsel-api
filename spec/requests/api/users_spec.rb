@@ -11,8 +11,8 @@ describe 'Users API' do
     let(:current_user) { FactoryGirl.create(:chef) }
     let(:taggable_route) { '/users' }
     let(:taggable) { current_user }
-    let(:keyword) { FactoryGirl.create(:keyword) }
-    let(:existing_tag) { FactoryGirl.create(:user_tag, tagger: current_user) }
+    let(:keyword) { FactoryGirl.create(:cuisine) }
+    let(:existing_tag) { FactoryGirl.create(:user_cuisine_tag, tagger: current_user) }
   end
 
   describe 'GET /users/search users#search' do
@@ -930,7 +930,7 @@ describe 'Users API' do
       let(:followed_keywords_count) { rand(2..6) }
 
       before do
-        followed_keywords_count.times { FactoryGirl.create(:keyword_follow, followable: FactoryGirl.create(:keyword), follower: follower) }
+        followed_keywords_count.times { FactoryGirl.create(:keyword_follow, followable: FactoryGirl.create(:cuisine), follower: follower) }
       end
 
       it_behaves_like 'TimelinePaginateable' do
