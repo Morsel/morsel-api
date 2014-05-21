@@ -96,11 +96,12 @@
     - [Morsel](#morsel)
   - [User Objects](#user-objects)
     - [Slim User](#slim-user)
+    - [Slim Followed User](#slim-followed-user)
     - [User](#user)
     - [User (w/ Private Attributes)](#user-w-private-attributes)
     - [User (w/ Auth Token)](#user-w-auth-token)
-    - [Followed User)](#followed-user)
-    - [User Follower)](#user-follower)
+    - [Followed User](#followed-user)
+    - [User Follower](#user-follower)
   - [Tag Objects](#tag-objects)
     - [Tag](#tag)
     - [Keyword](#keyword)
@@ -489,12 +490,13 @@ Returns [current_user](#current_user)
 <br />
 
 ## GET ```/users/search``` - Search Users
-Returns [Slim User](#slim-user)s matching the parameters
+Returns [Slim Followed User](#slim-followed-user)s matching the parameters
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
+| user[query] | String | Used to return Users by `first_name` OR `last_name` | | |
 | user[first_name] | String | User's `first_name` | | |
 | user[last_name] | String | User's `last_name` | | |
 | user[promoted] | Boolean | Used to return `promoted` Users | false | |
@@ -503,7 +505,7 @@ Returns [Slim User](#slim-user)s matching the parameters
 
 | __data__ |
 | -------- |
-| [Slim User](#slim-user) |
+| [Slim Followed User](#slim-followed-user) |
 
 ### Unique Errors
 
@@ -1532,7 +1534,22 @@ This includes the same keys as [Slim Morsel](#slim-morsel), along with:
   "id": 3,
   "username": "turdferg",
   "first_name": "Turd",
-  "last_name": "Ferguson"
+  "last_name": "Ferguson",
+  "photos": {
+    "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
+    "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
+  }
+}
+```
+
+### Slim Followed User
+This includes the same keys as [Slim User](#slim-user), along with:
+
+```json
+{
+  "following": false
 }
 ```
 
@@ -1543,12 +1560,6 @@ This includes the same keys as [Slim User](#slim-user), along with:
 {
   "created_at": "2014-01-07T18:35:57.877Z",
   "bio": "Suck It, Trebek",
-  "photos": {
-    "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-    "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-  },
   "facebook_uid": "1234567890",
   "twitter_username": "morsel_marty",
   "morsel_count": 1,

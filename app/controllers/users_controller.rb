@@ -1,6 +1,6 @@
 class UsersController < ApiController
   def search
-    custom_respond_with User.where(UserSearchParams.build(params)), each_serializer: SlimUserSerializer
+    custom_respond_with Search::SearchUsers.call(UserParams.build(params)), each_serializer: SlimFollowedUserSerializer
   end
 
   PUBLIC_ACTIONS << :show
@@ -20,6 +20,7 @@ class UsersController < ApiController
     authorize_action_for user
 
     user_params = UserParams.build(params)
+    user_params.delete(:promoted) # delete the `promoted` flag since that should only be set via /admin
     current_password = user_params.delete(:current_password)
 
     if password_required?(user, params) && !user.valid_password?(current_password)
@@ -178,13 +179,7 @@ class UsersController < ApiController
     def self.build(params)
       params.require(:user).permit(:email, :username, :password, :current_password,
                                    :first_name, :last_name, :bio, :industry,
-                                   :photo, :remote_photo_url)
-    end
-  end
-
-  class UserSearchParams
-    def self.build(params)
-      params.require(:user).permit(:first_name, :last_name, :promoted)
+                                   :photo, :remote_photo_url, :promoted, :query)
     end
   end
 

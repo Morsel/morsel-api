@@ -4,7 +4,10 @@ class RegistrationsController < Devise::RegistrationsController
   include UserEventCreator
 
   def create
-    user = User.new(UsersController::UserParams.build(params))
+    user_params = UsersController::UserParams.build(params)
+    user_params.delete(:promoted) # delete the `promoted` flag since that should only be set via /admin
+
+    user = User.new(user_params)
 
     authentication_errors = []
     if params[:authentication].present?
