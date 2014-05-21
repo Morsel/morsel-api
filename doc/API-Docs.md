@@ -27,6 +27,7 @@
   - [POST ```/users/forgot_password``` - Forgot Password](#post-usersforgot_password---forgot-password)
   - [POST ```/users/reset_password``` - Reset Password](#post-usersreset_password---reset-password)
   - [GET ```/users/me``` - Me](#get-usersme---me)
+  - [GET ```/users/search``` - Search Users](#get-userssearch---search-users)
   - [POST ```/users/unsubscribe``` - Unsubscribe](#post-usersunsubscribe---unsubscribe)
   - [GET ```/users/validate_email``` - Validate Email](#get-usersvalidate_email---validate-_email)
   - [GET ```/users/validateusername``` - Validate Username](#get-usersvalidateusername---validate-username)
@@ -483,6 +484,32 @@ Returns [current_user](#current_user)
 | __data__ |
 | -------- |
 | [User (w/ Private Attributes)](#user-w-private-attributes) |
+
+<br />
+<br />
+
+## GET ```/users/search``` - Search Users
+Returns [Slim User](#slim-user)s matching the parameters
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| user[first_name] | String | User's `first_name` | | |
+| user[last_name] | String | User's `last_name` | | |
+| user[promoted] | Boolean | Used to return `promoted` Users | false | |
+
+### Response
+
+| __data__ |
+| -------- |
+| [Slim User](#slim-user) |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ | ----------- |
+| __invalid search__ | 400 (Bad Request) | No valid parameters passed |
 
 <br />
 <br />

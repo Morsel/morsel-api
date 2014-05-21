@@ -1,4 +1,8 @@
 class UsersController < ApiController
+  def search
+    custom_respond_with User.where(UserSearchParams.build(params)), each_serializer: SlimUserSerializer
+  end
+
   PUBLIC_ACTIONS << :show
   def show
     if params[:id].present?
@@ -178,6 +182,12 @@ class UsersController < ApiController
     end
   end
 
+  class UserSearchParams
+    def self.build(params)
+      params.require(:user).permit(:first_name, :last_name, :promoted)
+    end
+  end
+
   private
 
   def password_required?(user, params)
@@ -188,5 +198,5 @@ class UsersController < ApiController
     user.errors.count > 0
   end
 
-  authorize_actions_for User, except: PUBLIC_ACTIONS, actions: { me: :read }
+  authorize_actions_for User, except: PUBLIC_ACTIONS, actions: { me: :read, search: :read }
 end

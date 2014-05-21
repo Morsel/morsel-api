@@ -38,6 +38,7 @@
 # **`photo_processing`**        | `boolean`          |
 # **`staff`**                   | `boolean`          | `default(FALSE)`
 # **`deleted_at`**              | `datetime`         |
+# **`promoted`**                | `boolean`          | `default(FALSE)`
 #
 
 # Read about factories at https://github.com/thoughtbot/factory_girl
