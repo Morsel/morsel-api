@@ -19,6 +19,23 @@ describe 'Users API' do
     let(:endpoint) { '/users/search' }
     let(:current_user) { FactoryGirl.create(:user) }
 
+    context 'query' do
+      before do
+        FactoryGirl.create(:user, first_name: 'TURd')
+        FactoryGirl.create(:user, last_name: 'tURD')
+      end
+
+      it 'returns Users matching both `first_name` and `last_name`' do
+        get_endpoint  user: {
+                              query: 'turd'
+                            }
+
+        expect_success
+        expect_json_data_count 2
+        expect(json_data.first['following']).to be_false
+      end
+    end
+
     context 'promoted' do
       let(:promoted_users_count) { rand(2..6) }
       before do
@@ -51,6 +68,15 @@ describe 'Users API' do
         expect_success
         expect_json_data_count users_first_named_turd_count
       end
+
+      it 'is case insensitive' do
+        get_endpoint  user: {
+                        first_name: 'tURD'
+                      }
+
+        expect_success
+        expect_json_data_count users_first_named_turd_count
+      end
     end
 
     context 'last_name' do
@@ -75,6 +101,22 @@ describe 'Users API' do
 
       before do
         rand(1..3).times { FactoryGirl.create(:user) }
+      end
+
+      context '`current_user` is following `user`' do
+        before do
+          Follow.create(followable: user, follower: current_user)
+        end
+
+        it 'returns `following` true' do
+          get_endpoint  user: {
+                          first_name: user.first_name,
+                          last_name: user.last_name
+                        }
+
+          expect_success
+          expect(json_data.first['following']).to be_true
+        end
       end
 
       it 'returns Users matching `first_name` and `last_name`' do
@@ -341,7 +383,8 @@ describe 'Users API' do
                       username: "user_#{Faker::Lorem.characters(10)}",
                       bio: 'Foo to the Stars',
                       industry: 'diner',
-                      photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
+                      photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
+                      promoted: true
                     }
 
       expect_success
@@ -359,6 +402,8 @@ describe 'Users API' do
         'password' => nil,
         'encrypted_password' => nil
       })
+
+      expect(new_user.promoted).to be_false
 
       expect(json_data['photos']).to_not be_nil
      end
