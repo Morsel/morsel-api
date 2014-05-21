@@ -772,7 +772,7 @@ Returns the Likeables that the User with the specified `user_id` has liked along
 <br />
 
 ## POST ```/users/{user_id}/tags``` - Create User Tag
-Tags the User with the specified `user_id` with the Keyword for the specified `keyword_id`.
+Tags the User with the specified `user_id` with the Keyword for the specified `keyword_id`. Valid Keyword types are __Cuisines__ and __Specialty__.
 
 ### Request
 

@@ -15,6 +15,12 @@
 #
 
 class Keyword < ActiveRecord::Base
+  VALID_TYPES = %w(
+    Cuisine
+    FoodAndDrink
+    Specialty
+  )
+
   include Authority::Abilities, Followable, TimelinePaginateable
   acts_as_paranoid
 
@@ -24,4 +30,8 @@ class Keyword < ActiveRecord::Base
 
   validates :name,
             presence: true
+
+  validates :type,  allow_blank: false,
+                    inclusion: VALID_TYPES,
+                    presence: true
 end

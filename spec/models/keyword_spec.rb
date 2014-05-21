@@ -17,7 +17,7 @@
 require 'spec_helper'
 
 describe Keyword do
-  subject(:keyword) { FactoryGirl.build(:keyword) }
+  subject(:cuisine) { FactoryGirl.build(:cuisine) }
 
   it { should respond_to(:name) }
 end

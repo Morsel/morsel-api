@@ -17,7 +17,7 @@ class TagsController < ApiController
     tag_params = TagParams.build(params)
 
     if Tag.find_by(taggable_id: params[:id], taggable_type: taggable_type, tagger_id: current_user.id, keyword_id: tag_params.fetch(:keyword_id))
-      render_json_errors("#{taggable_type.downcase}" => ['already tagged with that keyword'])
+      render_json_errors("#{taggable_type.underscore}" => ['already tagged with that keyword'])
     else
       tag = Tag.new(taggable_id: params[:id], taggable_type: taggable_type, tagger_id: current_user.id, keyword_id: tag_params.fetch(:keyword_id))
 
