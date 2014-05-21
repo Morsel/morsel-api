@@ -15,6 +15,80 @@ describe 'Users API' do
     let(:existing_tag) { FactoryGirl.create(:user_tag, tagger: current_user) }
   end
 
+  describe 'GET /users/search users#search' do
+    let(:endpoint) { '/users/search' }
+    let(:current_user) { FactoryGirl.create(:user) }
+
+    context 'promoted' do
+      let(:promoted_users_count) { rand(2..6) }
+      before do
+        promoted_users_count.times { FactoryGirl.create(:user, promoted: true) }
+        rand(1..3).times { FactoryGirl.create(:user) }
+      end
+
+      it 'returns `promoted` Users' do
+        get_endpoint  user: {
+                        promoted: true
+                      }
+
+        expect_success
+        expect_json_data_count promoted_users_count
+      end
+    end
+
+    context 'first_name' do
+      let(:users_first_named_turd_count) { rand(2..6) }
+      before do
+        users_first_named_turd_count.times { FactoryGirl.create(:user, first_name: 'Turd') }
+        rand(1..3).times { FactoryGirl.create(:user) }
+      end
+
+      it 'returns Users matching `first_name`' do
+        get_endpoint  user: {
+                        first_name: 'Turd'
+                      }
+
+        expect_success
+        expect_json_data_count users_first_named_turd_count
+      end
+    end
+
+    context 'last_name' do
+      let(:users_last_named_ferguson_count) { rand(2..6) }
+      before do
+        users_last_named_ferguson_count.times { FactoryGirl.create(:user, last_name: 'Turd') }
+        rand(1..3).times { FactoryGirl.create(:user) }
+      end
+
+      it 'returns Users matching `last_name`' do
+        get_endpoint  user: {
+                        last_name: 'Turd'
+                      }
+
+        expect_success
+        expect_json_data_count users_last_named_ferguson_count
+      end
+    end
+
+    context 'first_name and last_name' do
+      let(:user) { FactoryGirl.create(:user) }
+
+      before do
+        rand(1..3).times { FactoryGirl.create(:user) }
+      end
+
+      it 'returns Users matching `first_name` and `last_name`' do
+        get_endpoint  user: {
+                        first_name: user.first_name,
+                        last_name: user.last_name
+                      }
+
+        expect_success
+        expect_json_data_count 1
+      end
+    end
+  end
+
   describe 'GET /users/me users#me' do
     let(:endpoint) { '/users/me' }
     let(:current_user) { FactoryGirl.create(:user) }

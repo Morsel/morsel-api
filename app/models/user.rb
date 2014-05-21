@@ -38,6 +38,7 @@
 # **`photo_processing`**        | `boolean`          |
 # **`staff`**                   | `boolean`          | `default(FALSE)`
 # **`deleted_at`**              | `datetime`         |
+# **`promoted`**                | `boolean`          | `default(FALSE)`
 #
 
 class User < ActiveRecord::Base
