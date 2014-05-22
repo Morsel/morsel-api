@@ -12,6 +12,7 @@ class ApiController < ActionController::Base
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from ActionController::ParameterMissing, with: :parameter_missing
+  rescue_from Foursquare2::APIError, with: :foursquare_api_error
   rescue_from Twitter::Error::TooManyRequests, with: :too_many_requests
 
   rescue_from Authority::SecurityViolation do |error|
@@ -47,6 +48,10 @@ class ApiController < ActionController::Base
     end
   rescue ActiveRecord::RecordNotFound
     unauthorized_token
+  end
+
+  def foursquare_api_error(error)
+    render_json_errors({ api: ['unable to process Foursquare request'] }, :unprocessable_entity)
   end
 
   def pagination_params

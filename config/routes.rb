@@ -61,7 +61,7 @@ MorselApp::Application.routes.draw do
   get 'cuisines' => 'keywords#cuisines'
   get 'specialties' => 'keywords#specialties'
 
-  resources :keywords, only: [:show], concerns: [:followable] do
+  resources :keywords, only: [], concerns: [:followable] do
     member do
       get 'users' => 'keywords#users'
     end
@@ -108,6 +108,17 @@ MorselApp::Application.routes.draw do
 
     member do
       post 'publish' => 'morsels#publish'
+    end
+  end
+
+  resources :places, only: [] do
+    collection do
+      post 'join' => 'places#join'
+      get 'suggest' => 'places#suggest'
+    end
+
+    member do
+      get 'users' => 'places#users'
     end
   end
 

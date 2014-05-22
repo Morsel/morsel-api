@@ -5,4 +5,3 @@ class SlimFollowedUserSerializer < SlimUserSerializer
     current_user.present? && current_user.following_user?(object)
   end
 end
-

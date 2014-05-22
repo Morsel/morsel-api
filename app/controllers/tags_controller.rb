@@ -54,5 +54,4 @@ class TagsController < ApiController
       params.require(:tag).permit(:keyword_id)
     end
   end
-
 end

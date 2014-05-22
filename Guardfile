@@ -1,10 +1,5 @@
-# A sample Guardfile
-# More info at https://github.com/guard/guard#readme
-
 guard :bundler do
   watch('Gemfile')
-  # Uncomment next line if your Gemfile contains the `gemspec' command.
-  # watch(/^.+\.gemspec/)
 end
 
 guard 'rails' do
@@ -21,7 +16,7 @@ guard 'rails_best_practices' do
   watch(%r{^app/(.+)\.rb$})
 end
 
-guard 'rspec', cmd: 'bundle exec rspec --drb --format Fuubar --color', all_after_pass: false, all_on_start: true, failed_mode: :keep do
+guard 'rspec', cmd: 'zeus rspec --drb --format Fuubar --color', all_after_pass: false, all_on_start: false, failed_mode: :keep do
   watch(%r{^app/(.*)(\.erb|\.haml)$})                 { |m| "spec/#{m[1]}#{m[2]}_spec.rb" }
   watch(%r{^app/(.+)\.rb$})                           { |m| "spec/#{m[1]}_spec.rb" }
 

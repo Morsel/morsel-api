@@ -11,77 +11,81 @@
 - [Constants](#constants)
 
 - [Feed Methods](#feed-methods)
-  - [GET ```/feed``` - Feed](#get-feed---feed)
+  - [GET `/feed` - Feed](#get-feed---feed)
 
 - [Authentication Methods](#authentication-methods)
-  - [POST ```/authentications``` - Create Authentication](#post-authentications---create-authentication)
-  - [GET ```/authentications``` - Authentications](#get-authentications---authentications)
-  - [PUT ```/authentications/{authentication_id}``` - Update Authentication](#put-authenticationsauthentication_id---update-authentication)
-  - [DELETE ```/authentications/{authentication_id}``` - Delete Authentication](#delete-authenticationsauthentication_id---delete-authentication)
-  - [GET ```/authentications/check``` - Authentication Check](#get-authenticationscheck---authentication-check)
-  - [GET ```/authentications/connections``` - Authentication Connections](#get-authenticationsconnections---authentication-connections)
+  - [POST `/authentications` - Create Authentication](#post-authentications---create-authentication)
+  - [GET `/authentications` - Authentications](#get-authentications---authentications)
+  - [PUT `/authentications/{authentication_id}` - Update Authentication](#put-authenticationsauthentication_id---update-authentication)
+  - [DELETE `/authentications/{authentication_id}` - Delete Authentication](#delete-authenticationsauthentication_id---delete-authentication)
+  - [GET `/authentications/check` - Authentication Check](#get-authenticationscheck---authentication-check)
+  - [GET `/authentications/connections` - Authentication Connections](#get-authenticationsconnections---authentication-connections)
 
 - [User Methods](#user-methods)
-  - [POST ```/users``` - Create a new User](#post-users---create-a-new-user)
-  - [POST ```/users/sign_in``` - User Authentication](#post-userssign_in---user-authentication)
-  - [POST ```/users/forgot_password``` - Forgot Password](#post-usersforgot_password---forgot-password)
-  - [POST ```/users/reset_password``` - Reset Password](#post-usersreset_password---reset-password)
-  - [GET ```/users/me``` - Me](#get-usersme---me)
-  - [GET ```/users/search``` - Search Users](#get-userssearch---search-users)
-  - [POST ```/users/unsubscribe``` - Unsubscribe](#post-usersunsubscribe---unsubscribe)
-  - [GET ```/users/validate_email``` - Validate Email](#get-usersvalidate_email---validate-_email)
-  - [GET ```/users/validateusername``` - Validate Username](#get-usersvalidateusername---validate-username)
-  - [POST ```/users/reserveusername``` - Reserve Username](#post-usersreserveusername---reserve-username)
-  - [PUT ```/users/{user_id}/updateindustry``` - Update Industry](#put-usersuser_idupdateindustry---update-industry)
-  - [GET ```/users/{user_id|user_username}``` - User](#get-usersuser_iduser_username---user)
-  - [PUT ```/users/{user_id}``` - Update User](#put-usersuser_id---update-user)
-  - [GET ```/users/{user_id|user_username}/morsels``` - User Morsels](#get-usersuser_iduser_usernamemorsels---user-morsels)
-  - [GET ```/users/activities``` - User Activities](#get-usersactivities---user-activities)
-  - [GET ```/users/followables_activities``` - User Followables Activities](#get-usersfollowables_activities---user-followables-activities)
-  - [GET ```/users/notifications``` - User Notifications](#get-usersnotifications---user-notifications)
-  - [GET ```/users/{user_id}/likeables``` - User Likeables](#get-usersuser_idlikeables---user-likeables)
-  - [POST ```/users/{user_id}/tags``` - Create User Tag](#post-usersuser_idtags---create-user-tag)
-  - [DELETE ```/users/{user_id}/tags/{tag_id}``` - Delete User Tag](#delete-usersuser_idtagstag_id---delete-user-tag)
-  - [GET ```/users/{user_id}/cuisines``` - User Cuisines](#get-usersuser_idcuisines---user-cuisines)
-  - [GET ```/users/{user_id}/specialties``` - User Specialties](#get-usersuser_idspecialties---user-specialties)
-  - [POST ```/users/{user_id}/follow``` - Follow User](#post-usersuser_idfollow---follow-user)
-  - [DELETE ```/users/{user_id}/follow``` - Unfollow User](#delete-usersuser_idfollow---unfollow-user)
-  - [GET ```/users/{user_id}/followers``` - User Followers](#get-usersuser_idfollowers---user-followers)
-  - [GET ```/users/{user_id}/followables``` - User Followables](#get-usersuser_idfollowables---user-followables)
+  - [POST `/users` - Create a new User](#post-users---create-a-new-user)
+  - [POST `/users/sign_in` - User Authentication](#post-userssign_in---user-authentication)
+  - [POST `/users/forgot_password` - Forgot Password](#post-usersforgot_password---forgot-password)
+  - [POST `/users/reset_password` - Reset Password](#post-usersreset_password---reset-password)
+  - [GET `/users/me` - Me](#get-usersme---me)
+  - [GET `/users/search` - Search Users](#get-userssearch---search-users)
+  - [POST `/users/unsubscribe` - Unsubscribe](#post-usersunsubscribe---unsubscribe)
+  - [GET `/users/validate_email` - Validate Email](#get-usersvalidate_email---validate-_email)
+  - [GET `/users/validateusername` - Validate Username](#get-usersvalidateusername---validate-username)
+  - [POST `/users/reserveusername` - Reserve Username](#post-usersreserveusername---reserve-username)
+  - [PUT `/users/{user_id}/updateindustry` - Update Industry](#put-usersuser_idupdateindustry---update-industry)
+  - [GET `/users/{user_id|user_username}` - User](#get-usersuser_iduser_username---user)
+  - [PUT `/users/{user_id}` - Update User](#put-usersuser_id---update-user)
+  - [GET `/users/{user_id|user_username}/morsels` - User Morsels](#get-usersuser_iduser_usernamemorsels---user-morsels)
+  - [GET `/users/activities` - User Activities](#get-usersactivities---user-activities)
+  - [GET `/users/followables_activities` - User Followables Activities](#get-usersfollowables_activities---user-followables-activities)
+  - [GET `/users/notifications` - User Notifications](#get-usersnotifications---user-notifications)
+  - [GET `/users/{user_id}/likeables` - User Likeables](#get-usersuser_idlikeables---user-likeables)
+  - [POST `/users/{user_id}/tags` - Create User Tag](#post-usersuser_idtags---create-user-tag)
+  - [DELETE `/users/{user_id}/tags/{tag_id}` - Delete User Tag](#delete-usersuser_idtagstag_id---delete-user-tag)
+  - [GET `/users/{user_id}/cuisines` - User Cuisines](#get-usersuser_idcuisines---user-cuisines)
+  - [GET `/users/{user_id}/specialties` - User Specialties](#get-usersuser_idspecialties---user-specialties)
+  - [POST `/users/{user_id}/follow` - Follow User](#post-usersuser_idfollow---follow-user)
+  - [DELETE `/users/{user_id}/follow` - Unfollow User](#delete-usersuser_idfollow---unfollow-user)
+  - [GET `/users/{user_id}/followers` - User Followers](#get-usersuser_idfollowers---user-followers)
+  - [GET `/users/{user_id}/followables` - User Followables](#get-usersuser_idfollowables---user-followables)
+
+- [Place Methods](#place-methods)
+  - [GET `/places/suggest` - Suggest Completion](#get-placessuggest---suggest-completion)
+  - [POST `/places/join` - Join User w/ Place](#post-placesjoin---join-user-w-place)
 
 - [Item Methods](#item-methods)
-  - [POST ```/items``` - Create a new Item](#post-items---create-a-new-item)
-  - [GET ```/items/{item_id}``` - Item](#get-itemsitem_id---item)
-  - [PUT ```/items/{item_id}``` - Update Item](#put-itemsitem_id---update-item)
-  - [DELETE ```/items/{item_id}``` - Delete Item](#delete-itemsitem_id---delete-item)
-  - [POST ```/items/{item_id}/like``` - Like Item](#post-itemsitem_idlike---like-item)
-  - [DELETE ```/items/{item_id}/like``` - Unlike Item](#delete-itemsitem_idlike---unlike-item)
-  - [GET ```/items/{item_id}/likers``` - Likers](#get-itemsitem_idlikers---likers)
-  - [POST ```/items/{item_id}/comments``` - Create Comment](#post-itemsitem_idcomments---create-comment)
-  - [GET ```/items/{item_id}/comments``` - Item Comments](#get-itemsitem_idcomments---item-comments)
-  - [DELETE ```/items/{item_id}/comments/{comment_id}``` - Delete Comment](#delete-itemsitem_idcommentscomment_id---delete-comment)
+  - [POST `/items` - Create a new Item](#post-items---create-a-new-item)
+  - [GET `/items/{item_id}` - Item](#get-itemsitem_id---item)
+  - [PUT `/items/{item_id}` - Update Item](#put-itemsitem_id---update-item)
+  - [DELETE `/items/{item_id}` - Delete Item](#delete-itemsitem_id---delete-item)
+  - [POST `/items/{item_id}/like` - Like Item](#post-itemsitem_idlike---like-item)
+  - [DELETE `/items/{item_id}/like` - Unlike Item](#delete-itemsitem_idlike---unlike-item)
+  - [GET `/items/{item_id}/likers` - Likers](#get-itemsitem_idlikers---likers)
+  - [POST `/items/{item_id}/comments` - Create Comment](#post-itemsitem_idcomments---create-comment)
+  - [GET `/items/{item_id}/comments` - Item Comments](#get-itemsitem_idcomments---item-comments)
+  - [DELETE `/items/{item_id}/comments/{comment_id}` - Delete Comment](#delete-itemsitem_idcommentscomment_id---delete-comment)
 
 - [Morsel Methods](#morsel-methods)
-  - [POST ```/morsels``` - Create a new Morsel](#post-morsels---create-a-new-morsel)
-  - [GET ```/morsels``` - Morsels](#get-morsels---morsels)
-  - [GET ```/morsels/drafts``` - Morsel Drafts](#get-morselsdrafts---morsel-drafts)
-  - [GET ```/morsels/{morsel_id}``` - Morsel](#get-morselsmorsel_id----morsel)
-  - [PUT ```/morsels/{morsel_id}``` - Update Morsel](#put-morselsmorsel_id---update-morsel)
-  - [POST ```/morsels/{morsel_id}/publish``` - Publish Morsel](#post-morselsmorsel_idpublish---Publish-morsel)
-  - [DELETE ```/morsels/{morsel_id}``` - Delete Morsel](#delete-morselsmorsel_id---delete-morsel)
+  - [POST `/morsels` - Create a new Morsel](#post-morsels---create-a-new-morsel)
+  - [GET `/morsels` - Morsels](#get-morsels---morsels)
+  - [GET `/morsels/drafts` - Morsel Drafts](#get-morselsdrafts---morsel-drafts)
+  - [GET `/morsels/{morsel_id}` - Morsel](#get-morselsmorsel_id----morsel)
+  - [PUT `/morsels/{morsel_id}` - Update Morsel](#put-morselsmorsel_id---update-morsel)
+  - [POST `/morsels/{morsel_id}/publish` - Publish Morsel](#post-morselsmorsel_idpublish---Publish-morsel)
+  - [DELETE `/morsels/{morsel_id}` - Delete Morsel](#delete-morselsmorsel_id---delete-morsel)
 
 - [Keyword Methods](#keyword-methods)
-  - [POST ```/keywords/{keyword_id}/follow``` - Follow Keyword](#post-keywordskeyword_idfollow---follow-keyword)
-  - [DELETE ```/keywords/{keyword_id}/follow``` - Unfollow Keyword](#delete-keywordskeyword_idfollow---unfollow-keyword)
-  - [GET ```/keywords/{keyword_id}/followers``` - Keyword Followers](#get-keywordskeyword_idfollowers---keyword-followers)
-  - [GET ```/cuisines``` - Cuisines](#get-cuisines---cuisines)
-  - [GET ```/cuisines/{cuisine_id}/users``` - Cuisine Users](#get-cuisinescuisine_id---cuisine-users)
-  - [GET ```/specialties``` - Specialties](#get-specialties---specialties)
-  - [GET ```/specialties/{specialty_id}/users``` - Specialty Users](#get-specialtiesspecialty_id---specialty-users)
+  - [POST `/keywords/{keyword_id}/follow` - Follow Keyword](#post-keywordskeyword_idfollow---follow-keyword)
+  - [DELETE `/keywords/{keyword_id}/follow` - Unfollow Keyword](#delete-keywordskeyword_idfollow---unfollow-keyword)
+  - [GET `/keywords/{keyword_id}/followers` - Keyword Followers](#get-keywordskeyword_idfollowers---keyword-followers)
+  - [GET `/cuisines` - Cuisines](#get-cuisines---cuisines)
+  - [GET `/cuisines/{cuisine_id}/users` - Cuisine Users](#get-cuisinescuisine_id---cuisine-users)
+  - [GET `/specialties` - Specialties](#get-specialties---specialties)
+  - [GET `/specialties/{specialty_id}/users` - Specialty Users](#get-specialtiesspecialty_id---specialty-users)
 
 - [Misc Methods](#misc-methods)
-  - [GET ```/status``` - Status](#get-status---status)
-  - [GET ```/configuration``` - Configuration](#get-configuration---configuration)
+  - [GET `/status` - Status](#get-status---status)
+  - [GET `/configuration` - Configuration](#get-configuration---configuration)
 
 - [Response Objects](#response-objects)
   - [Authentication Objects](#authentication-objects)
@@ -496,9 +500,9 @@ Returns [Slim Followed User](#slim-followed-user)s matching the parameters
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| user[query] | String | Used to return Users by `first_name` OR `last_name` | | |
-| user[first_name] | String | User's `first_name` | | |
-| user[last_name] | String | User's `last_name` | | |
+| user[query] | String | Used to return Users by `first_name` OR `last_name`. Must be at least 3 characters. | | |
+| user[first_name] | String | User's `first_name`. Must be at least 3 characters. | | |
+| user[last_name] | String | User's `last_name`. Must be at least 3 characters. | | |
 | user[promoted] | Boolean | Used to return `promoted` Users | false | |
 
 ### Response
@@ -908,6 +912,47 @@ Returns the Followables that the User with the specified `user_id` is following 
 <br />
 
 
+# Place Methods
+
+## GET `/places/suggest` - Suggest Completion
+Proxy for the [Foursquare Venues suggestcompletion](https://developer.foursquare.com/docs/venues/suggestcompletion). Returns the response in `data`.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| query | String | String to search for. Must be at least 3 characters. | | X |
+| lat_lon | String | The User's lat, lon | | X |
+
+<br />
+<br />
+
+## POST `/places/join` - Join User w/ Place
+Associates the [current_user](#current_user) with the Place with the specified `place_id` or `foursquare_venue_id`.
+If the Place does not yet exist (`foursquare_venue_id` passed) it will be created with the additional place parameters and return it.
+Creating a new Place will kick off a background job to import all of its data from Foursquare.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| place[id] | String |  | | if `foursquare_venue_id` not passed |
+| place[foursquare_venue_id] | String | The photo for the new Item | | if `id` not passed |
+| place[name] | String | The name of the Place | | |
+| place[address] | String | The address of the Place | | |
+| place[city] | String | The city of the Place | | |
+| place[state] | String | The state of the Place | | |
+
+### Response
+
+| __data__ |
+| -------- |
+| [Place](#place) |
+
+<br />
+<br />
+
+
 # Item Methods
 
 ## POST ```/items``` - Create a new Item
@@ -1115,6 +1160,7 @@ Creates a new Morsel for the current User.
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | morsel[title] | String | The title for the new Morsel | | x |
+| morsel[place_id] | Number | A [Place](#place) to associate this Morsel to | | |
 | morsel[draft] | Boolean | Set to true if the Morsel is a draft | false | |
 
 ### Response
@@ -1189,6 +1235,7 @@ Updates the Morsel with the specified ```morsel_id```
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | morsel[title]         | String  | The title for the Morsel. Changing this will change the slug. | | |
+| morsel[place_id] | Number | A [Place](#place) to associate this Morsel to | | |
 | morsel[draft] | Boolean | Set to true if the Morsel is a draft | false | |
 | morsel[primary_item_id] | Number | The ID of the Item to set as the primary Item for this Morsel. Must be the ID of a Item that is part of the Morsel | | |
 
@@ -1463,6 +1510,10 @@ This includes the same keys as [Item](#item), along with:
 ```json
 {
   "id": 4,
+  "creator_id": 3,
+  "place_id": 4,
+  "created_at": "2014-01-07T16:34:44.862Z",
+  "updated_at": "2014-01-07T16:34:44.862Z",
   "title": "Butter Rocks!",
   "slug": "butter-rocks"
 }
@@ -1472,9 +1523,6 @@ This includes the same keys as [Slim Morsel](#slim-morsel), along with:
 
 ```json
 {
-  "creator_id": 3,
-  "created_at": "2014-01-07T16:34:44.862Z",
-  "updated_at": "2014-01-07T16:34:44.862Z",
   "draft": false,
   "primary_item_id": 2,
   "published_at": "2014-01-07T16:34:44.862Z",

@@ -1,10 +1,10 @@
 class AuthenticationsController < ApiController
   def create
-    authentication = CreateAuthentication.call(AuthenticationParams.build(params).merge(user: current_user))
-    if authentication.save
-      custom_respond_with authentication
+    service = CreateAuthentication.call(AuthenticationParams.build(params).merge(user: current_user))
+    if service.valid?
+      custom_respond_with service.response
     else
-      render_json_errors(authentication.errors)
+      render_json_errors service.errors
     end
   end
 
@@ -21,7 +21,7 @@ class AuthenticationsController < ApiController
     authorize_action_for authentication
 
     authentication.attributes = AuthenticationParams.build(params)
-    return render_json_errors({ authentication: ['is not valid'] }) unless ValidateAuthentication.call(authentication: authentication)
+    return render_json_errors(authentication: ['is not valid']) unless ValidateAuthentication.call(authentication: authentication).valid?
 
     if authentication.update(AuthenticationParams.build(params))
       custom_respond_with authentication

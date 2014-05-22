@@ -1,31 +1,35 @@
 class ActivityWorker
   include Sidekiq::Worker
 
-  def perform(subject_id, subject_type, action_id, action_type, creator_id, recipient_id, notify_recipient = false)
-    creator = User.find(creator_id)
+  def perform(options = nil)
+    return if options.nil?
+
+    creator = User.find(options['creator']['id'])
     activity = Activity.create(
-      creator_id: creator_id,
-      action_id: action_id,
-      action_type: action_type,
-      subject_id: subject_id,
-      subject_type: subject_type,
-      recipient_id: recipient_id
+      creator_id: options['creator']['id'],
+      action_id: options['action']['id'],
+      action_type: options['action']['type'],
+      subject_id: options['subject']['id'],
+      subject_type: options['subject']['type'],
+      recipient_id: options['recipient']['id']
     )
 
-    if notify_recipient && recipient_id.present? && recipient_id != creator_id
-      if action_type == 'Comment'
+    notify_recipient = options['notify_recipient'] || false
+
+    if notify_recipient && options['recipient']['id'].present? && options['recipient']['id'] != options['creator']['id']
+      if options['action']['type'] == 'Comment'
         past_tense_action = 'commented on'
-      elsif action_type == 'Like'
+      elsif options['action']['type'] == 'Like'
         past_tense_action = 'liked'
-      elsif action_type == 'Follow'
+      elsif options['action']['type'] == 'Follow'
         past_tense_action = 'followed'
       else
         raise 'InvalidAction'
       end
 
-      if subject_type == 'User'
+      if options['subject']['type'] == 'User'
         subject_message = activity.subject.full_name
-      elsif subject_type == 'Item'
+      elsif options['subject']['type'] == 'Item'
         subject_message = activity.subject.morsel_title_with_description
       else
         raise 'InvalidSubject'
@@ -35,7 +39,7 @@ class ActivityWorker
       Notification.create(
         payload: activity,
         message: notification_message.truncate(100, separator: ' ', omission: '... '),
-        user_id: recipient_id
+        user_id: options['recipient']['id']
       )
     end
   end

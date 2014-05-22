@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140521000343) do
+ActiveRecord::Schema.define(version: 20140527202407) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,6 +90,15 @@ ActiveRecord::Schema.define(version: 20140521000343) do
 
   add_index "emails", ["class_name"], name: "index_emails_on_class_name", unique: true, using: :btree
 
+  create_table "employments", force: true do |t|
+    t.integer  "place_id"
+    t.integer  "user_id"
+    t.string   "title"
+    t.datetime "deleted_at"
+  end
+
+  add_index "employments", ["place_id", "user_id"], name: "index_employments_on_place_id_and_user_id", using: :btree
+
   create_table "feed_items", force: true do |t|
     t.integer  "subject_id"
     t.string   "subject_type"
@@ -99,9 +108,11 @@ ActiveRecord::Schema.define(version: 20140521000343) do
     t.datetime "updated_at"
     t.integer  "user_id"
     t.boolean  "featured",     default: false
+    t.integer  "place_id"
   end
 
   add_index "feed_items", ["featured"], name: "index_feed_items_on_featured", using: :btree
+  add_index "feed_items", ["place_id"], name: "index_feed_items_on_place_id", using: :btree
   add_index "feed_items", ["subject_id", "subject_type"], name: "index_feed_items_on_subject_id_and_subject_type", using: :btree
   add_index "feed_items", ["user_id"], name: "index_feed_items_on_user_id", using: :btree
 
@@ -173,10 +184,12 @@ ActiveRecord::Schema.define(version: 20140521000343) do
     t.datetime "photo_updated_at"
     t.datetime "published_at"
     t.hstore   "mrsl"
+    t.integer  "place_id"
   end
 
   add_index "morsels", ["cached_slug"], name: "index_morsels_on_cached_slug", using: :btree
   add_index "morsels", ["creator_id"], name: "index_morsels_on_creator_id", using: :btree
+  add_index "morsels", ["place_id"], name: "index_morsels_on_place_id", using: :btree
 
   create_table "notifications", force: true do |t|
     t.integer  "payload_id"
@@ -191,6 +204,28 @@ ActiveRecord::Schema.define(version: 20140521000343) do
 
   add_index "notifications", ["payload_type"], name: "index_notifications_on_payload_type", using: :btree
   add_index "notifications", ["user_id"], name: "index_notifications_on_user_id", using: :btree
+
+  create_table "places", force: true do |t|
+    t.string   "name"
+    t.string   "slug"
+    t.string   "address"
+    t.string   "city"
+    t.string   "state"
+    t.string   "postal_code"
+    t.string   "country"
+    t.string   "facebook_page_id"
+    t.string   "twitter_username"
+    t.string   "foursquare_venue_id"
+    t.json     "foursquare_timeframes"
+    t.hstore   "information",           default: {}
+    t.integer  "creator_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+    t.datetime "last_imported_at"
+  end
+
+  add_index "places", ["name", "foursquare_venue_id"], name: "index_places_on_name_and_foursquare_venue_id", using: :btree
 
   create_table "roles", force: true do |t|
     t.string   "name"

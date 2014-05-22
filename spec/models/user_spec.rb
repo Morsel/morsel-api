@@ -147,7 +147,7 @@ describe User do
     end
   end
 
-  context 'persisted' do
+  context :saved do
     before { user.save }
     its(:authentication_token) { should_not be_nil }
 

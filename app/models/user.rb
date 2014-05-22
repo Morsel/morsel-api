@@ -83,6 +83,9 @@ class User < ActiveRecord::Base
   has_many :activities, foreign_key: :creator_id
   has_many :notifications
 
+  has_many :employments, inverse_of: :user
+  has_many :places, through: :employments
+
   validates :industry,
             inclusion: {
               in: %w(chef media diner),

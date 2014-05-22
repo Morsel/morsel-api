@@ -3,6 +3,7 @@ class MorselSerializer < ActiveModel::Serializer
 
   attributes :id,
              :title,
+             :place_id,
              :creator_id,
              :created_at,
              :updated_at,

@@ -1,6 +1,11 @@
 class UsersController < ApiController
   def search
-    custom_respond_with Search::SearchUsers.call(UserParams.build(params).merge(pagination_params)), each_serializer: SlimFollowedUserSerializer
+    service = Search::SearchUsers.call(UserParams.build(params).merge(pagination_params))
+    if service.valid?
+      custom_respond_with service.response, each_serializer: SlimFollowedUserSerializer
+    else
+      render_json_errors service.errors
+    end
   end
 
   PUBLIC_ACTIONS << :show

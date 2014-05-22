@@ -21,6 +21,7 @@
 # **`photo_updated_at`**    | `datetime`         |
 # **`published_at`**        | `datetime`         |
 # **`mrsl`**                | `hstore`           |
+# **`place_id`**            | `integer`          |
 #
 
 FactoryGirl.define do

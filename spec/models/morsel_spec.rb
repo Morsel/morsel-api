@@ -21,6 +21,7 @@
 # **`photo_updated_at`**    | `datetime`         |
 # **`published_at`**        | `datetime`         |
 # **`mrsl`**                | `hstore`           |
+# **`place_id`**            | `integer`          |
 #
 
 require 'spec_helper'
@@ -81,7 +82,7 @@ describe Morsel do
     end
   end
 
-  context 'persisted' do
+  context :saved do
     before { morsel.save }
 
     its(:cached_slug) { should_not be_nil }

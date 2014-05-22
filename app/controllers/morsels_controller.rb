@@ -1,9 +1,10 @@
 class MorselsController < ApiController
   def create
-    morsel = Morsel.new(MorselParams.build(params))
-    morsel.creator = current_user
+    morsel = Morsel.create(MorselParams.build(params)) do |m|
+      m.creator = current_user
+    end
 
-    if morsel.save
+    if morsel.valid?
       custom_respond_with morsel
     else
       render_json_errors morsel.errors
@@ -101,7 +102,7 @@ class MorselsController < ApiController
 
   class MorselParams
     def self.build(params)
-      params.require(:morsel).permit(:title, :draft, :primary_item_id)
+      params.require(:morsel).permit(:title, :draft, :primary_item_id, :place_id)
     end
   end
 

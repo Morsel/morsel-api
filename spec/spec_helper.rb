@@ -25,8 +25,8 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = false
   config.order = 'random'
 
-  config.include Requests::JsonHelpers, type: :request
-  config.include Requests::ServiceStubs, type: :request
+  config.include SpecHelpers
+  config.include ServiceStubs
 
   config.before(:suite) do
     ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
