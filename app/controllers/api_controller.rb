@@ -49,6 +49,12 @@ class ApiController < ActionController::Base
     unauthorized_token
   end
 
+  def pagination_params
+    pagination_params = params.slice(:max_id, :since_id)
+    pagination_params[:count] = pagination_count
+    pagination_params
+  end
+
   def pagination_count
     params[:count] || Settings.pagination_default_count || 20
   end

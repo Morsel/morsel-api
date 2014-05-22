@@ -1,6 +1,6 @@
 class UsersController < ApiController
   def search
-    custom_respond_with Search::SearchUsers.call(UserParams.build(params)), each_serializer: SlimFollowedUserSerializer
+    custom_respond_with Search::SearchUsers.call(UserParams.build(params).merge(pagination_params)), each_serializer: SlimFollowedUserSerializer
   end
 
   PUBLIC_ACTIONS << :show

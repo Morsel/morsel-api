@@ -43,6 +43,16 @@ describe 'Users API' do
         rand(1..3).times { FactoryGirl.create(:user) }
       end
 
+      it_behaves_like 'TimelinePaginateable' do
+        let(:paginateable_object_class) { User }
+        let(:additional_params) {{ user: { promoted: true }}}
+
+        before do
+          paginateable_object_class.delete_all
+          30.times { FactoryGirl.create(:user, promoted: true) }
+        end
+      end
+
       it 'returns `promoted` Users' do
         get_endpoint  user: {
                         promoted: true
