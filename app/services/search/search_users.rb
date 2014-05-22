@@ -7,18 +7,28 @@ module Search
     attribute :first_name, String
     attribute :last_name, String
     attribute :promoted, Boolean
+    attribute :count, Integer
+    attribute :max_id, Integer
+    attribute :since_id, Integer
 
     def call
       if query.present?
-        SearchableUser.where('first_name ILIKE :query OR last_name ILIKE :query', query: query)
+        SearchableUser.since(since_id)
+                      .max(max_id)
+                      .where('first_name ILIKE :query OR last_name ILIKE :query', query: query)
                       .promoted(promoted)
+                      .limit(count)
+                      .order('id DESC')
       else
-        SearchableUser.first_name(first_name)
+        SearchableUser.since(since_id)
+                      .max(max_id)
+                      .first_name(first_name)
                       .last_name(last_name)
                       .promoted(promoted)
+                      .limit(count)
+                      .order('id DESC')
       end
     end
-
   end
 
   class SearchableUser < User

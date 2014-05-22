@@ -4,7 +4,9 @@ shared_examples 'TimelinePaginateable' do
       expected_count = rand(3..6)
       max_id = paginateable_object_class.first.id + expected_count - 1
 
-      get_endpoint  max_id: max_id
+      params = (defined?(additional_params) && additional_params.present?) ? additional_params : {}
+      params.merge!({ max_id: max_id })
+      get_endpoint  params
 
       expect_success
       expect_json_data_count expected_count
@@ -17,7 +19,9 @@ shared_examples 'TimelinePaginateable' do
       expected_count = rand(3..6)
       since_id = paginateable_object_class.last.id - expected_count
 
-      get_endpoint  since_id: since_id
+      params = (defined?(additional_params) && additional_params.present?) ? additional_params : {}
+      params.merge!({ since_id: since_id })
+      get_endpoint  params
 
       expect_success
       expect_json_data_count expected_count
@@ -27,7 +31,8 @@ shared_examples 'TimelinePaginateable' do
 
   describe 'count' do
     it 'defaults to 20' do
-      get_endpoint
+      params = (defined?(additional_params) && additional_params.present?) ? additional_params : {}
+      get_endpoint  params
 
       expect_success
       expect_json_data_count 20
@@ -36,7 +41,9 @@ shared_examples 'TimelinePaginateable' do
     it 'limits the result' do
       expected_count = rand(3..6)
 
-      get_endpoint  count: expected_count
+      params = (defined?(additional_params) && additional_params.present?) ? additional_params : {}
+      params.merge!({ count: expected_count })
+      get_endpoint  params
 
       expect_success
       expect_json_data_count expected_count
@@ -45,8 +52,12 @@ shared_examples 'TimelinePaginateable' do
     it 'works with the other parameters' do
       expected_count = rand(3..6)
 
-      get_endpoint  count: expected_count,
-                    max_id: paginateable_object_class.last.id
+      params = (defined?(additional_params) && additional_params.present?) ? additional_params : {}
+      params.merge!({
+        count: expected_count,
+        max_id: paginateable_object_class.last.id
+      })
+      get_endpoint  params
 
       expect_success
       expect_json_data_count expected_count
