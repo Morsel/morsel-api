@@ -644,7 +644,6 @@ describe 'Users API' do
                         uid: authentication.uid,
                         token: other_authentication.token
                       }
-
         expect_failure
         expect(json_errors['base'].first).to eq('login or password is invalid')
       end

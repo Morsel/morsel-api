@@ -4,7 +4,7 @@ ruby '2.0.0'
 #ruby-gemset=morsel
 
 gem 'puma'
-gem 'rails', '4.0.3'
+gem 'rails', '~> 4.1.1'
 gem 'pg'
 
 gem 'active_model_serializers'
@@ -20,6 +20,7 @@ gem 'carrierwave_backgrounder'
 gem 'devise', "~> 3.2.2"
 # gem 'doorkeeper', '~> 0.7.0'
 # gem 'formtastic'
+gem 'foursquare2', '~> 1.9.8'
 gem 'hirefire-resource', '~> 0.3.2'
 gem 'instagram', '~> 1.0.0'
 gem 'jbuilder', '~> 1.2'
@@ -39,7 +40,7 @@ gem 'seedbank'
 gem 'settingslogic'
 gem 'sidekiq', '~> 3.0.0'
 gem 'sinatra', '>= 1.3.0', require: nil
-gem 'slim-rails'
+gem 'slim-rails', '~> 2.1.4'
 gem 'slugged', '~> 2.0'
 gem 'turbolinks'
 gem "twitter", "~> 5.5.1"

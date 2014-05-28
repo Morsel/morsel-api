@@ -28,3 +28,6 @@ NumericLiterals:
 
 SignalException:
   Enabled: false
+
+SingleLineMethods:
+  Enabled: false

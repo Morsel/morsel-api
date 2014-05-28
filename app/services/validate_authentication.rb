@@ -1,12 +1,12 @@
 class ValidateAuthentication
   include Service
-  include Virtus.model
 
   attribute :authentication, Authentication
 
+  validate :uid_match
+
   def call
-    # Need to make sure that the token passed belong to the uid passed
-    uid_match
+    true
   end
 
   private
@@ -22,6 +22,7 @@ class ValidateAuthentication
   end
 
   def uid_match
-    fetched_uid == authentication.uid
+    # Need to make sure that the token passed belong to the uid passed
+    errors.add(:authentication, 'is invalid') if fetched_uid != authentication.uid
   end
 end

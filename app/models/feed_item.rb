@@ -15,6 +15,7 @@
 # **`updated_at`**    | `datetime`         |
 # **`user_id`**       | `integer`          |
 # **`featured`**      | `boolean`          | `default(FALSE)`
+# **`place_id`**      | `integer`          |
 #
 
 class FeedItem < ActiveRecord::Base

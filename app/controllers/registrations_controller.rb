@@ -11,18 +11,17 @@ class RegistrationsController < Devise::RegistrationsController
 
     authentication_errors = []
     if params[:authentication].present?
-      authentication = CreateAuthentication.call(AuthenticationsController::AuthenticationParams.build(params).merge(user: user))
-
-      unless authentication.valid?
-        authentication_errors = authentication.errors.delete(:uid) if authentication.errors[:uid].include?('already exists')
-        authentication_errors += authentication.errors.full_messages
+      service = BuildAuthentication.call(AuthenticationsController::AuthenticationParams.build(params).merge(user: user))
+      if service.valid?
+        user.provider = service.response.provider
+        user.uid = service.response.uid
+      else
+        authentication_errors = service.errors.delete(:uid) if service.errors[:uid].include?('already exists')
+        authentication_errors += service.errors.full_messages
       end
 
       # Set a temporary password if none is set
       user.password ||= Devise.friendly_token
-
-      user.uid = authentication.uid
-      user.provider = authentication.provider
     end
 
     if user.valid? && authentication_errors.empty? && user.save

@@ -13,7 +13,23 @@ module Activityable
   private
 
   def create_activity
-    ActivityWorker.perform_async(subject.id, subject.class.to_s, id, self.class.to_s, user.id, recipient_id, activity_notification)
+    ActivityWorker.perform_async(
+      subject: {
+        id: subject.id,
+        type: subject.class.to_s
+      },
+      action: {
+        id: id,
+        type: self.class.to_s
+      },
+      creator: {
+        id: user.id
+      },
+      recipient: {
+        id: recipient_id
+      },
+      notify_recipient: activity_notification
+    )
   end
 
   def recipient_id

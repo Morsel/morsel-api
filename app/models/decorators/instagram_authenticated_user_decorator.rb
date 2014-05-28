@@ -31,6 +31,6 @@ class InstagramAuthenticatedUserDecorator < SimpleDelegator
   end
 
   def instagram_client(authentication = instagram_authentication)
-    Instagram::Client.new( access_token: authentication.token )
+    Instagram::Client.new(access_token: authentication.token)
   end
 end

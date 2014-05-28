@@ -1,0 +1,181 @@
+require 'spec_helper'
+
+describe 'Places API' do
+  describe 'POST /places/join places#join' do
+    let(:endpoint) { '/places/join' }
+    let(:current_user) { FactoryGirl.create(:chef) }
+    let(:title) { Faker::Name.title }
+    let(:foursquare_stub_options) { {} }
+
+    before { stub_foursquare_venue(foursquare_stub_options) }
+
+    context 'no `title` passed' do
+      it 'should return an error' do
+        post_endpoint place: {
+                        id: 0
+                      }
+        expect_failure
+        expect_missing_param_error_for_param('title')
+      end
+    end
+
+    context '`id`' do
+      context 'Place already exists in API' do
+        let(:place) { FactoryGirl.create(:place) }
+
+        it 'employs `current_user` at the Place with the specified `id`' do
+          post_endpoint place: {
+                          id: place.id
+                        },
+                        title: title
+          expect_success
+
+          expect_json_data_eq({
+            'id' => place.id,
+            'name' => place.name,
+            'slug' => place.slug,
+            'address' => place.address,
+            'city' => place.city,
+            'state' => place.state,
+            'country' => place.country
+          })
+
+          place.reload
+          expect(place.users.include?(current_user)).to be_true
+        end
+
+        it 'returns the User\'s `title` in the response' do
+          post_endpoint place: {
+                          id: place.id
+                        },
+                        title: title
+          expect_success
+
+          expect_json_data_eq('title' => title)
+        end
+       end
+
+      context 'Place does not exist in API' do
+        it 'returns an error' do
+          post_endpoint place: {
+                          id: 0
+                        },
+                        title: title
+
+          expect_failure
+          expect_record_not_found_error
+        end
+      end
+    end
+
+    context '`foursquare_venue_id`' do
+      context 'Place already exists in API' do
+        let(:place) { FactoryGirl.create(:place) }
+
+        it 'employs `current_user` at the Place with the specified `foursquare_venue_id`' do
+          post_endpoint place: {
+                          foursquare_venue_id: place.foursquare_venue_id
+                        },
+                        title: title
+          expect_success
+
+          expect_json_data_eq({
+            'id' => place.id,
+            'name' => place.name,
+            'slug' => place.slug,
+            'address' => place.address,
+            'city' => place.city,
+            'state' => place.state,
+            'country' => place.country
+          })
+
+          place.reload
+          expect(place.users.include?(current_user)).to be_true
+        end
+      end
+
+      context 'Place does not exist in API' do
+        let(:place) { FactoryGirl.build(:place) }
+
+        it 'creates a Place and employs `current_user` there' do
+          post_endpoint place: {
+                          foursquare_venue_id: place.foursquare_venue_id
+                        },
+                        title: title
+          expect_success
+          expect_json_data_eq('id' => Place.last.id)
+          expect(Place.last.users.include?(current_user)).to be_true
+        end
+
+        it 'queues the FoursquareImportWorker' do
+          expect {
+            post_endpoint place: {
+                            foursquare_venue_id: place.foursquare_venue_id
+                          },
+                          title: title
+          }.to change(FoursquareImportWorker.jobs, :size).by(1)
+        end
+      end
+    end
+  end
+
+  describe 'GET /places/suggest places#suggest' do
+    let(:endpoint) { '/places/suggest' }
+    let(:current_user) { FactoryGirl.create(:chef) }
+    let(:expected_count) { 3 }
+
+    before { stub_foursquare_suggest(count: expected_count) }
+
+    it 'suggests Foursquare Venues' do
+      get_endpoint lat_lon: '1,2', query: 'some query'
+      expect_success
+      expect_json_data_count expected_count
+    end
+
+    it 'renders the Foursquare response' do
+      get_endpoint lat_lon: '1,2', query: 'some query'
+      expect_success
+      expect(json_data.first['location']).to_not be_nil
+    end
+
+    describe 'query' do
+      it 'is required' do
+        get_endpoint lat_lon: '1,2'
+        expect_missing_param_error_for_param 'query'
+      end
+
+      it 'requires at least 3 characters' do
+        get_endpoint lat_lon: '1,2', query: 'ab'
+        expect_failure
+        expect_first_error('query', 'is too short (minimum is 3 characters)')
+      end
+    end
+
+    describe 'lat_lon' do
+      it 'is required' do
+        get_endpoint query: 'asdf'
+        expect_missing_param_error_for_param 'lat_lon'
+      end
+    end
+  end
+
+  describe 'GET /places/:id/users' do
+    let(:endpoint) { "/places/#{place.id}/users" }
+    let(:place) { FactoryGirl.create(:place) }
+    let(:place_users_count) { rand(2..6) }
+
+    before do
+      place_users_count.times { FactoryGirl.create(:employment, place: place) }
+    end
+
+    it 'returns Users associated with the Place' do
+      get_endpoint
+
+      expect_success
+
+      expect_json_data_count place_users_count
+
+      expect_first_json_data_eq title: Employment.last.title
+    end
+  end
+end

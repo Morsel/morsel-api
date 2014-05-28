@@ -1,4 +1,5 @@
 require 'spec_helper'
+
 describe 'Morsels API' do
   describe 'POST /morsels morsels#create', sidekiq: :inline do
     let(:endpoint) { '/morsels' }
@@ -24,11 +25,36 @@ describe 'Morsels API' do
       expect(new_morsel.draft).to be_true
     end
 
-    context 'draft is set to true' do
+    context 'place_id is passed' do
+      let(:place) { FactoryGirl.create(:place) }
+
+      it 'associates that Morsel with that Place' do
+        post_endpoint morsel: {
+                        title: expected_title,
+                        place_id: place.id
+                      }
+
+        expect_success
+
+        new_morsel = Morsel.find json_data['id']
+        expect_json_data_eq({
+          'id' => new_morsel.id,
+          'title' => new_morsel.title,
+          'creator_id' => new_morsel.creator_id,
+          'title' => expected_title,
+          'place_id' => place.id
+        })
+
+        expect(json_data['photos']).to be_nil
+        expect(new_morsel.draft).to be_true
+      end
+    end
+
+    context 'draft is set to false' do
       it 'creates a draft Morsel' do
         post_endpoint morsel: {
                         title: expected_title,
-                        draft: true
+                        draft: false
                       }
 
         expect_success
@@ -41,7 +67,7 @@ describe 'Morsels API' do
           'title' => expected_title,
         })
 
-        expect(new_morsel.draft).to be_true
+        expect(new_morsel.draft).to be_false
       end
     end
 
