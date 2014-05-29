@@ -9,7 +9,8 @@ class BuildAuthentication
   attribute :short_lived, String
 
   validates :provider, presence: true
-  validates :secret, presence: true
+  validates :token, presence: true
+  validates :uid, presence: true
   validates :user, presence: true
 
   def call
