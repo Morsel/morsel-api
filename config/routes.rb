@@ -99,7 +99,7 @@ MorselApp::Application.routes.draw do
 
   resources :items, only: [:create, :show, :update, :destroy], concerns: [:commentable, :likeable]
 
-  resources :morsels, only: [:create, :show, :update, :destroy] do
+  resources :morsels, only: [:create, :index, :show, :update, :destroy] do
     collection do
       get 'drafts' => 'morsels#drafts'
     end

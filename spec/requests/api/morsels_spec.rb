@@ -331,6 +331,34 @@ describe 'Morsels API' do
     end
   end
 
+  describe 'GET /morsels' do
+    let(:endpoint) { '/morsels' }
+    let(:current_user) { FactoryGirl.create(:user) }
+    let(:morsels_count) { 3 }
+    let(:draft_morsels_count) { rand(3..6) }
+
+    before do
+      morsels_count.times { FactoryGirl.create(:morsel_with_items, creator: current_user) }
+      draft_morsels_count.times { FactoryGirl.create(:draft_morsel_with_items, creator: current_user) }
+    end
+
+    it_behaves_like 'TimelinePaginateable' do
+      let(:paginateable_object_class) { Morsel }
+      before do
+        paginateable_object_class.delete_all
+        15.times { FactoryGirl.create(:morsel_with_items, creator: current_user) }
+        15.times { FactoryGirl.create(:draft_morsel_with_items, creator: current_user) }
+      end
+    end
+
+    it 'returns the authenticated User\'s Morsels, including Drafts' do
+      get_endpoint
+
+      expect_success
+      expect_json_data_count morsels_count + draft_morsels_count
+    end
+  end
+
   describe 'GET /morsels/drafts morsels#drafts' do
     let(:endpoint) { '/morsels/drafts' }
     let(:current_user) { FactoryGirl.create(:user) }
@@ -339,7 +367,7 @@ describe 'Morsels API' do
     let(:items_count) { 4 }
 
     before do
-      morsels_count.times { FactoryGirl.create(:morsel_with_items, items_count: items_count) }
+      morsels_count.times { FactoryGirl.create(:morsel_with_items, items_count: items_count, creator: current_user) }
       draft_morsels_count.times { FactoryGirl.create(:draft_morsel_with_items, creator: current_user) }
     end
 

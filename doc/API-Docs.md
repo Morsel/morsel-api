@@ -1176,7 +1176,7 @@ Creates a new Morsel for the current User.
 <br />
 
 ## GET ```/morsels``` - Morsels
-Returns the Morsels for all Users.
+Returns the Morsels (including Drafts) for [current_user](#current_user) sorted by their `id`.
 
 ### Request
 
@@ -1716,6 +1716,8 @@ _(NOTE: Refer to Foursquare's Documentation for the format of `foursquare_timefr
 
 ```json
 {
+  "facebook_page_id": "162760584142",
+  "twitter_username": "BigStarChicago",
   "foursquare_venue_id": "4adbf2bbf964a520242b21e3",
   "foursquare_timeframes": [
     {

@@ -98,6 +98,7 @@ FactoryGirl.define do
     state 'IL'
     postal_code '60622'
     country 'United States'
+    facebook_page_id '162760584142'
     twitter_username 'bigstarchicago'
     foursquare_venue_id '4adbf2bbf964a520242b21e3'
     foursquare_timeframes [
