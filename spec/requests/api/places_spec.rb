@@ -18,6 +18,8 @@ describe 'Places API' do
         'state' => place.state,
         'postal_code' => place.postal_code,
         'country' => place.country,
+        'facebook_page_id' => place.facebook_page_id,
+        'twitter_username' => place.twitter_username,
         'foursquare_venue_id' => place.foursquare_venue_id,
         'information' => {
           'website_url' => place.information['website_url'],
