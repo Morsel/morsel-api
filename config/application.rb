@@ -25,8 +25,6 @@ module MorselApp
       end
     end
 
-    config.middleware.use ::Rack::PerftoolsProfiler, bundler: true, password: ENV['PROFILER_PASSWORD']
-
     config.autoload_paths += Dir[File.join(Rails.root, 'lib', 'core_ext', '*.rb')].each { |l| require l }
     config.autoload_paths += Dir[File.join(Rails.root, 'lib', 'responders', '*.rb')].each { |l| require l }
     config.autoload_paths += Dir[File.join(Rails.root, 'lib', '*.rb')].each { |l| require l }

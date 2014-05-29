@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.0.0'
-#ruby-gemset=morsel
+    ruby '2.1.2'
 
 gem 'puma'
 gem 'rails', '~> 4.1.1'
@@ -32,7 +31,6 @@ gem 'mini_magick', github: 'minimagick/minimagick'
 gem 'newrelic_rpm'
 gem 'paranoia', '~> 2.0'
 gem 'rack-cors', require: 'rack/cors'
-gem 'rack-perftools_profiler', require: 'rack/perftools_profiler'
 gem 'rolify'
 gem 'rollbar'
 gem 'sass-rails', '~> 4.0.0'
@@ -51,8 +49,8 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller', platforms: [:mri_20]
   gem 'quiet_assets'
-  gem 'pry'
-  gem 'pry-debugger'
+  gem 'byebug'
+  gem 'pry-byebug'
   gem 'rails_layout'
   gem 'rb-fchange', require: false
   gem 'rb-fsevent', require: false

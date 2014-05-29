@@ -24,8 +24,7 @@ class FollowsController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << :followers
-  def followers
+  PUBLIC_ACTIONS << def followers
     custom_respond_with User.joins(:followable_follows)
                             .since(params[:since_id], 'users')
                             .max(params[:max_id], 'users')

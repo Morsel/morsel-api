@@ -8,6 +8,10 @@ class BuildAuthentication
   attribute :secret, String
   attribute :short_lived, String
 
+  validates :provider, presence: true
+  validates :secret, presence: true
+  validates :user, presence: true
+
   def call
     if provider == 'facebook'
       FacebookAuthenticatedUserDecorator.new(user).build_facebook_authentication(authentication_attributes)

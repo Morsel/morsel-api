@@ -111,7 +111,7 @@ MorselApp::Application.routes.draw do
     end
   end
 
-  resources :places, only: [] do
+  resources :places, only: [:show] do
     collection do
       post 'join' => 'places#join'
       get 'suggest' => 'places#suggest'

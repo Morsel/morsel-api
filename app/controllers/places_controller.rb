@@ -1,4 +1,8 @@
 class PlacesController < ApiController
+  PUBLIC_ACTIONS << def show
+    custom_respond_with Place.find params[:id]
+  end
+
   def join
     title = params.fetch(:title)
     place_params = PlaceParams.build(params)
@@ -34,8 +38,7 @@ class PlacesController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << :users
-  def users
+  PUBLIC_ACTIONS << def users
     custom_respond_with User.joins(:employments)
                             .since(params[:since_id], 'employments')
                             .max(params[:max_id], 'employments')

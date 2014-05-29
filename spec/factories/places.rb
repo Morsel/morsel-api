@@ -70,7 +70,21 @@ FactoryGirl.define do
     }
     information {
       {
-        website_url: Faker::Internet.url
+        website_url: Faker::Internet.url,
+        formatted_phone: Faker::PhoneNumber.phone_number,
+        price_tier: rand(1..4),
+        reservations_url: Faker::Internet.url,
+        menu_url: Faker::Internet.url,
+        menu_mobile_url: Faker::Internet.url,
+        reservations: 'Yes',
+        credit_cards: 'Yes (incl. American Express)',
+        outdoor_seating: 'Yes',
+        dining_options: 'Take-out',
+        dress_code: 'No Pants',
+        dining_style: 'Casual Dining',
+        public_transit: 'Take the bus.',
+        parking: 'Street Parking',
+        parking_details: 'Some Parking deetz.'
       }
     }
   end

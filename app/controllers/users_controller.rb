@@ -8,8 +8,7 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << :show
-  def show
+  PUBLIC_ACTIONS << def show
     if params[:id].present?
       user = User.includes(:authentications, :morsels, :items).find params[:id]
     elsif params[:username].present?
@@ -46,8 +45,7 @@ class UsersController < ApiController
     custom_respond_with current_user, serializer: UserWithPrivateAttributesSerializer
   end
 
-  PUBLIC_ACTIONS << :validate_email
-  def validate_email
+  PUBLIC_ACTIONS << def validate_email
     user = User.new(email: params[:email])
     user.validate_email
 
@@ -58,8 +56,7 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << :validateusername
-  def validateusername
+  PUBLIC_ACTIONS << def validateusername
     user = User.new(username: params[:username])
     user.validate_username
 
@@ -70,8 +67,7 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << :reserveusername
-  def reserveusername
+  PUBLIC_ACTIONS << def reserveusername
     user = User.new(UserParams.build(params))
     user.password = Devise.friendly_token
     user.active = false
@@ -86,8 +82,7 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << :updateindustry
-  def updateindustry
+  PUBLIC_ACTIONS << def updateindustry
     user = User.find(params[:id])
 
     if user.update(industry: UserParams.build(params)[:industry])
@@ -97,15 +92,13 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << :forgot_password
-  def forgot_password
+  PUBLIC_ACTIONS << def forgot_password
     user = User.find_by(email: params.fetch(:email))
     EmailUserDecorator.new(user).send_forgot_password_email if user
     render_json('Sending reset password email.')
   end
 
-  PUBLIC_ACTIONS << :reset_password
-  def reset_password
+  PUBLIC_ACTIONS << def reset_password
     reset_password_token = Devise.token_generator.digest(User, :reset_password_token, params.fetch(:reset_password_token))
     user = User.find_by reset_password_token: reset_password_token
     raise ActiveRecord::RecordNotFound if user.nil? || !user.active? || !user.reset_password_period_valid?
@@ -118,8 +111,7 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << :unsubscribe
-  def unsubscribe
+  PUBLIC_ACTIONS << def unsubscribe
     user = User.find_by(email: params[:email])
 
     if user.update(unsubscribed: true)
@@ -129,8 +121,7 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << :followables
-  def followables
+  PUBLIC_ACTIONS << def followables
     followable_type = params.fetch(:type)
 
     if followable_type == 'Keyword'
@@ -161,8 +152,7 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << :likeables
-  def likeables
+  PUBLIC_ACTIONS << def likeables
     likeable_type = params.fetch(:type)
     if likeable_type == 'Item'
       custom_respond_with Item.joins("LEFT OUTER JOIN likes ON likes.likeable_type = 'Item' AND likes.likeable_id = items.id AND likes.deleted_at IS NULL AND items.deleted_at IS NULL")

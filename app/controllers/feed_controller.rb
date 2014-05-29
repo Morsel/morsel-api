@@ -1,6 +1,5 @@
 class FeedController < ApiController
-  PUBLIC_ACTIONS << :index
-  def index
+  PUBLIC_ACTIONS << def index
     if current_user.present?
       custom_respond_with FeedItem.visible
                                   .personalized_for(current_user.id)
