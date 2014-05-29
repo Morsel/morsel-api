@@ -1,16 +1,13 @@
 class KeywordsController < ApiController
-  PUBLIC_ACTIONS << :cuisines
-  def cuisines
+  PUBLIC_ACTIONS << def cuisines
     custom_respond_with Keyword.where(type: 'Cuisine'), each_serializer: KeywordSerializer
   end
 
-  PUBLIC_ACTIONS << :specialties
-  def specialties
+  PUBLIC_ACTIONS << def specialties
     custom_respond_with Keyword.where(type: 'Specialty'), each_serializer: KeywordSerializer
   end
 
-  PUBLIC_ACTIONS << :users
-  def users
+  PUBLIC_ACTIONS << def users
     custom_respond_with User.joins(:tags)
                             .since(params[:since_id], 'users')
                             .max(params[:max_id], 'users')

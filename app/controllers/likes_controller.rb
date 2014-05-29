@@ -24,8 +24,7 @@ class LikesController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << :likers
-  def likers
+  PUBLIC_ACTIONS << def likers
     custom_respond_with User.joins(:likes)
                             .since(params[:since_id], 'users')
                             .max(params[:max_id], 'users')

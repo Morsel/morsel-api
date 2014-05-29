@@ -5,6 +5,7 @@ class SlimPlaceSerializer < ActiveModel::Serializer
              :address,
              :city,
              :state,
+             :postal_code,
              :country,
              :created_at,
              :updated_at

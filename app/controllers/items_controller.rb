@@ -12,8 +12,7 @@ class ItemsController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << :show
-  def show
+  PUBLIC_ACTIONS << def show
     custom_respond_with Item.find(params[:id])
   end
 

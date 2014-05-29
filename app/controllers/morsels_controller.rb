@@ -11,8 +11,7 @@ class MorselsController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << :index
-  def index
+  PUBLIC_ACTIONS << def index
     if params[:user_id].present? || params[:username].present?
       if params[:user_id].present?
         user = User.find params[:user_id]
@@ -52,8 +51,7 @@ class MorselsController < ApiController
     custom_respond_with morsels
   end
 
-  PUBLIC_ACTIONS << :show
-  def show
+  PUBLIC_ACTIONS << def show
     custom_respond_with Morsel.includes(:items, :creator).find(params[:id])
   end
 
