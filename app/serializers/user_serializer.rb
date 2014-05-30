@@ -1,12 +1,7 @@
-class UserSerializer < ActiveModel::Serializer
+class UserSerializer < SlimUserSerializer
   include PhotoUploadableSerializerAttributes
 
-  attributes :id,
-             :username,
-             :first_name,
-             :last_name,
-             :created_at,
-             :bio,
+  attributes :created_at,
              :industry,
              :facebook_uid,
              :twitter_username,

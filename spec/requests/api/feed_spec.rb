@@ -9,54 +9,52 @@ describe 'Feed API' do
       morsels_count.times { FactoryGirl.create(:morsel_with_items) }
     end
 
-    context 'public' do
-      it 'returns nothing if no `featured` Feed Items exist' do
+    it 'returns nothing if no `featured` Feed Items exist' do
+      get_endpoint
+
+      expect_success
+      expect_json_data_count 0
+    end
+
+    context '`featured` Feed Items exist' do
+      let(:featured_feed_items_count) { rand(2..6) }
+
+      it_behaves_like 'TimelinePaginateable' do
+        let(:paginateable_object_class) { FeedItem }
+        before do
+          paginateable_object_class.delete_all
+          30.times { FactoryGirl.create(:morsel_with_items, featured_feed_item: true) }
+        end
+      end
+
+      before { featured_feed_items_count.times { FactoryGirl.create(:morsel_with_items, featured_feed_item: true) }}
+
+      it 'returns any `featured` Feed Items' do
         get_endpoint
 
         expect_success
-        expect_json_data_count 0
+        expect_json_data_count featured_feed_items_count
       end
 
-      context '`featured` Feed Items exist' do
-        let(:featured_feed_items_count) { rand(2..6) }
+      context 'Morsel is deleted' do
+        before { Morsel.last.destroy }
 
-        it_behaves_like 'TimelinePaginateable' do
-          let(:paginateable_object_class) { FeedItem }
-          before do
-            paginateable_object_class.delete_all
-            30.times { FactoryGirl.create(:morsel_with_items, featured_feed_item: true) }
-          end
-        end
-
-        before { featured_feed_items_count.times { FactoryGirl.create(:morsel_with_items, featured_feed_item: true) }}
-
-        it 'returns any `featured` Feed Items' do
+        it 'removes the Feed Item' do
           get_endpoint
 
           expect_success
-          expect_json_data_count featured_feed_items_count
+          expect_json_data_count(featured_feed_items_count - 1)
         end
+      end
 
-        context 'Morsel is deleted' do
-          before { Morsel.last.destroy }
+      context 'Morsel is marked as draft' do
+        before { Morsel.last.update(draft: true) }
 
-          it 'removes the Feed Item' do
-            get_endpoint
+        it 'omits the Feed Item' do
+          get_endpoint
 
-            expect_success
-            expect_json_data_count(featured_feed_items_count - 1)
-          end
-        end
-
-        context 'Morsel is marked as draft' do
-          before { Morsel.last.update(draft: true) }
-
-          it 'omits the Feed Item' do
-            get_endpoint
-
-            expect_success
-            expect_json_data_count(featured_feed_items_count - 1)
-          end
+          expect_success
+          expect_json_data_count(featured_feed_items_count - 1)
         end
       end
     end

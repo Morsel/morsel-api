@@ -3,9 +3,9 @@ class SlimMorselSerializer < ActiveModel::Serializer
 
   attributes :id,
              :title,
-             :place_id,
+             :slug,
              :creator_id,
+             :place_id,
              :created_at,
-             :updated_at,
-             :slug
+             :updated_at
 end

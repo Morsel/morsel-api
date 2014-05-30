@@ -19,7 +19,7 @@ class MorselsController < ApiController
         user = User.find_by('lower(username) = lower(?)', params[:username])
       end
       raise ActiveRecord::RecordNotFound if user.nil?
-      custom_respond_with Morsel.includes(:items, :creator)
+      custom_respond_with Morsel.includes(:items, :creator, :place)
                           .published
                           .since(params[:since_id])
                           .max(params[:max_id])
@@ -27,11 +27,19 @@ class MorselsController < ApiController
                           .limit(pagination_count)
                           .order('id DESC')
     elsif current_user.present?
-      custom_respond_with Morsel.includes(:items, :creator)
+      custom_respond_with Morsel.includes(:items, :creator, :place)
                           .with_drafts(true)
                           .since(params[:since_id])
                           .max(params[:max_id])
                           .where(creator_id: current_user.id)
+                          .limit(pagination_count)
+                          .order('id DESC')
+    elsif params[:place_id].present?
+      custom_respond_with Morsel.includes(:items, :creator, :place)
+                          .published
+                          .since(params[:since_id])
+                          .max(params[:max_id])
+                          .where(place_id: params[:place_id])
                           .limit(pagination_count)
                           .order('id DESC')
     else
