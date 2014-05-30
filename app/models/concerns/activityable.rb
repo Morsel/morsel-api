@@ -22,12 +22,8 @@ module Activityable
         id: id,
         type: self.class.to_s
       },
-      creator: {
-        id: user.id
-      },
-      recipient: {
-        id: recipient_id
-      },
+      creator_id: user.id,
+      recipient_id: recipient_id,
       notify_recipient: activity_notification
     )
   end

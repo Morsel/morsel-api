@@ -87,6 +87,10 @@ FactoryGirl.define do
         parking_details: 'Some Parking deetz.'
       }
     }
+
+    factory :existing_place, class: Place do
+      last_imported_at { 15.days.ago }
+    end
   end
 
   factory :big_star do

@@ -26,7 +26,7 @@
 #
 
 class Place < ActiveRecord::Base
-  include Authority::Abilities
+  include Authority::Abilities, Followable
   acts_as_paranoid
   is_sluggable :name, slug_column: :slug
 
