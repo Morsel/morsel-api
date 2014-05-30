@@ -4,6 +4,7 @@ class FollowsController < ApiController
       render_json_errors("#{followable_type.underscore}" => ['already followed'])
     else
       follow = Follow.new(followable_id: params[:id], followable_type: followable_type, follower_id: current_user.id)
+
       if follow.save
         custom_respond_with follow
       else

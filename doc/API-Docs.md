@@ -10,18 +10,26 @@
 
 - [Constants](#constants)
 
+- [Behaviors](#behaviors)
+  - [Followable](#followable)
+    - [POST `/<followables>/:id/follow` - Follow <Followable>](#post-followables-id-follow---follow-followable)
+    - [DELETE `/<followables>/:id/follow` - Unfollow <Followable>](#delete-followables-id-follow---unfollow-followable)
+    - [GET `/<followables>/:id/followers` - <Followable> Followers](#get-followables-id-followers---followable-followers)
+
 - [Feed Methods](#feed-methods)
   - [GET `/feed` - Feed](#get-feed---feed)
 
 - [Authentication Methods](#authentication-methods)
   - [POST `/authentications` - Create Authentication](#post-authentications---create-authentication)
   - [GET `/authentications` - Authentications](#get-authentications---authentications)
-  - [PUT `/authentications/{authentication_id}` - Update Authentication](#put-authenticationsauthentication_id---update-authentication)
-  - [DELETE `/authentications/{authentication_id}` - Delete Authentication](#delete-authenticationsauthentication_id---delete-authentication)
+  - [PUT `/authentications/:id` - Update Authentication](#put-authenticationsid---update-authentication)
+  - [DELETE `/authentications/:id` - Delete Authentication](#delete-authenticationsid---delete-authentication)
   - [GET `/authentications/check` - Authentication Check](#get-authenticationscheck---authentication-check)
   - [GET `/authentications/connections` - Authentication Connections](#get-authenticationsconnections---authentication-connections)
 
 - [User Methods](#user-methods)
+  - [User Behaviors](#user-behaviors)
+    - [Followable](#followable)
   - [POST `/users` - Create a new User](#post-users---create-a-new-user)
   - [POST `/users/sign_in` - User Authentication](#post-userssign_in---user-authentication)
   - [POST `/users/forgot_password` - Forgot Password](#post-usersforgot_password---forgot-password)
@@ -32,56 +40,55 @@
   - [GET `/users/validate_email` - Validate Email](#get-usersvalidate_email---validate-_email)
   - [GET `/users/validateusername` - Validate Username](#get-usersvalidateusername---validate-username)
   - [POST `/users/reserveusername` - Reserve Username](#post-usersreserveusername---reserve-username)
-  - [PUT `/users/{user_id}/updateindustry` - Update Industry](#put-usersuser_idupdateindustry---update-industry)
-  - [GET `/users/{user_id|user_username}` - User](#get-usersuser_iduser_username---user)
-  - [PUT `/users/{user_id}` - Update User](#put-usersuser_id---update-user)
-  - [GET `/users/{user_id|user_username}/morsels` - User Morsels](#get-usersuser_iduser_usernamemorsels---user-morsels)
+  - [PUT `/users/:id/updateindustry` - Update Industry](#put-usersidupdateindustry---update-industry)
+  - [GET `/users/:id|:username` - User](#get-usersidusername---user)
+  - [PUT `/users/:id` - Update User](#put-usersid---update-user)
+  - [GET `/users/:id|:username/morsels` - User Morsels](#get-usersidusernamemorsels---user-morsels)
   - [GET `/users/activities` - User Activities](#get-usersactivities---user-activities)
   - [GET `/users/followables_activities` - User Followables Activities](#get-usersfollowables_activities---user-followables-activities)
   - [GET `/users/notifications` - User Notifications](#get-usersnotifications---user-notifications)
-  - [GET `/users/{user_id}/likeables` - User Likeables](#get-usersuser_idlikeables---user-likeables)
-  - [POST `/users/{user_id}/tags` - Create User Tag](#post-usersuser_idtags---create-user-tag)
-  - [DELETE `/users/{user_id}/tags/{tag_id}` - Delete User Tag](#delete-usersuser_idtagstag_id---delete-user-tag)
-  - [GET `/users/{user_id}/cuisines` - User Cuisines](#get-usersuser_idcuisines---user-cuisines)
-  - [GET `/users/{user_id}/specialties` - User Specialties](#get-usersuser_idspecialties---user-specialties)
-  - [POST `/users/{user_id}/follow` - Follow User](#post-usersuser_idfollow---follow-user)
-  - [DELETE `/users/{user_id}/follow` - Unfollow User](#delete-usersuser_idfollow---unfollow-user)
-  - [GET `/users/{user_id}/followers` - User Followers](#get-usersuser_idfollowers---user-followers)
-  - [GET `/users/{user_id}/followables` - User Followables](#get-usersuser_idfollowables---user-followables)
+  - [GET `/users/:id/likeables` - User Likeables](#get-usersidlikeables---user-likeables)
+  - [POST `/users/:id/tags` - Create User Tag](#post-usersidtags---create-user-tag)
+  - [DELETE `/users/:id/tags/:tag_id` - Delete User Tag](#delete-usersidtagstag_id---delete-user-tag)
+  - [GET `/users/:id/cuisines` - User Cuisines](#get-usersidcuisines---user-cuisines)
+  - [GET `/users/:id/specialties` - User Specialties](#get-usersidspecialties---user-specialties)
+  - [GET `/users/:id/followables` - User Followables](#get-usersidfollowables---user-followables)
 
 - [Place Methods](#place-methods)
+  - [Place Behaviors](#place-behaviors)
+    - [Followable](#followable)
   - [GET `/places/suggest` - Suggest Completion](#get-placessuggest---suggest-completion)
   - [POST `/places/join` - Join User w/ Place](#post-placesjoin---join-user-w-place)
+  - [GET `/places/:id` - Place](#get-placesid--place)
 
 - [Item Methods](#item-methods)
   - [POST `/items` - Create a new Item](#post-items---create-a-new-item)
-  - [GET `/items/{item_id}` - Item](#get-itemsitem_id---item)
-  - [PUT `/items/{item_id}` - Update Item](#put-itemsitem_id---update-item)
-  - [DELETE `/items/{item_id}` - Delete Item](#delete-itemsitem_id---delete-item)
-  - [POST `/items/{item_id}/like` - Like Item](#post-itemsitem_idlike---like-item)
-  - [DELETE `/items/{item_id}/like` - Unlike Item](#delete-itemsitem_idlike---unlike-item)
-  - [GET `/items/{item_id}/likers` - Likers](#get-itemsitem_idlikers---likers)
-  - [POST `/items/{item_id}/comments` - Create Comment](#post-itemsitem_idcomments---create-comment)
-  - [GET `/items/{item_id}/comments` - Item Comments](#get-itemsitem_idcomments---item-comments)
-  - [DELETE `/items/{item_id}/comments/{comment_id}` - Delete Comment](#delete-itemsitem_idcommentscomment_id---delete-comment)
+  - [GET `/items/:id` - Item](#get-itemsid---item)
+  - [PUT `/items/:id` - Update Item](#put-itemsid---update-item)
+  - [DELETE `/items/:id` - Delete Item](#delete-itemsid---delete-item)
+  - [POST `/items/:id/like` - Like Item](#post-itemsidlike---like-item)
+  - [DELETE `/items/:id/like` - Unlike Item](#delete-itemsidlike---unlike-item)
+  - [GET `/items/:id/likers` - Likers](#get-itemsidlikers---likers)
+  - [POST `/items/:id/comments` - Create Comment](#post-itemsidcomments---create-comment)
+  - [GET `/items/:id/comments` - Item Comments](#get-itemsidcomments---item-comments)
+  - [DELETE `/items/:id/comments/:comment_id` - Delete Comment](#delete-itemsidcommentscomment_id---delete-comment)
 
 - [Morsel Methods](#morsel-methods)
   - [POST `/morsels` - Create a new Morsel](#post-morsels---create-a-new-morsel)
   - [GET `/morsels` - Morsels](#get-morsels---morsels)
   - [GET `/morsels/drafts` - Morsel Drafts](#get-morselsdrafts---morsel-drafts)
-  - [GET `/morsels/{morsel_id}` - Morsel](#get-morselsmorsel_id----morsel)
-  - [PUT `/morsels/{morsel_id}` - Update Morsel](#put-morselsmorsel_id---update-morsel)
-  - [POST `/morsels/{morsel_id}/publish` - Publish Morsel](#post-morselsmorsel_idpublish---Publish-morsel)
-  - [DELETE `/morsels/{morsel_id}` - Delete Morsel](#delete-morselsmorsel_id---delete-morsel)
+  - [GET `/morsels/:id` - Morsel](#get-morselsid----morsel)
+  - [PUT `/morsels/:id` - Update Morsel](#put-morselsid---update-morsel)
+  - [POST `/morsels/:id/publish` - Publish Morsel](#post-morselsidpublish---Publish-morsel)
+  - [DELETE `/morsels/:id` - Delete Morsel](#delete-morselsid---delete-morsel)
 
 - [Keyword Methods](#keyword-methods)
-  - [POST `/keywords/{keyword_id}/follow` - Follow Keyword](#post-keywordskeyword_idfollow---follow-keyword)
-  - [DELETE `/keywords/{keyword_id}/follow` - Unfollow Keyword](#delete-keywordskeyword_idfollow---unfollow-keyword)
-  - [GET `/keywords/{keyword_id}/followers` - Keyword Followers](#get-keywordskeyword_idfollowers---keyword-followers)
+  - [Keyword Behaviors](#keyword-behaviors)
+    - [Followable](#followable)
   - [GET `/cuisines` - Cuisines](#get-cuisines---cuisines)
-  - [GET `/cuisines/{cuisine_id}/users` - Cuisine Users](#get-cuisinescuisine_id---cuisine-users)
+  - [GET `/cuisines/:id/users` - Cuisine Users](#get-cuisinesidusers---cuisine-users)
   - [GET `/specialties` - Specialties](#get-specialties---specialties)
-  - [GET `/specialties/{specialty_id}/users` - Specialty Users](#get-specialtiesspecialty_id---specialty-users)
+  - [GET `/specialties/:id/users` - Specialty Users](#get-specialtiesidusers---specialty-users)
 
 - [Misc Methods](#misc-methods)
   - [GET `/status` - Status](#get-status---status)
@@ -132,7 +139,7 @@ Versioning will be part of the HTTP HEADER instead of the URL. We'll worry about
 ## Response Format
 The API returns a JSON-encoded object (content-type: application/json) that wraps the response data with extra information such as errors and other metadata.
 
-So if you request a user: ```/users/1```
+So if you request a user: `/users/1`
 expect to get a user resource in return:
 ```json
 {
@@ -150,7 +157,7 @@ expect to get a user resource in return:
 }
 ```
 
-if you make a call for a user's morsels: ```users/1/morsels```
+if you make a call for a user's morsels: `users/1/morsels`
 expect to get an array of resources in return:
 ```json
 {
@@ -170,7 +177,7 @@ expect to get an array of resources in return:
 
 ## Errors
 
-Errors are returned as a dictionary in ```errors```. Each key represents the resource the error originated from or 'api' if none is specified
+Errors are returned as a dictionary in `errors`. Each key represents the resource the error originated from or 'api' if none is specified
 ```json
 {
   "meta": {
@@ -192,40 +199,32 @@ Errors are returned as a dictionary in ```errors```. Each key represents the res
 
 ## Pagination
 
-The API uses a pagination method similar to how Facebook and Twitter do. For a nice article about why and how it works, check out this [link](https://dev.twitter.com/docs/working-with-timelines). You'll use ```max_id``` OR ```since_id``` per API call, don't combine them as the API will ignore it.
+The API uses a pagination method similar to how Facebook and Twitter do. For a nice article about why and how it works, check out this [link](https://dev.twitter.com/docs/working-with-timelines). You'll use `max_id` OR `since_id` per API call, don't combine them as the API will ignore it.
 
 ### Example
 
 #### Getting the recent Morsels:
-Make a call to the API: ```/morsels.json?api_key=whatever&count=10```
+Make a call to the API: `/morsels.json?api_key=whatever&count=10`
 The API responds with the 10 most recent Morsels, let's say their id's are from 100-91.
 
 #### Getting a next set of Morsels going back:
-Based on the previous results, you want to get Morsels that are older than id 91 (the lowest/oldest id). So you'll want to set a ```max_id``` parameter to that id - 1 (```max_id``` is inclusive, meaning it will include the Morsel with the id passed in the results, which in this case would duplicate a Morsel). So set ```max_id``` to 91-1, 90.
-Make a call to the API: ```/morsels.json?api_key=whatever&count=10&max_id=90```
+Based on the previous results, you want to get Morsels that are older than id 91 (the lowest/oldest id). So you'll want to set a `max_id` parameter to that id - 1 (`max_id` is inclusive, meaning it will include the Morsel with the id passed in the results, which in this case would duplicate a Morsel). So set `max_id` to 91-1, 90.
+Make a call to the API: `/morsels.json?api_key=whatever&count=10&max_id=90`
 The API responds with the next 10 Morsels, in this case their id's are from 90-81.
-And repeat this process as you go further back until you get no results (or ```max_id``` < 1).
+And repeat this process as you go further back until you get no results (or `max_id` < 1).
 
 #### Getting a set of Morsels going forward (new Morsels):
 Apps like Facebook and Twitter will show a floating message while you're scrolling through a list telling you that X new Morsels have been added to the top of your feed.
-We can achieve the same thing by sending a call to the API every once awhile asking for any new Morsels since the most recent one you have. To do this, you'll set a ```since_id``` parameter (which is not inclusive) to the id of the most recent Morsel. Continuing the example, this would be ```since_id``` = 100.
-Make a call to the API: ```/morsels.json?api_key=whatever&count=10&since_id=100```
+We can achieve the same thing by sending a call to the API every once awhile asking for any new Morsels since the most recent one you have. To do this, you'll set a `since_id` parameter (which is not inclusive) to the id of the most recent Morsel. Continuing the example, this would be `since_id` = 100.
+Make a call to the API: `/morsels.json?api_key=whatever&count=10&since_id=100`
 The API responds with any new Morsels since the Morsel with id = 100. So if there were three new Morsels added, it would return Morsels with id's from 101-103.
-
-## About the API Documentation
-__URI Conventions__
-
-| Notation            | Meaning       | Example  |
-| ------------------- | ------------- | -------- |
-| Curly brackets {}   | Required Item | API_HOST/morsels/{morsel_id}/likers <br /><i>The `morsel_id` is required.</i> |
-| Square brackets []  | Optional Item | API_HOST/feed?[count] <br /><i>Specifying a `count` is optional</i> |
 
 
 # API Authentication
 The API uses two different levels of authentication, depending on the method.
 
 1. __None:__ No authentication. Anybody can query the method.
-2. __API key:__ Requires an API key. User API keys are in the following format: {user.id}:{user.auth_token} Example: api_key=3:25TLfL6tvc_Qzx52Zh9q
+2. __API key:__ Requires an API key. User API keys are in the following format: `user.id`:`user.auth_token` Example: api_key=3:25TLfL6tvc_Qzx52Zh9q
 
 
 # Terminology
@@ -238,9 +237,69 @@ The API uses two different levels of authentication, depending on the method.
 TIMELINE_DEFAULT_LIMIT = 20
 ```
 
+# Behaviors
+Since a lot of functionality is shared between different resources within the app, certain behaviors have been defined to DRY the API Docs (and code). An example of this is following a User, Place, or Keyword. All three can be followed so we can call any of them _'Followable'_ and define a set of behaviors for anything that can be _'Followable'_. Angled brackets are used a placeholders for the resource that you are dealing with. For example, if you want to follow a Place, you would substitute 'Place' into the [`/<followables>/:id/follow`](#post-followables-id-follow---follow-followable) call and get: `/places/:id/follow`. Other existing behaviors will be added here in the future (like pagination)
+
+# Followable
+
+## POST `/<followables>/:id/follow` - Follow _<Followable>_
+Follows the _<Followable>_ with the specified `id`.
+
+### Response
+
+| Status Code |
+| ----------- |
+|         201 |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __already followed__ | 400 (Bad Request) | [current_user](#current_user) has already followed the _<Followable>_ |
+
+<br />
+<br />
+
+## DELETE `/<followables>/:id/follow` - Unfollow _<Followable>_
+Unfollows the _<Followable>_ with the specified `id`.
+
+### Response
+
+| Status Code |
+| ----------- |
+|         204 |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __not followed__ | 400 (Bad Request) | [current_user](#current_user) has not followed that _<Followable>_ |
+
+<br />
+<br />
+
+## GET `/<followables>/:id/followers` - _<Followable>_ Followers
+Returns the followers for the _<Followable>_ with the specified `id`.
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return Users up to and including this `id` | | |
+| since_id | Number | Return Users since this `id` | | |
+
+### Response
+
+| __data__ |
+| -------- |
+| [User Followers](#user-follower)[] |
+
+<br />
+<br />
+
+
 # Feed Methods
 
-## GET ```/feed``` - Feed
+## GET `/feed` - Feed
 Returns the Feed. If [current_user](#current_user) exists, the results will include your Feed Items, any followed Users' Feed Items, and any Feed Items marked as `featured`. If no [current_user](#current_user) exists only Feed Items marked as `featured` will be returned. In either case results are sorted by their `created_at` date, with the most recent one's appearing first.
 
 ### Request
@@ -248,8 +307,8 @@ Returns the Feed. If [current_user](#current_user) exists, the results will incl
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Feed Items up to and including this ```id``` | | |
-| since_id | Number | Return Feed Items since this ```id``` | | |
+| max_id | Number | Return Feed Items up to and including this `id` | | |
+| since_id | Number | Return Feed Items since this `id` | | |
 
 ### Response
 
@@ -263,7 +322,7 @@ Returns the Feed. If [current_user](#current_user) exists, the results will incl
 
 # Authentication Methods
 
-## POST ```/authentications``` - Create Authentication
+## POST `/authentications` - Create Authentication
 Creates a new Authentication for [current_user](#current_user)
 
 ### Request
@@ -285,7 +344,7 @@ Creates a new Authentication for [current_user](#current_user)
 <br />
 <br />
 
-## GET ```/authentications``` - Authentications
+## GET `/authentications` - Authentications
 Returns authentications for [current_user](#current_user)
 
 ### Request
@@ -293,8 +352,8 @@ Returns authentications for [current_user](#current_user)
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Authentications up to and including this ```id``` | | |
-| since_id | Number | Return Authentications since this ```id``` | | |
+| max_id | Number | Return Authentications up to and including this `id` | | |
+| since_id | Number | Return Authentications since this `id` | | |
 
 ### Response
 
@@ -305,8 +364,8 @@ Returns authentications for [current_user](#current_user)
 <br />
 <br />
 
-## PUT ```/authentications/{authentication_id}``` - Update Authentication
-Updates the authentication with the specified `authentication_id`
+## PUT `/authentications/:id` - Update Authentication
+Updates the authentication with the specified `id`
 
 ### Request
 
@@ -327,8 +386,8 @@ Updates the authentication with the specified `authentication_id`
 <br />
 <br />
 
-## DELETE ```/authentications/{authentication_id}``` - Delete Authentication
-Deletes the authentication with the specified `authentication_id`
+## DELETE `/authentications/:id` - Delete Authentication
+Deletes the authentication with the specified `id`
 
 ### Response
 
@@ -339,8 +398,8 @@ Deletes the authentication with the specified `authentication_id`
 <br />
 <br />
 
-## GET ```/authentications/check``` - Authentication Check
-Returns ```true``` if the authentication exists, otherwise false.
+## GET `/authentications/check` - Authentication Check
+Returns `true` if the authentication exists, otherwise false.
 
 ### Request
 
@@ -359,7 +418,7 @@ Returns ```true``` if the authentication exists, otherwise false.
 <br />
 <br />
 
-## GET ```/authentications/connections``` - Authentication Connections
+## GET `/authentications/connections` - Authentication Connections
 Returns the Users that have authenticated with the specified `provider` and have a `uid` that is in `uids`.
 
 ### Request
@@ -383,8 +442,10 @@ Returns the Users that have authenticated with the specified `provider` and have
 
 
 # User Methods
+### User Behaviors
+* [Followable](#followable)
 
-## POST ```/users``` - Create a new User
+## POST `/users` - Create a new User
 Creates a new User and returns an authentication_token.
 Image processing is done in a background job. `photo_processing` will be set to `null` when it has finished.
 
@@ -393,7 +454,7 @@ Image processing is done in a background job. `photo_processing` will be set to 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | user[email] | String | The email address for the new User | | X |
-| user[username] | String | The username for the new User. Maximum 15 characters and must start with a letter. Regex: ```[a-zA-Z][A-Za-z0-9_]```| | X |
+| user[username] | String | The username for the new User. Maximum 15 characters and must start with a letter. Regex: `[a-zA-Z][A-Za-z0-9_]`| | X |
 | user[password] | String | The password for the new User. Minimum 8 characters. If an authentication is passed and this field is omitted the User's password will be randomly generated. | | X |
 | user[first_name] | String | The first name for the new User. | | |
 | user[last_name] | String | The last name for the new User. | | |
@@ -416,7 +477,7 @@ Image processing is done in a background job. `photo_processing` will be set to 
 <br />
 <br />
 
-## POST ```/users/sign_in``` - User Authentication
+## POST `/users/sign_in` - User Authentication
 Authenticates a User using one of the request parameters below and returns a [User (w/ Auth Token)](#user-w-auth-token).
 If the `Authentication` passed in [Sign In w/ Authentication](#sign-in-w--authentication) is valid, the previously stored `token` and `secret` values will be overwritten with the new ones passed in.
 
@@ -454,7 +515,7 @@ If the `Authentication` passed in [Sign In w/ Authentication](#sign-in-w--authen
 <br />
 <br />
 
-## POST ```/users/forgot_password``` - Forgot Password
+## POST `/users/forgot_password` - Forgot Password
 Sends a Reset Password email for the User with the specified `email`.
 
 ### Request
@@ -472,7 +533,7 @@ Sends a Reset Password email for the User with the specified `email`.
 <br />
 <br />
 
-## POST ```/users/reset_password``` - Reset Password
+## POST `/users/reset_password` - Reset Password
 Sets the password for the User with the specified `reset_password_token` to the `password` provided. Changing a `password` will regenerate the User's `authentication_token`.
 
 ### Request
@@ -491,7 +552,7 @@ Sets the password for the User with the specified `reset_password_token` to the 
 <br />
 <br />
 
-## GET ```/users/me``` - Me
+## GET `/users/me` - Me
 Returns [current_user](#current_user)
 
 ### Response
@@ -503,7 +564,7 @@ Returns [current_user](#current_user)
 <br />
 <br />
 
-## GET ```/users/search``` - Search Users
+## GET `/users/search` - Search Users
 Returns [Slim Followed User](#slim-followed-user)s matching the parameters
 
 ### Request
@@ -530,7 +591,7 @@ Returns [Slim Followed User](#slim-followed-user)s matching the parameters
 <br />
 <br />
 
-## POST ```/users/unsubscribe``` - Unsubscribe
+## POST `/users/unsubscribe` - Unsubscribe
 Unsubscribes the User with the specified user_id from all emails
 
 ### Request
@@ -548,8 +609,8 @@ Unsubscribes the User with the specified user_id from all emails
 <br />
 <br />
 
-## GET ```/users/validateusername``` - Validate Username
-Returns ```true``` if the username is valid, otherwise errors.
+## GET `/users/validateusername` - Validate Username
+Returns `true` if the username is valid, otherwise errors.
 
 ### Request
 
@@ -578,8 +639,8 @@ Returns ```true``` if the username is valid, otherwise errors.
 <br />
 
 
-## GET ```/users/validate_email``` - Validate Email
-Returns ```true``` if the email is valid, otherwise errors.
+## GET `/users/validate_email` - Validate Email
+Returns `true` if the email is valid, otherwise errors.
 
 ### Request
 
@@ -605,7 +666,7 @@ Returns ```true``` if the email is valid, otherwise errors.
 <br />
 <br />
 
-## POST ```/users/reserveusername``` - Reserve Username
+## POST `/users/reserveusername` - Reserve Username
 Returns the user_id if the user is successfully created, otherwise an error.
 
 ### Request
@@ -620,13 +681,13 @@ Returns the user_id if the user is successfully created, otherwise an error.
 
 | Condition | __data__ |
 | --------- | -------- |
-| User created | ```{user_id: USER_ID}``` |
+| User created | `{user_id: USER_ID}` |
 | Username or Email is invalid | Errors |
 
 <br />
 <br />
 
-## PUT ```/users/{user_id}/updateindustry``` - Update Industry
+## PUT `/users/:id/updateindustry` - Update Industry
 Updates the type ('industry') of the User with the specified user_id
 Returns the user_id if the user is successfully created, otherwise an error.
 
@@ -645,8 +706,8 @@ Returns the user_id if the user is successfully created, otherwise an error.
 <br />
 <br />
 
-## GET ```/users/{user_id|user_username}``` - User
-Returns the User with the specified ```user_id``` or ```user_username``` if the User exists and is `active`. Otherwise, returns 404 (Not Found).
+## GET `/users/:id|:username` - User
+Returns the User with the specified `user_id` or `user_username` if the User exists and is `active`. Otherwise, returns 404 (Not Found).
 
 ### Response
 
@@ -657,8 +718,8 @@ Returns the User with the specified ```user_id``` or ```user_username``` if the 
 <br />
 <br />
 
-## PUT ```/users/{user_id}``` - Update User
-Updates the User with the specified ```user_id```. If a new `email`, `username`, or `password` is specified, `current_password` is required.
+## PUT `/users/:id` - Update User
+Updates the User with the specified `user_id`. If a new `email`, `username`, or `password` is specified, `current_password` is required.
 
 ### Request
 
@@ -684,16 +745,16 @@ Updates the User with the specified ```user_id```. If a new `email`, `username`,
 <br />
 <br />
 
-## GET ```/users/{user_id|user_username}/morsels``` - User Morsels
-Returns the Morsels for the User with the specified ```user_id``` or ```user_username```.
+## GET `/users/:id|:username/morsels` - User Morsels
+Returns the Morsels for the User with the specified `user_id` or `user_username`.
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Morsels up to and including this ```id``` | | |
-| since_id | Number | Return Morsels since this ```id``` | | |
+| max_id | Number | Return Morsels up to and including this `id` | | |
+| since_id | Number | Return Morsels since this `id` | | |
 
 ### Response
 
@@ -704,7 +765,7 @@ Returns the Morsels for the User with the specified ```user_id``` or ```user_use
 <br />
 <br />
 
-## GET ```/users/activities``` - User Activities
+## GET `/users/activities` - User Activities
 Returns the [current_user](#current_user)'s Activities. An Activity is created when a User likes or comments on a Item. Think Facebook's Activity Log (https://www.facebook.com/<username>/allactivity).
 
 ### Request
@@ -712,8 +773,8 @@ Returns the [current_user](#current_user)'s Activities. An Activity is created w
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Activities up to and including this ```id``` | | |
-| since_id | Number | Return Authentications since this ```id``` | | |
+| max_id | Number | Return Activities up to and including this `id` | | |
+| since_id | Number | Return Authentications since this `id` | | |
 
 ### Response
 
@@ -724,7 +785,7 @@ Returns the [current_user](#current_user)'s Activities. An Activity is created w
 <br />
 <br />
 
-GET ```/users/followables_activities``` - User Followables Activities
+GET `/users/followables_activities` - User Followables Activities
 Returns the [current_user](#current_user)'s Followed Users' Activities.
 
 ### Request
@@ -732,8 +793,8 @@ Returns the [current_user](#current_user)'s Followed Users' Activities.
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Activities up to and including this ```id``` | | |
-| since_id | Number | Return Authentications since this ```id``` | | |
+| max_id | Number | Return Activities up to and including this `id` | | |
+| since_id | Number | Return Authentications since this `id` | | |
 
 ### Response
 
@@ -744,7 +805,7 @@ Returns the [current_user](#current_user)'s Followed Users' Activities.
 <br />
 <br />
 
-## GET ```/users/notifications``` - User Notifications
+## GET `/users/notifications` - User Notifications
 Returns the [current_user](#current_user)'s Notifications. A Notification is created when someone likes or comments on your Items. Think Facebook or Twitter Notifications.
 
 ### Request
@@ -752,8 +813,8 @@ Returns the [current_user](#current_user)'s Notifications. A Notification is cre
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Notifications up to and including this ```id``` | | |
-| since_id | Number | Return Notifications since this ```id``` | | |
+| max_id | Number | Return Notifications up to and including this `id` | | |
+| since_id | Number | Return Notifications since this `id` | | |
 
 ### Response
 
@@ -764,7 +825,7 @@ Returns the [current_user](#current_user)'s Notifications. A Notification is cre
 <br />
 <br />
 
-## GET ```/users/{user_id}/likeables``` - User Likeables
+## GET `/users/:id/likeables` - User Likeables
 Returns the Likeables that the User with the specified `user_id` has liked along with a `liked_at` DateTime key
 
 ### Request
@@ -785,7 +846,7 @@ Returns the Likeables that the User with the specified `user_id` has liked along
 <br />
 <br />
 
-## POST ```/users/{user_id}/tags``` - Create User Tag
+## POST `/users/:id/tags` - Create User Tag
 Tags the User with the specified `user_id` with the Keyword for the specified `keyword_id`. Valid Keyword types are __Cuisines__ and __Specialty__.
 
 ### Request
@@ -809,7 +870,7 @@ Tags the User with the specified `user_id` with the Keyword for the specified `k
 <br />
 <br />
 
-## DELETE ```/users/{user_id}/tags/{tag_id}``` - Delete User Tag
+## DELETE `/users/:id/tags/:tag_id` - Delete User Tag
 Deletes the Tag with the specified `tag_id` for the User with the specified `user_id`
 
 ### Response
@@ -821,8 +882,8 @@ Deletes the Tag with the specified `tag_id` for the User with the specified `use
 <br />
 <br />
 
-## GET ```/users/{user_id}/cuisines``` - User Cuisines
-Returns the Cuisines for the User with the specified ```user_id```.
+## GET `/users/:id/cuisines` - User Cuisines
+Returns the Cuisines for the User with the specified `user_id`.
 
 ### Response
 
@@ -833,8 +894,8 @@ Returns the Cuisines for the User with the specified ```user_id```.
 <br />
 <br />
 
-## GET ```/users/{user_id}/specialties``` - User Specialties
-Returns the Specialties for the User with the specified ```user_id```.
+## GET `/users/:id/specialties` - User Specialties
+Returns the Specialties for the User with the specified `user_id`.
 
 ### Response
 
@@ -845,61 +906,7 @@ Returns the Specialties for the User with the specified ```user_id```.
 <br />
 <br />
 
-## POST ```/users/{user_id}/follow``` - Follow User
-Follows the User with the specified ```user_id```.
-
-### Response
-
-| Status Code |
-| ----------- |
-|         201 |
-
-### Unique Errors
-
-| Message | Status | Description |
-| ------- | ------ |  ----------- |
-| __already followed__ | 400 (Bad Request) | current_user has already followed the User |
-
-<br />
-<br />
-
-## DELETE ```/users/{user_id}/follow``` - Unfollow User
-Unfollows the User with the specified ```user_id```.
-
-### Response
-
-| Status Code |
-| ----------- |
-|         204 |
-
-### Unique Errors
-
-| Message | Status | Description |
-| ------- | ------ |  ----------- |
-| __not followed__ | 400 (Bad Request) | current_user has not followed that User |
-
-<br />
-<br />
-
-## GET ```/users/{user_id}/followers``` - User Followers
-Returns the followers for the User with the specified ```user_id```.
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Users up to and including this `id` | | |
-| since_id | Number | Return Users since this `id` | | |
-
-### Response
-
-| __data__ |
-| -------- |
-| [Slim Followed Users](#slim-followed-user)[] |
-
-<br />
-<br />
-
-## GET ```/users/{user_id}/followables``` - User Followables
+## GET `/users/:id/followables` - User Followables
 Returns the Followables that the User with the specified `user_id` is following along with a `followed_at` DateTime.
 
 ### Request
@@ -923,6 +930,8 @@ Returns the Followables that the User with the specified `user_id` is following 
 
 
 # Place Methods
+### Place Behaviors
+* [Followable](#followable)
 
 ## GET `/places/suggest` - Suggest Completion
 Proxy for the [Foursquare Venues suggestcompletion](https://developer.foursquare.com/docs/venues/suggestcompletion). Returns the response in `data`.
@@ -962,10 +971,22 @@ Creating a new Place will kick off a background job to import all of its data fr
 <br />
 <br />
 
+## GET `/places/:id` - Place
+Returns Place with the specified `id`
+
+### Response
+
+| __data__ |
+| -------- |
+| [Place](#place) |
+
+<br />
+<br />
+
 
 # Item Methods
 
-## POST ```/items``` - Create a new Item
+## POST `/items` - Create a new Item
 Created a new Item for the current User.
 Image processing is done in a background job. `photo_processing` will be set to `null` when it has finished.
 
@@ -976,7 +997,7 @@ Image processing is done in a background job. `photo_processing` will be set to 
 | item[description] | String | The description for the new Item | | |
 | item[photo] | String | The photo for the new Item | | |
 | item[nonce] | String | Unique UUID to prevent duplicates | | |
-| item[sort_order] | Number | The ```sort_order``` for the Item in the Morsel. | end of Morsel | |
+| item[sort_order] | Number | The `sort_order` for the Item in the Morsel. | end of Morsel | |
 | item[morsel_id] | Number | The ID of the Morsel to set this Item to. | | X |
 
 ### Response
@@ -989,8 +1010,8 @@ Image processing is done in a background job. `photo_processing` will be set to 
 <br />
 <br />
 
-## GET ```/items/{item_id}``` - Item
-Returns Item with the specified ```item_id```
+## GET `/items/:id` - Item
+Returns Item with the specified `id`
 
 ### Response
 
@@ -1001,8 +1022,8 @@ Returns Item with the specified ```item_id```
 <br />
 <br />
 
-## PUT ```/items/{item_id}``` - Update Item
-Updates the Item with the specified ```item_id```
+## PUT `/items/:id` - Update Item
+Updates the Item with the specified `id`
 
 ### Request
 
@@ -1010,8 +1031,8 @@ Updates the Item with the specified ```item_id```
 | ------------------- | ------- | ----------- | ------- | --------- |
 | item[description] | String | The description for the Item | | |
 | item[photo] | String | The photo for the Item | | |
-| item[sort_order] | Number | Changes the ```sort_order``` of a Morsel when combined with ```morsel_id```. | | |
-| item[morsel_id] | Number | Changes the ```sort_order``` of a Morsel when combined with ```sort_order```. | | |
+| item[sort_order] | Number | Changes the `sort_order` of a Morsel when combined with `morsel_id`. | | |
+| item[morsel_id] | Number | Changes the `sort_order` of a Morsel when combined with `sort_order`. | | |
 
 ### Response
 
@@ -1022,8 +1043,8 @@ Updates the Item with the specified ```item_id```
 <br />
 <br />
 
-## DELETE ```/items/{item_id}``` - Delete Item
-Deletes the Item with the specified ```item_id```.
+## DELETE `/items/:id` - Delete Item
+Deletes the Item with the specified `id`.
 
 ### Response
 
@@ -1034,8 +1055,8 @@ Deletes the Item with the specified ```item_id```.
 <br />
 <br />
 
-## POST ```/items/{item_id}/like``` - Like Item
-Likes the Item with the specified ```item_id``` for [current_user](#current_user)
+## POST `/items/:id/like` - Like Item
+Likes the Item with the specified `id` for [current_user](#current_user)
 
 ### Response
 
@@ -1052,8 +1073,8 @@ Likes the Item with the specified ```item_id``` for [current_user](#current_user
 <br />
 <br />
 
-## DELETE ```/items/{item_id}/like``` - Unlike Item
-Unlikes the Item with the specified ```item_id``` for [current_user](#current_user)
+## DELETE `/items/:id/like` - Unlike Item
+Unlikes the Item with the specified `id` for [current_user](#current_user)
 
 ### Response
 
@@ -1070,16 +1091,16 @@ Unlikes the Item with the specified ```item_id``` for [current_user](#current_us
 <br />
 <br />
 
-## GET ```/items/{item_id}/likers``` - Likers
-Returns the Users who have liked the Item with the specified ```item_id```
+## GET `/items/:id/likers` - Likers
+Returns the Users who have liked the Item with the specified `id`
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Users up to and including this ```id``` | | |
-| since_id | Number | Return Users since this ```id``` | | |
+| max_id | Number | Return Users up to and including this `id` | | |
+| since_id | Number | Return Users since this `id` | | |
 
 ### Response
 
@@ -1096,8 +1117,8 @@ Returns the Users who have liked the Item with the specified ```item_id```
 <br />
 <br />
 
-## POST ```/items/{item_id}/comments``` - Create Comment
-Create a Comment for the Item with the specified ```item_id```
+## POST `/items/:id/comments` - Create Comment
+Create a Comment for the Item with the specified `id`
 
 ### Request
 
@@ -1120,16 +1141,16 @@ Create a Comment for the Item with the specified ```item_id```
 <br />
 <br />
 
-## GET ```/items/{item_id}/comments``` - Item Comments
-List the Comments for the Item with the specified ```item_id```
+## GET `/items/:id/comments` - Item Comments
+List the Comments for the Item with the specified `id`
 
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Comments up to and including this ```id``` | | |
-| since_id | Number | Return Comments since this ```id``` | | |
+| max_id | Number | Return Comments up to and including this `id` | | |
+| since_id | Number | Return Comments since this `id` | | |
 
 ### Response
 
@@ -1140,8 +1161,8 @@ List the Comments for the Item with the specified ```item_id```
 <br />
 <br />
 
-## DELETE ```/items/{item_id}/comments/{comment_id}``` - Delete Comment
-Deletes the Comment with the specified `comment_id` for the `item_id` if [current_user](#current_user) is the Comment or Item Creator
+## DELETE `/items/:id/comments/:comment_id` - Delete Comment
+Deletes the Comment with the specified `comment_id` for the `id` if [current_user](#current_user) is the Comment or Item Creator
 
 ### Response
 
@@ -1162,7 +1183,7 @@ Deletes the Comment with the specified `comment_id` for the `item_id` if [curren
 
 # Morsel Methods
 
-## POST ```/morsels``` - Create a new Morsel
+## POST `/morsels` - Create a new Morsel
 Creates a new Morsel for the current User.
 
 ### Request
@@ -1182,7 +1203,7 @@ Creates a new Morsel for the current User.
 <br />
 <br />
 
-## GET ```/morsels``` - Morsels
+## GET `/morsels` - Morsels
 Returns the Morsels (including Drafts) for [current_user](#current_user) sorted by their `id`.
 
 ### Request
@@ -1190,8 +1211,8 @@ Returns the Morsels (including Drafts) for [current_user](#current_user) sorted 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Morsels up to and including this ```id``` | | |
-| since_id | Number | Return Morsels since this ```id``` | | |
+| max_id | Number | Return Morsels up to and including this `id` | | |
+| since_id | Number | Return Morsels since this `id` | | |
 
 ### Response
 
@@ -1202,7 +1223,7 @@ Returns the Morsels (including Drafts) for [current_user](#current_user) sorted 
 <br />
 <br />
 
-## GET ```/morsels/drafts``` - Morsel Drafts
+## GET `/morsels/drafts` - Morsel Drafts
 Returns the Morsel Drafts for [current_user](#current_user) sorted by their updated_at, with the most recent one's appearing first.
 
 ### Request
@@ -1210,8 +1231,8 @@ Returns the Morsel Drafts for [current_user](#current_user) sorted by their upda
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Morsels up to and including this ```id``` | | |
-| since_id | Number | Return Morsels since this ```id``` | | |
+| max_id | Number | Return Morsels up to and including this `id` | | |
+| since_id | Number | Return Morsels since this `id` | | |
 
 ### Response
 
@@ -1222,8 +1243,8 @@ Returns the Morsel Drafts for [current_user](#current_user) sorted by their upda
 <br />
 <br />
 
-## GET ```/morsels/{morsel_id}``` -  Morsel
-Returns the Morsel with the specified ```morsel_id```
+## GET `/morsels/:id` -  Morsel
+Returns the Morsel with the specified `id`
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
@@ -1237,8 +1258,8 @@ Returns the Morsel with the specified ```morsel_id```
 <br />
 <br />
 
-## PUT ```/morsels/{morsel_id}``` - Update Morsel
-Updates the Morsel with the specified ```morsel_id```
+## PUT `/morsels/:id` - Update Morsel
+Updates the Morsel with the specified `id`
 
 ### Request
 
@@ -1258,8 +1279,8 @@ Updates the Morsel with the specified ```morsel_id```
 <br />
 <br />
 
-POST ```/morsels/{morsel_id}/publish``` - Publish Morsel
-Publishes the Morsel with the specified ```morsel_id``` by setting a `published_at` DateTime and `draft`=false
+POST `/morsels/:id/publish` - Publish Morsel
+Publishes the Morsel with the specified `id` by setting a `published_at` DateTime and `draft`=false
 
 ### Request
 
@@ -1280,62 +1301,10 @@ Publishes the Morsel with the specified ```morsel_id``` by setting a `published_
 
 
 # Keyword Methods
+### Keyword Behaviors
+* [Followable](#followable)
 
-## POST `/keywords/{keyword_id}/follow` - Follow Keyword
-Follows the Keyword with the specified `keyword_id`.
-
-### Response
-
-| Status Code |
-| ----------- |
-|         201 |
-
-### Unique Errors
-
-| Message | Status | Description |
-| ------- | ------ |  ----------- |
-| __already followed__ | 400 (Bad Request) | current_user has already followed the Keyword |
-
-<br />
-<br />
-
-## DELETE `/keywords/{keyword_id}/follow` - Unfollow Keyword
-Unfollows the Keyword with the specified `keyword_id`.
-
-### Response
-
-| Status Code |
-| ----------- |
-|         204 |
-
-### Unique Errors
-
-| Message | Status | Description |
-| ------- | ------ |  ----------- |
-| __not followed__ | 400 (Bad Request) | current_user has not followed that Keyword |
-
-<br />
-<br />
-
-## GET ```/keywords/{keyword_id}/followers``` - Keyword Followers
-Returns the followers for the Keyword with the specified `keyword_id`.
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Users up to and including this `id` | | |
-| since_id | Number | Return Users since this `id` | | |
-
-### Response
-
-| __data__ |
-| -------- |
-| [User Followers](#user-follower)[] |
-
-<br />
-<br />
-
-## GET ```/cuisines``` - Cuisines
+## GET `/cuisines` - Cuisines
 Returns the list of Cuisines
 
 ### Response
@@ -1347,8 +1316,8 @@ Returns the list of Cuisines
 <br />
 <br />
 
-## GET ```/cuisines/{cuisine_id}/users``` - Cuisine Users
-Returns a list of Users who belong to the Cuisine with the specified `cuisine_id`
+## GET `/cuisines/:id/users` - Cuisine Users
+Returns a list of Users who belong to the Cuisine with the specified `id`
 
 ### Request
 
@@ -1367,7 +1336,7 @@ Returns a list of Users who belong to the Cuisine with the specified `cuisine_id
 <br />
 <br />
 
-## GET ```/specialties``` - Specialties
+## GET `/specialties` - Specialties
 Returns the list of Specialties
 
 ### Response
@@ -1379,8 +1348,8 @@ Returns the list of Specialties
 <br />
 <br />
 
-## GET ```/specialties/{specialty_id}/users``` - Specialty Users
-Returns a list of Users who belong to the Specialty with the specified `specialty_id`
+## GET `/specialties/:id/users` - Specialty Users
+Returns a list of Users who belong to the Specialty with the specified `id`
 
 ### Request
 
@@ -1402,7 +1371,7 @@ Returns a list of Users who belong to the Specialty with the specified `specialt
 
 # Misc Methods
 
-## GET ```/status``` - Status
+## GET `/status` - Status
 Used by third-party services to ping the API.
 
 ### Response
@@ -1414,7 +1383,7 @@ Used by third-party services to ping the API.
 <br />
 <br />
 
-## GET ```/configuration``` - Configuration
+## GET `/configuration` - Configuration
 
 ### Response
 
