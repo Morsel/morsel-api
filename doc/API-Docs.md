@@ -12,9 +12,9 @@
 
 - [Behaviors](#behaviors)
   - [Followable](#followable)
-    - [POST `/{{followables}}/:id/follow` - Follow {{Followable}}](#post-followablesidfollow---follow-)
-    - [DELETE `/{{followables}}/:id/follow` - Unfollow {{Followable}}](#delete-followables-id-follow---unfollow-followable)
-    - [GET `/{{followables}}/:id/followers` - {{Followable}} Followers](#get-followables-id-followers---followable-followers)
+    - [POST `/<followables>/:id/follow` - Follow <Followable>](#post-followablesidfollow---follow-followable)
+    - [DELETE `/<followables>/:id/follow` - Unfollow <Followable>](#delete-followables-id-follow---unfollow-followable)
+    - [GET `/<followables>/:id/followers` - <Followable> Followers](#get-followables-id-followers---followable-followers)
 
 - [Feed Methods](#feed-methods)
   - [GET `/feed` - Feed](#get-feed---feed)
@@ -238,12 +238,12 @@ TIMELINE_DEFAULT_LIMIT = 20
 ```
 
 # Behaviors
-Since a lot of functionality is shared between different resources within the app, certain behaviors have been defined to DRY the API Docs (and code). An example of this is following a User, Place, or Keyword. All three can be followed so we can call any of them _'Followable'_ and define a set of behaviors for anything that can be _'Followable'_. Angled brackets are used a placeholders for the resource that you are dealing with. For example, if you want to follow a Place, you would substitute 'Place' into the [`/{{followables}}/:id/follow`](#post-followables-id-follow---follow-followable) call and get: `/places/:id/follow`. Other existing behaviors will be added here in the future (like pagination)
+Since a lot of functionality is shared between different resources within the app, certain behaviors have been defined to DRY the API Docs (and code). An example of this is following a User, Place, or Keyword. All three can be followed so we can call any of them _'Followable'_ and define a set of behaviors for anything that can be _'Followable'_. Angled brackets are used a placeholders for the resource that you are dealing with. For example, if you want to follow a Place, you would substitute 'Place' into the [`/<followables>/:id/follow`](#post-followables-id-follow---follow-followable) call and get: `/places/:id/follow`. Other existing behaviors will be added here in the future (like pagination)
 
 # Followable
 
-## POST `/{{followables}}/:id/follow` - Follow _{{Followable}}_
-Follows the _{{Followable}}_ with the specified `id`.
+## POST `/<followables>/:id/follow` - Follow _<Followable>_
+Follows the _<Followable>_ with the specified `id`.
 
 ### Response
 
@@ -255,13 +255,13 @@ Follows the _{{Followable}}_ with the specified `id`.
 
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
-| __already followed__ | 400 (Bad Request) | [current_user](#current_user) has already followed the _{{Followable}}_ |
+| __already followed__ | 400 (Bad Request) | [current_user](#current_user) has already followed the _<Followable>_ |
 
 <br />
 <br />
 
-## DELETE `/{{followables}}/:id/follow` - Unfollow _{{Followable}}_
-Unfollows the _{{Followable}}_ with the specified `id`.
+## DELETE `/<followables>/:id/follow` - Unfollow _<Followable>_
+Unfollows the _<Followable>_ with the specified `id`.
 
 ### Response
 
@@ -273,13 +273,13 @@ Unfollows the _{{Followable}}_ with the specified `id`.
 
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
-| __not followed__ | 400 (Bad Request) | [current_user](#current_user) has not followed that _{{Followable}}_ |
+| __not followed__ | 400 (Bad Request) | [current_user](#current_user) has not followed that _<Followable>_ |
 
 <br />
 <br />
 
-## GET `/{{followables}}/:id/followers` - _{{Followable}}_ Followers
-Returns the followers for the _{{Followable}}_ with the specified `id`.
+## GET `/<followables>/:id/followers` - _<Followable>_ Followers
+Returns the followers for the _<Followable>_ with the specified `id`.
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
