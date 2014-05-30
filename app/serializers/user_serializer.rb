@@ -6,7 +6,7 @@ class UserSerializer < SlimUserSerializer
              :facebook_uid,
              :twitter_username,
              :morsel_count,
-             :liked_items_count,
+             :liked_item_count,
              :following,
              :followed_user_count,
              :follower_count

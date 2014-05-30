@@ -805,7 +805,7 @@ describe 'Users API' do
         'photos' => nil,
         'facebook_uid' => FacebookAuthenticatedUserDecorator.new(user_with_morsels).facebook_uid,
         'twitter_username' => TwitterAuthenticatedUserDecorator.new(user_with_morsels).twitter_username,
-        'liked_items_count' => number_of_likes,
+        'liked_item_count' => number_of_likes,
         'morsel_count' => user_with_morsels.morsels.count
       })
     end
@@ -842,7 +842,7 @@ describe 'Users API' do
           'photos' => nil,
           'facebook_uid' => FacebookAuthenticatedUserDecorator.new(user_with_morsels).facebook_uid,
           'twitter_username' => TwitterAuthenticatedUserDecorator.new(user_with_morsels).twitter_username,
-          'liked_items_count' => number_of_likes,
+          'liked_item_count' => number_of_likes,
           'morsel_count' => user_with_morsels.morsels.count
         })
       end
@@ -910,9 +910,9 @@ describe 'Users API' do
     context 'type=Item' do
       let(:endpoint) { "/users/#{liker.id}/likeables?type=Item" }
       let(:liker) { FactoryGirl.create(:user) }
-      let(:liked_items_count) { rand(2..6) }
+      let(:liked_item_count) { rand(2..6) }
 
-      before { liked_items_count.times { FactoryGirl.create(:item_like, liker: liker, likeable: FactoryGirl.create(:item_with_creator_and_morsel)) }}
+      before { liked_item_count.times { FactoryGirl.create(:item_like, liker: liker, likeable: FactoryGirl.create(:item_with_creator_and_morsel)) }}
 
       it_behaves_like 'TimelinePaginateable' do
         let(:paginateable_object_class) { Item }
@@ -926,7 +926,7 @@ describe 'Users API' do
         get_endpoint
 
         expect_success
-        expect_json_data_count liked_items_count
+        expect_json_data_count liked_item_count
         expect_first_json_data_eq('liked_at' => Like.last.created_at.as_json)
       end
     end
@@ -1336,6 +1336,26 @@ describe 'Users API' do
         paginateable_object_class.delete_all
         30.times { FactoryGirl.create(:activity_notification, user: current_user) }
       end
+    end
+  end
+
+  describe 'GET /users/:id/places' do
+    let(:endpoint) { "/users/#{user.id}/places" }
+    let(:current_user) { FactoryGirl.create(:chef) }
+    let(:user) { FactoryGirl.create(:user) }
+    let(:place_count) { rand(2..6) }
+
+    before do
+      place_count.times { FactoryGirl.create(:employment, user: user) }
+    end
+
+    it 'returns Places associated with the User' do
+      get_endpoint
+
+      expect_success
+      expect_json_data_count place_count
+
+      expect_first_json_data_eq title: Employment.last.title
     end
   end
 end

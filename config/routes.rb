@@ -94,6 +94,7 @@ MorselApp::Application.routes.draw do
       put 'updateindustry' => 'users#updateindustry'
       get 'followables' => 'users#followables'
       get 'likeables' => 'users#likeables'
+      get 'places' => 'users#places'
     end
   end
 
