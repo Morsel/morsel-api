@@ -13,8 +13,8 @@
 - [Behaviors](#behaviors)
   - [Followable](#followable)
     - [POST `/{{followables}}/:id/follow` - Follow {{Followable}}](#post-followablesidfollow---follow-followable)
-    - [DELETE `/{{followables}}/:id/follow` - Unfollow {{Followable}}](#delete-followables-id-follow---unfollow-followable)
-    - [GET `/{{followables}}/:id/followers` - {{Followable}} Followers](#get-followables-id-followers---followable-followers)
+    - [DELETE `/{{followables}}/:id/follow` - Unfollow {{Followable}}](#delete-followablesidfollow---unfollow-followable)
+    - [GET `/{{followables}}/:id/followers` - {{Followable}} Followers](#get-followablesidfollowers---followable-followers)
 
 - [Feed Methods](#feed-methods)
   - [GET `/feed` - Feed](#get-feed---feed)
@@ -238,7 +238,7 @@ TIMELINE_DEFAULT_LIMIT = 20
 ```
 
 # Behaviors
-Since a lot of functionality is shared between different resources within the app, certain behaviors have been defined to DRY the API Docs (and code). An example of this is following a User, Place, or Keyword. All three can be followed so we can call any of them _'Followable'_ and define a set of behaviors for anything that can be _'Followable'_. Angled brackets are used a placeholders for the resource that you are dealing with. For example, if you want to follow a Place, you would substitute 'Place' into the [`/{{followables}}/:id/follow`](#post-followables-id-follow---follow-followable) call and get: `/places/:id/follow`. Other existing behaviors will be added here in the future (like pagination)
+Since a lot of functionality is shared between different resources within the app, certain behaviors have been defined to DRY the API Docs (and code). An example of this is following a User, Place, or Keyword. All three can be followed so we can call any of them _'Followable'_ and define a set of behaviors for anything that can be _'Followable'_. Angled brackets are used a placeholders for the resource that you are dealing with. For example, if you want to follow a Place, you would substitute 'Place' into the [`/{{followables}}/:id/follow`](#post-followablesidfollow---follow-followable) call and get: `/places/:id/follow`. Other existing behaviors will be added here in the future (like pagination)
 
 # Followable
 
