@@ -16,14 +16,14 @@ module FollowableSerializerAttributes
   private
 
   def followable_id
-    options[:context][:followable_id]
+    options[:context][:followable_id] if options[:context]
   end
 
   def followable_type
-    options[:context][:followable_type]
+    options[:context][:followable_type] if options[:context]
   end
 
   def follower_id
-    options[:context][:follower_id]
+    options[:context][:follower_id] if options[:context]
   end
 end

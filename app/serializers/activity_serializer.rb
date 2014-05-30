@@ -6,5 +6,5 @@ class ActivitySerializer < ActiveModel::Serializer
 
   has_one :action
   has_one :subject
-  has_one :creator
+  has_one :creator, serializer: SlimUserSerializer
 end

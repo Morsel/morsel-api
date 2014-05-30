@@ -144,7 +144,7 @@ class UsersController < ApiController
                               .where(follows: { follower_id: params[:id] })
                               .limit(pagination_count)
                               .order('follows.id DESC'),
-                          each_serializer: FollowedUserSerializer,
+                          each_serializer: SlimFollowedUserSerializer,
                           context: {
                             follower_id: params[:id],
                             followable_type: followable_type

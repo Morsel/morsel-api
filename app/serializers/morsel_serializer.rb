@@ -1,15 +1,6 @@
-class MorselSerializer < ActiveModel::Serializer
-  include PhotoUploadableSerializerAttributes
-
-  attributes :id,
-             :title,
-             :place_id,
-             :creator_id,
-             :created_at,
-             :updated_at,
-             :published_at,
+class MorselSerializer < SlimMorselSerializer
+  attributes :published_at,
              :draft,
-             :slug,
              :total_like_count,
              :total_comment_count,
              :primary_item_id,
@@ -17,8 +8,9 @@ class MorselSerializer < ActiveModel::Serializer
              :facebook_mrsl,
              :twitter_mrsl
 
-  has_one :creator
+  has_one :creator, serializer: SlimUserSerializer
   has_many :items
+  has_one :place, serializer: SlimPlaceSerializer
 
   def items
     object.items.order('sort_order ASC')

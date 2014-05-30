@@ -115,6 +115,7 @@ MorselApp::Application.routes.draw do
     collection do
       post 'join' => 'places#join'
       get 'suggest' => 'places#suggest'
+      get ':place_id/morsels' => 'morsels#index', place_id: /\d+/
     end
 
     member do

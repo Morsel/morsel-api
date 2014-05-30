@@ -104,8 +104,6 @@
     - [User](#user)
     - [User (w/ Private Attributes)](#user-w-private-attributes)
     - [User (w/ Auth Token)](#user-w-auth-token)
-    - [Followed User](#followed-user)
-    - [User Follower](#user-follower)
   - [Place Objects](#place-objects)
     - [Slim Place](#slim-place)
     - [Place](#place)
@@ -257,7 +255,7 @@ Returns the Feed. If [current_user](#current_user) exists, the results will incl
 
 | __data__ |
 | -------- |
-| Array of [Feed Item](#feed-item) |
+| [Feed Items](#feed-item)[] |
 
 <br />
 <br />
@@ -302,13 +300,23 @@ Returns authentications for [current_user](#current_user)
 
 | __data__ |
 | -------- |
-| Array of [Authentication](#authentication) |
+| [Authentications](#authentication)[] |
 
 <br />
 <br />
 
 ## PUT ```/authentications/{authentication_id}``` - Update Authentication
 Updates the authentication with the specified `authentication_id`
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook', 'instagram', and 'twitter'. | | |
+| authentication[uid] | String | The User's ID for the provider. | | |
+| authentication[token] | String | The User's Access Token for the provider. | | |
+| authentication[secret] | String | The User's Access Token Secret for the provider. Only required for Twitter. | | Twitter |
+| authentication[short_lived] | Boolean | Set to `true` if the token passed is a short-lived token. | | |
 
 ### Response
 
@@ -368,8 +376,7 @@ Returns the Users that have authenticated with the specified `provider` and have
 
 | __data__ |
 | -------- |
-| Array of [User](#user)s found in `uids` for the specified `provider` |
-
+| [Users](#user)[] found in `uids` for the specified `provider` |
 
 <br />
 <br />
@@ -692,7 +699,7 @@ Returns the Morsels for the User with the specified ```user_id``` or ```user_use
 
 | __data__ |
 | -------- |
-| Array of [Morsel](#morsel) |
+| [Morsels](#morsel)[] |
 
 <br />
 <br />
@@ -712,7 +719,7 @@ Returns the [current_user](#current_user)'s Activities. An Activity is created w
 
 | __data__ |
 | -------- |
-| Array of [Activity](#activity) |
+| [Activities](#activity)[] |
 
 <br />
 <br />
@@ -732,7 +739,7 @@ Returns the [current_user](#current_user)'s Followed Users' Activities.
 
 | __data__ |
 | -------- |
-| Array of [Activity](#activity) |
+| [Activities](#activity)[] |
 
 <br />
 <br />
@@ -752,7 +759,7 @@ Returns the [current_user](#current_user)'s Notifications. A Notification is cre
 
 | __data__ |
 | -------- |
-| Array of [Notification](#notification) |
+| [Notifications](#notification)[] |
 
 <br />
 <br />
@@ -773,7 +780,7 @@ Returns the Likeables that the User with the specified `user_id` has liked along
 
 | type= | __data__ |
 | --------- | -------- |
-| Item | Array of [Liked Item](#liked-item)s |
+| Item | [Liked Items](#liked-item)[] |
 
 <br />
 <br />
@@ -821,7 +828,7 @@ Returns the Cuisines for the User with the specified ```user_id```.
 
 | __data__ |
 | -------- |
-| Array of [Tag](#tag) of keyword `type` 'Cuisine' |
+| [Tags](#tag)[] of keyword `type` 'Cuisine' |
 
 <br />
 <br />
@@ -833,7 +840,7 @@ Returns the Specialties for the User with the specified ```user_id```.
 
 | __data__ |
 | -------- |
-| Array of [Tag](#tag) of keyword `type` 'Specialty' |
+| [Tags](#tag)[] of keyword `type` 'Specialty' |
 
 <br />
 <br />
@@ -887,7 +894,7 @@ Returns the followers for the User with the specified ```user_id```.
 
 | __data__ |
 | -------- |
-| Array of [User Follower](#user-follower)s |
+| [Slim Followed Users](#slim-followed-user)[] |
 
 <br />
 <br />
@@ -908,8 +915,8 @@ Returns the Followables that the User with the specified `user_id` is following 
 
 | type= | __data__ |
 | --------- | -------- |
-| Keyword | Array of [Followed Keyword](#followed-keyword)s |
-| User | Array of [Followed User](#followed-user)s |
+| Keyword | [Followed Keywords](#followed-keyword)[] |
+| User | [Slim Followed Users](#slim-followed-user)[] |
 
 <br />
 <br />
@@ -1078,7 +1085,7 @@ Returns the Users who have liked the Item with the specified ```item_id```
 
 | __data__ |
 | -------- |
-| Array of [User](#user) |
+| [Users](#user)[] |
 
 ### Unique Errors
 
@@ -1128,7 +1135,7 @@ List the Comments for the Item with the specified ```item_id```
 
 | __data__ |
 | -------- |
-| Array of [Comment](#comment) |
+| [Comments](#comment)[] |
 
 <br />
 <br />
@@ -1190,7 +1197,7 @@ Returns the Morsels (including Drafts) for [current_user](#current_user) sorted 
 
 | __data__ |
 | -------- |
-| Array of [Morsel](#morsel) |
+| [Morsels](#morsel)[] |
 
 <br />
 <br />
@@ -1210,7 +1217,7 @@ Returns the Morsel Drafts for [current_user](#current_user) sorted by their upda
 
 | __data__ |
 | -------- |
-| Array of [Morsel](#morsel) |
+| [Morsels](#morsel)[] |
 
 <br />
 <br />
@@ -1323,7 +1330,7 @@ Returns the followers for the Keyword with the specified `keyword_id`.
 
 | __data__ |
 | -------- |
-| Array of [User Follower](#user-follower)s |
+| [User Followers](#user-follower)[] |
 
 <br />
 <br />
@@ -1335,7 +1342,7 @@ Returns the list of Cuisines
 
 | __data__ |
 | -------- |
-| Array of [Keyword](#keyword) of `type` 'Cuisine' |
+| [Keywords](#keyword)[] of `type` 'Cuisine' |
 
 <br />
 <br />
@@ -1355,7 +1362,7 @@ Returns a list of Users who belong to the Cuisine with the specified `cuisine_id
 
 | __data__ |
 | -------- |
-| Array of [User](#user) |
+| [Users](#user)[] |
 
 <br />
 <br />
@@ -1367,7 +1374,7 @@ Returns the list of Specialties
 
 | __data__ |
 | -------- |
-| Array of [Keyword](#keyword) of `type` 'Specialty' |
+| [Keywords](#keyword)[] of `type` 'Specialty' |
 
 <br />
 <br />
@@ -1387,7 +1394,7 @@ Returns a list of Users who belong to the Specialty with the specified `specialt
 
 | __data__ |
 | -------- |
-| Array of [User](#user) |
+| [Users](#user)[] |
 
 <br />
 <br />
@@ -1441,23 +1448,13 @@ Used by third-party services to ping the API.
 ## Comment Objects
 
 ### Comment
+* Includes:
+  * `creator`: [Slim User](#slim-user)
 
 ```json
 {
   "id": 4,
   "description": "Wow! Are those Swedish Fish caviar???!?!?!one!?!11!?1?!",
-  "creator": {
-    "id": 1,
-    "username": "marty",
-    "first_name": "Marty",
-    "last_name": "Trzpit",
-    "photos": {
-      "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg",
-      "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg",
-      "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg",
-      "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/1/1389119757-batman.jpeg"
-    }
-  },
   "commentable_id": 5,
   "commentable_type": "Item",
   "created_at": "2014-01-07T18:37:19.661Z"
@@ -1493,10 +1490,10 @@ Used by third-party services to ping the API.
 
 ### Liked Item
 Response for any Like Item related requests.
-This includes the same keys as [Item](#item), along with:
-* `creator`: [Slim User](#slim-user)
-* `morsel`: [Slim Morsel](#slim-morsel)
-* and:
+* Inherits from [Item](#item)
+* Includes:
+  * `creator`: [Slim User](#slim-user)
+  * `morsel`: [Slim Morsel](#slim-morsel)
 
 ```json
 {
@@ -1513,65 +1510,34 @@ This includes the same keys as [Item](#item), along with:
 ```json
 {
   "id": 4,
+  "title": "Butter Rocks!",
+  "slug": "butter-rocks",
   "creator_id": 3,
   "place_id": 4,
   "created_at": "2014-01-07T16:34:44.862Z",
-  "updated_at": "2014-01-07T16:34:44.862Z",
-  "title": "Butter Rocks!",
-  "slug": "butter-rocks"
+  "updated_at": "2014-01-07T16:34:44.862Z"
 }
 
 ### Morsel
-This includes the same keys as [Slim Morsel](#slim-morsel), along with:
+* Inherits from [Slim Morsel](#slim-morsel)
+* Includes:
+  * `creator`: [Slim User](#slim-user)
+  * `items`: [Items](#item)[] \(ordered by `sort_order` ASC)
+  * `place`: [Slim Place](#slim-place)
 
 ```json
 {
-  "draft": false,
-  "primary_item_id": 2,
   "published_at": "2014-01-07T16:34:44.862Z",
-  "photos": {
-    "_800x600":"https://morsel-staging.s3.amazonaws.com/morsel-images/4/648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
-  },
+  "draft": false,
+  "total_like_count": 10,
+  "total_comment_count": 3,
+  "primary_item_id": 2,
   "url": "http://eatmorsel.com/turdferg/4-butter-rocks",
   "facebook_mrsl": "http://mrsl.co/facebook",
   "twitter_mrsl": "http://mrsl.co/twitter",
-  "creator": {
-    "id": 3,
-    "username": "turdferg",
-    "first_name": "Turd",
-    "last_name": "Ferguson",
-    "created_at": "2014-01-07T18:35:57.877Z",
-    "updated_at": "2014-01-07T18:35:57.877Z",
-    "bio": "Suck It, Trebek",
-    "photos": {
-      "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "_80x80": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
-      "_144x144": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg"
-    }
-  },
-  "items": [
-    {
-      "id": 2,
-      "description": null,
-      "creator_id": 3,
-      "created_at": "2014-01-07T16:34:43.071Z",
-      "updated_at": "2014-01-07T16:34:43.071Z",
-      "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
-      "photos": {
-        "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_80x80":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_100x100":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_240x240":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_480x480":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
-      },
-      "sort_order": 1,
-      "url": "http://eatmorsel.com/turdferg/4-butter-rocks/1"
-    }
-  ]
+  "photos": {
+    "_800x600":"https://morsel-staging.s3.amazonaws.com/morsel-images/4/648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
+  }
 }
 ```
 
@@ -1586,6 +1552,7 @@ This includes the same keys as [Slim Morsel](#slim-morsel), along with:
   "username": "turdferg",
   "first_name": "Turd",
   "last_name": "Ferguson",
+  "bio": "Suck It, Trebek",
   "photos": {
     "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
     "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
@@ -1596,7 +1563,7 @@ This includes the same keys as [Slim Morsel](#slim-morsel), along with:
 ```
 
 ### Slim Followed User
-This includes the same keys as [Slim User](#slim-user), along with:
+* Inherits from [Slim User](#slim-user)
 
 ```json
 {
@@ -1605,12 +1572,12 @@ This includes the same keys as [Slim User](#slim-user), along with:
 ```
 
 ### User
-This includes the same keys as [Slim User](#slim-user), along with:
+* Inherits from [Slim User](#slim-user)
 
 ```json
 {
   "created_at": "2014-01-07T18:35:57.877Z",
-  "bio": "Suck It, Trebek",
+  "industry": "chef",
   "facebook_uid": "1234567890",
   "twitter_username": "morsel_marty",
   "morsel_count": 1,
@@ -1623,7 +1590,8 @@ This includes the same keys as [Slim User](#slim-user), along with:
 
 ### User (w/ Private Attributes)
 You'll only see these if the api_key matches the User you're looking up.
-This includes the same keys as [User](#user), along with:
+* Inherits from [User](#user)
+
 ```json
 {
   "staff": true,
@@ -1635,7 +1603,7 @@ This includes the same keys as [User](#user), along with:
 ```
 
 ### User (w/ Auth Token)
-This includes the same keys as [User (w/ Private Attributes)](#user-w-private-attributes), along with:
+* Inherits from [User (w/ Private Attributes)](#user-w-private-attributes)
 
 ```json
 {
@@ -1645,7 +1613,7 @@ This includes the same keys as [User (w/ Private Attributes)](#user-w-private-at
 
 ### Followed User
 Response for any Follow User related requests.
-This includes the same keys as [User](#user), along with:
+* Inherits from [User](#user)
 
 ```json
 {
@@ -1655,7 +1623,7 @@ This includes the same keys as [User](#user), along with:
 
 ### User Follower
 Response for any User Follower related requests.
-This includes the same keys as [User](#user), along with:
+* Inherits from [User](#user)
 
 ```json
 {
@@ -1666,6 +1634,8 @@ This includes the same keys as [User](#user), along with:
 ## Feed Objects
 
 ### Feed Item
+* Includes:
+  * `subject`: [Morsel](#morsel)
 
 ```json
 {
@@ -1674,19 +1644,7 @@ This includes the same keys as [User](#user), along with:
   "updated_at":"2014-03-25T21:18:02.360Z",
   "subject_type":"Morsel",
   "user_id": 1,
-  "featured": false,
-  "subject":{
-    "id":6,
-    "title":"Eum perspiciatis tempora omnis ab qui.",
-    "creator_id":null,
-    "created_at":"2014-03-25T21:18:02.354Z",
-    "updated_at":"2014-03-25T21:18:02.354Z",
-    "published_at":"2014-03-25T21:18:02.353Z",
-    "draft":false,
-    "slug":"eum-perspiciatis-tempora-omnis-ab-qui",
-    "creator":null,
-    "items":[]
-  }
+  "featured": false
 }
 ```
 
@@ -1711,8 +1669,8 @@ This includes the same keys as [User](#user), along with:
 ```
 
 ### Place
-This includes the same keys as [Slim Place](#slim-place), along with:
-_(NOTE: Refer to Foursquare's Documentation for the format of `foursquare_timeframes` as it may vary)_
+* Inherits from [Slim Place](#slim-place)
+* _(NOTE: Refer to Foursquare's Documentation for the format of `foursquare_timeframes` as it may vary)_
 
 ```json
 {
@@ -1764,6 +1722,8 @@ _(NOTE: Refer to Foursquare's Documentation for the format of `foursquare_timefr
 ## Tag Objects
 
 ### Tag
+* Includes:
+  * `keyword`: [Keyword](#keyword)
 
 ```json
 {
@@ -1771,12 +1731,7 @@ _(NOTE: Refer to Foursquare's Documentation for the format of `foursquare_timefr
   "created_at":"2014-03-25T21:18:02.349Z",
   "updated_at":"2014-03-25T21:18:02.360Z",
   "taggable_id":4,
-  "taggable_type":"User",
-  "keyword":{
-    "id":6,
-    "type":"Cuisine",
-    "name":"Polish"
-  }
+  "taggable_type":"User"
 }
 ```
 
@@ -1792,7 +1747,7 @@ _(NOTE: Refer to Foursquare's Documentation for the format of `foursquare_timefr
 
 ### Followed Keyword
 Response for any Follow Keyword related requests.
-This includes the same keys as [Keyword](#keyword), along with:
+* Inherits from [Keyword](#keyword)
 
 ```json
 {
@@ -1804,54 +1759,17 @@ This includes the same keys as [Keyword](#keyword), along with:
 ## Activity Objects
 
 ### Activity
+* Includes:
+  * `creator`: [Slim User](#slim-user)
+  * `subject`: [Item](#item) OR [User](#user)
+  * `action`: [Comment](#comment) OR [Follow](#) OR [Like](#)
 
 ```json
 {
   "id":2,
   "action_type":"Like",
-  "action": {
-    "id":6,
-    "user_id":2,
-    "item_id":3,
-    "deleted_at":null,
-    "created_at":"2014-04-01T22:05:20.683Z",
-    "updated_at":"2014-04-01T22:05:20.683Z"
-  },
   "created_at":"2014-03-13T17:01:38.370Z",
-  "subject_type":"Item",
-  "subject":{
-    "id":3,
-    "description":"Voluptatem dolores beatae id labore ut corporis tempora id numquam in vel et nemo sed natus quos provident commodi quia quo officiis distinctio qui aut non iure nam illum reprehenderit debitis hic et esse molestiae nulla eaque excepturi quaerat eveniet nisi asperiores voluptate.",
-    "creator_id":1,
-    "updated_at":"2014-03-13T17:01:37.955Z",
-    "created_at":"2014-03-13T17:01:37.955Z",
-    "nonce":null,
-    "photos":{
-      "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/3/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_80x80":"https://morsel-staging.s3.amazonaws.com/item-images/item/3/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_100x100":"https://morsel-staging.s3.amazonaws.com/item-images/item/3/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_240x240":"https://morsel-staging.s3.amazonaws.com/item-images/item/3/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/3/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_480x480":"https://morsel-staging.s3.amazonaws.com/item-images/item/3/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/3/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-      "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/3/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
-    },
-    "photo_processing":true,
-    "morsel_id":1,
-    "sort_order":2,
-    "url":"https://test.eatmorsel.com/user_3yugjkugvv/1-rem-adipisci-et-ut-totam-repudiandae-est/2",
-    "liked":true
-  },
-  "creator":{
-    "id":2,
-    "username":"user_m3m6m78gkr",
-    "first_name":"Kody",
-    "last_name":"Fritsch",
-    "created_at":"2014-03-13T17:01:38.219Z",
-    "bio":"Hi! I like turtles!",
-    "photos":null,
-    "photo_processing":null
-  }
+  "subject_type":"Item"
 }
 ```
 
@@ -1859,60 +1777,15 @@ This includes the same keys as [Keyword](#keyword), along with:
 ## Notification Objects
 
 ### Notification
+* Includes:
+  * `payload`: [Activity](#activity)
 
 ```json
 {
   "id":4,
   "message":"Drew Muller (user_jtu6g7nacn) liked Enim quia sequi aut vel.: Soluta quo saepe nemo voluptatem... ",
   "created_at":"2014-03-13T17:04:22.411Z",
-  "payload_type":"Activity",
-  "payload":{
-    "id":4,
-    "action_type":"Like",
-    "action": {
-      "id":6,
-      "user_id":2,
-      "item_id":3,
-      "deleted_at":null,
-      "created_at":"2014-04-01T22:05:20.683Z",
-      "updated_at":"2014-04-01T22:05:20.683Z"
-    },
-    "created_at":"2014-03-13T17:04:22.403Z",
-    "subject_type":"Item",
-    "subject":{
-      "id":1,
-      "description":"Soluta quo saepe nemo voluptatem similique et et veniam ipsa et dolore dolorem beatae nam doloremque enim distinctio quasi in architecto iure ut sit facere reiciendis alias quis.",
-      "creator_id":1,
-      "updated_at":"2014-03-13T17:04:21.899Z",
-      "created_at":"2014-03-13T17:04:21.899Z",
-      "nonce":null,
-      "photos":{
-        "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_80x80":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_100x100":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_240x240":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_240x240_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_480x480":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_480x480_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
-        "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
-      },
-      "photo_processing":true,
-      "morsel_id":1,
-      "sort_order":1,
-      "url":"https://test.eatmorsel.com/user_qaa0jncv99/1-enim-quia-sequi-aut-vel/1",
-      "liked":false
-    },
-    "creator":{
-      "id":5,
-      "username":"user_jtu6g7nacn",
-      "first_name":"Drew",
-      "last_name":"Muller",
-      "created_at":"2014-03-13T17:04:22.381Z",
-      "bio":"Hi! I like turtles!",
-      "photos":null,
-      "photo_processing":null
-    }
-  }
+  "payload_type":"Activity"
 }
 ```
 

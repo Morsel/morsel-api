@@ -1,4 +1,6 @@
 class SlimFollowedUserSerializer < SlimUserSerializer
+  include FollowableSerializerAttributes
+
   attributes :following
 
   def following

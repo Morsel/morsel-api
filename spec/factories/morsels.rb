@@ -43,6 +43,7 @@ FactoryGirl.define do
 
     factory :morsel_with_creator, class: Morsel do
       association(:creator, factory: :user)
+      association(:place)
       factory :morsel_with_creator_and_photo do
         photo Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
       end
