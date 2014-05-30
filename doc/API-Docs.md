@@ -53,6 +53,7 @@
   - [GET `/users/:id/cuisines` - User Cuisines](#get-usersidcuisines---user-cuisines)
   - [GET `/users/:id/specialties` - User Specialties](#get-usersidspecialties---user-specialties)
   - [GET `/users/:id/followables` - User Followables](#get-usersidfollowables---user-followables)
+  - [GET `/users/:id/places` - User Places](#get-usersidplaces---user-places)
 
 - [Place Methods](#place-methods)
   - [Place Behaviors](#place-behaviors)
@@ -929,6 +930,27 @@ Returns the Followables that the User with the specified `user_id` is following 
 <br />
 
 
+## GET `/users/:id/places` - User Places
+Returns the Place that the User with the specified `user_id` belongs to.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return followables of the specified `type` up to and including this `id` | | |
+| since_id | Number | Return followables of the specified `type` since this `id` | | |
+
+### Response
+
+| __data__ |
+| -------- |
+| [Slim Places](#slim-place)[] w/ the User's `title` |
+
+<br />
+<br />
+
+
 # Place Methods
 ### Place Behaviors
 * [Followable](#followable)
@@ -1550,7 +1572,7 @@ Response for any Like Item related requests.
   "facebook_uid": "1234567890",
   "twitter_username": "morsel_marty",
   "morsel_count": 1,
-  "liked_items_count": 3,
+  "liked_item_count": 3,
   "following": false,
   "followed_user_count": 3,
   "follower_count": 3

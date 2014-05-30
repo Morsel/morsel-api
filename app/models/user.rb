@@ -113,7 +113,7 @@ class User < ActiveRecord::Base
     username || email
   end
 
-  def liked_items_count
+  def liked_item_count
     liked_items.count
   end
 

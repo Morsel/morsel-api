@@ -170,6 +170,17 @@ class UsersController < ApiController
     end
   end
 
+  def places
+    custom_respond_with Place.joins(:employments)
+                            .since(params[:since_id], 'employments')
+                            .max(params[:max_id], 'employments')
+                            .where(employments: { user_id: params[:id] })
+                            .limit(pagination_count)
+                            .order('employments.id DESC')
+                            .select('places.*, employments.title'),
+                        each_serializer: SlimPlaceWithTitleSerializer
+  end
+
   class UserParams
     def self.build(params)
       params.require(:user).permit(:email, :username, :password, :current_password,
@@ -188,5 +199,5 @@ class UsersController < ApiController
     user.errors.count > 0
   end
 
-  authorize_actions_for User, except: PUBLIC_ACTIONS, actions: { me: :read, search: :read }
+  authorize_actions_for User, except: PUBLIC_ACTIONS, actions: { me: :read, search: :read, places: :read }
 end
