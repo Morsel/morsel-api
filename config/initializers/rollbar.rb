@@ -7,6 +7,8 @@ Rollbar.configure do |config|
   # Here we'll disable in 'test':
   if Rails.env.test? || Rails.env.development?
     config.enabled = false
+  else
+    config.use_sidekiq
   end
 
   config.environment = Rails.env

@@ -124,4 +124,6 @@ MorselApp::Application.routes.draw do
   end
 
   get 'feed' => 'feed#index'
+
+  match '*a', to: 'errors#routing', via: :all
 end
