@@ -3,7 +3,6 @@
   - [Versioning](#versioning)
   - [Response Format](#response-format)
   - [Errors](#errors)
-  - [Pagination](#pagination)
   - [About the API Documentation](#about-the-api-documentation)
 
 - [API Authentication](#api-authentication)
@@ -15,6 +14,7 @@
     - [POST `/{{followables}}/:id/follow` - Follow {{Followable}}](#post-followablesidfollow---follow-followable)
     - [DELETE `/{{followables}}/:id/follow` - Unfollow {{Followable}}](#delete-followablesidfollow---unfollow-followable)
     - [GET `/{{followables}}/:id/followers` - {{Followable}} Followers](#get-followablesidfollowers---followable-followers)
+  - [Pagination](#pagination)
 
 - [Feed Methods](#feed-methods)
   - [GET `/feed` - Feed](#get-feed---feed)
@@ -198,29 +198,6 @@ Errors are returned as a dictionary in `errors`. Each key represents the resourc
 }
 ```
 
-## Pagination
-
-The API uses a pagination method similar to how Facebook and Twitter do. For a nice article about why and how it works, check out this [link](https://dev.twitter.com/docs/working-with-timelines). You'll use `max_id` OR `since_id` per API call, don't combine them as the API will ignore it.
-
-### Example
-
-#### Getting the recent Morsels:
-Make a call to the API: `/morsels.json?api_key=whatever&count=10`
-The API responds with the 10 most recent Morsels, let's say their id's are from 100-91.
-
-#### Getting a next set of Morsels going back:
-Based on the previous results, you want to get Morsels that are older than id 91 (the lowest/oldest id). So you'll want to set a `max_id` parameter to that id - 1 (`max_id` is inclusive, meaning it will include the Morsel with the id passed in the results, which in this case would duplicate a Morsel). So set `max_id` to 91-1, 90.
-Make a call to the API: `/morsels.json?api_key=whatever&count=10&max_id=90`
-The API responds with the next 10 Morsels, in this case their id's are from 90-81.
-And repeat this process as you go further back until you get no results (or `max_id` < 1).
-
-#### Getting a set of Morsels going forward (new Morsels):
-Apps like Facebook and Twitter will show a floating message while you're scrolling through a list telling you that X new Morsels have been added to the top of your feed.
-We can achieve the same thing by sending a call to the API every once awhile asking for any new Morsels since the most recent one you have. To do this, you'll set a `since_id` parameter (which is not inclusive) to the id of the most recent Morsel. Continuing the example, this would be `since_id` = 100.
-Make a call to the API: `/morsels.json?api_key=whatever&count=10&since_id=100`
-The API responds with any new Morsels since the Morsel with id = 100. So if there were three new Morsels added, it would return Morsels with id's from 101-103.
-
-
 # API Authentication
 The API uses two different levels of authentication, depending on the method.
 
@@ -282,11 +259,8 @@ Unfollows the _{{Followable}}_ with the specified `id`.
 ## GET `/{{followables}}/:id/followers` - _{{Followable}}_ Followers
 Returns the followers for the _{{Followable}}_ with the specified `id`.
 
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Users up to and including this `id` | | |
-| since_id | Number | Return Users since this `id` | | |
+__Request Behaviors__
+* [Pagination](#pagination)
 
 ### Response
 
@@ -297,19 +271,43 @@ Returns the followers for the _{{Followable}}_ with the specified `id`.
 <br />
 <br />
 
+# Pagination
+
+The API uses a pagination method similar to how Facebook and Twitter do. For a nice article about why and how it works, check out this [link](https://dev.twitter.com/docs/working-with-timelines). You'll use `max_id` OR `since_id` per API call, don't combine them as the API will ignore it.
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return results up to and including this `id` | | |
+| since_id | Number | Return results since this `id` | | |
+
+
+## Example
+
+### Getting the recent Morsels:
+Make a call to the API: `/morsels.json?api_key=whatever&count=10`
+The API responds with the 10 most recent Morsels, let's say their id's are from 100-91.
+
+### Getting a next set of Morsels going back:
+Based on the previous results, you want to get Morsels that are older than id 91 (the lowest/oldest id). So you'll want to set a `max_id` parameter to that id - 1 (`max_id` is inclusive, meaning it will include the Morsel with the id passed in the results, which in this case would duplicate a Morsel). So set `max_id` to 91-1, 90.
+Make a call to the API: `/morsels.json?api_key=whatever&count=10&max_id=90`
+The API responds with the next 10 Morsels, in this case their id's are from 90-81.
+And repeat this process as you go further back until you get no results (or `max_id` < 1).
+
+### Getting a set of Morsels going forward (new Morsels):
+Apps like Facebook and Twitter will show a floating message while you're scrolling through a list telling you that X new Morsels have been added to the top of your feed.
+We can achieve the same thing by sending a call to the API every once awhile asking for any new Morsels since the most recent one you have. To do this, you'll set a `since_id` parameter (which is not inclusive) to the id of the most recent Morsel. Continuing the example, this would be `since_id` = 100.
+Make a call to the API: `/morsels.json?api_key=whatever&count=10&since_id=100`
+The API responds with any new Morsels since the Morsel with id = 100. So if there were three new Morsels added, it would return Morsels with id's from 101-103.
+
 
 # Feed Methods
 
 ## GET `/feed` - Feed
 Returns the Feed. If [current_user](#current_user) exists, the results will include your Feed Items, any followed Users' Feed Items, and any Feed Items marked as `featured`. If no [current_user](#current_user) exists only Feed Items marked as `featured` will be returned. In either case results are sorted by their `created_at` date, with the most recent one's appearing first.
 
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Feed Items up to and including this `id` | | |
-| since_id | Number | Return Feed Items since this `id` | | |
+__Request Behaviors__
+* [Pagination](#pagination)
 
 ### Response
 
@@ -348,13 +346,8 @@ Creates a new Authentication for [current_user](#current_user)
 ## GET `/authentications` - Authentications
 Returns authentications for [current_user](#current_user)
 
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Authentications up to and including this `id` | | |
-| since_id | Number | Return Authentications since this `id` | | |
+__Request Behaviors__
+* [Pagination](#pagination)
 
 ### Response
 
@@ -422,15 +415,15 @@ Returns `true` if the authentication exists, otherwise false.
 ## GET `/authentications/connections` - Authentication Connections
 Returns the Users that have authenticated with the specified `provider` and have a `uid` that is in `uids`.
 
+__Request Behaviors__
+* [Pagination](#pagination)
+
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | provider | String | The authentication provider. Currently the only valid values are 'facebook', 'instagram', and 'twitter'. | | X |
 | uids | String | Comma-separated `uid` strings for the `provider` specified. e.g. "'12345','67890'" | | X |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Users up to and including this `id` | | |
-| since_id | Number | Return Users since this `id` | | |
 
 ### Response
 
@@ -750,13 +743,8 @@ Updates the User with the specified `user_id`. If a new `email`, `username`, or 
 ## GET `/users/:id|:username/morsels` - User Morsels
 Returns the Morsels for the User with the specified `user_id` or `user_username`.
 
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Morsels up to and including this `id` | | |
-| since_id | Number | Return Morsels since this `id` | | |
+__Request Behaviors__
+* [Pagination](#pagination)
 
 ### Response
 
@@ -770,13 +758,8 @@ Returns the Morsels for the User with the specified `user_id` or `user_username`
 ## GET `/users/activities` - User Activities
 Returns the [current_user](#current_user)'s Activities. An Activity is created when a User likes or comments on a Item. Think Facebook's Activity Log (https://www.facebook.com/<username>/allactivity).
 
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Activities up to and including this `id` | | |
-| since_id | Number | Return Authentications since this `id` | | |
+__Request Behaviors__
+* [Pagination](#pagination)
 
 ### Response
 
@@ -790,13 +773,8 @@ Returns the [current_user](#current_user)'s Activities. An Activity is created w
 GET `/users/followables_activities` - User Followables Activities
 Returns the [current_user](#current_user)'s Followed Users' Activities.
 
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Activities up to and including this `id` | | |
-| since_id | Number | Return Authentications since this `id` | | |
+__Request Behaviors__
+* [Pagination](#pagination)
 
 ### Response
 
@@ -810,13 +788,8 @@ Returns the [current_user](#current_user)'s Followed Users' Activities.
 ## GET `/users/notifications` - User Notifications
 Returns the [current_user](#current_user)'s Notifications. A Notification is created when someone likes or comments on your Items. Think Facebook or Twitter Notifications.
 
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Notifications up to and including this `id` | | |
-| since_id | Number | Return Notifications since this `id` | | |
+__Request Behaviors__
+* [Pagination](#pagination)
 
 ### Response
 
@@ -830,14 +803,14 @@ Returns the [current_user](#current_user)'s Notifications. A Notification is cre
 ## GET `/users/:id/likeables` - User Likeables
 Returns the Likeables that the User with the specified `user_id` has liked along with a `liked_at` DateTime key
 
+__Request Behaviors__
+* [Pagination](#pagination)
+
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | type | String | The type of likeables to return. Currently only 'Item' is acceptable. | | X |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return likeables of the specified `type` up to and including this `id` | | |
-| since_id | Number | Return likeables of the specified `type` since this `id` | | |
 
 ### Response
 
@@ -911,14 +884,14 @@ Returns the Specialties for the User with the specified `user_id`.
 ## GET `/users/:id/followables` - User Followables
 Returns the Followables that the User with the specified `user_id` is following along with a `followed_at` DateTime.
 
+__Request Behaviors__
+* [Pagination](#pagination)
+
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | type | String | The type of followables to return. Currently only `Keyword` and `User` is acceptable. | | X |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return followables of the specified `type` up to and including this `id` | | |
-| since_id | Number | Return followables of the specified `type` since this `id` | | |
 
 ### Response
 
@@ -934,13 +907,8 @@ Returns the Followables that the User with the specified `user_id` is following 
 ## GET `/users/:id/places` - User Places
 Returns the Place that the User with the specified `user_id` belongs to.
 
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return followables of the specified `type` up to and including this `id` | | |
-| since_id | Number | Return followables of the specified `type` since this `id` | | |
+__Request Behaviors__
+* [Pagination](#pagination)
 
 ### Response
 
@@ -1117,13 +1085,8 @@ Unlikes the Item with the specified `id` for [current_user](#current_user)
 ## GET `/items/:id/likers` - Likers
 Returns the Users who have liked the Item with the specified `id`
 
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Users up to and including this `id` | | |
-| since_id | Number | Return Users since this `id` | | |
+__Request Behaviors__
+* [Pagination](#pagination)
 
 ### Response
 
@@ -1167,13 +1130,8 @@ Create a Comment for the Item with the specified `id`
 ## GET `/items/:id/comments` - Item Comments
 List the Comments for the Item with the specified `id`
 
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Comments up to and including this `id` | | |
-| since_id | Number | Return Comments since this `id` | | |
+__Request Behaviors__
+* [Pagination](#pagination)
 
 ### Response
 
@@ -1229,13 +1187,8 @@ Creates a new Morsel for the current User.
 ## GET `/morsels` - Morsels
 Returns the Morsels (including Drafts) for [current_user](#current_user) sorted by their `id`.
 
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Morsels up to and including this `id` | | |
-| since_id | Number | Return Morsels since this `id` | | |
+__Request Behaviors__
+* [Pagination](#pagination)
 
 ### Response
 
@@ -1249,13 +1202,8 @@ Returns the Morsels (including Drafts) for [current_user](#current_user) sorted 
 ## GET `/morsels/drafts` - Morsel Drafts
 Returns the Morsel Drafts for [current_user](#current_user) sorted by their updated_at, with the most recent one's appearing first.
 
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Morsels up to and including this `id` | | |
-| since_id | Number | Return Morsels since this `id` | | |
+__Request Behaviors__
+* [Pagination](#pagination)
 
 ### Response
 
@@ -1342,13 +1290,8 @@ Returns the list of Cuisines
 ## GET `/cuisines/:id/users` - Cuisine Users
 Returns a list of Users who belong to the Cuisine with the specified `id`
 
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Users up to and including this `id` | | |
-| since_id | Number | Return Users since this `id` | | |
+__Request Behaviors__
+* [Pagination](#pagination)
 
 ### Response
 
@@ -1374,13 +1317,8 @@ Returns the list of Specialties
 ## GET `/specialties/:id/users` - Specialty Users
 Returns a list of Users who belong to the Specialty with the specified `id`
 
-### Request
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return Users up to and including this `id` | | |
-| since_id | Number | Return Users since this `id` | | |
+__Request Behaviors__
+* [Pagination](#pagination)
 
 ### Response
 
