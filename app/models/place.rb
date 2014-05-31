@@ -23,6 +23,7 @@
 # **`created_at`**             | `datetime`         |
 # **`updated_at`**             | `datetime`         |
 # **`deleted_at`**             | `datetime`         |
+# **`last_imported_at`**       | `datetime`         |
 #
 
 class Place < ActiveRecord::Base
@@ -33,6 +34,27 @@ class Place < ActiveRecord::Base
   belongs_to  :creator, class_name: 'User'
   has_many    :employments, inverse_of: :place
   has_many    :users, through: :employments
+
+  concerning :Information do
+    included do
+      store_accessor  :information,
+                      :credit_cards,
+                      :dining_options,
+                      :dining_style,
+                      :dress_code,
+                      :formatted_phone,
+                      :menu_mobile_url,
+                      :menu_url,
+                      :outdoor_seating,
+                      :parking,
+                      :parking_details,
+                      :price_tier,
+                      :public_transit,
+                      :reservations,
+                      :reservations_url,
+                      :website_url
+    end
+  end
 
   def employ(user, title)
     errors.add(:title, 'is required') if title.blank?

@@ -3,7 +3,8 @@ class UserWithPrivateAttributesSerializer < UserSerializer
              :draft_count,
              :sign_in_count,
              :photo_processing,
-             :email
+             :email,
+             :settings
 
   def draft_count
     object.morsels.drafts.count

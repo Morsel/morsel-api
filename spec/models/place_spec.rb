@@ -23,6 +23,7 @@
 # **`created_at`**             | `datetime`         |
 # **`updated_at`**             | `datetime`         |
 # **`deleted_at`**             | `datetime`         |
+# **`last_imported_at`**       | `datetime`         |
 #
 
 require 'spec_helper'
