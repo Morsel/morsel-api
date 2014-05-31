@@ -27,9 +27,7 @@
   - [GET `/authentications/check` - Authentication Check](#get-authenticationscheck---authentication-check)
   - [GET `/authentications/connections` - Authentication Connections](#get-authenticationsconnections---authentication-connections)
 
-- [User Methods](#user-methods)
-  - [User Behaviors](#user-behaviors)
-    - [Followable](#followable)
+- [User Methods](#user-methods) [\<Followable\>](#followable)
   - [POST `/users` - Create a new User](#post-users---create-a-new-user)
   - [POST `/users/sign_in` - User Authentication](#post-userssign_in---user-authentication)
   - [POST `/users/forgot_password` - Forgot Password](#post-usersforgot_password---forgot-password)
@@ -55,9 +53,7 @@
   - [GET `/users/:id/followables` - User Followables](#get-usersidfollowables---user-followables)
   - [GET `/users/:id/places` - User Places](#get-usersidplaces---user-places)
 
-- [Place Methods](#place-methods)
-  - [Place Behaviors](#place-behaviors)
-    - [Followable](#followable)
+- [Place Methods](#place-methods) [\<Followable\>](#followable)
   - [GET `/places/suggest` - Suggest Completion](#get-placessuggest---suggest-completion)
   - [POST `/places/join` - Join User w/ Place](#post-placesjoin---join-user-w-place)
   - [GET `/places/:id` - Place](#get-placesid--place)
@@ -83,9 +79,7 @@
   - [POST `/morsels/:id/publish` - Publish Morsel](#post-morselsidpublish---Publish-morsel)
   - [DELETE `/morsels/:id` - Delete Morsel](#delete-morselsid---delete-morsel)
 
-- [Keyword Methods](#keyword-methods)
-  - [Keyword Behaviors](#keyword-behaviors)
-    - [Followable](#followable)
+- [Keyword Methods](#keyword-methods) [\<Followable\>](#followable)
   - [GET `/cuisines` - Cuisines](#get-cuisines---cuisines)
   - [GET `/cuisines/:id/users` - Cuisine Users](#get-cuisinesidusers---cuisine-users)
   - [GET `/specialties` - Specialties](#get-specialties---specialties)
@@ -436,8 +430,7 @@ __Request Behaviors__
 
 
 # User Methods
-### User Behaviors
-* [Followable](#followable)
+* [\<Followable\>](#followable)
 
 ## POST `/users` - Create a new User
 Creates a new User and returns an authentication_token.
@@ -921,8 +914,7 @@ __Request Behaviors__
 
 
 # Place Methods
-### Place Behaviors
-* [Followable](#followable)
+* [\<Followable\>](#followable)
 
 ## GET `/places/suggest` - Suggest Completion
 Proxy for the [Foursquare Venues suggestcompletion](https://developer.foursquare.com/docs/venues/suggestcompletion). Returns the response in `data`.
@@ -1272,8 +1264,7 @@ Publishes the Morsel with the specified `id` by setting a `published_at` DateTim
 
 
 # Keyword Methods
-### Keyword Behaviors
-* [Followable](#followable)
+* [\<Followable\>](#followable)
 
 ## GET `/cuisines` - Cuisines
 Returns the list of Cuisines
