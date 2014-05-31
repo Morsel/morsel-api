@@ -23,6 +23,7 @@
 # **`created_at`**             | `datetime`         |
 # **`updated_at`**             | `datetime`         |
 # **`deleted_at`**             | `datetime`         |
+# **`last_imported_at`**       | `datetime`         |
 #
 
 FactoryGirl.define do
@@ -70,21 +71,21 @@ FactoryGirl.define do
     }
     information {
       {
-        website_url: Faker::Internet.url,
-        formatted_phone: Faker::PhoneNumber.phone_number,
-        price_tier: rand(1..4),
-        reservations_url: Faker::Internet.url,
-        menu_url: Faker::Internet.url,
-        menu_mobile_url: Faker::Internet.url,
-        reservations: 'Yes',
         credit_cards: 'Yes (incl. American Express)',
-        outdoor_seating: 'Yes',
         dining_options: 'Take-out',
-        dress_code: 'No Pants',
         dining_style: 'Casual Dining',
-        public_transit: 'Take the bus.',
+        dress_code: 'No Pants',
+        formatted_phone: Faker::PhoneNumber.phone_number,
+        menu_mobile_url: Faker::Internet.url,
+        menu_url: Faker::Internet.url,
+        outdoor_seating: 'Yes',
         parking: 'Street Parking',
-        parking_details: 'Some Parking deetz.'
+        parking_details: 'Some Parking deetz.',
+        price_tier: rand(1..4),
+        public_transit: 'Take the bus.',
+        reservations: 'Yes',
+        reservations_url: Faker::Internet.url,
+        website_url: Faker::Internet.url
       }
     }
 
@@ -128,21 +129,21 @@ FactoryGirl.define do
     ]
     information {
       {
-        website_url: "http://www.bigstarchicago.com",
-        formatted_phone: '(773) 235-4039',
-        price_tier: 2,
-        reservations_url: "http://www.opentable.com/single.aspx?rid=20791&ref=9601",
-        menu_url: "https://foursquare.com/v/big-star/4adbf2bbf964a520242b21e3/menu",
-        menu_mobile_url: "https://foursquare.com/v/4adbf2bbf964a520242b21e3/device_menu",
-        reservations: "Yes",
         credit_cards: "Yes (incl. American Express)",
-        outdoor_seating: "Yes",
         dining_options: "Take-out; No Delivery",
-        dress_code: "Casual Dress",
         dining_style: "Casual Dining",
-        public_transit: "Take the bus.",
+        dress_code: "Casual Dress",
+        formatted_phone: '(773) 235-4039',
+        menu_mobile_url: "https://foursquare.com/v/4adbf2bbf964a520242b21e3/device_menu",
+        menu_url: "https://foursquare.com/v/big-star/4adbf2bbf964a520242b21e3/menu",
+        outdoor_seating: "Yes",
         parking: "Street Parking",
-        parking_details: "We don't have valet or private parking. We recommend street parking or side streets."
+        parking_details: "We don't have valet or private parking. We recommend street parking or side streets.",
+        price_tier: 2,
+        public_transit: "Take the bus.",
+        reservations: "Yes",
+        reservations_url: "http://www.opentable.com/single.aspx?rid=20791&ref=9601",
+        website_url: "http://www.bigstarchicago.com"
       }
     }
   end

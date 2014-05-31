@@ -735,6 +735,7 @@ Updates the User with the specified `user_id`. If a new `email`, `username`, or 
 | user[remote_photo_url] | String | URL to the new profile photo for the User. Can be GIF, JPG, or PNG. | | |
 | user[bio] | String | The new bio for the User. Maximum 255 characters | | |
 | user[current_password] | String | The current password for the User. Required for sensitive changes such as `email`, `username`, or `password`.| | |
+| user[settings][auto_follow] | Boolean | `true` to have the User auto-follow social friends that join | | |
 
 ### Response
 
@@ -1589,7 +1590,10 @@ You'll only see these if the api_key matches the User you're looking up.
   "draft_count": 0,
   "sign_in_count": 1,
   "photo_processing": null,
-  "email": "buttsackmcgee@eatmorsel.com"
+  "email": "buttsackmcgee@eatmorsel.com",
+  "options": {
+    "auto_follow": "true"
+  }
 }
 ```
 

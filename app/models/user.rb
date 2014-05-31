@@ -34,11 +34,11 @@
 # **`active`**                  | `boolean`          | `default(TRUE)`
 # **`verified_at`**             | `datetime`         |
 # **`industry`**                | `string(255)`      |
-# **`unsubscribed`**            | `boolean`          | `default(FALSE)`
 # **`photo_processing`**        | `boolean`          |
 # **`staff`**                   | `boolean`          | `default(FALSE)`
 # **`deleted_at`**              | `datetime`         |
 # **`promoted`**                | `boolean`          | `default(FALSE)`
+# **`settings`**                | `hstore`           | `default({})`
 #
 
 class User < ActiveRecord::Base
@@ -99,6 +99,15 @@ class User < ActiveRecord::Base
 
   mount_uploader :photo, UserPhotoUploader
   process_in_background :photo
+
+  concerning :Settings do
+    included do
+      store_accessor :settings, :unsubscribed, :auto_follow
+    end
+
+    def auto_follow?; auto_follow == 'true' end
+    def unsubscribed?; unsubscribed == 'true' end
+  end
 
   def self.find_first_by_auth_conditions(warden_conditions)
     conditions = warden_conditions.dup

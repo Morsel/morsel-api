@@ -34,11 +34,11 @@
 # **`active`**                  | `boolean`          | `default(TRUE)`
 # **`verified_at`**             | `datetime`         |
 # **`industry`**                | `string(255)`      |
-# **`unsubscribed`**            | `boolean`          | `default(FALSE)`
 # **`photo_processing`**        | `boolean`          |
 # **`staff`**                   | `boolean`          | `default(FALSE)`
 # **`deleted_at`**              | `datetime`         |
 # **`promoted`**                | `boolean`          | `default(FALSE)`
+# **`settings`**                | `hstore`           | `default({})`
 #
 
 require 'spec_helper'

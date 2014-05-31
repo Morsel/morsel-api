@@ -1018,15 +1018,25 @@ describe 'Users API' do
     it 'updates the User' do
       new_first_name = 'Bob'
 
-      put_endpoint user: { first_name: new_first_name }
+      put_endpoint user: {
+        first_name: new_first_name,
+        settings: {
+          auto_follow: true
+        }
+      }
+
       expect_success
       expect_json_data_eq({
         'first_name' => new_first_name,
-        'email' => current_user.email
+        'email' => current_user.email,
+        'settings' => {
+          'auto_follow' => 'true'
+        }
       })
       expect(json_data['auth_token']).to be_nil
 
       expect(User.first.first_name).to eq(new_first_name)
+      expect(User.first.auto_follow?).to eq(true)
     end
 
     context 'email changed' do

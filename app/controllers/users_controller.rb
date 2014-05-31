@@ -185,7 +185,8 @@ class UsersController < ApiController
     def self.build(params)
       params.require(:user).permit(:email, :username, :password, :current_password,
                                    :first_name, :last_name, :bio, :industry,
-                                   :photo, :remote_photo_url, :promoted, :query)
+                                   :photo, :remote_photo_url, :promoted, :query,
+                                   :settings => [:auto_follow])
     end
   end
 
