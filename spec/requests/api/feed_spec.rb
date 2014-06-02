@@ -113,6 +113,58 @@ describe 'Feed API' do
           end
         end
       end
+
+      context 'following Places' do
+        let(:morsels_from_followed_places) { rand(2..6) }
+
+        it_behaves_like 'TimelinePaginateable' do
+          let(:paginateable_object_class) { FeedItem }
+          before do
+            paginateable_object_class.delete_all
+            30.times do
+              morsel = FactoryGirl.create(:morsel_with_items)
+              morsel.place.followers << current_user
+            end
+          end
+        end
+
+        before do
+          morsels_from_followed_places.times do
+            morsel = FactoryGirl.create(:morsel_with_items)
+            morsel.place.followers << current_user
+          end
+        end
+
+        it 'returns any Feed Items from current_user\'s Followed Places' do
+          get_endpoint
+
+          expect_success
+          expect_json_data_count morsels_from_followed_places
+        end
+
+        context 'Morsel is marked as draft' do
+          before { Morsel.last.update(draft: true) }
+
+          it 'omits the Feed Item' do
+            get_endpoint
+
+            expect_success
+            expect_json_data_count(morsels_from_followed_places - 1)
+          end
+        end
+
+        context 'current_user Feed Item exists' do
+          let(:current_user_morsel_count) { rand(2..6) }
+          before { current_user_morsel_count.times { FactoryGirl.create(:morsel_with_items, creator: current_user) }}
+
+          it 'returns any Feed Items from current_user\'s Followed Places in addition to the current_user\'s' do
+            get_endpoint
+
+            expect_success
+            expect_json_data_count(morsels_from_followed_places + current_user_morsel_count)
+          end
+        end
+      end
     end
   end
 end

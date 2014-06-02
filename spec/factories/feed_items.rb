@@ -21,6 +21,7 @@
 FactoryGirl.define do
   factory :morsel_feed_item, class: FeedItem do
     association(:subject, factory: :morsel)
+    association(:place, factory: :place)
     association(:user, factory: :user)
     factory :visible_morsel_feed_item, class: FeedItem do
       visible true

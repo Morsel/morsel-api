@@ -57,6 +57,7 @@
   - [GET `/places/suggest` - Suggest Completion](#get-placessuggest---suggest-completion)
   - [POST `/places/join` - Join User w/ Place](#post-placesjoin---join-user-w-place)
   - [GET `/places/:id` - Place](#get-placesid--place)
+  - [GET `/places/:id/users` - Place Users](#get-placesidusers--place-users)
 
 - [Item Methods](#item-methods)
   - [POST `/items` - Create a new Item](#post-items---create-a-new-item)
@@ -298,7 +299,7 @@ The API responds with any new Morsels since the Morsel with id = 100. So if ther
 # Feed Methods
 
 ## GET `/feed` - Feed
-Returns the Feed. If [current_user](#current_user) exists, the results will include your Feed Items, any followed Users' Feed Items, and any Feed Items marked as `featured`. If no [current_user](#current_user) exists only Feed Items marked as `featured` will be returned. In either case results are sorted by their `created_at` date, with the most recent one's appearing first.
+Returns the Feed. If [current_user](#current_user) exists, the results will include your Feed Items, any followed Users' Feed Items, any followed Places' Feed Items, and any Feed Items marked as `featured`. If no [current_user](#current_user) exists only Feed Items marked as `featured` will be returned. In either case results are sorted by their `created_at` date, with the most recent one's appearing first.
 
 __Request Behaviors__
 * [Pagination](#pagination)
@@ -963,6 +964,21 @@ Returns Place with the specified `id`
 | __data__ |
 | -------- |
 | [Place](#place) |
+
+<br />
+<br />
+
+## GET `/places/:id/users` - Place Users
+Returns Users belonging to the Place with the specified `id`
+
+__Request Behaviors__
+* [Pagination](#pagination)
+
+### Response
+
+| __data__ |
+| -------- |
+| [Users](#user)[] |
 
 <br />
 <br />
