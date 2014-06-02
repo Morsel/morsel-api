@@ -18,7 +18,7 @@ module Search
       if query.present?
         SearchableUser.since(since_id)
                       .max(max_id)
-                      .where('first_name ILIKE :query OR last_name ILIKE :query', query: query)
+                      .where('first_name ILIKE :query OR last_name ILIKE :query', query: "#{query}%")
                       .promoted(promoted)
                       .limit(count)
                       .order('id DESC')

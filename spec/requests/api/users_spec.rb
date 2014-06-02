@@ -34,6 +34,16 @@ describe 'Users API' do
         expect_json_data_count 2
         expect(json_data.first['following']).to be_false
       end
+
+      it 'returns inpartial matches' do
+        get_endpoint  user: {
+                              query: 'tur'
+                            }
+
+        expect_success
+        expect_json_data_count 2
+        expect(json_data.first['following']).to be_false
+      end
     end
 
     context 'promoted' do
