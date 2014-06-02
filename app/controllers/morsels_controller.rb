@@ -95,6 +95,7 @@ class MorselsController < ApiController
     if morsel.save
       PublishMorselWorker.perform_async(
         morsel_id: morsel.id,
+        place_id: morsel.place_id,
         user_id: current_user.id,
         post_to_facebook: params[:post_to_facebook],
         post_to_twitter: params[:post_to_twitter]

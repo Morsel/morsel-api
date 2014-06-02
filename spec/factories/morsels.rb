@@ -42,6 +42,9 @@ FactoryGirl.define do
     end
 
     factory :morsel_with_creator, class: Morsel do
+      before(:build) do
+        stub_foursquare_venue
+      end
       association(:creator, factory: :user)
       association(:place)
       factory :morsel_with_creator_and_photo do
@@ -58,7 +61,7 @@ FactoryGirl.define do
         after(:create) do |morsel, evaluator|
           create_list(:item, evaluator.items_count, morsel: morsel, creator: morsel.creator)
           morsel.primary_item_id = morsel.item_ids.last
-          morsel.build_feed_item(subject_id: morsel.id, subject_type: 'Morsel', visible: true, user: morsel.creator, featured: evaluator.featured_feed_item) if evaluator.build_feed_item
+          morsel.build_feed_item(subject_id: morsel.id, subject_type: 'Morsel', visible: true, user: morsel.creator, place: morsel.place, featured: evaluator.featured_feed_item) if evaluator.build_feed_item
           morsel.save
         end
 

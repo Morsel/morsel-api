@@ -23,6 +23,7 @@ class FeedItem < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :subject, polymorphic: true
+  belongs_to :place
   belongs_to :user
 
   scope :visible, -> { where(visible: true) }
@@ -30,13 +31,22 @@ class FeedItem < ActiveRecord::Base
 
   def self.personalized_for(user_id)
     where(%Q[
-      user_id IN (SELECT followable_id
-                  FROM follows
-                  WHERE follower_id = :user_id
-                    AND followable_type = 'User'
-                    AND deleted_at IS NULL)
-      OR user_id = :user_id
-      OR featured = true
+      user_id IN (                        -- Followed Users' IDs
+        SELECT followable_id
+        FROM follows
+        WHERE follower_id = :user_id
+          AND followable_type = 'User'
+          AND deleted_at IS NULL
+      )
+      OR place_id IN (                    -- Followed Places' IDs
+        SELECT followable_id
+        FROM follows
+        WHERE follower_id = :user_id
+          AND followable_type = 'Place'
+            AND deleted_at IS NULL
+      )
+      OR user_id = :user_id               -- User's
+      OR featured = true                  -- Featured
       ], user_id: user_id)
   end
 end

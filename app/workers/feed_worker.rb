@@ -7,6 +7,7 @@ class FeedWorker
     feed_item = FeedItem.new(
       subject_id: options['morsel_id'],
       subject_type: 'Morsel',
+      place_id: options['place_id'],
       user_id: options['user_id'],
       visible: true
     )

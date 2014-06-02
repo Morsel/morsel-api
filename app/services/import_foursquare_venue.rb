@@ -11,12 +11,12 @@ class ImportFoursquareVenue
     reservations
   )
 
-  def call
+  def call(force = false)
     if foursquare_venue
-      return if place.recently_imported?
+      return if !force && place.recently_imported?
 
       place.name = foursquare_venue['name']
-      place.information['website_url'] = foursquare_venue['url']
+      place.website_url = foursquare_venue['url']
 
       import_attributes if foursquare_venue['attributes'].present?
       import_contact if foursquare_venue['contact'].present?
@@ -27,6 +27,8 @@ class ImportFoursquareVenue
       import_reservations if foursquare_venue['reservations'].present?
 
       place.last_imported_at = DateTime.now
+      place.foursquare_timeframes_will_change!
+      place.information_will_change!
       place.save
     else
       delete_place
@@ -68,8 +70,8 @@ class ImportFoursquareVenue
   end
 
   def import_contact
-    place.twitter_username =              foursquare_venue['contact']['twitter']
-    place.information['formatted_phone'] = foursquare_venue['contact']['formattedPhone']
+    place.twitter_username =  foursquare_venue['contact']['twitter']
+    place.formatted_phone =   foursquare_venue['contact']['formattedPhone']
   end
 
   def import_hours
@@ -85,15 +87,15 @@ class ImportFoursquareVenue
   end
 
   def import_menu
-    place.information['menu_url'] =        foursquare_venue['menu']['url']
-    place.information['menu_mobile_url'] = foursquare_venue['menu']['mobileUrl']
+    place.menu_url =        foursquare_venue['menu']['url']
+    place.menu_mobile_url = foursquare_venue['menu']['mobileUrl']
   end
 
   def import_price
-    place.information['price_tier'] = foursquare_venue['price']['tier']
+    place.price_tier = foursquare_venue['price']['tier']
   end
 
   def import_reservations
-    place.information['reservations_url'] = foursquare_venue['reservations']['url']
+    place.reservations_url = foursquare_venue['reservations']['url']
   end
 end
