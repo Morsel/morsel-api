@@ -938,6 +938,7 @@ Creating a new Place will kick off a background job to import all of its data fr
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
+| title| String | [current_user](#current_user)'s `title` at the Place | | X |
 | place[id] | String |  | | if `foursquare_venue_id` not passed |
 | place[foursquare_venue_id] | String | The photo for the new Item | | if `id` not passed |
 | place[name] | String | The name of the Place | | |
