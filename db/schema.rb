@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140530204148) do
+ActiveRecord::Schema.define(version: 20140602202222) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,8 +60,10 @@ ActiveRecord::Schema.define(version: 20140530204148) do
     t.string   "link"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
+  add_index "authentications", ["deleted_at"], name: "index_authentications_on_deleted_at", using: :btree
   add_index "authentications", ["uid", "name"], name: "index_authentications_on_uid_and_name", using: :btree
   add_index "authentications", ["user_id"], name: "index_authentications_on_user_id", using: :btree
 

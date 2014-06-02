@@ -16,10 +16,12 @@
 # **`link`**        | `string(255)`      |
 # **`created_at`**  | `datetime`         |
 # **`updated_at`**  | `datetime`         |
+# **`deleted_at`**  | `datetime`         |
 #
 
 class Authentication < ActiveRecord::Base
   include Authority::Abilities, TimelinePaginateable, UserCreatable
+  acts_as_paranoid
 
   attr_accessor :short_lived
 
