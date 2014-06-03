@@ -12,7 +12,15 @@ class MorselsController < ApiController
   end
 
   PUBLIC_ACTIONS << def index
-    if params[:user_id].present? || params[:username].present?
+    if params[:place_id].present?
+      custom_respond_with Morsel.includes(:items, :creator, :place)
+                          .published
+                          .since(params[:since_id])
+                          .max(params[:max_id])
+                          .where(place_id: params[:place_id])
+                          .limit(pagination_count)
+                          .order('id DESC')
+    elsif params[:user_id].present? || params[:username].present?
       if params[:user_id].present?
         user = User.find params[:user_id]
       elsif params[:username].present?
@@ -32,14 +40,6 @@ class MorselsController < ApiController
                           .since(params[:since_id])
                           .max(params[:max_id])
                           .where(creator_id: current_user.id)
-                          .limit(pagination_count)
-                          .order('id DESC')
-    elsif params[:place_id].present?
-      custom_respond_with Morsel.includes(:items, :creator, :place)
-                          .published
-                          .since(params[:since_id])
-                          .max(params[:max_id])
-                          .where(place_id: params[:place_id])
                           .limit(pagination_count)
                           .order('id DESC')
     else
