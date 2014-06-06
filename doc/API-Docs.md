@@ -1491,6 +1491,7 @@ Response for any Like Item related requests.
   "first_name": "Turd",
   "last_name": "Ferguson",
   "bio": "Suck It, Trebek",
+  "industry": "chef",
   "photos": {
     "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
     "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
@@ -1515,7 +1516,6 @@ Response for any Like Item related requests.
 ```json
 {
   "created_at": "2014-01-07T18:35:57.877Z",
-  "industry": "chef",
   "facebook_uid": "1234567890",
   "twitter_username": "morsel_marty",
   "morsel_count": 1,
