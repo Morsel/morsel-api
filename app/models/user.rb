@@ -105,8 +105,8 @@ class User < ActiveRecord::Base
       store_accessor :settings, :unsubscribed, :auto_follow
     end
 
-    def auto_follow?; auto_follow == 'true' end
-    def unsubscribed?; unsubscribed == 'true' end
+    def auto_follow?; auto_follow == true || auto_follow == 'true' end
+    def unsubscribed?; unsubscribed == true || unsubscribed == 'true' end
   end
 
   def self.find_first_by_auth_conditions(warden_conditions)

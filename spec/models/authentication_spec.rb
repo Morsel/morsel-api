@@ -88,6 +88,15 @@ describe Authentication do
       end
       it { should_not be_valid }
     end
+
+    context 'authentication with same `uid` was deleted before' do
+      before do
+        authentication_with_same_uid = authentication.dup
+        authentication_with_same_uid.save
+        authentication_with_same_uid.destroy
+      end
+      it { should be_valid }
+    end
   end
 
   describe 'user' do
