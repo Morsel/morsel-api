@@ -24,6 +24,8 @@
 # **`updated_at`**             | `datetime`         |
 # **`deleted_at`**             | `datetime`         |
 # **`last_imported_at`**       | `datetime`         |
+# **`lat`**                    | `float`            |
+# **`lon`**                    | `float`            |
 #
 
 require 'spec_helper'
