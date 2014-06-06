@@ -1615,6 +1615,8 @@ Response for any User Follower related requests.
 
 ```json
 {
+  "lat": 41.896917,
+  "lon": -87.643547,
   "facebook_page_id": "162760584142",
   "twitter_username": "BigStarChicago",
   "foursquare_venue_id": "4adbf2bbf964a520242b21e3",

@@ -84,6 +84,8 @@ class ImportFoursquareVenue
     place.state =       foursquare_venue['location']['state']
     place.postal_code = foursquare_venue['location']['postalCode']
     place.country =     foursquare_venue['location']['country']
+    place.lat =         foursquare_venue['location']['lat']
+    place.lon =         foursquare_venue['location']['lng']
   end
 
   def import_menu
