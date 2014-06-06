@@ -13,6 +13,8 @@ class BuildAuthentication
   validates :uid, presence: true
   validates :user, presence: true
 
+  validate :secret_required?
+
   def call
     if provider == 'facebook'
       FacebookAuthenticatedUserDecorator.new(user).build_facebook_authentication(authentication_attributes)
@@ -29,5 +31,9 @@ class BuildAuthentication
 
   def authentication_attributes
     attributes.except :user
+  end
+
+  def secret_required?
+    errors.add(:secret, 'is required') if secret.nil? && provider == 'twitter'
   end
 end

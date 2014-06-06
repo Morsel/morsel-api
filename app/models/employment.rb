@@ -19,5 +19,5 @@ class Employment < ActiveRecord::Base
   belongs_to :place
   belongs_to :user
 
-  validates :user_id, uniqueness: { scope: [:deleted_at, :place_id] }
+  validates :user_id, uniqueness: { scope: [:deleted_at, :place_id], conditions: -> { where(deleted_at: nil) } }
 end

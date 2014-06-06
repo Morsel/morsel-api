@@ -31,6 +31,6 @@ class Like < ActiveRecord::Base
 
   self.authorizer_name = 'LikeAuthorizer'
 
-  validates :liker_id, uniqueness: { scope: [:deleted_at, :likeable_id] }
+  validates :liker_id, uniqueness: { scope: [:deleted_at, :likeable_id], conditions: -> { where(deleted_at: nil) } }
   validates :likeable, presence: true
 end

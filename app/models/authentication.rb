@@ -33,7 +33,12 @@ class Authentication < ActiveRecord::Base
 
   validates :secret, presence: true, if: proc { |a| a.twitter? }
   validates :token, presence: true
-  validates :uid, presence: true, uniqueness: { scope: :provider, message: 'already exists' }
+  validates :uid, presence: true,
+                  uniqueness: {
+                    scope: :provider,
+                    message: 'already exists',
+                    conditions: -> { where(deleted_at: nil) }
+                  }
   validates :user, presence: true
 
   def exchange_access_token
