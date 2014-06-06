@@ -52,6 +52,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable
 
   before_validation :ensure_authentication_token
+  before_save :default_values
   before_save :process_remote_photo_url
   after_save :ensure_role
 
@@ -190,6 +191,10 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  def default_values
+    self.auto_follow ||= true
+  end
 
   def ensure_authentication_token
     # If the User is new or they are changing their password, regenerate authentication_token

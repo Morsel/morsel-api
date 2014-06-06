@@ -150,6 +150,7 @@ describe User do
   context :saved do
     before { user.save }
     its(:authentication_token) { should_not be_nil }
+    its(:auto_follow?) { should be_true }
 
     describe 'admin' do
       context 'is true' do
