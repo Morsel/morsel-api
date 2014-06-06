@@ -5,7 +5,8 @@ class SlimUserSerializer < ActiveModel::Serializer
              :username,
              :first_name,
              :last_name,
-             :bio
+             :bio,
+             :industry
 
   def attributes
     hash = super

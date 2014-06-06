@@ -2,7 +2,6 @@ class UserSerializer < SlimUserSerializer
   include PhotoUploadableSerializerAttributes
 
   attributes :created_at,
-             :industry,
              :facebook_uid,
              :twitter_username,
              :morsel_count,
