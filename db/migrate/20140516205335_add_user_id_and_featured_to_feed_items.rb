@@ -5,7 +5,7 @@ class AddUserIdAndFeaturedToFeedItems < ActiveRecord::Migration
     add_column :feed_items, :featured, :boolean, default: false
     add_index :feed_items, :featured
 
-    FeedItem.find_each(conditions: "subject_type = 'Morsel'") do |feed_item|
+    FeedItem.where(subject_type: 'Morsel').find_each do |feed_item|
       feed_item.update(user_id: feed_item.subject.user_id)
     end
   end
