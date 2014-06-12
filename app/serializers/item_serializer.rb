@@ -15,6 +15,9 @@ class ItemSerializer < ActiveModel::Serializer
              :like_count,
              :comment_count
 
+  has_one :creator, serializer: SlimUserSerializer
+  has_one :morsel, serializer: SlimMorselSerializer
+
   def liked
     current_user.present? && current_user.likes_item?(object)
   end
