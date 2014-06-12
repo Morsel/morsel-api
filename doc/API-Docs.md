@@ -1402,6 +1402,9 @@ Used by third-party services to ping the API.
 ## Item Objects
 
 ### Item
+* Includes:
+  * `creator`: [Slim User](#slim-user)
+  * `morsel`: [Slim Morsel](#slim-morsel) (unless Item is returned as part of a Morsel)
 
 ```json
   {
