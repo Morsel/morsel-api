@@ -9,7 +9,7 @@ class MorselSerializer < SlimMorselSerializer
              :twitter_mrsl
 
   has_one :creator, serializer: SlimUserSerializer
-  has_many :items
+  has_many :items, serializer: ItemSansMorselSerializer
   has_one :place, serializer: SlimPlaceSerializer
 
   def items

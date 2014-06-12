@@ -1206,13 +1206,27 @@ describe 'Users API' do
       expect_json_data_count items_count
 
       last_item = some_morsel.items.last
+      last_item_creator = last_item.creator
+      last_item_morsel = last_item.morsel
+
       expect_first_json_data_eq({
         'action_type' => 'Like',
         'subject_type' => 'Item',
         'subject' => {
           'id' => last_item.id,
           'description' => last_item.description,
-          'nonce' => last_item.nonce
+          'nonce' => last_item.nonce,
+          'creator' => {
+            'id' => last_item_creator.id,
+            'username' => last_item_creator.username,
+            'first_name' => last_item_creator.first_name,
+            'last_name' => last_item_creator.last_name
+          },
+          'morsel' => {
+            'id' => last_item_morsel.id,
+            'title' => last_item_morsel.title,
+            'slug' => last_item_morsel.slug
+          }
         }
       })
     end
