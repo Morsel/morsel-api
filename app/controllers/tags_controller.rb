@@ -33,7 +33,7 @@ class TagsController < ApiController
     authorize_action_for tag
 
     if tag.destroy
-      render_json 'OK'
+      render_json_ok
     else
       render_json_errors tag.errors
     end

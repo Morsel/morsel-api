@@ -69,6 +69,17 @@ MorselApp::Application.routes.draw do
   match 'cuisines/:id/users', to: 'keywords#users', via: :get
   match 'specialties/:id/users', to: 'keywords#users', via: :get
 
+  resources :notifications, only: [:index] do
+    collection do
+      put 'mark_read'
+      get 'unread_count'
+    end
+
+    member do
+      put 'mark_read'
+    end
+  end
+
   resources :users, only: [:update], concerns: [:followable, :taggable] do
     collection do
       get 'validate_email(/:email)' => 'users#validate_email'

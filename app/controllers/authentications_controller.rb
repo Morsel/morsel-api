@@ -35,7 +35,7 @@ class AuthenticationsController < ApiController
     authorize_action_for authentication
 
     if authentication.destroy
-      render_json 'OK'
+      render_json_ok
     else
       render_json_errors(authentication.errors)
     end

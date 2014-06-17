@@ -19,7 +19,7 @@ class FollowsController < ApiController
     authorize_action_for follow
 
     if follow.destroy
-      render_json 'OK'
+      render_json_ok
     else
       render_json_errors follow.errors
     end

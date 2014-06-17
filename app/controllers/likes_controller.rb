@@ -18,7 +18,7 @@ class LikesController < ApiController
     authorize_action_for like
 
     if like.destroy
-      render_json 'OK'
+      render_json_ok
     else
       render_json_errors like.errors
     end

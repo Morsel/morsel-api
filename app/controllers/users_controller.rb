@@ -86,7 +86,7 @@ class UsersController < ApiController
     user = User.find(params[:id])
 
     if user.update(industry: UserParams.build(params)[:industry])
-      render_json 'OK'
+      render_json_ok
     else
       render_json_errors(user.errors)
     end
@@ -105,7 +105,7 @@ class UsersController < ApiController
 
     # Password confirmation is done client-side, so just pass the password again as the password_confirmation
     if user.reset_password!(params.fetch(:password), params.fetch(:password))
-      render_json 'OK'
+      render_json_ok
     else
       render_json_errors(user.errors)
     end
@@ -115,7 +115,7 @@ class UsersController < ApiController
     user = User.find_by(email: params[:email])
 
     if user.update(unsubscribed: true)
-      render_json 'OK'
+      render_json_ok
     else
       render_json_errors(user.errors)
     end

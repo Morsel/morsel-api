@@ -44,7 +44,7 @@
   - [GET `/users/:id|:username/morsels` - User Morsels](#get-usersidusernamemorsels---user-morsels)
   - [GET `/users/activities` - User Activities](#get-usersactivities---user-activities)
   - [GET `/users/followables_activities` - User Followables Activities](#get-usersfollowables_activities---user-followables-activities)
-  - [GET `/users/notifications` - User Notifications](#get-usersnotifications---user-notifications)
+  - [GET `/users/notifications` - User Notifications](#get-usersnotifications---user-notifications) __DEPRECATED__
   - [GET `/users/:id/likeables` - User Likeables](#get-usersidlikeables---user-likeables)
   - [POST `/users/:id/tags` - Create User Tag](#post-usersidtags---create-user-tag)
   - [DELETE `/users/:id/tags/:tag_id` - Delete User Tag](#delete-usersidtagstag_id---delete-user-tag)
@@ -87,6 +87,12 @@
   - [GET `/cuisines/:id/users` - Cuisine Users](#get-cuisinesidusers---cuisine-users)
   - [GET `/specialties` - Specialties](#get-specialties---specialties)
   - [GET `/specialties/:id/users` - Specialty Users](#get-specialtiesidusers---specialty-users)
+
+- [Notification Methods](#notification-methods)
+  - [GET `/notifications` - Notifications](#get-notifications---notifications)
+  - [PUT `/notifications/mark_read` - Mark Notifications Read](#put-notificationsmark_read---mark-notifications-read)
+  - [PUT `/notifications/:id/mark_read` - Mark Notification Read](#put-notificationsidmark_read---mark-notification-read)
+  - [GET `/notifications/unread_count` - Notifications Unread Count](#get-notificationsunread_count---notifications-unread-count)
 
 - [Misc Methods](#misc-methods)
   - [GET `/status` - Status](#get-status---status)
@@ -766,7 +772,7 @@ __Request Behaviors__
 <br />
 <br />
 
-GET `/users/followables_activities` - User Followables Activities
+## GET `/users/followables_activities` - User Followables Activities
 Returns the [current_user](#current_user)'s Followed Users' Activities.
 
 __Request Behaviors__
@@ -782,16 +788,7 @@ __Request Behaviors__
 <br />
 
 ## GET `/users/notifications` - User Notifications
-Returns the [current_user](#current_user)'s Notifications. A Notification is created when someone likes or comments on your Items. Think Facebook or Twitter Notifications.
-
-__Request Behaviors__
-* [Pagination](#pagination)
-
-### Response
-
-| __data__ |
-| -------- |
-| [Notifications](#notification)[] |
+__DEPRECATED__ Alias for [GET `/notifications` - Notifications](#get-notifications---notifications)
 
 <br />
 <br />
@@ -1383,6 +1380,65 @@ __Request Behaviors__
 | __data__ |
 | -------- |
 | [Users](#user)[] |
+
+<br />
+<br />
+
+
+# Notification Methods
+
+## GET `/notifications` - Notifications
+Returns the [current_user](#current_user)'s Notifications. A Notification is created when someone likes or comments on your Items. Think Facebook or Twitter Notifications.
+
+__Request Behaviors__
+* [Pagination](#pagination)
+
+### Response
+
+| __data__ |
+| -------- |
+| [Notifications](#notification)[] |
+
+<br />
+<br />
+
+## PUT `/notifications/mark_read` - Mark Notifications Read
+Marks all notifications specified as read
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| max_id | Number | results up to and including this `id` | | X |
+
+### Response
+
+| Status Code |
+| ----------- |
+|         200 |
+
+<br />
+<br />
+
+## PUT `/notifications/:id/mark_read` - Mark Notification Read
+Marks the notification for the specified `id` as read
+
+### Response
+
+| Status Code |
+| ----------- |
+|         200 |
+
+<br />
+<br />
+
+## GET `/notifications/unread_count` - Notifications Unread Count
+
+### Response
+
+| __data__ |   |
+| -------- | - |
+| `unread_count` | The number of unread notifications for [current_user](#current_user) |
 
 <br />
 <br />

@@ -24,12 +24,16 @@ class Notification < ActiveRecord::Base
   belongs_to :payload, polymorphic: true
   belongs_to :user
 
-  before_save :ensure_marked_read_at
+  scope :unread, -> { where(marked_read_at: nil) }
+  scope :unread_for_user_id, -> (user_id) { unread.where(user_id: user_id) }
 
-  private
+  self.authorizer_name = 'NotificationAuthorizer'
 
-  # HACK: Since we're not going to implement 'Mark as Read' now, default all Notifications to being read upon creation
-  def ensure_marked_read_at
-    self.marked_read_at = DateTime.now if marked_read_at.blank?
+  def read?
+    marked_read_at.present?
+  end
+
+  def mark_read!
+    self.update(marked_read_at: DateTime.now) unless marked_read_at
   end
 end
