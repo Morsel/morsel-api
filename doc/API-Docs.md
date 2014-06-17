@@ -55,8 +55,10 @@
 
 - [Place Methods](#place-methods) [\<Followable\>](#followable)
   - [GET `/places/suggest` - Suggest Completion](#get-placessuggest---suggest-completion)
-  - [POST `/places/join` - Join User w/ Place](#post-placesjoin---join-user-w-place)
+  - [POST `/places/:id|:foursquare_venue_id/employment` - Employ User at Place](#post-placesidfoursquare_venue_idemployment---employ-user-at-place)
+  - [DELETE `/places/:id/employment` - Unemploy User at Place](#delete-placesidemployment---unemploy-user-at-place)
   - [GET `/places/:id` - Place](#get-placesid--place)
+  - [GET `/places/:id/morsels` - Place Morsels](#get-placesidmorsels--place-morsels)
   - [GET `/places/:id/users` - Place Users](#get-placesidusers--place-users)
 
 - [Item Methods](#item-methods)
@@ -930,8 +932,8 @@ Proxy for the [Foursquare Venues suggestcompletion](https://developer.foursquare
 <br />
 <br />
 
-## POST `/places/join` - Join User w/ Place
-Associates the [current_user](#current_user) with the Place with the specified `place_id` or `foursquare_venue_id`.
+## POST `/places/:id|:foursquare_venue_id/employment` - Employ User at Place
+Associates the [current_user](#current_user) with the Place with the specified `id` or `foursquare_venue_id`.
 If the Place does not yet exist (`foursquare_venue_id` passed) it will be created with the additional place parameters and return it.
 Creating a new Place will kick off a background job to import all of its data from Foursquare.
 
@@ -956,6 +958,24 @@ Creating a new Place will kick off a background job to import all of its data fr
 <br />
 <br />
 
+## DELETE `/places/:id/employment` - Unemploy User at Place
+Removes the association between the Place with the specified `id` and [current_user](#current_user)
+
+### Response
+
+| Status Code |
+| ----------- |
+|         204 |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __not joined__ | 404 (Not Found) | The Place is not joined by the User |
+
+<br />
+<br />
+
 ## GET `/places/:id` - Place
 Returns Place with the specified `id`
 
@@ -964,6 +984,36 @@ Returns Place with the specified `id`
 | __data__ |
 | -------- |
 | [Place](#place) |
+
+<br />
+<br />
+
+## GET `/places/:id/users` - Place Users
+Returns Users belonging to the Place with the specified `id`
+
+__Request Behaviors__
+* [Pagination](#pagination)
+
+### Response
+
+| __data__ |
+| -------- |
+| [Users](#user)[] |
+
+<br />
+<br />
+
+## GET `/places/:id/morsels` - Place Morsels
+Returns Morsels belonging to the Place with the specified `id`
+
+__Request Behaviors__
+* [Pagination](#pagination)
+
+### Response
+
+| __data__ |
+| -------- |
+| [Morsels](#morsel)[] |
 
 <br />
 <br />

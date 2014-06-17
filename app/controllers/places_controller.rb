@@ -3,29 +3,6 @@ class PlacesController < ApiController
     custom_respond_with Place.find params[:id]
   end
 
-  def join
-    title = params.fetch(:title)
-    place_params = PlaceParams.build(params)
-
-    if place_params[:id].present?
-      place = Place.find place_params[:id]
-    elsif place_params[:foursquare_venue_id].present?
-      place = Place.find_or_create_by(foursquare_venue_id: place_params[:foursquare_venue_id]) do |p|
-        p.attributes = place_params
-        p.creator_id = current_user.id
-      end
-
-      render_json_errors(place.errors) && return unless place.valid?
-    end
-
-    if place.employ(current_user, title)
-      custom_respond_with place,  serializer: SlimPlaceWithTitleSerializer,
-                                  context: { title: title }
-    else
-      render_json_errors place.errors
-    end
-  end
-
   def suggest
     query = params.fetch(:query)
     lat_lon = params.fetch(:lat_lon)
@@ -51,7 +28,7 @@ class PlacesController < ApiController
 
   private
 
-  authorize_actions_for Place, except: PUBLIC_ACTIONS, actions: { join: :create, suggest: :read }
+  authorize_actions_for Place, except: PUBLIC_ACTIONS, actions: { suggest: :read }
 
   class PlaceParams
     def self.build(params)
