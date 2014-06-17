@@ -48,12 +48,79 @@ describe 'Places API' do
     end
   end
 
-  describe 'POST /places/:id|:foursquare_venue_id/employment places#employment' do
+  describe 'POST /places/join employments#create' do
+    let(:endpoint) { '/places/join' }
     let(:current_user) { FactoryGirl.create(:chef) }
     let(:title) { Faker::Name.title }
-    let(:foursquare_stub_options) { {} }
 
-    before { stub_foursquare_venue(foursquare_stub_options) }
+    before { stub_foursquare_venue }
+
+    context 'Place already exists in API' do
+      let(:place) { FactoryGirl.create(:place) }
+
+      it 'employs `current_user` at the Place with the specified `foursquare_venue_id`' do
+        post_endpoint place: {
+                        foursquare_venue_id: place.foursquare_venue_id,
+                        name: place.name,
+                        address: place.address,
+                        city: place.city,
+                        state: place.state
+                      }, title: title
+
+        expect_success
+
+        expect_json_data_eq({
+          'id' => place.id,
+          'name' => place.name,
+          'slug' => place.slug,
+          'address' => place.address,
+          'city' => place.city,
+          'state' => place.state,
+          'country' => place.country
+        })
+
+        place.reload
+        expect(place.users.include?(current_user)).to be_true
+      end
+    end
+
+    context 'Place does not exist in API' do
+      let(:place) { FactoryGirl.build(:place) }
+
+      it 'creates a Place and employs `current_user` there' do
+        post_endpoint place: {
+                        foursquare_venue_id: place.foursquare_venue_id,
+                        name: place.name,
+                        address: place.address,
+                        city: place.city,
+                        state: place.state
+                      }, title: title
+        expect_success
+        expect_json_data_eq({
+          'id' => Place.last.id,
+          'name' => place.name,
+          'address' => place.address,
+          'city' => place.city,
+          'state' => place.state
+        })
+        expect(Place.last.users.include?(current_user)).to be_true
+      end
+
+      it 'queues the FoursquareImportWorker' do
+        expect {
+          post_endpoint place: {
+                          foursquare_venue_id: place.foursquare_venue_id
+                        }, title: title
+        }.to change(FoursquareImportWorker.jobs, :size).by(1)
+      end
+    end
+  end
+
+  describe 'POST /places/:id|:foursquare_venue_id/employment employments#create' do
+    let(:current_user) { FactoryGirl.create(:chef) }
+    let(:title) { Faker::Name.title }
+
+    before { stub_foursquare_venue }
 
     context 'no `title` passed' do
       let(:endpoint) { '/places/0/employment' }
@@ -164,7 +231,7 @@ describe 'Places API' do
     end
   end
 
-  describe 'DELETE /places/:id/employment places#employment' do
+  describe 'DELETE /places/:id/employment employments#destroy' do
     let(:endpoint) { "/places/#{place.id}/employment" }
     let(:place) { FactoryGirl.create(:place) }
     let(:current_user) { FactoryGirl.create(:chef) }
