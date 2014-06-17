@@ -1436,9 +1436,9 @@ Marks the notification for the specified `id` as read
 
 ### Response
 
-| __data__ |   |
-| -------- | - |
-| `unread_count` | The number of unread notifications for [current_user](#current_user) |
+| __data__ | info  |
+| -------- | ---- |
+| unread_count | The number of unread notifications for [current_user](#current_user) |
 
 <br />
 <br />
