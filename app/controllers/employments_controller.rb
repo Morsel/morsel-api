@@ -4,13 +4,16 @@ class EmploymentsController < ApiController
 
     if params[:place_id].present?
       place = Place.find params[:place_id]
-    elsif params[:foursquare_venue_id].present?
-      place = Place.find_or_create_by(foursquare_venue_id: params[:foursquare_venue_id]) do |p|
-        p.attributes = PlacesController::PlaceParams.build(params) if params[:place]
-        p.creator_id = current_user.id
-      end
+    else
+      foursquare_venue_id = params[:foursquare_venue_id] || params[:place][:foursquare_venue_id]
+      if foursquare_venue_id.present?
+        place = Place.find_or_create_by(foursquare_venue_id: foursquare_venue_id) do |p|
+          p.attributes = PlacesController::PlaceParams.build(params) if params[:place]
+          p.creator_id = current_user.id
+        end
 
-      render_json_errors(place.errors) && return unless place.valid?
+        render_json_errors(place.errors) && return unless place.valid?
+      end
     end
 
     if place.employ(current_user, title)

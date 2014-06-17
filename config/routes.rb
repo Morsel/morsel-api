@@ -119,6 +119,9 @@ MorselApp::Application.routes.draw do
       post ':place_id/employment' => 'employments#create', place_id: /\d+/
       post ':foursquare_venue_id/employment' => 'employments#create', foursquare_venue_id: /[A-Za-z0-9]+/
       delete ':place_id/employment' => 'employments#destroy'
+
+      # HACK: Deprecated method
+      post 'join' => 'employments#create'
     end
 
     member do
