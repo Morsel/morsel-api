@@ -16,6 +16,7 @@ module ReservedPaths
       blog
       business
       buttons
+      careers
       change-password
       checkusername
       chef
@@ -24,11 +25,14 @@ module ReservedPaths
       claimed
       contact
       contacts
+      dev
+      developer
       devices
       direct-messages
       download
       downloads
       eatmorsel
+      engineering
       faq
       favorites
       feed
@@ -90,6 +94,7 @@ module ReservedPaths
       statistics
       tag
       team
+      tech
       terms
       tos
       translate

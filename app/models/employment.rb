@@ -14,6 +14,7 @@
 #
 
 class Employment < ActiveRecord::Base
+  include Authority::Abilities, UserCreatable
   acts_as_paranoid
 
   belongs_to :place

@@ -114,9 +114,11 @@ MorselApp::Application.routes.draw do
 
   resources :places, only: [:show], concerns: [:followable] do
     collection do
-      post 'join' => 'places#join'
       get 'suggest' => 'places#suggest'
       get ':place_id/morsels' => 'morsels#index', place_id: /\d+/
+      post ':place_id/employment' => 'employments#create', place_id: /\d+/
+      post ':foursquare_venue_id/employment' => 'employments#create', foursquare_venue_id: /[A-Za-z0-9]+/
+      delete ':place_id/employment' => 'employments#destroy'
     end
 
     member do
