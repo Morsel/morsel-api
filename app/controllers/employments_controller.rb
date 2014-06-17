@@ -31,7 +31,7 @@ class EmploymentsController < ApiController
     authorize_action_for employment
 
     if employment.destroy
-      render_json 'OK'
+      render_json_ok
     else
       render_json_errors employment.errors
     end

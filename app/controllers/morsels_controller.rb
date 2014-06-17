@@ -79,7 +79,7 @@ class MorselsController < ApiController
     authorize_action_for morsel
 
     if morsel.destroy
-      render_json 'OK'
+      render_json_ok
     else
       render_json_errors(morsel.errors)
     end

@@ -37,7 +37,7 @@ class ItemsController < ApiController
     Authority.enforce :delete, item, current_user
 
     if item.destroy
-      render_json 'OK'
+      render_json_ok
     else
       render_json_errors(item.errors)
     end

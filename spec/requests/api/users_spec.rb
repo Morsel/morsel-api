@@ -1312,67 +1312,6 @@ describe 'Users API' do
     end
   end
 
-  describe 'GET /users/notifications' do
-    let(:endpoint) { '/users/notifications' }
-    let(:current_user) { FactoryGirl.create(:user) }
-    let(:last_user) { FactoryGirl.create(:user) }
-    let(:notifications_count) { 3 }
-    let(:some_morsel) { FactoryGirl.create(:morsel_with_creator, creator: current_user) }
-
-    context 'an Item is liked' do
-      before do
-        notifications_count.times { FactoryGirl.create(:item_with_creator, creator: current_user, morsel:some_morsel) }
-        current_user.items.each do |item|
-          Sidekiq::Testing.inline! { item.likers << FactoryGirl.create(:user) }
-        end
-        Sidekiq::Testing.inline! { current_user.items.last.likers << last_user }
-      end
-
-      it 'returns the User\'s recent notifications' do
-        get_endpoint
-
-        expect_success
-        expect_json_data_count(notifications_count + 1)
-
-        first_item = some_morsel.items.first
-        expect_first_json_data_eq({
-          'message' => "#{last_user.full_name} (#{last_user.username}) liked #{first_item.morsel_title_with_description}".truncate(100, separator: ' ', omission: '... '),
-          'payload_type' => 'Activity',
-          'payload' => {
-            'action_type' => 'Like',
-            'subject_type' => 'Item',
-            'subject' => {
-              'id' => first_item.id,
-              'description' => first_item.description,
-              'nonce' => first_item.nonce
-            }
-          }
-        })
-      end
-
-      context 'Item is unliked' do
-        before do
-          Like.last.destroy
-        end
-
-        it 'should not notify for that action' do
-          get_endpoint
-
-          expect_success
-          expect_json_data_count notifications_count
-        end
-      end
-    end
-
-    it_behaves_like 'TimelinePaginateable' do
-      let(:paginateable_object_class) { Notification }
-      before do
-        paginateable_object_class.delete_all
-        30.times { FactoryGirl.create(:activity_notification, user: current_user) }
-      end
-    end
-  end
-
   describe 'GET /users/:id/places' do
     let(:endpoint) { "/users/#{user.id}/places" }
     let(:current_user) { FactoryGirl.create(:chef) }

@@ -23,7 +23,7 @@ class CommentsController < ApiController
     authorize_action_for comment
 
     if comment.destroy
-      render_json 'OK'
+      render_json_ok
     else
       render_json_errors comment.errors
     end
