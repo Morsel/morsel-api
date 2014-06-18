@@ -1601,6 +1601,7 @@ Response for any Like Item related requests.
   "last_name": "Ferguson",
   "bio": "Suck It, Trebek",
   "industry": "chef",
+  "professional": true,
   "photos": {
     "_40x40": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
     "_72x72": "https://morsel-staging.s3.amazonaws.com/user-images/user/3/1389119757-batman.jpeg",
