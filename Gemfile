@@ -60,7 +60,7 @@ group :development do
 end
 
 group :development, :test do
-  gem 'annotate', '>= 2.6.0'
+  gem 'annotate', '>= 2.6'
   gem 'bundler-audit'
   gem 'childprocess', '0.3.6'
   gem 'dotenv-rails'

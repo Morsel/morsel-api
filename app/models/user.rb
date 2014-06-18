@@ -39,6 +39,7 @@
 # **`deleted_at`**              | `datetime`         |
 # **`promoted`**                | `boolean`          | `default(FALSE)`
 # **`settings`**                | `hstore`           | `default({})`
+# **`professional`**            | `boolean`          | `default(FALSE)`
 #
 
 class User < ActiveRecord::Base
@@ -52,9 +53,9 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable
 
   before_validation :ensure_authentication_token
+  after_validation :ensure_professional
   before_save :default_values
   before_save :process_remote_photo_url
-  after_save :ensure_role
 
   has_many :authentications, inverse_of: :user
 
@@ -208,25 +209,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def ensure_role
-    case industry
-    when 'chef'
-      add_role(:chef)
-    when 'media'
-      add_role(:media)
-    end
-
-    if admin
-      add_role(:admin)
-    else
-      remove_role(:admin)
-    end
-
-    if staff
-      add_role(:staff)
-    else
-      remove_role(:staff)
-    end
+  def ensure_professional
+    self.professional = industry == 'chef' unless industry.nil?
   end
 
   def process_remote_photo_url

@@ -28,7 +28,7 @@ class PlacesController < ApiController
 
   private
 
-  authorize_actions_for Place, except: PUBLIC_ACTIONS, actions: { suggest: :read }
+  authorize_actions_for Place, except: PUBLIC_ACTIONS, actions: { suggest: :create }
 
   class PlaceParams
     def self.build(params)
