@@ -815,7 +815,6 @@ describe 'Users API' do
         'photos' => nil,
         'facebook_uid' => FacebookAuthenticatedUserDecorator.new(user_with_morsels).facebook_uid,
         'twitter_username' => TwitterAuthenticatedUserDecorator.new(user_with_morsels).twitter_username,
-        'liked_item_count' => number_of_likes,
         'morsel_count' => user_with_morsels.morsels.count
       })
     end
@@ -852,7 +851,6 @@ describe 'Users API' do
           'photos' => nil,
           'facebook_uid' => FacebookAuthenticatedUserDecorator.new(user_with_morsels).facebook_uid,
           'twitter_username' => TwitterAuthenticatedUserDecorator.new(user_with_morsels).twitter_username,
-          'liked_item_count' => number_of_likes,
           'morsel_count' => user_with_morsels.morsels.count
         })
       end

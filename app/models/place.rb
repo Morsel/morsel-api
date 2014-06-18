@@ -37,6 +37,8 @@ class Place < ActiveRecord::Base
   has_many    :employments, inverse_of: :place
   has_many    :users, through: :employments
 
+  self.authorizer_name = 'ProfessionalAuthorizer'
+
   concerning :Information do
     included do
       store_accessor  :information,

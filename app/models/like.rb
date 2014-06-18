@@ -29,8 +29,6 @@ class Like < ActiveRecord::Base
   alias_attribute :creator, :liker
   alias_attribute :user, :liker
 
-  self.authorizer_name = 'LikeAuthorizer'
-
   validates :liker_id, uniqueness: { scope: [:deleted_at, :likeable_id], conditions: -> { where(deleted_at: nil) } }
   validates :likeable, presence: true
 end

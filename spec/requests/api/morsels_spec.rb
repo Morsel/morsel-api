@@ -6,6 +6,28 @@ describe 'Morsels API' do
     let(:current_user) { FactoryGirl.create(:chef) }
     let(:expected_title) { 'Bake Sale!' }
 
+    context 'non-chef' do
+      let(:current_user) { FactoryGirl.create(:user) }
+      it 'creates a Morsel' do
+        post_endpoint morsel: {
+                        title: expected_title
+                      }
+
+        expect_success
+
+        new_morsel = Morsel.find json_data['id']
+        expect_json_data_eq({
+          'id' => new_morsel.id,
+          'title' => new_morsel.title,
+          'creator_id' => new_morsel.creator_id,
+          'title' => expected_title,
+        })
+
+        expect(json_data['photos']).to be_nil
+        expect(new_morsel.draft).to be_true
+      end
+    end
+
     it 'creates a Morsel' do
       post_endpoint morsel: {
                       title: expected_title

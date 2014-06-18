@@ -39,5 +39,5 @@ class EmploymentsController < ApiController
 
   private
 
-  authorize_actions_for Employment, except: PUBLIC_ACTIONS, actions: { users: :read }
+  authorize_actions_for Employment
 end

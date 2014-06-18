@@ -30,7 +30,7 @@
 
 FactoryGirl.define do
   factory :place do
-    association(:creator, factory: :user)
+    association(:creator, factory: :chef)
 
     name { Faker::Company.name }
     address { Faker::Address.street_address }

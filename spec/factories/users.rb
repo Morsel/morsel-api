@@ -39,6 +39,7 @@
 # **`deleted_at`**              | `datetime`         |
 # **`promoted`**                | `boolean`          | `default(FALSE)`
 # **`settings`**                | `hstore`           | `default({})`
+# **`professional`**            | `boolean`          | `default(FALSE)`
 #
 
 # Read about factories at https://github.com/thoughtbot/factory_girl
@@ -52,6 +53,7 @@ FactoryGirl.define do
     password 'password'
     bio 'Hi! I like turtles!'
     active true
+    professional false
 
     factory :admin do
       admin true
@@ -67,6 +69,7 @@ FactoryGirl.define do
 
     factory :chef, class: User do
       industry 'chef'
+      professional true
 
       factory :chef_with_photo, class: User do
         photo Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
