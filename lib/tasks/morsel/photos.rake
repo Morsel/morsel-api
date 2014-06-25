@@ -3,7 +3,7 @@ require 'rake'
 namespace :morsel do
   desc 'Recreate and reprocess the photos for the specified Class.'
   task reprocess_photos: :environment do
-    recreate_and_reprocess_class_photos(Morsel)
+    recreate_and_reprocess_class_photos(Item)
     recreate_and_reprocess_class_photos(User)
   end
 
