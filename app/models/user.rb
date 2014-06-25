@@ -210,7 +210,7 @@ class User < ActiveRecord::Base
   end
 
   def ensure_professional
-    self.professional = industry == 'chef' unless industry.nil?
+    self.professional = industry == 'chef' unless professional || industry.nil?
   end
 
   def process_remote_photo_url
