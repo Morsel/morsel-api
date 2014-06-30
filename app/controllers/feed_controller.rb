@@ -6,14 +6,14 @@ class FeedController < ApiController
                                   .since(params[:since_id])
                                   .max(params[:max_id])
                                   .limit(pagination_count)
-                                  .order('id DESC')
+                                  .order('created_at DESC')
     else
       custom_respond_with FeedItem.visible
                                   .featured
                                   .since(params[:since_id])
                                   .max(params[:max_id])
                                   .limit(pagination_count)
-                                  .order('id DESC')
+                                  .order('created_at DESC')
     end
   end
 end
