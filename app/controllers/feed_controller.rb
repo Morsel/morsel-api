@@ -1,5 +1,6 @@
 class FeedController < ApiController
   PUBLIC_ACTIONS << def index
+    # HACK: Sorting by `created_at` because mfk's Morsels were all created in sequence and now needed to be 'randomized'
     if current_user.present?
       custom_respond_with FeedItem.visible
                                   .personalized_for(current_user.id)
