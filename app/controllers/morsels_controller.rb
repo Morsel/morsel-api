@@ -13,14 +13,13 @@ class MorselsController < ApiController
 
   PUBLIC_ACTIONS << def index
     if params[:place_id].present?
-      # HACK: Sorting by `published_at` because mfk's Morsels were all created in sequence and now needed to be 'randomized'
       custom_respond_with Morsel.includes(:items, :creator, :place)
                           .published
                           .since(params[:since_id])
                           .max(params[:max_id])
                           .where(place_id: params[:place_id])
                           .limit(pagination_count)
-                          .order('published_at DESC')
+                          .order('id DESC')
     elsif params[:user_id].present? || params[:username].present?
       if params[:user_id].present?
         user = User.find params[:user_id]
