@@ -94,6 +94,7 @@ class MorselsController < ApiController
 
     if morsel.save
       PublishMorselWorker.perform_async(
+        current_user_id: current_user.id,
         morsel_id: morsel.id,
         place_id: morsel.place_id,
         user_id: current_user.id,
