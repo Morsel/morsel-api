@@ -47,7 +47,7 @@ gem 'virtus'
 
 group :development do
   gem 'better_errors'
-  gem 'binding_of_caller', platforms: [:mri_20]
+  gem 'binding_of_caller'
   gem 'quiet_assets'
   gem 'byebug'
   gem 'pry-byebug'
