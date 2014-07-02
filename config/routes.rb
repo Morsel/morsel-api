@@ -4,6 +4,7 @@ MorselApp::Application.routes.draw do
   root to: 'status#show'
   get 'status' => 'status#show'
   get 'configuration' => 'configuration#show'
+  get 'proxy' => 'configuration#proxy'
 
   authenticate :user, lambda { |u| u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
