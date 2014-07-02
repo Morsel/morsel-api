@@ -14,11 +14,11 @@ class BasePhotoUploader < CarrierWave::Uploader::Base
 
   def store_dir
     if Rails.env.production? || Rails.env.staging?
-      "#{model.class.to_s.underscore}-photos/#{model.id}"
+      "#{model.class.base_class.to_s.underscore}-photos/#{model.id}"
     elsif Rails.env.development?
-      "#{Rails.root}/public/uploads_dev/#{model.class.to_s.underscore}-photos/#{model.id}"
+      "#{Rails.root}/public/uploads_dev/#{model.class.base_class.to_s.underscore}-photos/#{model.id}"
     else
-      "#{Rails.root}/spec/support/uploads/#{model.class.to_s.underscore}-photos/#{model.id}"
+      "#{Rails.root}/spec/support/uploads/#{model.class.base_class.to_s.underscore}-photos/#{model.id}"
     end
   end
 
