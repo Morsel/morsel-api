@@ -14,7 +14,6 @@ module Activityable
 
   def create_activity
     ActivityWorker.perform_async(
-      current_user_id: current_user.id,
       subject: {
         id: subject.id,
         type: subject.class.to_s
