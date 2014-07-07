@@ -84,7 +84,7 @@ class Place < ActiveRecord::Base
 
     def import_foursquare_venue_data
       FoursquareImportWorker.perform_async(
-        current_user_id: current_user.id,
+        creator_id: creator_id,
         place: {
           id: id
         }

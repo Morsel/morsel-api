@@ -77,6 +77,36 @@ describe 'Items API' do
       end
     end
 
+    context '`prepare_presigned_upload`=true' do
+      it 'should create the Item and respond with a `presigned_upload` object' do
+        stub_aws_s3_client
+        post_endpoint item: {
+                        description: 'It\'s not a toomarh!',
+                        nonce: nonce,
+                        morsel_id: morsel.id
+                      },
+                      prepare_presigned_upload: true
+
+        expect_success
+
+        new_item = Item.find json_data['id']
+        expect_json_data_eq({
+          'id' => new_item.id,
+          'description' => new_item.description,
+          'creator_id' => new_item.creator_id
+        })
+        expect(json_data['photos']).to be_nil
+
+        expect_json_eq(json_data['presigned_upload'], {
+          "AWSAccessKeyId"=>"AWS_ACCESS_KEY_ID",
+          "key"=> "KEY-${filename}",
+          "policy"=> "POLICY",
+          "signature"=>"SIGNATURE",
+          "acl"=>"ACL"
+        })
+      end
+    end
+
     context 'current_user is NOT a :chef' do
       let(:current_user) { FactoryGirl.create(:user) }
       it 'should NOT be authorized' do
@@ -151,6 +181,44 @@ describe 'Items API' do
       expect_success
       expect_json_data_eq('description' => new_description)
       expect(Item.find(item.id).description).to eq(new_description)
+    end
+
+    context '`prepare_presigned_upload`=true' do
+      it 'should update the Item and respond with a `presigned_upload` object' do
+        stub_aws_s3_client
+        put_endpoint item: {
+                        description: new_description
+                      },
+                      prepare_presigned_upload: true
+
+        expect_success
+
+        new_item = Item.find json_data['id']
+        expect_json_data_eq({
+          'id' => new_item.id,
+          'description' => new_item.description,
+          'creator_id' => new_item.creator_id
+        })
+
+        expect_json_eq(json_data['presigned_upload'], {
+          "AWSAccessKeyId"=>"AWS_ACCESS_KEY_ID",
+          "key"=> "KEY-${filename}",
+          "policy"=> "POLICY",
+          "signature"=>"SIGNATURE",
+          "acl"=>"ACL"
+        })
+      end
+    end
+
+    context '`photo_key`' do
+      it 'set the photo path to the new key' do
+        put_endpoint  item: {
+                        photo_key: "item-photos/#{item.id}/dbb6a58c-photo.jpg"
+                      }
+
+        expect_success
+        expect(Item.find(item.id).photo_url.include?('dbb6a58c-photo.jpg')).to be_true
+      end
     end
 
     context 'current_user is NOT Item creator' do

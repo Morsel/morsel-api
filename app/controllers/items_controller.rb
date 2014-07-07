@@ -6,7 +6,11 @@ class ItemsController < ApiController
     item.creator = current_user
 
     if item.save
-      custom_respond_with item
+      if params[:prepare_presigned_upload] == 'true'
+        handle_presigned_photo(item)
+      else
+        custom_respond_with item
+      end
     else
       render_json_errors item.errors
     end
@@ -19,14 +23,24 @@ class ItemsController < ApiController
   def update
     Authority.enforce :update, Item, current_user
 
-    item = Item.find params[:id]
+    item = Item.find(params[:id])
 
     Authority.enforce :update, item, current_user
 
-    if item.update(ItemParams.build(params))
-      custom_respond_with item
+    item_params = ItemParams.build(params)
+
+    if item_params[:photo_key]
+      handle_photo_key(item_params[:photo_key], item)
     else
-      render_json_errors item.errors
+      if item.update(item_params)
+        if params[:prepare_presigned_upload] == 'true'
+          handle_presigned_photo(item)
+        else
+          custom_respond_with item
+        end
+      else
+        render_json_errors item.errors
+      end
     end
   end
 
@@ -45,7 +59,31 @@ class ItemsController < ApiController
 
   class ItemParams
     def self.build(params)
-      params.require(:item).permit(:description, :photo, :nonce, :sort_order, :morsel_id)
+      params.require(:item).permit(:description, :photo, :nonce, :sort_order, :morsel_id, :photo_key)
+    end
+  end
+
+  private
+
+  def handle_photo_key(photo_key, item)
+    # "item-photos/some-id/dbb6a58c-photo.jpg"
+    photo_identifier = photo_key.split("#{item.id}/")[1]
+    ActiveRecord::Base.connection.execute("UPDATE items SET photo=#{ActiveRecord::Base.sanitize(photo_identifier)} WHERE items.id = #{item.id}")
+    item.reload
+    item.photo.recreate_versions! if item.photo?
+    if item.save
+      custom_respond_with item
+    else
+      render_json_errors item.errors
+    end
+  end
+
+  def handle_presigned_photo(item)
+    service = PreparePresignedUpload.call(model:item)
+    if service.valid?
+      custom_respond_with item, context: { presigned_upload: service.response }
+    else
+      render_json_errors item.errors
     end
   end
 end
