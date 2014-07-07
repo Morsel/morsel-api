@@ -4,6 +4,7 @@ ActiveAdmin.register User do
   filter :username
   filter :first_name
   filter :last_name
+  filter :active
 
   config.clear_action_items!
 
