@@ -19,7 +19,7 @@ ActiveAdmin.register User do
     column :industry
     column :admin
     column :active
-    column :last_sign_in_at
+    column :current_sign_in_at
     column :created_at
     actions
   end
