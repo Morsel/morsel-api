@@ -13,13 +13,7 @@ class BasePhotoUploader < CarrierWave::Uploader::Base
   end
 
   def store_dir
-    if Rails.env.production? || Rails.env.staging?
-      "#{model.class.base_class.to_s.underscore}-photos/#{model.id}"
-    elsif Rails.env.development?
-      "#{Rails.root}/public/uploads_dev/#{model.class.base_class.to_s.underscore}-photos/#{model.id}"
-    else
-      "#{Rails.root}/spec/support/uploads/#{model.class.base_class.to_s.underscore}-photos/#{model.id}"
-    end
+    PreparePresignedUpload.store_dir_for_model(model)
   end
 
   def extension_white_list
@@ -27,12 +21,19 @@ class BasePhotoUploader < CarrierWave::Uploader::Base
   end
 
   def filename
-    "#{secure_token}.#{file.extension}" if original_filename.present?
+    if original_filename
+      # TODO: Fix this so that duplicate files aren't created
+      # if model && model.read_attribute(mounted_as).present?
+      #   model.read_attribute(mounted_as)
+      # else
+        "#{secure_token}.#{file.extension}"
+      # end
+    end
   end
 
   def secure_token
     var = :"@#{mounted_as}_secure_token"
-    model.instance_variable_get(var) || model.instance_variable_set(var, SecureRandom.uuid)
+    model.instance_variable_get(var) || model.instance_variable_set(var, PreparePresignedUpload.short_secure_token)
   end
 
   process :set_content_type

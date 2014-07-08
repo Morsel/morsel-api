@@ -1,4 +1,27 @@
 module ServiceStubs
+  def stub_aws_s3_client
+    aws_s3_client = double('AWS::S3')
+    AWS::S3.stub(:new).and_return(aws_s3_client)
+
+    presigned_post = double('AWS::S3::PresignedPost')
+
+    presigned_post.stub(:fields).and_return({
+      "AWSAccessKeyId"=>"AWS_ACCESS_KEY_ID",
+      "key"=> "KEY-${filename}",
+      "policy"=> "POLICY",
+      "signature"=>"SIGNATURE",
+      "acl"=>"ACL"
+    })
+    presigned_post.stub(:url).and_return(URI.parse('http://www.eatmorsel.com'))
+
+    bucket = double('AWS::S3::Bucket')
+    bucket.stub(:presigned_post).and_return(presigned_post)
+
+    aws_s3_client.stub(:buckets).and_return({ Settings.aws.buckets.default => bucket })
+
+    aws_s3_client
+  end
+
   def stub_bitly_client
     bitly_client = double('Bitly::V3::Client')
     Bitly.stub(:client).and_return(bitly_client)

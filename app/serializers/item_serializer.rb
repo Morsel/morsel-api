@@ -18,6 +18,14 @@ class ItemSerializer < ActiveModel::Serializer
   has_one :creator, serializer: SlimUserSerializer
   has_one :morsel, serializer: SlimMorselSerializer
 
+  def attributes
+    hash = super
+    if options[:context] && options[:context][:presigned_upload]
+      hash['presigned_upload'] = options[:context][:presigned_upload]
+    end
+    hash
+  end
+
   def liked
     current_user.present? && current_user.likes_item?(object)
   end

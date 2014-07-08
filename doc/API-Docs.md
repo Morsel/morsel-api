@@ -15,6 +15,7 @@
     - [DELETE `/{{followables}}/:id/follow` - Unfollow {{Followable}}](#delete-followablesidfollow---unfollow-followable)
     - [GET `/{{followables}}/:id/followers` - {{Followable}} Followers](#get-followablesidfollowers---followable-followers)
   - [Pagination](#pagination)
+  - [Presigned Photo Uploadable](#presigned-photo-uploadable)
 
 - [Feed Methods](#feed-methods)
   - [GET `/feed` - Feed](#get-feed---feed)
@@ -129,6 +130,7 @@
     - [Notification](#notification)
   - [Misc Objects](#misc-objects)
     - [Configuration](#configuration)
+    - [Presigned Upload](#presigned-upload)
 
 - [Notes](#notes)
   - [sort_order](#sort_order)
@@ -303,6 +305,21 @@ We can achieve the same thing by sending a call to the API every once awhile ask
 Make a call to the API: `/morsels.json?api_key=whatever&count=10&since_id=100`
 The API responds with any new Morsels since the Morsel with id = 100. So if there were three new Morsels added, it would return Morsels with id's from 101-103.
 
+<br />
+<br />
+
+# Presigned Photo Uploadable
+
+Since we use S3 for hosting our photos, it makes sense to upload photos directly to S3 from a client. To avoid including sensitive AWS credentials in our client applications, clients will ask the API for temporary access to S3 via presigned credentials that expire after an hour. The expected flow is:
+  1. Client requests presigned temporary credentials by passing `prepare_presigned_upload=true` to a POST or PUT request on a valid object.
+  2. API responds with the expected response, in addition to a `presigned_upload` object ([Presigned Upload](#presigned-upload))
+  3. Client uses the presigned credentials to POST the photo file to S3.
+  4. When the upload is complete, client updates the object via PUT with the new `photo_key` (`Key` in the S3 XML response) provided by Amazon.
+  5. API processes additional photos.
+
+
+<br />
+<br />
 
 # Feed Methods
 
@@ -1865,6 +1882,21 @@ NOTE: "non_username_paths" is just a sample of the real list, for an up to date 
   ]
 }
 ```
+
+### Presigned Upload
+NOTE: These values are expected to be passed to S3 with the exact casing specified below
+
+```json
+{
+  "AWSAccessKeyId": "AWS_ACCESS_KEY_ID",
+  "key": "KEY-${filename}",
+  "policy": "POLICY",
+  "signature": "SIGNATURE",
+  "acl": "ACL",
+  "url": "https://some-bucket.s3.aws.com/"
+}
+```
+
 
 ## Notes
 

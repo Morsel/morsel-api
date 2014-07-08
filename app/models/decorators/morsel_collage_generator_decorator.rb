@@ -134,8 +134,8 @@ class MorselCollageGeneratorDecorator < SimpleDelegator
     primary_item = self.primary_item if primary_item_id
     valid_items.push(primary_item) if primary_item
 
-    self.items.each do |m|
-      valid_items.push(m) if m.photo_url && m != primary_item
+    self.items.each do |item|
+      valid_items.push(item) if item.photo_url && item != primary_item
     end
 
     valid_items
