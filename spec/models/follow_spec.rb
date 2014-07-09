@@ -31,4 +31,13 @@ describe Follow do
     let(:user_creatable_object) { FactoryGirl.build(:user_follow) }
     let(:user) { user_creatable_object.user }
   end
+
+  context 'following two different types of objects with the same id' do
+    let(:place_follow) { FactoryGirl.build(:place_follow, followable:FactoryGirl.create(:place, id:user_follow.followable_id), follower_id:user_follow.follower_id) }
+    it 'should successfully follow both' do
+      user_follow.save
+      expect(user_follow).to be_valid
+      expect(place_follow).to be_valid
+    end
+  end
 end

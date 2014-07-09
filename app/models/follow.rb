@@ -29,7 +29,7 @@ class Follow < ActiveRecord::Base
   alias_attribute :creator, :follower
   alias_attribute :user, :follower
 
-  validates :follower_id, uniqueness: { scope: [:followable_id], conditions: -> { where(deleted_at: nil) } }
+  validates :follower_id, uniqueness: { scope: [:followable_id, :followable_type], conditions: -> { where(deleted_at: nil) } }
   validates :followable, presence: true
 
   def followable_type=(sType)

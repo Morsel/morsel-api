@@ -26,5 +26,9 @@ FactoryGirl.define do
     factory :user_follow, class: Follow do
       association(:followable, factory: :user)
     end
+
+    factory :place_follow, class: Follow do
+      association(:followable, factory: :place)
+    end
   end
 end
