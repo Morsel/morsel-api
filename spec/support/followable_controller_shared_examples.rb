@@ -22,7 +22,9 @@ shared_examples 'FollowableController' do
     end
 
     context 'already follows the Followable' do
-      before { followable.followers << current_user }
+      before do
+        post_endpoint
+      end
 
       it 'returns an error' do
         post_endpoint
@@ -35,8 +37,8 @@ shared_examples 'FollowableController' do
 
     context 'followed then unfollowed the Followable' do
       before do
-        followable.followers << current_user
-        followable.followers.destroy(current_user)
+        post_endpoint
+        delete_endpoint
       end
 
       it 'follows the Followable for the current_user' do

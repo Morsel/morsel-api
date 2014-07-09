@@ -109,14 +109,14 @@ describe 'Items API' do
 
     context 'current_user is NOT a :chef' do
       let(:current_user) { FactoryGirl.create(:user) }
-      it 'should NOT be authorized' do
+      it 'should be authorized' do
         post_endpoint item: {
                         description: 'Holy Diver',
                         nonce: nonce,
                         morsel_id: morsel.id
                       }
 
-        expect_failure
+        expect_success
       end
     end
   end

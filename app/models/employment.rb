@@ -22,5 +22,5 @@ class Employment < ActiveRecord::Base
 
   self.authorizer_name = 'ProfessionalAuthorizer'
 
-  validates :user_id, uniqueness: { scope: [:deleted_at, :place_id], conditions: -> { where(deleted_at: nil) } }
+  validates :user_id, uniqueness: { scope: [:place_id], conditions: -> { where(deleted_at: nil) } }
 end
