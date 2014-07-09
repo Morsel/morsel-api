@@ -37,6 +37,7 @@ gem 'sass-rails', '~> 4.0.0'
 gem 'seedbank'
 gem 'settingslogic'
 gem 'sidekiq', '~> 3.0.0'
+gem 'sidekiq-failures', '~> 0.4.3'
 gem 'sinatra', '>= 1.3.0', require: nil
 gem 'slim-rails', '~> 2.1.4'
 gem 'slugged', '~> 2.0'
