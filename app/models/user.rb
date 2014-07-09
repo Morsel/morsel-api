@@ -78,6 +78,7 @@ class User < ActiveRecord::Base
 
   has_many :followable_follows, foreign_key: :follower_id, class_name: 'Follow', dependent: :destroy
   has_many :followed_users, through: :followable_follows, source: :followable, source_type: 'User'
+  has_many :followed_places, through: :followable_follows, source: :followable, source_type: 'Place'
   has_many :followed_keywords, through: :followable_follows, source: :followable, source_type: 'Keyword'
 
   has_many :items, foreign_key: :creator_id
@@ -146,6 +147,10 @@ class User < ActiveRecord::Base
 
   def following_user?(user)
     followed_users.include?(user)
+  end
+
+  def following_place?(place)
+    followed_places.include?(place)
   end
 
   def full_name

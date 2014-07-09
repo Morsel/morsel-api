@@ -1783,7 +1783,8 @@ Response for any User Follower related requests.
       "public_transit": "Take the bus.",
       "parking": "Street Parking",
       "parking_details": "We don't have valet or private parking. We recommend street parking or side streets."
-    }
+    },
+    "following": false
 }
 ```
 

@@ -27,6 +27,7 @@ describe 'Places API' do
         'facebook_page_id' => place.facebook_page_id,
         'twitter_username' => place.twitter_username,
         'foursquare_venue_id' => place.foursquare_venue_id,
+        'following' => false,
         'information' => {
           'website_url' => place.information['website_url'],
           'formatted_phone' => place.information['formatted_phone'],
@@ -45,6 +46,21 @@ describe 'Places API' do
           'parking_details' => place.information['parking_details']
         }
       })
+    end
+
+    context '`current_user` is following Place' do
+      let(:current_user) { FactoryGirl.create(:chef) }
+      before { current_user.followed_places << place }
+
+      it 'returns `following` true' do
+        get_endpoint
+        expect_success
+
+        expect_json_data_eq({
+          'id' => place.id,
+          'following' => true
+        })
+      end
     end
   end
 

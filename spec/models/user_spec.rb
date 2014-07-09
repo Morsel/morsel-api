@@ -65,6 +65,24 @@ describe User do
 
   it { should be_valid }
 
+  context 'following a User' do
+    let(:followed_user) { FactoryGirl.create(:user) }
+    before { subject.followed_users << followed_user }
+
+    it 'returns `true` for following_user?' do
+      expect(subject.following_user?(followed_user)).to be_true
+    end
+  end
+
+  context 'following a Place' do
+    let(:followed_place) { FactoryGirl.create(:place) }
+    before { subject.followed_places << followed_place }
+
+    it 'returns `true` for following_place?' do
+      expect(subject.following_place?(followed_place)).to be_true
+    end
+  end
+
   describe 'email' do
     context 'already taken' do
       before do
