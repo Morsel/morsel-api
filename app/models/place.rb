@@ -73,7 +73,7 @@ class Place < ActiveRecord::Base
 
   concerning :Foursquare do
     included do
-      after_create :import_foursquare_venue_data
+      after_commit :import_foursquare_venue_data, on: :create
     end
 
     def recently_imported?
