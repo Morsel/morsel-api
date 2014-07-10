@@ -5,7 +5,7 @@ module Activityable
     has_one :activity, as: :action, dependent: :destroy
 
     class_attribute :activity_notification
-    after_create :create_activity
+    after_commit :create_activity, on: :create
     def self.activity_notification; false end
     def subject; raise 'NotImplementedError - subject is not implemented for this Activityable' end
   end
