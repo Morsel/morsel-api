@@ -170,7 +170,7 @@ class UsersController < ApiController
     end
   end
 
-  def places
+  PUBLIC_ACTIONS << def places
     custom_respond_with Place.joins(:employments)
                             .since(params[:since_id], 'employments')
                             .max(params[:max_id], 'employments')
