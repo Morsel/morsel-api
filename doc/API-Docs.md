@@ -26,7 +26,8 @@
   - [PUT `/authentications/:id` - Update Authentication](#put-authenticationsid---update-authentication)
   - [DELETE `/authentications/:id` - Delete Authentication](#delete-authenticationsid---delete-authentication)
   - [GET `/authentications/check` - Authentication Check](#get-authenticationscheck---authentication-check)
-  - [GET `/authentications/connections` - Authentication Connections](#get-authenticationsconnections---authentication-connections)
+  - [GET `/authentications/connections` - Authentication Connections](#get-authenticationsconnections---authentication-connections) __DEPRECATED__
+  - [POST `/authentications/connections` - Authentication Connections](#post-authenticationsconnections---authentication-connections)
 
 - [User Methods](#user-methods) [\<Followable\>](#followable)
   - [POST `/users` - Create a new User](#post-users---create-a-new-user)
@@ -433,6 +434,28 @@ Returns `true` if the authentication exists, otherwise false.
 <br />
 
 ## GET `/authentications/connections` - Authentication Connections
+__DEPRECATED: Use [POST `/authentications/connections` - Authentication Connections](#post-authenticationsconnections---authentication-connections) instead__ Returns the Users that have authenticated with the specified `provider` and have a `uid` that is in `uids`.
+
+__Request Behaviors__
+* [Pagination](#pagination)
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| provider | String | The authentication provider. Currently the only valid values are 'facebook', 'instagram', and 'twitter'. | | X |
+| uids | String | Comma-separated `uid` strings for the `provider` specified. e.g. "'12345','67890'" | | X |
+
+### Response
+
+| __data__ |
+| -------- |
+| [Users](#user)[] found in `uids` for the specified `provider` |
+
+<br />
+<br />
+
+## POST `/authentications/connections` - Authentication Connections
 Returns the Users that have authenticated with the specified `provider` and have a `uid` that is in `uids`.
 
 __Request Behaviors__
