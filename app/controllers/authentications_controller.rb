@@ -54,7 +54,7 @@ class AuthenticationsController < ApiController
     custom_respond_with User.joins(:authentications)
                             .since(params[:since_id])
                             .max(params[:max_id])
-                            .where("authentications.provider = ? AND authentications.uid IN (#{uids})", provider)
+                            .where("authentications.provider = ? AND authentications.uid IN (?)", provider, uids)
                             .limit(pagination_count)
                             .order('id DESC')
   end

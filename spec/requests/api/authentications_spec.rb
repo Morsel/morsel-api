@@ -213,7 +213,7 @@ describe 'Authentications API Methods' do
     end
   end
 
-  describe 'GET /authentications/connections authentications#connections' do
+  describe 'POST /authentications/connections authentications#connections' do
     let(:endpoint) { '/authentications/connections' }
     let(:current_user) { FactoryGirl.create(:user) }
     let(:authenticated_users_count) { rand(2..6) }
@@ -221,7 +221,7 @@ describe 'Authentications API Methods' do
     before { authenticated_users_count.times { FactoryGirl.create(:facebook_authentication) }}
 
     it 'returns no Users if none with the specified Authentications `uids` for the `provider` are found' do
-      get_endpoint provider: 'facebook', uids: "'123','456','789'"
+      post_endpoint provider: 'facebook', uids: "'123','456','789'"
 
       expect_success
       expect_json_data_count 0
