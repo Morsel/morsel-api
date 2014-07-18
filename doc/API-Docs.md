@@ -1581,6 +1581,7 @@ Response for any Like Item related requests.
   "created_at": "2014-01-07T16:34:44.862Z",
   "updated_at": "2014-01-07T16:34:44.862Z"
 }
+```
 
 ### Morsel
 * Inherits from [Slim Morsel](#slim-morsel)
