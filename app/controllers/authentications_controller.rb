@@ -49,12 +49,15 @@ class AuthenticationsController < ApiController
 
   def connections
     provider = params.fetch(:provider)
-    uids = params.fetch(:uids)
+
+    # Convert from csv param to array of ids for where()
+    # HACK: Older clients still pass in a comma separated string w/ quotes around each uid, so sub out single quotes
+    uids = params.fetch(:uids).gsub("'", '').split(',')
 
     custom_respond_with User.joins(:authentications)
                             .since(params[:since_id])
                             .max(params[:max_id])
-                            .where("authentications.provider = ? AND authentications.uid IN (#{uids})", provider)
+                            .where(authentications: { provider: provider, uid: uids })
                             .limit(pagination_count)
                             .order('id DESC')
   end
