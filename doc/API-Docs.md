@@ -466,7 +466,7 @@ __Request Behaviors__
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | provider | String | The authentication provider. Currently the only valid values are 'facebook', 'instagram', and 'twitter'. | | X |
-| uids | String | Comma-separated `uid` strings for the `provider` specified. e.g. "'12345','67890'" | | X |
+| uids | String | Comma-separated `uid`s for the `provider` specified. e.g. "12345,67890" | | X |
 
 ### Response
 
