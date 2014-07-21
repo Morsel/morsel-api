@@ -1602,7 +1602,9 @@ Response for any Like Item related requests.
   "creator_id": 3,
   "place_id": 4,
   "created_at": "2014-01-07T16:34:44.862Z",
-  "updated_at": "2014-01-07T16:34:44.862Z"
+  "updated_at": "2014-01-07T16:34:44.862Z",
+  "published_at": "2014-01-07T16:34:44.862Z",
+  "primary_item_id": 2,
 }
 ```
 
@@ -1615,11 +1617,9 @@ Response for any Like Item related requests.
 
 ```json
 {
-  "published_at": "2014-01-07T16:34:44.862Z",
   "draft": false,
   "total_like_count": 10,
   "total_comment_count": 3,
-  "primary_item_id": 2,
   "url": "http://eatmorsel.com/turdferg/4-butter-rocks",
   "facebook_mrsl": "http://mrsl.co/facebook",
   "twitter_mrsl": "http://mrsl.co/twitter",
