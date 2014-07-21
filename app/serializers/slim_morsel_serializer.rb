@@ -7,5 +7,8 @@ class SlimMorselSerializer < ActiveModel::Serializer
              :creator_id,
              :place_id,
              :created_at,
-             :updated_at
+             :updated_at,
+             :published_at,
+             :primary_item_id
+
 end

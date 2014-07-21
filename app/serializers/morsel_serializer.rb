@@ -1,9 +1,7 @@
 class MorselSerializer < SlimMorselSerializer
-  attributes :published_at,
-             :draft,
+  attributes :draft,
              :total_like_count,
              :total_comment_count,
-             :primary_item_id,
              :url,
              :facebook_mrsl,
              :twitter_mrsl
