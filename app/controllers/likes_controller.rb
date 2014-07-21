@@ -26,11 +26,9 @@ class LikesController < ApiController
 
   PUBLIC_ACTIONS << def likers
     custom_respond_with User.joins(:likes)
-                            .since(params[:since_id], 'users')
-                            .max(params[:max_id], 'users')
+                            .paginate(pagination_params, User)
                             .where(likes: { likeable_id: params[:id] })
-                            .limit(pagination_count)
-                            .order('likes.id DESC')
+                            .order(Like.arel_table[:id].desc)
   end
 
   private

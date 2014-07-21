@@ -6,7 +6,7 @@ module PhotoUploadable
   end
 
   def photos
-    photo.versions.keys.reduce({}) { |memo, version| memo[version] = photo_url(version); memo } if photo?
+    photo.versions.keys.reduce({}) { |a, e| a[e] = photo_url(e); a } if photo?
   end
 
   private

@@ -1,10 +1,8 @@
 class NotificationsController < ApiController
   def index
-    notifications = Notification.since(params[:since_id])
-                                .max(params[:max_id])
+    notifications = Notification.paginate(pagination_params)
                                 .where(user_id: current_user.id)
-                                .limit(pagination_count)
-                                .order('id DESC')
+                                .order(Notification.arel_table[:id].desc)
 
     custom_respond_with notifications
   end
@@ -14,7 +12,7 @@ class NotificationsController < ApiController
       Notification.unread.where(id: params[:id]).update_all(marked_read_at: DateTime.now)
     else
       max_id = params.fetch(:max_id)
-      Notification.unread.where("id <= #{max_id}").update_all(marked_read_at: DateTime.now)
+      Notification.unread.where(Notification.arel_table[:id].lteq(max_id)).update_all(marked_read_at: DateTime.now)
     end
 
     render_json_ok

@@ -1,18 +1,14 @@
 class ActivitiesController < ApiController
   def index
-    custom_respond_with Activity.since(params[:since_id])
-                                .max(params[:max_id])
+    custom_respond_with Activity.paginate(pagination_params)
                                 .where(creator_id: current_user.id)
-                                .limit(pagination_count)
-                                .order('id DESC')
+                                .order(Activity.arel_table[:id].desc)
   end
 
   def followables_activities
-    custom_respond_with Activity.since(params[:since_id])
-                                .max(params[:max_id])
+    custom_respond_with Activity.paginate(pagination_params)
                                 .where(creator_id: current_user.followed_user_ids)
-                                .limit(pagination_count)
-                                .order('id DESC')
+                                .order(Activity.arel_table[:id].desc)
   end
 
   private

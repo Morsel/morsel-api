@@ -27,11 +27,9 @@ class FollowsController < ApiController
 
   PUBLIC_ACTIONS << def followers
     custom_respond_with User.joins(:followable_follows)
-                            .since(params[:since_id], 'users')
-                            .max(params[:max_id], 'users')
+                            .paginate(pagination_params, User)
                             .where(follows: { followable_id: params[:id], followable_type: followable_type })
-                            .limit(pagination_count)
-                            .order('follows.id DESC'),
+                            .order(Follow.arel_table[:id].desc),
                         each_serializer: SlimFollowedUserSerializer,
                         context: {
                           followable_id: params[:id],

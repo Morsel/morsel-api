@@ -9,11 +9,9 @@ class KeywordsController < ApiController
 
   PUBLIC_ACTIONS << def users
     custom_respond_with User.joins(:tags)
-                            .since(params[:since_id], 'users')
-                            .max(params[:max_id], 'users')
+                            .paginate(pagination_params, User)
                             .where(tags: { keyword_id: params[:id] })
-                            .limit(pagination_count)
-                            .order('tags.id DESC')
+                            .order(Tag.arel_table[:id].desc)
   end
 
   private

@@ -15,33 +15,27 @@ class MorselsController < ApiController
     if params[:place_id].present?
       custom_respond_with Morsel.includes(:items, :creator, :place)
                           .published
-                          .since(params[:since_id])
-                          .max(params[:max_id])
+                          .paginate(pagination_params)
                           .where(place_id: params[:place_id])
-                          .limit(pagination_count)
-                          .order('id DESC')
+                          .order(Morsel.arel_table[:id].desc)
     elsif params[:user_id].present? || params[:username].present?
       if params[:user_id].present?
         user = User.find params[:user_id]
       elsif params[:username].present?
-        user = User.find_by('lower(username) = lower(?)', params[:username])
+        user = User.find_by(User.arel_table[:username].lower.eq(params[:username].downcase))
       end
       raise ActiveRecord::RecordNotFound if user.nil?
       custom_respond_with Morsel.includes(:items, :creator, :place)
                           .published
-                          .since(params[:since_id])
-                          .max(params[:max_id])
+                          .paginate(pagination_params)
                           .where(creator_id: user.id)
-                          .limit(pagination_count)
-                          .order('id DESC')
+                          .order(Morsel.arel_table[:id].desc)
     elsif current_user.present?
       custom_respond_with Morsel.includes(:items, :creator, :place)
                           .with_drafts(true)
-                          .since(params[:since_id])
-                          .max(params[:max_id])
+                          .paginate(pagination_params)
                           .where(creator_id: current_user.id)
-                          .limit(pagination_count)
-                          .order('id DESC')
+                          .order(Morsel.arel_table[:id].desc)
     else
       unauthorized_token
     end
@@ -50,11 +44,9 @@ class MorselsController < ApiController
   def drafts
     morsels = Morsel.includes(:items, :creator)
                     .drafts
-                    .since(params[:since_id])
-                    .max(params[:max_id])
+                    .paginate(pagination_params)
                     .where(creator_id: current_user.id)
-                    .limit(pagination_count)
-                    .order('updated_at DESC')
+                    .order(Morsel.arel_table[:updated_at].desc)
 
     custom_respond_with morsels
   end

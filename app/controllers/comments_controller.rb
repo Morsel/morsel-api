@@ -10,11 +10,9 @@ class CommentsController < ApiController
   end
 
   PUBLIC_ACTIONS << def index
-    custom_respond_with Comment.since(params[:since_id])
-                               .max(params[:max_id])
+    custom_respond_with Comment.paginate(pagination_params)
                                .where(commentable_type: commentable_type, commentable_id: params[:id])
-                               .limit(pagination_count)
-                               .order('id DESC')
+                               .order(Comment.arel_table[:id].desc)
   end
 
   def destroy

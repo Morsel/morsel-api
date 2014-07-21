@@ -79,7 +79,7 @@ class ItemsController < ApiController
   end
 
   def handle_presigned_photo(item)
-    service = PreparePresignedUpload.call(model:item)
+    service = PreparePresignedUpload.call(model: item)
     if service.valid?
       custom_respond_with item, context: { presigned_upload: service.response }
     else

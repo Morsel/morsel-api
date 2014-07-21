@@ -7,7 +7,7 @@ describe 'Keywords API' do
     let(:followable) { FactoryGirl.create(:cuisine) }
   end
 
-  describe 'GET /cuisines' do
+  describe 'GET /cuisines keywords#cuisines' do
     let(:endpoint) { '/cuisines' }
     let(:cuisines_count) { rand(3..6) }
 
@@ -21,7 +21,7 @@ describe 'Keywords API' do
     end
   end
 
-  describe 'GET /specialties' do
+  describe 'GET /specialties keywords#specialties' do
     let(:endpoint) { '/specialties' }
     let(:specialties_count) { rand(3..6) }
 
@@ -35,7 +35,7 @@ describe 'Keywords API' do
     end
   end
 
-  describe 'GET /keywords/:id/users' do
+  describe 'GET /keywords/:id/users keywords#users' do
     let(:endpoint) { "/keywords/#{keyword.id}/users" }
     let(:keyword) { FactoryGirl.create(:cuisine) }
     let(:users_count) { rand(3..6) }
@@ -59,7 +59,7 @@ describe 'Keywords API' do
     end
   end
 
-  describe 'GET /cuisines/:id/users' do
+  describe 'GET /cuisines/:id/users keywords#users' do
     let(:endpoint) { "/cuisines/#{cuisine.id}/users" }
     let(:cuisine) { FactoryGirl.create(:cuisine) }
     let(:users_count) { rand(3..6) }
@@ -83,7 +83,7 @@ describe 'Keywords API' do
     end
   end
 
-  describe 'GET /specialties/:id/users' do
+  describe 'GET /specialties/:id/users keywords#users' do
     let(:endpoint) { "/specialties/#{specialty.id}/users" }
     let(:specialty) { FactoryGirl.create(:specialty) }
     let(:users_count) { rand(3..6) }

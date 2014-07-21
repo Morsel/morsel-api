@@ -43,7 +43,7 @@ class ApiController < ActionController::Base
       else
         unauthorized_token
       end
-    elsif self.class::PUBLIC_ACTIONS.exclude? params[:action].to_sym
+    elsif self.class::PUBLIC_ACTIONS.map(&:to_s).exclude? params[:action]
       unauthorized_token
     end
   rescue ActiveRecord::RecordNotFound
@@ -55,8 +55,8 @@ class ApiController < ActionController::Base
   end
 
   def pagination_params
-    pagination_params = params.slice(:max_id, :since_id)
-    pagination_params[:count] = pagination_count
+    pagination_params = params.slice(:max_id, :since_id, :count)
+    pagination_params[:count] ||= pagination_count
     pagination_params
   end
 

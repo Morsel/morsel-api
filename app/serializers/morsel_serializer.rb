@@ -13,6 +13,6 @@ class MorselSerializer < SlimMorselSerializer
   has_one :place, serializer: SlimPlaceSerializer
 
   def items
-    object.items.order('sort_order ASC')
+    object.items.order(Item.arel_table[:sort_order].asc)
   end
 end

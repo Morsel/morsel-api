@@ -601,7 +601,7 @@ Returns [current_user](#current_user)
 <br />
 
 ## GET `/users/search` - Search Users
-Returns [Slim Followed User](#slim-followed-user)s matching the parameters
+Returns [Slim Followed User](#slim-followed-user)s matching the parameters. Results are returned for exact matches and matches that begin with the parameters.
 
 ### Request
 

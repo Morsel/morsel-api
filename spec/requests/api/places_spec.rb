@@ -344,7 +344,7 @@ describe 'Places API' do
     end
   end
 
-  describe 'GET /places/:id/users' do
+  describe 'GET /places/:id/users places#users' do
     let(:endpoint) { "/places/#{place.id}/users" }
     let(:place) { FactoryGirl.create(:place) }
     let(:place_users_count) { rand(2..6) }
