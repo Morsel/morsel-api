@@ -37,7 +37,7 @@ class Morsel < ActiveRecord::Base
 
   belongs_to  :place
 
-  has_many    :items, -> { order('sort_order ASC') }, dependent: :destroy
+  has_many    :items, -> { order(Item.arel_table[:sort_order].asc) }, dependent: :destroy
   belongs_to  :primary_item, class_name: 'Item'
 
   before_save :update_published_at_if_necessary

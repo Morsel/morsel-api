@@ -35,7 +35,7 @@ describe 'Users API' do
         expect(json_data.first['following']).to be_false
       end
 
-      it 'returns inpartial matches' do
+      it 'returns fuzzy begins with matches' do
         get_endpoint  user: {
                               query: 'tur'
                             }

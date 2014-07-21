@@ -6,7 +6,7 @@ morsel:
   web_url: <%= ENV['MORSEL_WEB_URL'] %>
   twitter_username: <%= ENV['MORSEL_TWITTER_USERNAME'] %>
 
-pagination_default_count: <%= ENV['PAGINATION_DEFAULT_COUNT'] %>
+pagination_default_count: <%= ENV['PAGINATION_DEFAULT_COUNT'] || 20 %>
 
 aws:
   credentials:

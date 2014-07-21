@@ -12,7 +12,7 @@ class UsersController < ApiController
     if params[:id].present?
       user = User.includes(:authentications, :morsels, :items).find params[:id]
     elsif params[:username].present?
-      user = User.includes(:authentications, :morsels, :items).find_by('lower(username) = lower(?)', params[:username])
+      user = User.includes(:authentications, :morsels, :items).find_by(User.arel_table[:username].lower.eq(params[:username].downcase))
     end
     raise ActiveRecord::RecordNotFound if user.nil? || !user.active?
 
@@ -125,12 +125,9 @@ class UsersController < ApiController
     followable_type = params.fetch(:type)
 
     if followable_type == 'Keyword'
-      custom_respond_with Keyword.joins("LEFT OUTER JOIN follows ON follows.followable_type = 'Keyword' AND follows.followable_id = keywords.id AND follows.deleted_at IS NULL AND keywords.deleted_at IS NULL")
-                              .since(params[:since_id], 'keywords')
-                              .max(params[:max_id], 'keywords')
-                              .where(follows: { follower_id: params[:id] })
-                              .limit(pagination_count)
-                              .order('follows.id DESC'),
+      custom_respond_with Keyword.followed_by(params[:id])
+                            .paginate(pagination_params, Keyword)
+                            .order(Follow.arel_table[:id].desc),
                           each_serializer: FollowedKeywordSerializer,
                           context: {
                             follower_id: params[:id],
@@ -138,12 +135,9 @@ class UsersController < ApiController
                           }
 
     elsif followable_type == 'User'
-      custom_respond_with User.joins("LEFT OUTER JOIN follows ON follows.followable_type = 'User' AND follows.followable_id = users.id AND follows.deleted_at IS NULL AND users.deleted_at IS NULL")
-                              .since(params[:since_id], 'users')
-                              .max(params[:max_id], 'users')
-                              .where(follows: { follower_id: params[:id] })
-                              .limit(pagination_count)
-                              .order('follows.id DESC'),
+      custom_respond_with User.followed_by(params[:id])
+                              .paginate(pagination_params, User)
+                              .order(Follow.arel_table[:id].desc),
                           each_serializer: SlimFollowedUserSerializer,
                           context: {
                             follower_id: params[:id],
@@ -155,13 +149,9 @@ class UsersController < ApiController
   PUBLIC_ACTIONS << def likeables
     likeable_type = params.fetch(:type)
     if likeable_type == 'Item'
-      custom_respond_with Item.joins("LEFT OUTER JOIN likes ON likes.likeable_type = 'Item' AND likes.likeable_id = items.id AND likes.deleted_at IS NULL AND items.deleted_at IS NULL")
-                              .includes(:creator, :morsel)
-                              .since(params[:since_id], 'items')
-                              .max(params[:max_id], 'items')
-                              .where(likes: { liker_id: params[:id] })
-                              .limit(pagination_count)
-                              .order('likes.id DESC'),
+      custom_respond_with Item.liked_by(params[:id])
+                            .paginate(pagination_params, Item)
+                            .order(Like.arel_table[:id].desc),
                           each_serializer: LikedItemSerializer,
                           context: {
                             liker_id: params[:id],
@@ -172,11 +162,9 @@ class UsersController < ApiController
 
   PUBLIC_ACTIONS << def places
     custom_respond_with Place.joins(:employments)
-                            .since(params[:since_id], 'employments')
-                            .max(params[:max_id], 'employments')
+                            .paginate(pagination_params, Employment)
                             .where(employments: { user_id: params[:id] })
-                            .limit(pagination_count)
-                            .order('employments.id DESC')
+                            .order(Employment.arel_table[:id].desc)
                             .select('places.*, employments.title'),
                         each_serializer: SlimPlaceWithTitleSerializer
   end
@@ -186,7 +174,7 @@ class UsersController < ApiController
       params.require(:user).permit(:email, :username, :password, :current_password,
                                    :first_name, :last_name, :bio, :industry,
                                    :photo, :remote_photo_url, :promoted, :query,
-                                   :professional, :settings => [:auto_follow])
+                                   :professional, settings: [:auto_follow])
     end
   end
 

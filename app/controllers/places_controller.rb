@@ -17,11 +17,9 @@ class PlacesController < ApiController
 
   PUBLIC_ACTIONS << def users
     custom_respond_with User.joins(:employments)
-                            .since(params[:since_id], 'employments')
-                            .max(params[:max_id], 'employments')
+                            .paginate(pagination_params, Employment)
                             .where(employments: { place_id: params[:id] })
-                            .limit(pagination_count)
-                            .order('employments.id DESC')
+                            .order(Employment.arel_table[:id].desc)
                             .select('users.*, employments.title'),
                         each_serializer: SlimFollowedUserSerializer
   end

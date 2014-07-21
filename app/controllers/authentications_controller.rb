@@ -9,11 +9,9 @@ class AuthenticationsController < ApiController
   end
 
   def index
-    custom_respond_with Authentication.since(params[:since_id])
-                                     .max(params[:max_id])
-                                     .where(user_id: current_user.id)
-                                     .limit(pagination_count)
-                                     .order('id DESC')
+    custom_respond_with Authentication.paginate(pagination_params)
+                                      .where(user_id: current_user.id)
+                                      .order(Authentication.arel_table[:id].desc)
   end
 
   def update
@@ -55,11 +53,9 @@ class AuthenticationsController < ApiController
     uids = params.fetch(:uids).gsub("'", '').split(',')
 
     custom_respond_with User.joins(:authentications)
-                            .since(params[:since_id])
-                            .max(params[:max_id])
+                            .paginate(pagination_params)
                             .where(authentications: { provider: provider, uid: uids })
-                            .limit(pagination_count)
-                            .order('id DESC')
+                            .order(User.arel_table[:id].desc)
   end
 
   class AuthenticationParams

@@ -3,17 +3,13 @@ class FeedController < ApiController
     if current_user.present?
       custom_respond_with FeedItem.visible
                                   .personalized_for(current_user.id)
-                                  .since(params[:since_id])
-                                  .max(params[:max_id])
-                                  .limit(pagination_count)
-                                  .order('id DESC')
+                                  .paginate(pagination_params)
+                                  .order(FeedItem.arel_table[:id].desc)
     else
       custom_respond_with FeedItem.visible
                                   .featured
-                                  .since(params[:since_id])
-                                  .max(params[:max_id])
-                                  .limit(pagination_count)
-                                  .order('id DESC')
+                                  .paginate(pagination_params)
+                                  .order(FeedItem.arel_table[:id].desc)
     end
   end
 end

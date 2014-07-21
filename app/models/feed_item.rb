@@ -28,25 +28,22 @@ class FeedItem < ActiveRecord::Base
 
   scope :visible, -> { where(visible: true) }
   scope :featured, -> { where(featured: true) }
-
-  def self.personalized_for(user_id)
-    where(%Q[
-      user_id IN (                        -- Followed Users' IDs
-        SELECT followable_id
-        FROM follows
-        WHERE follower_id = :user_id
-          AND followable_type = 'User'
-          AND deleted_at IS NULL
-      )
-      OR place_id IN (                    -- Followed Places' IDs
-        SELECT followable_id
-        FROM follows
-        WHERE follower_id = :user_id
-          AND followable_type = 'Place'
-            AND deleted_at IS NULL
-      )
-      OR user_id = :user_id               -- User's
-      OR featured = true                  -- Featured
-      ], user_id: user_id)
-  end
+  scope :personalized_for, -> (user_id) {
+    where(
+      FeedItem.arel_table[:user_id].in(
+        Follow.select(:followable_id).where(
+          Follow.arel_table[:follower_id].eq(user_id)
+          .and(Follow.arel_table[:followable_type].eq('User'))
+          .and(Follow.arel_table[:deleted_at].eq(nil))
+        ).ast
+      ).or(FeedItem.arel_table[:place_id].in(
+        Follow.select(:followable_id).where(
+          Follow.arel_table[:follower_id].eq(user_id)
+          .and(Follow.arel_table[:followable_type].eq('Place'))
+          .and(Follow.arel_table[:deleted_at].eq(nil))
+        ).ast
+      )).or(FeedItem.arel_table[:user_id].eq(user_id)
+      ).or(FeedItem.arel_table[:featured].eq(true))
+    )
+  }
 end
