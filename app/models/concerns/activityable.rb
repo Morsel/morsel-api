@@ -29,6 +29,7 @@ module Activityable
   end
 
   def recipient_id
+    return nil if subject.kind_of?(Place)
     if subject.respond_to?(:creator)
       subject.creator.id
     elsif subject.kind_of?(User)
