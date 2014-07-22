@@ -159,7 +159,7 @@ describe 'Users API' do
       get_endpoint
 
       expect_success
-      expect_json_keys(json_data, current_user, %w(id username first_name last_name sign_in_count bio staff email))
+      expect_json_keys(json_data, current_user, %w(id username first_name last_name sign_in_count bio staff email password_set))
     end
 
     context 'has a Morsel draft' do
@@ -303,7 +303,8 @@ describe 'Users API' do
       expect(user).to_not be_nil
       expect(user.email).to eq(fake_email)
       expect(user.username).to eq(fake_username)
-      expect(user.active).to eq(false)
+      expect(user.active).to be_false
+      expect(user.password_set).to be_false
       expect(user.current_sign_in_ip).to_not be_nil
     end
 
@@ -420,7 +421,8 @@ describe 'Users API' do
         'bio' => new_user.bio,
         'auth_token' => new_user.authentication_token,
         'password' => nil,
-        'encrypted_password' => nil
+        'encrypted_password' => nil,
+        'password_set' => true
       })
 
       expect(new_user.promoted).to be_false
@@ -496,6 +498,8 @@ describe 'Users API' do
 
             expect_success
             expect(Authentication.last.token).to eq('new_access_token')
+            new_user = User.find json_data['id']
+            expect(new_user.password_set).to be_false
           end
         end
 
@@ -524,6 +528,7 @@ describe 'Users API' do
           expect(new_facebook_user.facebook_uid).to eq('facebook_user_id')
           expect(new_facebook_user.uid).to eq('facebook_user_id')
           expect(new_facebook_user.provider).to eq('facebook')
+          expect(new_facebook_user.password_set).to be_false
         end
       end
 
@@ -554,6 +559,7 @@ describe 'Users API' do
           expect(new_twitter_user.twitter_username).to eq('eatmorsel')
           expect(new_twitter_user.uid).to eq('twitter_user_id')
           expect(new_twitter_user.provider).to eq('twitter')
+          expect(new_twitter_user.password_set).to be_false
         end
       end
     end
@@ -756,7 +762,7 @@ describe 'Users API' do
 
   describe 'POST /users/reset_password users#reset_password' do
     let(:endpoint) { '/users/reset_password' }
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryGirl.create(:user, password_set: false) }
     let(:new_password) { Faker::Lorem.characters(15) }
     let(:raw_token) { user.send_reset_password_instructions }
 
@@ -770,6 +776,7 @@ describe 'Users API' do
 
       user.reload
       expect(user.valid_password?(new_password)).to be_true
+      expect(user.password_set).to be_true
     end
 
     it 'changes the User\'s authentication_token' do

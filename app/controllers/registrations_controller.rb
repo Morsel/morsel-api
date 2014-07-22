@@ -20,6 +20,8 @@ class RegistrationsController < Devise::RegistrationsController
         authentication_errors += service.errors.full_messages
       end
 
+      user.password_set = user.password.present?
+
       # Set a temporary password if none is set
       user.password ||= Devise.friendly_token
     end

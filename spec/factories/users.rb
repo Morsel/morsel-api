@@ -40,6 +40,7 @@
 # **`promoted`**                | `boolean`          | `default(FALSE)`
 # **`settings`**                | `hstore`           | `default({})`
 # **`professional`**            | `boolean`          | `default(FALSE)`
+# **`password_set`**            | `boolean`          | `default(TRUE)`
 #
 
 # Read about factories at https://github.com/thoughtbot/factory_girl
@@ -54,6 +55,7 @@ FactoryGirl.define do
     bio 'Hi! I like turtles!'
     active true
     professional false
+    password_set true
 
     factory :admin do
       admin true

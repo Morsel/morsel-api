@@ -40,6 +40,7 @@
 # **`promoted`**                | `boolean`          | `default(FALSE)`
 # **`settings`**                | `hstore`           | `default({})`
 # **`professional`**            | `boolean`          | `default(FALSE)`
+# **`password_set`**            | `boolean`          | `default(TRUE)`
 #
 
 class User < ActiveRecord::Base
@@ -110,6 +111,12 @@ class User < ActiveRecord::Base
 
     def auto_follow?; auto_follow == true || auto_follow == 'true' end
     def unsubscribed?; unsubscribed == true || unsubscribed == 'true' end
+  end
+
+  concerning :DeviseOverrides do
+    def after_password_reset
+      self.update_attributes password_set: true
+    end
   end
 
   def self.find_first_by_auth_conditions(warden_conditions)
