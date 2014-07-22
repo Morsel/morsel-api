@@ -40,6 +40,7 @@
 # **`promoted`**                | `boolean`          | `default(FALSE)`
 # **`settings`**                | `hstore`           | `default({})`
 # **`professional`**            | `boolean`          | `default(FALSE)`
+# **`password_set`**            | `boolean`          | `default(TRUE)`
 #
 
 require 'spec_helper'

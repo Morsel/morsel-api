@@ -40,6 +40,7 @@
 # **`promoted`**                | `boolean`          | `default(FALSE)`
 # **`settings`**                | `hstore`           | `default({})`
 # **`professional`**            | `boolean`          | `default(FALSE)`
+# **`password_set`**            | `boolean`          | `default(TRUE)`
 #
 
 # Read about factories at https://github.com/thoughtbot/factory_girl
