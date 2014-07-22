@@ -1,5 +1,6 @@
 class UserWithPrivateAttributesSerializer < UserSerializer
   attributes :staff,
+             :password_set,
              :draft_count,
              :sign_in_count,
              :photo_processing,

@@ -70,6 +70,7 @@ class UsersController < ApiController
   PUBLIC_ACTIONS << def reserveusername
     user = User.new(UserParams.build(params))
     user.password = Devise.friendly_token
+    user.password_set = false
     user.active = false
 
     if user.save

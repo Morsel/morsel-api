@@ -60,8 +60,10 @@ describe User do
   it { should respond_to(:follower_count) }
   it { should respond_to(:followed_user_count) }
   it { should respond_to(:bio) }
+  it { should respond_to(:password_set) }
 
   its(:authentication_token) { should be_nil }
+  its(:password_set) { should be_true }
 
   it { should be_valid }
 

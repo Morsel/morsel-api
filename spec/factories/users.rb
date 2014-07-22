@@ -54,6 +54,7 @@ FactoryGirl.define do
     bio 'Hi! I like turtles!'
     active true
     professional false
+    password_set true
 
     factory :admin do
       admin true

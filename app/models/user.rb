@@ -112,6 +112,12 @@ class User < ActiveRecord::Base
     def unsubscribed?; unsubscribed == true || unsubscribed == 'true' end
   end
 
+  concerning :DeviseOverrides do
+    def after_password_reset
+      self.update_attributes password_set: true
+    end
+  end
+
   def self.find_first_by_auth_conditions(warden_conditions)
     conditions = warden_conditions.dup
     if login = conditions.delete(:login)
