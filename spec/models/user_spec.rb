@@ -137,6 +137,11 @@ describe User do
       before { user.username = ReservedPaths.non_username_paths.sample }
       it { should_not be_valid }
     end
+
+    context 'can be one character' do
+      before { user.username = 'a' }
+      it { should be_valid }
+    end
   end
 
   describe 'password' do
