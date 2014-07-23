@@ -40,8 +40,6 @@ class Item < ActiveRecord::Base
   mount_uploader :photo, ItemPhotoUploader
   process_in_background :photo
 
-  scope :feed, -> { includes(:creator, :morsel) }
-
   validates :morsel, presence: true
 
   def url
