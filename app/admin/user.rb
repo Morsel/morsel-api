@@ -16,7 +16,7 @@ ActiveAdmin.register User do
     end
     column :email
     column :username
-    column :full_name
+    column :full_name, sortable: 'last_name'
     column :industry
     column :admin
     column :active

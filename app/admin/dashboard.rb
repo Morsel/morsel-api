@@ -7,7 +7,7 @@ ActiveAdmin.register_page 'Dashboard' do
       column do
         panel 'Recent Items' do
           ul do
-            Item.feed.limit(5).order('created_at DESC').map do |item|
+            Item.includes(:creator, :morsel).limit(5).order('created_at DESC').map do |item|
               li link_to(item.description, admin_item_path(item))
             end
           end
