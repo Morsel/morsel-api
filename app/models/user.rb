@@ -190,7 +190,7 @@ class User < ActiveRecord::Base
       errors.add(:username, 'must be less than 16 characters') if username.length > 15
       errors.add(:username, 'cannot contain spaces') if username.include? ' '
       errors.add(:username, 'has already been taken') if ReservedPaths.non_username_paths.include?(username)
-      errors.add(:username, 'must start with a letter and can only contain alphanumeric characters and underscores') unless username.match(/\A[a-zA-Z][A-Za-z0-9_]+$\z/)
+      errors.add(:username, 'must start with a letter and can only contain alphanumeric characters and underscores') unless username.match(/\A[a-zA-Z]([A-Za-z0-9_]*)$\z/)
       errors.add(:username, 'has already been taken') if User.where('lower(username) = ? AND id != ?', username.downcase, id || 0).count > 0
     end
   end
