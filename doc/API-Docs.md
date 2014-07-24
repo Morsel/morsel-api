@@ -481,6 +481,7 @@ __Request Behaviors__
 
 # User Methods
 * [\<Followable\>](#followable)
+* [Presigned Photo Uploadable](#presigned-photo-uploadable)
 
 ## POST `/users` - Create a new User
 Creates a new User and returns an authentication_token.
@@ -1079,6 +1080,7 @@ __Request Behaviors__
 
 
 # Item Methods
+* [Presigned Photo Uploadable](#presigned-photo-uploadable)
 
 ## POST `/items` - Create a new Item
 Created a new Item for the current User.
