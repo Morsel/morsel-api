@@ -17,9 +17,11 @@
 #
 
 FactoryGirl.define do
-  factory :item_comment, class: Comment do
+  factory :comment, class: Comment do
     description { Faker::Lorem.sentence(rand(5..100)) }
     association(:commenter, factory: :user)
-    association(:commentable, factory: :item_with_creator)
+    factory :item_comment, class: Comment do
+      association(:commentable, factory: :item_with_creator)
+    end
   end
 end

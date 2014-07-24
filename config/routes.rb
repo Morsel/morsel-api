@@ -85,7 +85,8 @@ MorselApp::Application.routes.draw do
   resources :users, only: [:update], concerns: [:followable, :taggable] do
     collection do
       get 'validate_email(/:email)' => 'users#validate_email'
-      get 'validateusername(/:username)' => 'users#validateusername'
+      get 'validate_username(/:username)' => 'users#validate_username'
+      get 'validateusername(/:username)' => 'users#validate_username'
       post 'reserveusername(/:username)' => 'users#reserveusername'
       post 'forgot_password' => 'users#forgot_password'
       post 'reset_password' => 'users#reset_password'

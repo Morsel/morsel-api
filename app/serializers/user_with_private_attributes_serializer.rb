@@ -7,6 +7,12 @@ class UserWithPrivateAttributesSerializer < UserSerializer
              :email,
              :settings
 
+  def attributes
+    hash = super
+    hash['presigned_upload'] = object.presigned_upload if object.respond_to? :presigned_upload
+    hash
+  end
+
   def draft_count
     object.morsels.drafts.count
   end

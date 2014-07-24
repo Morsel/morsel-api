@@ -20,9 +20,7 @@ class ItemSerializer < ActiveModel::Serializer
 
   def attributes
     hash = super
-    if options[:context] && options[:context][:presigned_upload]
-      hash['presigned_upload'] = options[:context][:presigned_upload]
-    end
+    hash['presigned_upload'] = object.presigned_upload if object.respond_to? :presigned_upload
     hash
   end
 

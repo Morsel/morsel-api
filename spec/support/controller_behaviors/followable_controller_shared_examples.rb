@@ -2,7 +2,7 @@ shared_examples 'FollowableController' do
   describe 'POST /followable/:id/follow' do
     let(:endpoint) { "#{followable_route}/#{followable.id}/follow" }
 
-    it 'follows the User' do
+    it 'follows the Followablelikeable' do
       post_endpoint
 
       expect_success
