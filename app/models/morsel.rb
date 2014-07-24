@@ -94,6 +94,29 @@ class Morsel < ActiveRecord::Base
     "#{url}/#{items.find_index(item) + 1}"
   end
 
+  def publish!(options = {})
+    # TODO: Crap out if already published
+
+    if update draft: false
+      PublishMorselWorker.perform_async(
+        morsel_id: self.id,
+        place_id: self.place_id,
+        user_id: self.user_id,
+        post_to_facebook: options[:post_to_facebook],
+        post_to_twitter: options[:post_to_twitter]
+      )
+      true
+    else
+      false
+    end
+  end
+
+  def unpublish!
+    # TODO: Crap out if not already published
+    feed_item.destroy
+    update draft: true, published_at: nil
+  end
+
   private
 
   def primary_item_belongs_to_morsel
