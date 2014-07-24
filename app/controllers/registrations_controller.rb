@@ -2,6 +2,7 @@ class RegistrationsController < Devise::RegistrationsController
   respond_to :json
   include JSONEnvelopable
   include UserEventCreator
+  include PresignedPhotoUploadable
 
   def create
     user_params = UsersController::UserParams.build(params)
@@ -28,7 +29,11 @@ class RegistrationsController < Devise::RegistrationsController
 
     if user.valid? && authentication_errors.empty? && user.save
       create_user_event(:created_account, user.id)
-      custom_respond_with user, serializer: UserWithAuthTokenSerializer
+      if params[:prepare_presigned_upload] == 'true'
+        handle_presigned_upload(user, serializer: UserWithPrivateAttributesSerializer)
+      else
+        custom_respond_with user, serializer: UserWithAuthTokenSerializer
+      end
     else
       user.errors.delete(:authentications)
       authentication_errors.each { |e| user.errors[:authentication] << e }

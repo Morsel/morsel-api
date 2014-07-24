@@ -1,4 +1,6 @@
 class UsersController < ApiController
+  include PresignedPhotoUploadable
+
   def search
     service = Search::SearchUsers.call(UserParams.build(params).merge(pagination_params))
     if service.valid?
@@ -27,17 +29,25 @@ class UsersController < ApiController
     user_params.delete(:promoted) # delete the `promoted` flag since that should only be set via /admin
     current_password = user_params.delete(:current_password)
 
-    if password_required?(user, params) && !user.valid_password?(current_password)
-      render_json_errors(user.errors)
-    elsif user.update_attributes(user_params)
-      # if password was changed, return the new auth_token
-      if user_params[:password].present?
-        custom_respond_with user, serializer: UserWithAuthTokenSerializer
-      else
-        custom_respond_with user, serializer: UserWithPrivateAttributesSerializer
-      end
+    if user_params[:photo_key]
+      handle_photo_key(user_params[:photo_key], user, serializer: UserWithPrivateAttributesSerializer)
     else
-      render_json_errors(user.errors)
+      if password_required?(user, params) && !user.valid_password?(current_password)
+        render_json_errors(user.errors)
+      elsif user.update_attributes(user_params)
+        if params[:prepare_presigned_upload] == 'true'
+          handle_presigned_upload(user, serializer: UserWithPrivateAttributesSerializer)
+        else
+          # if password was changed, return the new auth_token
+          if user_params[:password].present?
+            custom_respond_with user, serializer: UserWithAuthTokenSerializer
+          else
+            custom_respond_with user, serializer: UserWithPrivateAttributesSerializer
+          end
+        end
+      else
+        render_json_errors(user.errors)
+      end
     end
   end
 
@@ -56,7 +66,7 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def validateusername
+  PUBLIC_ACTIONS << def validate_username
     user = User.new(username: params[:username])
     user.validate_username
 

@@ -16,8 +16,11 @@
 #
 
 FactoryGirl.define do
-  factory :item_like, class: Like do
+  factory :like, class: Like do
     association(:liker, factory: :user)
-    association(:likeable, factory: :item_with_creator)
+
+    factory :item_like, class: Like do
+      association(:likeable, factory: :item_with_creator)
+    end
   end
 end

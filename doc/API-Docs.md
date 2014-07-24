@@ -38,7 +38,8 @@
   - [GET `/users/search` - Search Users](#get-userssearch---search-users)
   - [POST `/users/unsubscribe` - Unsubscribe](#post-usersunsubscribe---unsubscribe)
   - [GET `/users/validate_email` - Validate Email](#get-usersvalidate_email---validate-_email)
-  - [GET `/users/validateusername` - Validate Username](#get-usersvalidateusername---validate-username)
+  - [GET `/users/validateusername` - Validate Username](#get-usersvalidateusername---validate-username) __DEPRECATED__
+  - [GET `/users/validate_username` - Validate Username](#get-usersvalidate_username---validate-username)
   - [POST `/users/reserveusername` - Reserve Username](#post-usersreserveusername---reserve-username)
   - [PUT `/users/:id/updateindustry` - Update Industry](#put-usersidupdateindustry---update-industry)
   - [GET `/users/:id|:username` - User](#get-usersidusername---user)
@@ -646,7 +647,13 @@ Unsubscribes the User with the specified user_id from all emails
 <br />
 
 ## GET `/users/validateusername` - Validate Username
-Returns `true` if the username is valid, otherwise errors.
+__DEPRECATED__ User [GET `/users/validate_username` - Validate Username](#get-usersvalidate_username---validate-username) instead
+
+<br />
+<br />
+
+## GET `/users/validate_username` - Validate Username
+__DEPRECATED__ Returns `true` if the username is valid, otherwise errors.
 
 ### Request
 
