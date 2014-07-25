@@ -5,6 +5,8 @@ shared_examples 'PresignedPhotoUploadable' do
       params = presigned_photo_uploadable_object.merge(prepare_presigned_upload: true)
 
       case endpoint_method
+      when :get
+        get_endpoint params
       when :post
         post_endpoint params
       when :put
