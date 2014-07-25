@@ -52,7 +52,13 @@ class UsersController < ApiController
   end
 
   def me
-    custom_respond_with current_user, serializer: UserWithPrivateAttributesSerializer
+    if params[:prepare_presigned_upload] == 'true'
+      Authority.enforce :update, User, current_user
+      Authority.enforce :update, current_user, current_user
+      handle_presigned_upload(current_user, serializer: UserWithPrivateAttributesSerializer)
+    else
+      custom_respond_with current_user, serializer: UserWithPrivateAttributesSerializer
+    end
   end
 
   PUBLIC_ACTIONS << def validate_email
