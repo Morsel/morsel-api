@@ -19,7 +19,15 @@ class ItemsController < ApiController
   end
 
   PUBLIC_ACTIONS << def show
-    custom_respond_with Item.find(params[:id])
+    item = Item.find(params[:id])
+
+    if params[:prepare_presigned_upload] == 'true'
+      Authority.enforce :update, Item, current_user
+      Authority.enforce :update, item, current_user
+      handle_presigned_upload(item)
+    else
+      custom_respond_with item
+    end
   end
 
   def update

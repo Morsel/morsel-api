@@ -4,6 +4,16 @@ describe 'GET /items/{:item_id} items#show' do
   let(:endpoint) { "/items/#{item.id}" }
   let(:item) { FactoryGirl.create(:item_with_creator_and_morsel) }
 
+  it_behaves_like 'PresignedPhotoUploadable' do
+    let(:current_user) { item.creator }
+    let(:presigned_photo_uploadable_object) {
+      {
+        api_key: api_key_for_user(current_user)
+      }
+    }
+    let(:endpoint_method) { :get }
+  end
+
   context 'authenticated and current_user likes the Item' do
     let(:current_user) { FactoryGirl.create(:user) }
     before { Like.create(likeable: item, liker: current_user) }
