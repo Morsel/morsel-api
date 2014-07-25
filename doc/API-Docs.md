@@ -313,7 +313,7 @@ The API responds with any new Morsels since the Morsel with id = 100. So if ther
 # Presigned Photo Uploadable
 
 Since we use S3 for hosting our photos, it makes sense to upload photos directly to S3 from a client. To avoid including sensitive AWS credentials in our client applications, clients will ask the API for temporary access to S3 via presigned credentials that expire after an hour. The expected flow is:
-  1. Client requests presigned temporary credentials by passing `prepare_presigned_upload=true` to a GET, POST, or PUT request on a valid object.
+  1. Client requests presigned temporary credentials by passing `prepare_presigned_upload=true` to a GET (`/whatever/:id` or `/me`), POST, or PUT request on a valid object.
   2. API responds with the expected response, in addition to a `presigned_upload` object ([Presigned Upload](#presigned-upload))
   3. Client uses the presigned credentials to POST the photo file to S3.
   4. When the upload is complete, client updates the object via PUT with the new `photo_key` (`Key` in the S3 XML response) provided by Amazon.

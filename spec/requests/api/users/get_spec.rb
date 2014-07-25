@@ -4,6 +4,15 @@ describe 'GET /users/me users#me' do
   let(:endpoint) { '/users/me' }
   let(:current_user) { FactoryGirl.create(:user) }
 
+  it_behaves_like 'PresignedPhotoUploadable' do
+    let(:presigned_photo_uploadable_object) {
+      {
+        api_key: api_key_for_user(current_user)
+      }
+    }
+    let(:endpoint_method) { :get }
+  end
+
   it 'returns the authenticated User' do
     get_endpoint
 
