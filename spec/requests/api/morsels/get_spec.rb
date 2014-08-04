@@ -13,7 +13,10 @@ describe 'GET /morsels morsels#show' do
       'id' => morsel_with_items.id,
       'title' => morsel_with_items.title,
       'creator_id' => morsel_with_items.creator_id,
-      'slug' => morsel_with_items.cached_slug
+      'slug' => morsel_with_items.cached_slug,
+      'place' => {
+        'widget_url' => morsel_with_items.place.widget_url
+      }
     })
     expect(json_data['items'].count).to eq(items_count)
   end

@@ -26,6 +26,7 @@
 # **`last_imported_at`**       | `datetime`         |
 # **`lat`**                    | `float`            |
 # **`lon`**                    | `float`            |
+# **`widget_url`**             | `string(255)`      |
 #
 
 require 'spec_helper'
@@ -77,5 +78,10 @@ describe Place do
         end
       end
     end
+  end
+
+  context :widget do
+    subject(:place_with_widget) { FactoryGirl.build(:place_with_widget) }
+    its(:widget_url) { should_not be_nil }
   end
 end

@@ -26,6 +26,7 @@
 # **`last_imported_at`**       | `datetime`         |
 # **`lat`**                    | `float`            |
 # **`lon`**                    | `float`            |
+# **`widget_url`**             | `string(255)`      |
 #
 
 FactoryGirl.define do
@@ -93,6 +94,10 @@ FactoryGirl.define do
 
     factory :existing_place, class: Place do
       last_imported_at { 15.days.ago }
+    end
+
+    factory :place_with_widget, class: Place do
+      widget_url Faker::Internet.url
     end
   end
 

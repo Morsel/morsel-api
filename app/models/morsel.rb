@@ -14,12 +14,12 @@
 # **`cached_slug`**         | `string(255)`      |
 # **`deleted_at`**          | `datetime`         |
 # **`draft`**               | `boolean`          | `default(TRUE), not null`
+# **`published_at`**        | `datetime`         |
 # **`primary_item_id`**     | `integer`          |
 # **`photo`**               | `string(255)`      |
 # **`photo_content_type`**  | `string(255)`      |
 # **`photo_file_size`**     | `string(255)`      |
 # **`photo_updated_at`**    | `datetime`         |
-# **`published_at`**        | `datetime`         |
 # **`mrsl`**                | `hstore`           |
 # **`place_id`**            | `integer`          |
 #
