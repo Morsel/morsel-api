@@ -36,7 +36,14 @@ FactoryGirl.define do
       if evaluator.include_mrsl
         morsel.mrsl = {
           facebook_mrsl: 'https://mrsl.co/facebook',
-          twitter_mrsl: 'https://mrsl.co/twitter'
+          twitter_mrsl: 'https://mrsl.co/twitter',
+          clipboard: 'http://mrsl.co/clipboard',
+          facebook_media: 'http://mrsl.co/facebook_media',
+          twitter_media: 'http://mrsl.co/twitter_media',
+          clipboard_media: 'http://mrsl.co/clipboard_media',
+          pinterest_media: 'http://mrsl.co/pinterest_media',
+          linkedin_media: 'http://mrsl.co/linkedin_media',
+          googleplus_media: 'http://mrsl.co/googleplus_media'
         }
       end
     end
