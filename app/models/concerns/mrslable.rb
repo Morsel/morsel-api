@@ -6,6 +6,9 @@ module Mrslable
       facebook_mrsl
       twitter_mrsl
       clipboard_mrsl
+      pinterest_mrsl
+      linkedin_mrsl
+      googleplus_mrsl
       facebook_media_mrsl
       twitter_media_mrsl
       clipboard_media_mrsl
