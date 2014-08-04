@@ -1633,13 +1633,16 @@ Response for any Like Item related requests.
   "mrsl": {
     "facebook_mrsl": "http://mrsl.co/facebook",
     "twitter_mrsl": "http://mrsl.co/twitter",
-    "clipboard": "http://mrsl.co/clipboard",
-    "facebook_media": "http://mrsl.co/facebook_media",
-    "twitter_media": "http://mrsl.co/twitter_media",
-    "clipboard_media": "http://mrsl.co/clipboard_media",
-    "pinterest_media": "http://mrsl.co/pinterest_media",
-    "linkedin_media": "http://mrsl.co/linkedin_media",
-    "googleplus_media": "http://mrsl.co/googleplus_media"
+    "clipboard_mrsl": "http://mrsl.co/clipboard",
+    "pinterest_mrsl": "http://mrsl.co/pinterest",
+    "linkedin_mrsl": "http://mrsl.co/linkedin",
+    "googleplus_mrsl": "http://mrsl.co/googleplus",
+    "facebook_media_mrsl": "http://mrsl.co/facebook_media",
+    "twitter_media_mrsl": "http://mrsl.co/twitter_media",
+    "clipboard_media_mrsl": "http://mrsl.co/clipboard_media",
+    "pinterest_media_mrsl": "http://mrsl.co/pinterest_media",
+    "linkedin_media_mrsl": "http://mrsl.co/linkedin_media",
+    "googleplus_media_mrsl": "http://mrsl.co/googleplus_media"
   },
   "photos": {
     "_800x600":"https://morsel-staging.s3.amazonaws.com/morsel-images/4/648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
