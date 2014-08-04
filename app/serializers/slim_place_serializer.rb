@@ -10,5 +10,6 @@ class SlimPlaceSerializer < ActiveModel::Serializer
               :created_at,
               :updated_at,
               :lat,
-              :lon
+              :lon,
+              :widget_url
 end

@@ -26,6 +26,7 @@
 # **`last_imported_at`**       | `datetime`         |
 # **`lat`**                    | `float`            |
 # **`lon`**                    | `float`            |
+# **`widget_url`**             | `string(255)`      |
 #
 
 class Place < ActiveRecord::Base

@@ -1766,7 +1766,8 @@ Response for any User Follower related requests.
   "postal_code": "60622",
   "country": "United States",
   "lat": 41.896917,
-  "lon": -87.643547
+  "lon": -87.643547,
+  "widget_url": "http://bigstarchicago.com/morsels"
 }
 ```
 
