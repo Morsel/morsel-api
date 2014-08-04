@@ -1630,8 +1630,17 @@ Response for any Like Item related requests.
   "total_like_count": 10,
   "total_comment_count": 3,
   "url": "http://eatmorsel.com/turdferg/4-butter-rocks",
-  "facebook_mrsl": "http://mrsl.co/facebook",
-  "twitter_mrsl": "http://mrsl.co/twitter",
+  "mrsl": {
+    "facebook_mrsl": "http://mrsl.co/facebook",
+    "twitter_mrsl": "http://mrsl.co/twitter",
+    "clipboard": "http://mrsl.co/clipboard",
+    "facebook_media": "http://mrsl.co/facebook_media",
+    "twitter_media": "http://mrsl.co/twitter_media",
+    "clipboard_media": "http://mrsl.co/clipboard_media",
+    "pinterest_media": "http://mrsl.co/pinterest_media",
+    "linkedin_media": "http://mrsl.co/linkedin_media",
+    "googleplus_media": "http://mrsl.co/googleplus_media"
+  },
   "photos": {
     "_800x600":"https://morsel-staging.s3.amazonaws.com/morsel-images/4/648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
   }
