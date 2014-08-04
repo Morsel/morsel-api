@@ -5,9 +5,8 @@ class MrslWorker
     return if options.nil?
 
     morsel = Morsel.find(options['morsel_id'])
-    morsel_mrsl = MorselMrslDecorator.new(morsel)
 
-    morsel_mrsl.generate_mrsl_links
+    MorselMrslDecorator.new(morsel).generate_mrsl_links!
 
     if morsel.feed_item.nil?
       FeedWorker.perform_async(options)
