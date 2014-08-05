@@ -16,6 +16,7 @@ RACK_ENV=development
 PORT=3000
 
 MORSEL_API_URL=https://api.eatmorsel.com
+MORSEL_MEDIA_URL=http://media.eatmorsel.com
 MORSEL_WEB_URL=https://eatmorsel.com
 MORSEL_TWITTER_USERNAME=eatmorsel
 MORSEL_SUPPORT_EMAIL_ADDRESS=support@eatmorsel.com

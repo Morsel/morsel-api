@@ -3,6 +3,7 @@ developer_email: <%= ENV['DEVELOPER_EMAIL'] %>
 morsel:
   api_url: <%= ENV['MORSEL_API_URL'] %>
   support_email_address: <%= ENV['MORSEL_SUPPORT_EMAIL_ADDRESS'] %>
+  media_url: <%= ENV['MORSEL_MEDIA_URL'] %>
   web_url: <%= ENV['MORSEL_WEB_URL'] %>
   twitter_username: <%= ENV['MORSEL_TWITTER_USERNAME'] %>
 
