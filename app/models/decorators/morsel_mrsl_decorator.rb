@@ -10,11 +10,8 @@ class MorselMrslDecorator < SimpleDelegator
     save if changed?
   end
 
-  private
-
   def media_url
     # http://media.eatmorsel.com/morsels/1
     "#{Settings.morsel.media_url}/morsels/#{id}"
   end
-
 end
