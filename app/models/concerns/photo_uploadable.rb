@@ -3,6 +3,7 @@ module PhotoUploadable
 
   included do
     before_save :update_photo_attributes
+    process_in_background :photo
   end
 
   def photos

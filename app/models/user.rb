@@ -102,7 +102,6 @@ class User < ActiveRecord::Base
   validate :validate_password
 
   mount_uploader :photo, UserPhotoUploader
-  process_in_background :photo
 
   concerning :Settings do
     included do
@@ -114,8 +113,16 @@ class User < ActiveRecord::Base
   end
 
   concerning :DeviseOverrides do
+    included do
+      attr_accessor :login
+    end
+
     def after_password_reset
       self.update_attributes password_set: true
+    end
+
+    def login
+      @login || username || email
     end
   end
 
@@ -130,10 +137,6 @@ class User < ActiveRecord::Base
     else
       where(conditions).first
     end
-  end
-
-  def login
-    username || email
   end
 
   def liked_item_count

@@ -5,29 +5,29 @@ class SessionsController < Devise::SessionsController
   respond_to :json
 
   def create
-    if request.format == :html
-      super
+    if params[:user].present?
+      return sign_in_with_login_and_password((params[:user][:email] || params[:user][:username] || params[:user][:login]), params[:user][:password])
+    elsif params[:authentication].present?
+      return sign_in_with_authentication(AuthenticationsController::AuthenticationParams.build(params))
     else
-      if params[:user].present?
-        return sign_in_with_login_and_password((params[:user][:email] || params[:user][:username] || params[:user][:login]), params[:user][:password])
-      elsif params[:authentication].present?
-        return sign_in_with_authentication(AuthenticationsController::AuthenticationParams.build(params))
-      else
-        invalid_login_attempt(:unprocessable_entity)
-      end
+      invalid_login_attempt(:unprocessable_entity)
     end
   end
 
   private
 
   def sign_in_with_login_and_password(login, password)
-    user = User.find_for_database_authentication(login: login)
+    user = User.find_first_by_auth_conditions(login: login)
     return invalid_login_attempt unless user
 
     if user.valid_password?(password) && user.active?
-      sign_in user, store: false
-
-      custom_respond_with user, serializer: UserWithAuthTokenSerializer
+      if request.format == :html
+        sign_in user
+        respond_with user, location: after_sign_in_path_for(user)
+      else
+        sign_in user, store: false
+        custom_respond_with(user, serializer: UserWithAuthTokenSerializer)
+      end
     else
       invalid_login_attempt
     end
@@ -54,6 +54,10 @@ class SessionsController < Devise::SessionsController
   end
 
   def invalid_login_attempt(http_status = :unauthorized)
-    render_json_errors({ base: ['login or password is invalid'] }, http_status)
+    if request.format == :html
+      render(text: 'login or password is invalid')
+    else
+      render_json_errors({ base: ['login or password is invalid'] }, http_status)
+    end
   end
 end
