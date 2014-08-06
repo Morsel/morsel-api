@@ -43,7 +43,6 @@ class Morsel < ActiveRecord::Base
   before_save :update_published_at_if_necessary
 
   mount_uploader :photo, MorselPhotoUploader
-  process_in_background :photo
 
   validate  :primary_item_belongs_to_morsel
 

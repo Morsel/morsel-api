@@ -38,7 +38,6 @@ class Item < ActiveRecord::Base
   before_save :check_sort_order
 
   mount_uploader :photo, ItemPhotoUploader
-  process_in_background :photo
 
   validates :morsel, presence: true
 

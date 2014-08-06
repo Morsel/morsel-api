@@ -115,7 +115,7 @@ describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
     stub_bitly_client
 
     MorselCollageGeneratorDecorator.any_instance.should_receive(:generate).exactly(1).times.and_return { draft_morsel.update(photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))))}
-    Mrsl.should_receive(:shorten).exactly(2).times.and_call_original
+    Mrsl.should_receive(:shorten).exactly(12).times.and_call_original
     FeedItem.should_receive(:new).exactly(1).times.and_call_original
     FacebookAuthenticatedUserDecorator.any_instance.should_not_receive(:post_facebook_photo_url)
     TwitterAuthenticatedUserDecorator.any_instance.should_not_receive(:post_twitter_photo_url)
@@ -150,7 +150,7 @@ describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
       stub_bitly_client
 
       MorselCollageGeneratorDecorator.any_instance.should_receive(:generate).exactly(1).times.and_return { draft_morsel.update(photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))))}
-      Mrsl.should_receive(:shorten).exactly(2).times.and_call_original
+      Mrsl.should_receive(:shorten).exactly(12).times.and_call_original
       FeedItem.should_receive(:new).exactly(1).times.and_call_original
       FacebookAuthenticatedUserDecorator.any_instance.should_receive(:post_facebook_photo_url).exactly(1).times.and_call_original
       TwitterAuthenticatedUserDecorator.any_instance.should_not_receive(:post_twitter_photo_url)
@@ -173,7 +173,7 @@ describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
       stub_bitly_client
 
       MorselCollageGeneratorDecorator.any_instance.should_receive(:generate).exactly(1).times.and_return { draft_morsel.update(photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))))}
-      Mrsl.should_receive(:shorten).exactly(2).times.and_call_original
+      Mrsl.should_receive(:shorten).exactly(12).times.and_call_original
       FeedItem.should_receive(:new).exactly(1).times.and_call_original
       FacebookAuthenticatedUserDecorator.any_instance.should_not_receive(:post_facebook_photo_url)
       TwitterAuthenticatedUserDecorator.any_instance.should_receive(:post_twitter_photo_url).exactly(1).times.and_call_original

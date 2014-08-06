@@ -28,4 +28,6 @@ MorselApp::Application.configure do
   config.assets.debug = true
 
   config.logger = Logger.new(config.paths['log'].first, 50, 5.megabyte)
+
+  config.middleware.use Oink::Middleware, logger: Hodel3000CompliantLogger.new(STDOUT)
 end
