@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 gem 'unicorn', '~> 4.8.3'
 gem 'rails', '~> 4.1.4'
 gem 'pg'
+gem 'oink', '~> 0.10.1'
 
 gem 'active_model_serializers'
 gem 'activeadmin', github: 'gregbell/active_admin'
