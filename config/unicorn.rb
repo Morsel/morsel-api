@@ -1,8 +1,7 @@
 # config/unicorn.rb
 # based off of: https://gist.github.com/leshill/1401792
 
-# See comment by @paulelliott
-worker_processes 3
+worker_processes ENV['UNICORN_WORKER_PROCESS_COUNT'] || 2
 timeout 30
 preload_app true
 
