@@ -7,7 +7,7 @@ class ApiController < ActionController::Base
   respond_to :json
 
   before_filter :authenticate_user_from_token!,
-                :check_request_format
+                :default_format_json
   include JSONEnvelopable
   include UserEventCreator
 
@@ -24,8 +24,8 @@ class ApiController < ActionController::Base
     redirect_to new_user_session_path unless current_user.try(:admin?)
   end
 
-  def check_request_format
-    render nothing: true, status: 406 unless params[:format] == 'json'
+  def default_format_json
+    request.format = 'json' unless params[:format]
   end
 
   private
