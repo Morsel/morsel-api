@@ -3,6 +3,7 @@ require 'carrierwave/processing/mime_types'
 class BasePhotoUploader < CarrierWave::Uploader::Base
   include ::CarrierWave::Backgrounder::Delay
   include CarrierWave::MimeTypes
+  include Piet::CarrierWaveExtension
 
   configure do |config|
     config.remove_previously_stored_files_after_update = false
@@ -40,6 +41,7 @@ class BasePhotoUploader < CarrierWave::Uploader::Base
   process :save_content_type_and_size_in_model
   process :fix_exif_rotation
   process :strip
+  process :optimize
 
   def save_content_type_and_size_in_model
     model.photo_content_type = file.content_type if file.content_type
