@@ -62,6 +62,10 @@ class Morsel < ActiveRecord::Base
     items.map(&:comment_count).reduce(:+)
   end
 
+  def item_count
+    items.count
+  end
+
   # Since there are no 'versions' for a Morsel photo (the collage), override the photos method from PhotoUploadable and return it as the default size.
   def photos
     if photo?
