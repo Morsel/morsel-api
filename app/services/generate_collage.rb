@@ -49,7 +49,7 @@ class GenerateCollage
   end
 
   def image_for_item(item, photo_version = :_320x320)
-    MiniMagick::Image.open(COLLAGE_LOCAL_PATH+item.photo_url(photo_version))
+    MiniMagick::Image.open(COLLAGE_LOCAL_PATH+item.photo_url(photo_version)) if item
   end
 
   def canvas
