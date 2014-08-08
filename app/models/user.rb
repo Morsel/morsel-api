@@ -151,6 +151,10 @@ class User < ActiveRecord::Base
     morsels.published.count
   end
 
+  def draft_count
+    morsels.drafts.count
+  end
+
   def follower_count
     followers.count
   end
