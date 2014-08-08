@@ -15,6 +15,7 @@
     - [DELETE `/{{followables}}/:id/follow` - Unfollow {{Followable}}](#delete-followablesidfollow---unfollow-followable)
     - [GET `/{{followables}}/:id/followers` - {{Followable}} Followers](#get-followablesidfollowers---followable-followers)
   - [Pagination](#pagination)
+  - [Public](#public)
   - [Presigned Photo Uploadable](#presigned-photo-uploadable)
 
 - [Feed Methods](#feed-methods)
@@ -268,6 +269,7 @@ Returns the followers for the _{{Followable}}_ with the specified `id`.
 
 __Request Behaviors__
 * [Pagination](#pagination)
+* [Public](#public)
 
 ### Response
 
@@ -310,6 +312,12 @@ The API responds with any new Morsels since the Morsel with id = 100. So if ther
 <br />
 <br />
 
+# Public
+
+The request does not require an `api_key` for [API Authentication](#api-authentication).
+<br />
+<br />
+
 # Presigned Photo Uploadable
 
 Since we use S3 for hosting our photos, it makes sense to upload photos directly to S3 from a client. To avoid including sensitive AWS credentials in our client applications, clients will ask the API for temporary access to S3 via presigned credentials that expire after an hour. The expected flow is:
@@ -330,6 +338,7 @@ Returns the Feed. If [current_user](#current_user) exists, the results will incl
 
 __Request Behaviors__
 * [Pagination](#pagination)
+* [Public](#public)
 
 ### Response
 
@@ -416,6 +425,9 @@ Deletes the authentication with the specified `id`
 
 ## GET `/authentications/check` - Authentication Check
 Returns `true` if the authentication exists, otherwise false.
+
+__Request Behaviors__
+* [Public](#public)
 
 ### Request
 
@@ -605,6 +617,9 @@ Returns [current_user](#current_user)
 ## GET `/users/search` - Search Users
 Returns [Slim Followed User](#slim-followed-user)s matching the parameters. Results are returned for exact matches and matches that begin with the parameters.
 
+__Request Behaviors__
+* [Public](#public)
+
 ### Request
 
 | Parameter           | Type    | Description | Default | Required? |
@@ -650,11 +665,17 @@ Unsubscribes the User with the specified user_id from all emails
 ## GET `/users/validateusername` - Validate Username
 __DEPRECATED__ User [GET `/users/validate_username` - Validate Username](#get-usersvalidate_username---validate-username) instead
 
+__Request Behaviors__
+* [Public](#public)
+
 <br />
 <br />
 
 ## GET `/users/validate_username` - Validate Username
 __DEPRECATED__ Returns `true` if the username is valid, otherwise errors.
+
+__Request Behaviors__
+* [Public](#public)
 
 ### Request
 
@@ -685,6 +706,9 @@ __DEPRECATED__ Returns `true` if the username is valid, otherwise errors.
 
 ## GET `/users/validate_email` - Validate Email
 Returns `true` if the email is valid, otherwise errors.
+
+__Request Behaviors__
+* [Public](#public)
 
 ### Request
 
@@ -753,6 +777,9 @@ Returns the user_id if the user is successfully created, otherwise an error.
 ## GET `/users/:id|:username` - User
 Returns the User with the specified `user_id` or `user_username` if the User exists and is `active`. Otherwise, returns 404 (Not Found).
 
+__Request Behaviors__
+* [Public](#public)
+
 ### Response
 
 | __data__ |
@@ -795,6 +822,7 @@ Returns the Morsels for the User with the specified `user_id` or `user_username`
 
 __Request Behaviors__
 * [Pagination](#pagination)
+* [Public](#public)
 
 ### Response
 
@@ -846,6 +874,7 @@ Returns the Likeables that the User with the specified `user_id` has liked along
 
 __Request Behaviors__
 * [Pagination](#pagination)
+* [Public](#public)
 
 ### Request
 
@@ -901,6 +930,9 @@ Deletes the Tag with the specified `tag_id` for the User with the specified `use
 ## GET `/users/:id/cuisines` - User Cuisines
 Returns the Cuisines for the User with the specified `user_id`.
 
+__Request Behaviors__
+* [Public](#public)
+
 ### Response
 
 | __data__ |
@@ -912,6 +944,9 @@ Returns the Cuisines for the User with the specified `user_id`.
 
 ## GET `/users/:id/specialties` - User Specialties
 Returns the Specialties for the User with the specified `user_id`.
+
+__Request Behaviors__
+* [Public](#public)
 
 ### Response
 
@@ -927,6 +962,7 @@ Returns the Followables that the User with the specified `user_id` is following 
 
 __Request Behaviors__
 * [Pagination](#pagination)
+* [Public](#public)
 
 ### Request
 
@@ -950,6 +986,7 @@ Returns the Place that the User with the specified `user_id` belongs to.
 
 __Request Behaviors__
 * [Pagination](#pagination)
+* [Public](#public)
 
 ### Response
 
@@ -1024,6 +1061,9 @@ Removes the association between the Place with the specified `id` and [current_u
 ## GET `/places/:id` - Place
 Returns Place with the specified `id`
 
+__Request Behaviors__
+* [Public](#public)
+
 ### Response
 
 | __data__ |
@@ -1038,6 +1078,7 @@ Returns Users belonging to the Place with the specified `id`
 
 __Request Behaviors__
 * [Pagination](#pagination)
+* [Public](#public)
 
 ### Response
 
@@ -1053,6 +1094,7 @@ Returns Morsels belonging to the Place with the specified `id`
 
 __Request Behaviors__
 * [Pagination](#pagination)
+* [Public](#public)
 
 ### Response
 
@@ -1068,6 +1110,7 @@ Returns Users belonging to the Place with the specified `id`
 
 __Request Behaviors__
 * [Pagination](#pagination)
+* [Public](#public)
 
 ### Response
 
@@ -1108,6 +1151,9 @@ Image processing is done in a background job. `photo_processing` will be set to 
 
 ## GET `/items/:id` - Item
 Returns Item with the specified `id`
+
+__Request Behaviors__
+* [Public](#public)
 
 ### Response
 
@@ -1192,6 +1238,7 @@ Returns the Users who have liked the Item with the specified `id`
 
 __Request Behaviors__
 * [Pagination](#pagination)
+* [Public](#public)
 
 ### Response
 
@@ -1237,6 +1284,7 @@ List the Comments for the Item with the specified `id`
 
 __Request Behaviors__
 * [Pagination](#pagination)
+* [Public](#public)
 
 ### Response
 
@@ -1322,8 +1370,8 @@ __Request Behaviors__
 ## GET `/morsels/:id` -  Morsel
 Returns the Morsel with the specified `id`
 
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
+__Request Behaviors__
+* [Public](#public)
 
 ### Response
 
@@ -1355,7 +1403,7 @@ Updates the Morsel with the specified `id`
 <br />
 <br />
 
-POST `/morsels/:id/publish` - Publish Morsel
+## POST `/morsels/:id/publish` - Publish Morsel
 Publishes the Morsel with the specified `id` by setting a `published_at` DateTime and `draft`=false
 
 ### Request
@@ -1382,6 +1430,9 @@ Publishes the Morsel with the specified `id` by setting a `published_at` DateTim
 ## GET `/cuisines` - Cuisines
 Returns the list of Cuisines
 
+__Request Behaviors__
+* [Public](#public)
+
 ### Response
 
 | __data__ |
@@ -1396,6 +1447,7 @@ Returns a list of Users who belong to the Cuisine with the specified `id`
 
 __Request Behaviors__
 * [Pagination](#pagination)
+* [Public](#public)
 
 ### Response
 
@@ -1408,6 +1460,9 @@ __Request Behaviors__
 
 ## GET `/specialties` - Specialties
 Returns the list of Specialties
+
+__Request Behaviors__
+* [Public](#public)
 
 ### Response
 
@@ -1423,6 +1478,7 @@ Returns a list of Users who belong to the Specialty with the specified `id`
 
 __Request Behaviors__
 * [Pagination](#pagination)
+* [Public](#public)
 
 ### Response
 
@@ -1498,6 +1554,9 @@ Marks the notification for the specified `id` as read
 ## GET `/status` - Status
 Used by third-party services to ping the API.
 
+__Request Behaviors__
+* [Public](#public)
+
 ### Response
 
 | Status Code |
@@ -1508,6 +1567,9 @@ Used by third-party services to ping the API.
 <br />
 
 ## GET `/configuration` - Configuration
+
+__Request Behaviors__
+* [Public](#public)
 
 ### Response
 
