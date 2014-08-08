@@ -1,7 +1,7 @@
 class UsersController < ApiController
   include PresignedPhotoUploadable
 
-  def search
+  PUBLIC_ACTIONS << def search
     service = Search::SearchUsers.call(UserParams.build(params).merge(pagination_params))
     if service.valid?
       custom_respond_with service.response, each_serializer: SlimFollowedUserSerializer
