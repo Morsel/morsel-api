@@ -14,6 +14,8 @@
     - [POST `/{{followables}}/:id/follow` - Follow {{Followable}}](#post-followablesidfollow---follow-followable)
     - [DELETE `/{{followables}}/:id/follow` - Unfollow {{Followable}}](#delete-followablesidfollow---unfollow-followable)
     - [GET `/{{followables}}/:id/followers` - {{Followable}} Followers](#get-followablesidfollowers---followable-followers)
+  - [Reportable](#reportable)
+    - [POST `/{{reportables}}/:id/report` - Report {{Reportable}}](#post-reportablesidreport---report-reportable)
   - [Pagination](#pagination)
   - [Public](#public)
   - [Presigned Photo Uploadable](#presigned-photo-uploadable)
@@ -280,6 +282,20 @@ __Request Behaviors__
 <br />
 <br />
 
+# Reportable
+
+## POST `/{{reportables}}/:id/report` - Report _{{Reportable}}_
+Reports the _{{Reportable}}_ with the specified `id`.
+
+### Response
+
+| Status Code |
+| ----------- |
+|         200 |
+
+<br />
+<br />
+
 # Pagination
 
 The API uses a pagination method similar to how Facebook and Twitter do. For a nice article about why and how it works, check out this [link](https://dev.twitter.com/docs/working-with-timelines). You'll use `max_id` OR `since_id` per API call, don't combine them as the API will ignore it.
@@ -493,6 +509,8 @@ __Request Behaviors__
 
 # User Methods
 * [\<Followable\>](#followable)
+* [\<Reportable\>](#reportable)
+
 * [Presigned Photo Uploadable](#presigned-photo-uploadable)
 
 ## POST `/users` - Create a new User
@@ -1000,6 +1018,7 @@ __Request Behaviors__
 
 # Place Methods
 * [\<Followable\>](#followable)
+* [\<Reportable\>](#reportable)
 
 ## GET `/places/suggest` - Suggest Completion
 Proxy for the [Foursquare Venues suggestcompletion](https://developer.foursquare.com/docs/venues/suggestcompletion). Returns the response in `data`.
@@ -1123,6 +1142,7 @@ __Request Behaviors__
 
 
 # Item Methods
+* [\<Reportable\>](#reportable)
 * [Presigned Photo Uploadable](#presigned-photo-uploadable)
 
 ## POST `/items` - Create a new Item
@@ -1316,6 +1336,7 @@ Deletes the Comment with the specified `comment_id` for the `id` if [current_use
 
 
 # Morsel Methods
+* [\<Reportable\>](#reportable)
 
 ## POST `/morsels` - Create a new Morsel
 Creates a new Morsel for the current User.

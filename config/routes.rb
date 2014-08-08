@@ -43,6 +43,12 @@ MorselApp::Application.routes.draw do
     end
   end
 
+  concern :reportable do
+    member do
+      post 'report' => 'reports#create'
+    end
+  end
+
   concern :taggable do
     member do
       post 'tags' => 'tags#create'
@@ -82,7 +88,7 @@ MorselApp::Application.routes.draw do
     end
   end
 
-  resources :users, only: [:update], concerns: [:followable, :taggable] do
+  resources :users, only: [:update], concerns: [:followable, :reportable, :taggable] do
     collection do
       get 'validate_email(/:email)' => 'users#validate_email'
       get 'validate_username(/:username)' => 'users#validate_username'
@@ -112,9 +118,9 @@ MorselApp::Application.routes.draw do
     end
   end
 
-  resources :items, only: [:create, :show, :update, :destroy], concerns: [:commentable, :likeable]
+  resources :items, only: [:create, :show, :update, :destroy], concerns: [:commentable, :likeable, :reportable]
 
-  resources :morsels, only: [:create, :index, :show, :update, :destroy] do
+  resources :morsels, only: [:create, :index, :show, :update, :destroy], concerns: [:reportable] do
     collection do
       get 'drafts' => 'morsels#drafts'
     end
@@ -126,7 +132,7 @@ MorselApp::Application.routes.draw do
     end
   end
 
-  resources :places, only: [:show], concerns: [:followable] do
+  resources :places, only: [:show], concerns: [:followable, :reportable] do
     collection do
       get 'suggest' => 'places#suggest'
       get ':place_id/morsels' => 'morsels#index', place_id: /\d+/

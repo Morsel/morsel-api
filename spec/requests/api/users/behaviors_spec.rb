@@ -7,6 +7,12 @@ describe 'Users Behaviors' do
     let(:followable) { FactoryGirl.create(:user) }
   end
 
+  it_behaves_like 'ReportableController' do
+    let(:current_user) { FactoryGirl.create(:chef) }
+    let(:reportable_route) { '/users' }
+    let(:reportable) { FactoryGirl.create(:user) }
+  end
+
   it_behaves_like 'TaggableController' do
     let(:current_user) { FactoryGirl.create(:chef) }
     let(:taggable_route) { '/users' }
