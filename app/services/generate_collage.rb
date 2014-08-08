@@ -69,7 +69,7 @@ module MiniMagick
       self.composite(watermark_image) do |watermark|
         watermark.compose 'Over'
         watermark.gravity 'SouthWest'
-        watermark.geometry "140x60+#{GenerateCollage::COLLAGE_PADDING}+#{GenerateCollage::COLLAGE_PADDING}"
+        watermark.geometry "140x60+#{GenerateCollage::COLLAGE_PADDING * 3}+#{GenerateCollage::COLLAGE_PADDING * 3}"
       end
     end
 
