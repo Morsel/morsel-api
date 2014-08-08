@@ -76,16 +76,11 @@ class Morsel < ActiveRecord::Base
   end
 
   def facebook_message
-    "\"#{title}\" from #{creator.full_name} on Morsel #{facebook_mrsl}".normalize
+    "\"#{title}\" #{facebook_mrsl} via Morsel".normalize
   end
 
   def twitter_message
-    if TwitterAuthenticatedUserDecorator.new(creator).twitter_username.present?
-      twitter_username_or_full_name = "@#{TwitterAuthenticatedUserDecorator.new(creator).twitter_username}"
-    else
-      twitter_username_or_full_name = creator.full_name
-    end
-    "\"#{title}\" from #{twitter_username_or_full_name}".twitter_string("on @#{Settings.morsel.twitter_username} #{twitter_mrsl}")
+    "\"#{title}\" #{twitter_mrsl} via @#{Settings.morsel.twitter_username}"
   end
 
   def url
