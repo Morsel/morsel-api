@@ -12,7 +12,7 @@ class GenerateCollage
 
   validates :morsel, presence: true
 
-  validate :has_items?
+  validate :has_at_least_three_items?
 
   def call
     # Add cover
@@ -36,8 +36,8 @@ class GenerateCollage
 
   private
 
-  def has_items?
-    errors.add(:morsel, 'has no items') unless morsel.item_count > 0
+  def has_at_least_three_items?
+    errors.add(:morsel, 'should have at least 3 items') if morsel.item_count < 3
   end
 
   def cover_item
@@ -49,7 +49,7 @@ class GenerateCollage
   end
 
   def image_for_item(item, photo_version = :_320x320)
-    MiniMagick::Image.open(COLLAGE_LOCAL_PATH+item.photo_url(photo_version)) if item
+    MiniMagick::Image.open(COLLAGE_LOCAL_PATH+item.photo_url(photo_version))
   end
 
   def canvas
