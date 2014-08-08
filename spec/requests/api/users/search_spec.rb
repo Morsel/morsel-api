@@ -2,7 +2,6 @@ require_relative '_spec_helper'
 
 describe 'GET /users/search users#search' do
   let(:endpoint) { '/users/search' }
-  let(:current_user) { FactoryGirl.create(:user) }
 
   context 'query' do
     before do
@@ -109,6 +108,7 @@ describe 'GET /users/search users#search' do
     end
 
     context '`current_user` is following `user`' do
+      let(:current_user) { FactoryGirl.create(:user) }
       before do
         Follow.create(followable: user, follower: current_user)
       end
