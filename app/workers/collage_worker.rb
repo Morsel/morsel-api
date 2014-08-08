@@ -4,10 +4,7 @@ class CollageWorker
   def perform(options = nil)
     return if options.nil?
 
-    morsel = Morsel.find(options['morsel_id'])
-    unless morsel.photo.present?
-      MorselCollageGeneratorDecorator.new(morsel).generate
-    end
+    GenerateCollage.call morsel: Morsel.find(options['morsel_id'])
 
     MrslWorker.perform_async(options)
   end
