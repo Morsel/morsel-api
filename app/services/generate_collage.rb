@@ -5,39 +5,45 @@ class GenerateCollage
   COLLAGE_HEIGHT=420
   COLLAGE_LOCAL_PATH = Rails.env.development? ? "#{Rails.root}/public" : ''
   COLLAGE_PADDING=4
-  COLLAGE_COVER_WIDTH=628
-  COLLAGE_CELL_WIDTH=208
+  COLLAGE_HALF_PADDING=2
+  COLLAGE_COVER_WIDTH=630
+  COLLAGE_CELL_WIDTH=210
 
   attribute :morsel, Morsel
 
   validates :morsel, presence: true
 
-  validate :has_at_least_three_items?
+  validate :has_cover_item?
+  validate :has_items?
 
   def call
-    # Add cover
-    output = canvas.composite(image_for_item(cover_item)) do |cover|
-      cover.compose 'Over'
-      cover.gravity 'NorthWest'
-      cover.geometry "#{COLLAGE_COVER_WIDTH}x#{COLLAGE_COVER_WIDTH}+0-104"
-    end.composite(image_for_item(additional_items.first)) do |first_item|
-      first_item.compose 'Over'
-      first_item.gravity 'NorthEast'
-      first_item.geometry "#{COLLAGE_CELL_WIDTH}x#{COLLAGE_CELL_WIDTH}+0+0"
-    end.composite(image_for_item(additional_items.second)) do |second_item|
-      second_item.compose 'Over'
-      second_item.gravity 'SouthEast'
-      second_item.geometry "#{COLLAGE_CELL_WIDTH}x#{COLLAGE_CELL_WIDTH}+0+0"
-    end.mrsl_watermark
-
-    output.format 'jpg'
-    output
+    if collage
+      collage.format 'jpg'
+      collage
+    end
   end
 
   private
 
-  def has_at_least_three_items?
-    errors.add(:morsel, 'should have at least 3 items') if morsel.item_count < 3
+  def has_cover_item?
+    errors.add(:morsel, 'should have a cover item set') if morsel.primary_item.nil?
+  end
+
+  def has_items?
+    errors.add(:morsel, 'should have at least 1 item') unless morsel.item_count > 0
+  end
+
+  def collage
+    @collage ||= begin
+      puts "item count: #{item_count}"
+      if item_count > 2
+        composite_three_item_collage.mrsl_watermark
+      elsif item_count > 1
+        composite_two_item_collage.mrsl_watermark
+      else
+        composite_one_item_collage.mrsl_watermark
+      end
+    end
   end
 
   def cover_item
@@ -48,6 +54,10 @@ class GenerateCollage
     @additional_items ||= morsel.items.where(Item.arel_table[:photo].not_eq(nil).and(Item.arel_table[:id].not_eq(morsel.primary_item_id))).limit(2)
   end
 
+  def item_count
+    @item_count ||= (cover_item ? 1 : 0) + additional_items.count
+  end
+
   def image_for_item(item, photo_version = :_320x320)
     MiniMagick::Image.open(COLLAGE_LOCAL_PATH+item.photo_url(photo_version))
   end
@@ -55,8 +65,51 @@ class GenerateCollage
   def canvas
     @canvas ||= begin
       tmp = Tempfile.new(%W[mini_magick_collage_ .png])
-      `convert -size #{COLLAGE_WIDTH}x#{COLLAGE_HEIGHT} xc:white #{tmp.path}`
+      if item_count > 1
+        `convert -size #{COLLAGE_WIDTH}x#{COLLAGE_HEIGHT} xc:white #{tmp.path}`
+      else
+        `convert -size #{COLLAGE_HEIGHT}x#{COLLAGE_HEIGHT} xc:white #{tmp.path}`
+      end
       MiniMagick::Image.new(tmp.path, tmp)
+    end
+  end
+
+  def composite_one_item_collage
+    puts 'one item'
+    canvas.composite(image_for_item(cover_item, :_480x480)) do |cover|
+      cover.compose 'Over'
+      cover.gravity 'Center'
+      cover.geometry "#{COLLAGE_HEIGHT}x#{COLLAGE_HEIGHT}+0+0"
+    end
+  end
+
+  def composite_two_item_collage
+    puts 'two item'
+    canvas.composite(image_for_item(cover_item, :_480x480)) do |cover|
+      cover.compose 'Over'
+      cover.gravity 'West'
+      cover.geometry "#{COLLAGE_HEIGHT}x#{COLLAGE_HEIGHT}-#{COLLAGE_HALF_PADDING}+0"
+    end.composite(image_for_item(additional_items.first, :_480x480)) do |first_item|
+      first_item.compose 'Over'
+      first_item.gravity 'East'
+      first_item.geometry "#{COLLAGE_HEIGHT}x#{COLLAGE_HEIGHT}-#{COLLAGE_HALF_PADDING}+0"
+    end
+  end
+
+  def composite_three_item_collage
+    puts 'three item'
+    canvas.composite(image_for_item(cover_item, :_640x640)) do |cover|
+      cover.compose 'Over'
+      cover.gravity 'West'
+      cover.geometry "#{COLLAGE_COVER_WIDTH-COLLAGE_HALF_PADDING}x#{COLLAGE_COVER_WIDTH-COLLAGE_HALF_PADDING}+0+0"
+    end.composite(image_for_item(additional_items.first)) do |first_item|
+      first_item.compose 'Over'
+      first_item.gravity 'NorthEast'
+      first_item.geometry "#{COLLAGE_CELL_WIDTH-COLLAGE_HALF_PADDING}x#{COLLAGE_CELL_WIDTH-COLLAGE_HALF_PADDING}+0+0"
+    end.composite(image_for_item(additional_items.second)) do |second_item|
+      second_item.compose 'Over'
+      second_item.gravity 'SouthEast'
+      second_item.geometry "#{COLLAGE_CELL_WIDTH-COLLAGE_HALF_PADDING}x#{COLLAGE_CELL_WIDTH-COLLAGE_HALF_PADDING}+0+0"
     end
   end
 end
