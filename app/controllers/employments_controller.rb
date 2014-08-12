@@ -16,7 +16,7 @@ class EmploymentsController < ApiController
       end
     end
 
-    if place.employ(current_user, title)
+    if EmployAtPlaceDecorator.new(place).employ(current_user, title)
       custom_respond_with place,  serializer: SlimPlaceWithTitleSerializer,
                                   context: { title: title }
     else

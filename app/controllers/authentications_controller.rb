@@ -1,11 +1,7 @@
 class AuthenticationsController < ApiController
   def create
     service = CreateAuthentication.call(AuthenticationParams.build(params).merge(user: current_user))
-    if service.valid?
-      custom_respond_with service.response
-    else
-      render_json_errors service.errors
-    end
+    custom_respond_with_service service
   end
 
   def index

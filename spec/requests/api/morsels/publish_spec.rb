@@ -8,7 +8,7 @@ describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
   it 'should publish the Morsel by setting draft to false and setting a published_at DateTime' do
     stub_bitly_client
 
-    GenerateCollage.any_instance.should_receive(:call).exactly(1).times.and_return { draft_morsel.update(photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))))}
+    GenerateCollage.any_instance.should_receive(:call).exactly(1).times.and_return { Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))}
     Mrsl.should_receive(:shorten).exactly(12).times.and_call_original
     FeedItem.should_receive(:new).exactly(1).times.and_call_original
     FacebookAuthenticatedUserDecorator.any_instance.should_not_receive(:post_facebook_photo_url)
@@ -43,7 +43,7 @@ describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
       stub_facebook_client
       stub_bitly_client
 
-      GenerateCollage.any_instance.should_receive(:call).exactly(1).times.and_return { draft_morsel.update(photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))))}
+      GenerateCollage.any_instance.should_receive(:call).exactly(1).times.and_return { Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))}
       Mrsl.should_receive(:shorten).exactly(12).times.and_call_original
       FeedItem.should_receive(:new).exactly(1).times.and_call_original
       FacebookAuthenticatedUserDecorator.any_instance.should_receive(:post_facebook_photo_url).exactly(1).times.and_call_original
@@ -70,7 +70,7 @@ describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
       stub_twitter_client
       stub_bitly_client
 
-      GenerateCollage.any_instance.should_receive(:call).exactly(1).times.and_return { draft_morsel.update(photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))))}
+      GenerateCollage.any_instance.should_receive(:call).exactly(1).times.and_return { Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))}
       Mrsl.should_receive(:shorten).exactly(12).times.and_call_original
       FeedItem.should_receive(:new).exactly(1).times.and_call_original
       FacebookAuthenticatedUserDecorator.any_instance.should_not_receive(:post_facebook_photo_url)

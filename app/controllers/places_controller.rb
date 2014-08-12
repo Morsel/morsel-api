@@ -8,11 +8,7 @@ class PlacesController < ApiController
     lat_lon = params.fetch(:lat_lon)
 
     service = SuggestFoursquareVenue.call(query: query, lat_lon: lat_lon)
-    if service.valid?
-      render_json service.response
-    else
-      render_json_errors service.errors
-    end
+    custom_respond_with_service service
   end
 
   PUBLIC_ACTIONS << def users
