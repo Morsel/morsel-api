@@ -114,28 +114,20 @@ describe Morsel do
 
   describe '#facebook_message' do
     let(:morsel_with_creator) { FactoryGirl.create(:morsel_with_creator) }
-    subject(:facebook_message) { morsel_with_creator.facebook_message }
+    subject(:facebook_message) { SocialMorselDecorator.new(morsel_with_creator).facebook_message }
 
     it { should include(morsel_with_creator.title) }
-    it { should include(morsel_with_creator.creator.full_name) }
     it { should include(morsel_with_creator.facebook_mrsl) }
+    it { should include(' via Morsel') }
   end
 
   describe '#twitter_message' do
     let(:morsel_with_creator) { FactoryGirl.create(:morsel_with_creator) }
-    subject(:twitter_message) { morsel_with_creator.twitter_message }
+    subject(:twitter_message) { SocialMorselDecorator.new(morsel_with_creator).twitter_message }
 
     it { should include(morsel_with_creator.title) }
-    it { should include(morsel_with_creator.creator.full_name) }
     it { should include(morsel_with_creator.twitter_mrsl) }
-    it { should include(' on @eatmorsel') }
-
-    context 'User has a Twitter username' do
-      let(:morsel_with_creator) { FactoryGirl.create(:morsel_with_creator, creator: FactoryGirl.create(:chef_with_twitter_authentication)) }
-      subject(:twitter_message) { morsel_with_creator.twitter_message }
-
-      it { should include('@twitter_screen_name') }
-    end
+    it { should include(' via @eatmorsel') }
   end
 
   context 'has Items' do

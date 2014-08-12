@@ -3,11 +3,7 @@ class UsersController < ApiController
 
   PUBLIC_ACTIONS << def search
     service = Search::SearchUsers.call(UserParams.build(params).merge(pagination_params))
-    if service.valid?
-      custom_respond_with service.response, each_serializer: SlimFollowedUserSerializer
-    else
-      render_json_errors service.errors
-    end
+    custom_respond_with_service service, each_serializer: SlimFollowedUserSerializer
   end
 
   PUBLIC_ACTIONS << def show

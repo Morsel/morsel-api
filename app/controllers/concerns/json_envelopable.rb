@@ -13,6 +13,14 @@ module JSONEnvelopable
     respond_with(*(resources << options), &block)
   end
 
+  def custom_respond_with_service(service, options = {})
+    if service.valid?
+      custom_respond_with service.response, options
+    else
+      render_json_errors service.errors
+    end
+  end
+
   private
 
   def json_meta

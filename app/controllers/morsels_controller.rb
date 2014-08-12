@@ -81,13 +81,16 @@ class MorselsController < ApiController
     morsel = Morsel.find params[:id]
     authorize_action_for morsel
 
-    morsel.primary_item_id = params[:morsel][:primary_item_id] if params[:morsel] && params[:morsel][:primary_item_id].present?
+    service = PublishMorsel.call(
+      morsel: morsel,
+      morsel_params: (params[:morsel].present? ? MorselParams.build(params) : nil),
+      social_params: {
+        post_to_facebook: params[:post_to_facebook],
+        post_to_twitter: params[:post_to_twitter]
+      }
+    )
 
-    if morsel.publish! params.slice(:post_to_facebook, :post_to_twitter)
-      custom_respond_with morsel
-    else
-      render_json_errors morsel.errors
-    end
+    custom_respond_with_service service
   end
 
   class MorselParams
