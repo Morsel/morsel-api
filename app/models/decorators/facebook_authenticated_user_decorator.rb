@@ -14,7 +14,7 @@ class FacebookAuthenticatedUserDecorator < SimpleDelegator
   def build_facebook_authentication(authentication_params)
     authentication = authentications.build(authentication_params)
 
-    facebook_user_object = Koala::Facebook::API.new(authentication.token).get_object('me')
+    facebook_user_object = facebook_client(authentication).get_object('me')
 
     if facebook_user_object.present?
       authentication.uid = facebook_user_object['id'].presence
