@@ -23,7 +23,7 @@ module JSONEnvelopable
 
   def render_json_with_service(service, options = {})
     if service.valid?
-      render_json service.response, options
+      render_json service.response
     else
       render_json_errors service.errors
     end
