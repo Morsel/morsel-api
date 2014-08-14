@@ -17,6 +17,7 @@ gem 'coffee-rails', '~> 4.0.0'
 gem "carrierwave", "~> 0.9.0"
 gem 'carrierwave-aws'
 gem 'carrierwave_backgrounder'
+gem 'dalli', '~> 2.7.2'
 gem 'devise', "~> 3.2.2"
 # gem 'doorkeeper', '~> 0.7.0'
 # gem 'formtastic'

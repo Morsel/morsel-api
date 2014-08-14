@@ -136,6 +136,7 @@ GEM
     colored (1.2)
     columnize (0.8.9)
     connection_pool (2.0.0)
+    dalli (2.7.2)
     database_cleaner (1.0.1)
     debug_inspector (0.0.2)
     debugger-linecache (1.2.0)
@@ -528,6 +529,7 @@ DEPENDENCIES
   childprocess (= 0.3.6)
   codeclimate-test-reporter
   coffee-rails (~> 4.0.0)
+  dalli (~> 2.7.2)
   database_cleaner (= 1.0.1)
   devise (~> 3.2.2)
   dotenv-rails
