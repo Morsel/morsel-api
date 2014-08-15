@@ -1,0 +1,33 @@
+| Greetings,
+
+p
+  'You claimed your username,
+  b = @resource.username
+  ' , on
+  = link_to 'Morsel', Settings.morsel.web_url
+  '  and now you're among the first to get access to the public beta of our new iOS app.
+
+p Getting started is as easy as 1-2-3:
+ol
+  li
+    = link_to 'Click here to complete your Morsel account.', "#{Settings.morsel.web_url}/auth/reserved-username?reserved_username_token=#{@token}&email=#{@resource.email}&username=#{@resource.username}"
+  li
+    | Download the app from the App Store (Android will be coming in the future).
+  li
+    ' Log in with your username,
+    b = @resource.username
+    ' , and password from step 1.
+
+p Thank you so very much for your time and early support! We appreciate any and all feedback. Please don't hesitate to reach out to us at support@eatmorsel.com. We look forward to making Morsel a vibrant culinary community sharing food stories, cooking inspiration and kitchen hacks!
+
+br/
+| Sincerely,
+br/
+br/
+| The Morsel Team
+br/
+a href="http://www.eatmorsel.com" www.eatmorsel.com
+| &nbsp;&nbsp;⚆&nbsp;&nbsp;
+a href="https://twitter.com/eatmorsel" Follow on Twitter
+| &nbsp;&nbsp;⚆&nbsp;&nbsp;
+a href="https://facebook.com/eatmorsel" Find on Facebook
