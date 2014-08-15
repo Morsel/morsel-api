@@ -10,9 +10,9 @@ p
 p Getting started is as easy as 1-2-3:
 ol
   li
-    = link_to 'Click here to complete your Morsel account.', "#{Settings.morsel.web_url}/auth/reserved-username?reserved_username_token=#{@token}&email=#{@resource.email}&username=#{@resource.username}&utm_source=morsel&utm_medium=email&utm_campaign=claim1"
+    = link_to 'Click here to complete your Morsel account.', "#{Settings.morsel.web_url}/auth/reserved-username?reserved_username_token=#{@token}&email=#{@resource.email}&username=#{@resource.username}&id=#{@resource.id}&utm_source=morsel&utm_medium=email&utm_campaign=claim1"
   li
-    = link_to 'Download the app from the App Store', "https://itunes.apple.com/us/app/id888118457"
+    = link_to 'Download the app from the App Store', "https://itunes.apple.com/us/app/id888118457?utm_source=morsel&utm_medium=email&utm_campaign=claim1"
     '  (Android will be coming in the future).
   li
     ' Log in with your username,
