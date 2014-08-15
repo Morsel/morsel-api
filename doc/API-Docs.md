@@ -602,7 +602,7 @@ Sends a Reset Password email for the User with the specified `email`. The token 
 <br />
 
 ## POST `/users/reset_password` - Reset Password
-Sets the password for the User with the specified `reset_password_token` to the `password` provided. Changing a `password` will regenerate the User's `authentication_token`.
+Sets the password for the User with the specified `reset_password_token` to the `password` provided. Changing a `password` will regenerate the User's `authentication_token`. Passing `reserved_username` will return a [User](#user).
 
 ### Request
 
@@ -610,12 +610,20 @@ Sets the password for the User with the specified `reset_password_token` to the 
 | ------------------- | ------- | ----------- | ------- | --------- |
 | reset_password_token | String | The User's token from the Reset Password email. | | x |
 | password | String | The new password for the User. Minimum 8 characters. | | x |
+| reserved_username | Boolean | If set to anything, will return the User. HACK for reserved username flow | | |
 
 ### Response
 
 | Status Code |
 | ----------- |
 |         200 |
+
+- or if `reserved_username` -
+
+| __data__ |
+| -------- |
+| [User (w/ Private Attributes)](#user-w-private-attributes) |
+
 
 <br />
 <br />
