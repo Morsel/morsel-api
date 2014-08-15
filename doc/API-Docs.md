@@ -622,7 +622,7 @@ Sets the password for the User with the specified `reset_password_token` to the 
 
 | __data__ |
 | -------- |
-| [User (w/ Private Attributes)](#user-w-private-attributes) |
+| Authenticated [User (w/ Auth Token)](#user-w-auth-token) |
 
 
 <br />
