@@ -118,7 +118,12 @@ class UsersController < ApiController
 
     # Password confirmation is done client-side, so just pass the password again as the password_confirmation
     if user.reset_password!(params.fetch(:password), params.fetch(:password))
-      render_json_ok
+      # TODO: HACK: This is so the reserved username instructions flow can have the authentication token to update the user
+      if params[:reserved_username]
+        custom_respond_with user, serializer: UserWithPrivateAttributesSerializer
+      else
+        render_json_ok
+      end
     else
       render_json_errors(user.errors)
     end
