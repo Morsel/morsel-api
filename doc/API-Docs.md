@@ -584,7 +584,7 @@ If the `Authentication` passed in [Sign In w/ Authentication](#sign-in-w--authen
 <br />
 
 ## POST `/users/forgot_password` - Forgot Password
-Sends a Reset Password email for the User with the specified `email`.
+Sends a Reset Password email for the User with the specified `email`. The token in the email expires after 1 month.
 
 ### Request
 
