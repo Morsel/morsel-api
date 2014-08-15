@@ -12,7 +12,8 @@ ol
   li
     = link_to 'Click here to complete your Morsel account.', "#{Settings.morsel.web_url}/auth/reserved-username?reserved_username_token=#{@token}&email=#{@resource.email}&username=#{@resource.username}"
   li
-    | Download the app from the App Store (Android will be coming in the future).
+    = link_to 'Download the app from the App Store', "https://itunes.apple.com/us/app/id888118457"
+    '  (Android will be coming in the future).
   li
     ' Log in with your username,
     b = @resource.username
