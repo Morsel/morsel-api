@@ -120,7 +120,7 @@ class UsersController < ApiController
     if user.reset_password!(params.fetch(:password), params.fetch(:password))
       # TODO: HACK: This is so the reserved username instructions flow can have the authentication token to update the user
       if params[:reserved_username]
-        custom_respond_with user, serializer: UserWithPrivateAttributesSerializer
+        custom_respond_with user, serializer: UserWithAuthTokenSerializer
       else
         render_json_ok
       end
