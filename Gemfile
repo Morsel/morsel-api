@@ -22,6 +22,7 @@ gem 'devise', "~> 3.2.2"
 # gem 'doorkeeper', '~> 0.7.0'
 # gem 'formtastic'
 gem 'foursquare2', '~> 1.9.8'
+gem 'hipchat', '~> 1.3.0'
 gem 'hirefire-resource', '~> 0.3.2'
 gem 'instagram', '~> 1.0.0'
 gem 'jbuilder', '~> 1.2'

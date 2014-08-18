@@ -1,7 +1,7 @@
 module Mrslable
   extend ActiveSupport::Concern
 
-  def self.mrsl_mediums
+  def self.mrsl_sources
     %i(
       facebook_mrsl
       twitter_mrsl
@@ -19,6 +19,6 @@ module Mrslable
   end
 
   included do
-    store_accessor :mrsl, Mrslable.mrsl_mediums
+    store_accessor :mrsl, Mrslable.mrsl_sources
   end
 end

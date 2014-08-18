@@ -1,9 +1,17 @@
 class MorselMrslDecorator < SimpleDelegator
   def generate_mrsl_links!
-    Mrslable.mrsl_mediums.each do |medium|
-      unless self.send(medium)
-        url = medium.to_s.include?('media') ? self.media_url : self.url
-        self.send("#{medium}=", Mrsl.shorten(url, medium.to_s.sub('_mrsl', ''), 'share', "morsel-#{id}"))
+    Mrslable.mrsl_sources.each do |source|
+      unless self.send(source)
+        url = source.to_s.include?('media') ? self.media_url : self.url
+        service = ShortenURL.call(
+          url:url,
+          utm: {
+            source: source.to_s.sub('_mrsl', ''),
+            medium: 'share',
+            campaign: "morsel-#{id}"
+          }
+        )
+        self.send("#{source}=", service.response)
       end
     end
 

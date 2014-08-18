@@ -140,4 +140,29 @@ module ServiceStubs
 
     instagram_client
   end
+
+  def stub_hipchat_client(options = {})
+    hipchat_client = double('HipChat::Client')
+    HipChat::Client.stub(:new).and_return(hipchat_client)
+
+    hipchat_room = double('HipChat::Room')
+    hipchat_room.stub(:send).and_return(true)
+    hipchat_client.stub(:[]).with(options[:room]).and_return(hipchat_room)
+
+    hipchat_client
+  end
+
+  def stub_settings(setting, hash, root_setting=true)
+    settings = double('Settings')
+    hash.each do |k,v|
+      if v.is_a? Hash
+        settings.stub(k).and_return(stub_settings(k, v, false))
+      else
+        settings.stub(k).and_return(v)
+      end
+    end
+
+    Settings.stub(setting).and_return(settings) if root_setting
+    settings
+  end
 end
