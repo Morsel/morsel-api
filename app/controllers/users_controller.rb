@@ -7,11 +7,7 @@ class UsersController < ApiController
   end
 
   PUBLIC_ACTIONS << def show
-    if params[:id].present?
-      user = User.includes(:authentications, :morsels, :items).find params[:id]
-    elsif params[:username].present?
-      user = User.includes(:authentications, :morsels, :items).find_by(User.arel_table[:username].lower.eq(params[:username].downcase))
-    end
+    user = User.includes(:authentications, :morsels, :items).find_by_id_or_username(params[:id] || params[:username])
     raise ActiveRecord::RecordNotFound if user.nil? || !user.active?
 
     custom_respond_with user
@@ -167,14 +163,16 @@ class UsersController < ApiController
   PUBLIC_ACTIONS << def likeables
     likeable_type = params.fetch(:type)
     if likeable_type == 'Item'
-      custom_respond_with Item.liked_by(params[:id])
-                            .paginate(pagination_params, Item)
-                            .order(Like.arel_table[:id].desc),
-                          each_serializer: LikedItemSerializer,
-                          context: {
-                            liker_id: params[:id],
-                            likeable_type: likeable_type
-                          }
+      custom_respond_with_cached_serializer(
+        Item.liked_by(params[:id])
+            .paginate(pagination_params, Item)
+            .order(Like.arel_table[:id].desc),
+        LikedItemSerializer,
+        {
+          liker_id: params[:id],
+          likeable_type: likeable_type
+        }
+      )
     end
   end
 

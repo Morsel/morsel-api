@@ -53,6 +53,8 @@ class Morsel < ActiveRecord::Base
   scope :drafts, -> { where(draft: true) }
   scope :published, -> { where(draft: false) }
   scope :with_drafts, -> (include_drafts = true) { where(draft: false) unless include_drafts }
+  scope :where_place_id, -> (place_id) { where(place_id: place_id) unless place_id.nil? }
+  scope :where_creator_id, -> (creator_id) { where(creator_id: creator_id) unless creator_id.nil? }
 
   def total_like_count
     items.map(&:like_count).reduce(:+)

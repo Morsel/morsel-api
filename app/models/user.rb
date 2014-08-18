@@ -143,6 +143,14 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.find_by_id_or_username(id_or_username)
+    if (id_or_username.to_s =~ /\A[-+]?\d*\.?\d+\z/) == nil
+      find_by User.arel_table[:username].lower.eq(id_or_username.downcase)
+    else
+      find id_or_username
+    end
+  end
+
   def liked_item_count
     liked_items.count
   end

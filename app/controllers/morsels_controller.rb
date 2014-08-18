@@ -12,32 +12,13 @@ class MorselsController < ApiController
   end
 
   PUBLIC_ACTIONS << def index
-    if params[:place_id].present?
-      custom_respond_with Morsel.includes(:items, :creator, :place)
-                          .published
-                          .paginate(pagination_params)
-                          .where(place_id: params[:place_id])
-                          .order(Morsel.arel_table[:id].desc)
-    elsif params[:user_id].present? || params[:username].present?
-      if params[:user_id].present?
-        user = User.find params[:user_id]
-      elsif params[:username].present?
-        user = User.find_by(User.arel_table[:username].lower.eq(params[:username].downcase))
-      end
-      raise ActiveRecord::RecordNotFound if user.nil?
-      custom_respond_with Morsel.includes(:items, :creator, :place)
-                          .published
-                          .paginate(pagination_params)
-                          .where(creator_id: user.id)
-                          .order(Morsel.arel_table[:id].desc)
-    elsif current_user.present?
-      custom_respond_with Morsel.includes(:items, :creator, :place)
-                          .with_drafts(true)
-                          .paginate(pagination_params)
-                          .where(creator_id: current_user.id)
-                          .order(Morsel.arel_table[:id].desc)
-    else
+    if morsels_for_params.nil?
       unauthorized_token
+    else
+      custom_respond_with_cached_serializer(
+        morsels_for_params,
+        MorselSerializer
+      )
     end
   end
 
@@ -100,6 +81,29 @@ class MorselsController < ApiController
   end
 
   private
+
+  def morsels_for_params
+    @morsels_for_params ||= begin
+      if params[:place_id] || params[:user_id] || params[:username]
+        user_id = params[:user_id] || if params[:place_id].nil?
+          user = User.find_by(username: params[:username])
+          raise ActiveRecord::RecordNotFound if user.nil?
+          user.id
+        end
+
+        Morsel.published
+              .paginate(pagination_params)
+              .where_creator_id(user_id)
+              .where_place_id(params[:place_id])
+              .order(Morsel.arel_table[:id].desc)
+      elsif current_user.present?
+        Morsel.with_drafts(true)
+              .paginate(pagination_params)
+              .where_creator_id(current_user.id)
+              .order(Morsel.arel_table[:id].desc)
+      end
+    end
+  end
 
   authorize_actions_for Morsel, except: PUBLIC_ACTIONS, actions: { publish: :update, drafts: :read }
 end
