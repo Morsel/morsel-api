@@ -7,6 +7,6 @@ class PlaceSerializer < SlimPlaceSerializer
               :following
 
   def following
-    current_user.present? && current_user.following_place?(object)
+    scope.present? && scope.following_place?(object)
   end
 end
