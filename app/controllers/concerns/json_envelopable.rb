@@ -14,11 +14,16 @@ module JSONEnvelopable
   end
 
   def custom_respond_with_cached_serializer(relation, serializer, &block)
-    custom_respond_with CachedSerializer.new(
-      relation,
-      serializer: serializer,
-      scope: current_user
-    ).to_json(rooted: true)
+    relation_is_array = relation.respond_to? :count
+    if (relation_is_array ? relation.count > 0 : relation.present?)
+      custom_respond_with CachedSerializer.new(
+        relation,
+        serializer: serializer,
+        scope: current_user
+      ).to_json(rooted: true)
+    else
+      render_json (relation_is_array ? [] : {})
+    end
   end
 
   def custom_respond_with_service(service, options = {})
