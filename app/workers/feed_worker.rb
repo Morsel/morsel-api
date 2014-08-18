@@ -15,7 +15,7 @@ class FeedWorker
     if feed_item.save
       SocialWorker.perform_async(options.except('post_to_twitter')) if options['post_to_facebook']
       SocialWorker.perform_async(options.except('post_to_facebook')) if options['post_to_twitter']
-      PublishedMorselHipChatNotificationWorker.perform_async(options)
+      PublishedMorselHipChatNotificationWorker.perform_async(options) if Rails.env.production?
     end
   end
 end
