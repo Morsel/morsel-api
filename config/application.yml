@@ -28,6 +28,10 @@ foursquare:
   client_secret: <%= ENV['FOURSQUARE_CLIENT_SECRET'] %>
   api_version: <%= ENV['FOURSQUARE_API_VERSION'] %>
 
+hipchat:
+  auth_token: <%= ENV['HIPCHAT_AUTH_TOKEN'] %>
+  default_room: <%= ENV['HIPCHAT_DEFAULT_ROOM'] %>
+
 mandrill:
   api_key: <%= ENV['MANDRILL_API_KEY'] %>
   user_name: <%= ENV['MANDRILL_USER_NAME'] %>
