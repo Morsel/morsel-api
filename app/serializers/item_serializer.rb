@@ -25,6 +25,6 @@ class ItemSerializer < ActiveModel::Serializer
   end
 
   def liked
-    current_user.present? && current_user.likes_item?(object)
+    scope.present? && scope.likes_item?(object)
   end
 end
