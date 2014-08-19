@@ -18,4 +18,17 @@ class FeedController < ApiController
       )
     end
   end
+
+  def all
+    if current_user.staff?
+      custom_respond_with_cached_serializer(
+        FeedItem.visible
+                .paginate(pagination_params)
+                .order(FeedItem.arel_table[:id].desc),
+        FeedItemSerializer
+      )
+    else
+      unauthorized_token
+    end
+  end
 end

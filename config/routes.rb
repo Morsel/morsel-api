@@ -150,6 +150,7 @@ MorselApp::Application.routes.draw do
   end
 
   get 'feed' => 'feed#index'
+  get 'feed_all' => 'feed#all'
 
   match '*a', to: 'errors#routing', via: :all
 end

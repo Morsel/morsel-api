@@ -57,7 +57,7 @@ FactoryGirl.define do
     professional false
     password_set true
 
-    factory :admin do
+    factory :admin, class: User do
       admin true
     end
 
@@ -67,6 +67,10 @@ FactoryGirl.define do
       first_name 'Turd'
       last_name 'Ferguson'
       password 'test1234'
+    end
+
+    factory :staff, class: User do
+      staff true
     end
 
     factory :chef, class: User do
