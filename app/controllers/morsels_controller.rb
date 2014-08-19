@@ -86,7 +86,7 @@ class MorselsController < ApiController
     @morsels_for_params ||= begin
       if params[:place_id] || params[:user_id] || params[:username]
         user_id = params[:user_id] || if params[:place_id].nil?
-          user = User.find_by(username: params[:username])
+          user = User.find_by_id_or_username params[:username]
           raise ActiveRecord::RecordNotFound if user.nil?
           user.id
         end
