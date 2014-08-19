@@ -167,4 +167,42 @@ describe 'Feed API' do
       end
     end
   end
+
+  describe 'GET /feed_all' do
+    let(:endpoint) { '/feed_all' }
+    let(:morsels_count) { rand(2..6) }
+    let(:current_user) { FactoryGirl.create(:staff) }
+
+    before do
+      morsels_count.times { FactoryGirl.create(:morsel_with_items) }
+    end
+
+    it 'returns recent Feed Items' do
+      get_endpoint
+
+      expect_success
+      expect_json_data_count morsels_count
+    end
+
+    context 'current_user is NOT `staff`' do
+      let(:current_user) { FactoryGirl.create(:user) }
+
+      it 'returns an unauthorized error' do
+        get_endpoint
+
+        expect_failure
+        expect_status 401
+      end
+    end
+
+    context 'public call' do
+      let(:current_user) { nil }
+      it 'returns an unauthorized error' do
+        get_endpoint
+
+        expect_failure
+        expect_status 401
+      end
+    end
+  end
 end

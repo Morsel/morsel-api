@@ -22,6 +22,7 @@
 
 - [Feed Methods](#feed-methods)
   - [GET `/feed` - Feed](#get-feed---feed)
+  - [GET `/feed_all` - Feed (All)](#get-feed_all---feed-all)
 
 - [Authentication Methods](#authentication-methods)
   - [POST `/authentications` - Create Authentication](#post-authentications---create-authentication)
@@ -351,6 +352,22 @@ Since we use S3 for hosting our photos, it makes sense to upload photos directly
 
 ## GET `/feed` - Feed
 Returns the Feed. If [current_user](#current_user) exists, the results will include your Feed Items, any followed Users' Feed Items, any followed Places' Feed Items, and any Feed Items marked as `featured`. If no [current_user](#current_user) exists only Feed Items marked as `featured` will be returned. In either case results are sorted by their `created_at` date, with the most recent one's appearing first.
+
+__Request Behaviors__
+* [Pagination](#pagination)
+* [Public](#public)
+
+### Response
+
+| __data__ |
+| -------- |
+| [Feed Items](#feed-item)[] |
+
+<br />
+<br />
+
+## GET `/feed_all` - Feed (All)
+Returns all Feed Items. Only `staff` users may call this.
 
 __Request Behaviors__
 * [Pagination](#pagination)
