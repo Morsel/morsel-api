@@ -1,10 +1,11 @@
 class NotificationsController < ApiController
   def index
-    notifications = Notification.paginate(pagination_params)
-                                .where(user_id: current_user.id)
-                                .order(Notification.arel_table[:id].desc)
-
-    custom_respond_with notifications
+    custom_respond_with_cached_serializer(
+      Notification.paginate(pagination_params)
+                  .where(user_id: current_user.id)
+                  .order(Notification.arel_table[:id].desc),
+      NotificationSerializer
+    )
   end
 
   def mark_read
