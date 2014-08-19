@@ -3,7 +3,7 @@ source 'https://rubygems.org'
     ruby '2.1.2'
 
 gem 'unicorn', '~> 4.8.3'
-gem 'rails', '~> 4.1.4'
+gem 'rails', '~> 4.1.5'
 gem 'pg'
 gem 'oink', '~> 0.10.1'
 
