@@ -70,6 +70,7 @@ class ImportFoursquareVenue
   end
 
   def import_contact
+    place.facebook_page_id =  foursquare_venue['contact']['facebook']
     place.twitter_username =  foursquare_venue['contact']['twitter']
     place.formatted_phone =   foursquare_venue['contact']['formattedPhone']
   end
