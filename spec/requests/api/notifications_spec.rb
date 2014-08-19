@@ -8,7 +8,7 @@ describe 'Notifications API' do
     let(:notification_count) { 3 }
     let(:some_morsel) { FactoryGirl.create(:morsel_with_creator, creator: current_user) }
 
-    context 'an Item is liked' do
+    context 'current_user\'s Item is liked' do
       before do
         notification_count.times { FactoryGirl.create(:item_with_creator, creator: current_user, morsel:some_morsel) }
         current_user.items.each do |item|
@@ -17,7 +17,7 @@ describe 'Notifications API' do
         Sidekiq::Testing.inline! { current_user.items.last.likers << last_user }
       end
 
-      it 'returns the User\'s recent notifications' do
+      it 'returns the Like Activity of that Item in current_user\'s recent notifications' do
         get_endpoint
 
         expect_success
