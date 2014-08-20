@@ -16,6 +16,6 @@ describe 'Items Behaviors' do
   it_behaves_like 'ReportableController' do
     let(:current_user) { FactoryGirl.create(:chef) }
     let(:reportable_route) { '/items' }
-    let(:reportable) { FactoryGirl.create(:item_with_creator) }
+    let(:reportable) { FactoryGirl.create(:item_with_creator_and_morsel) }
   end
 end

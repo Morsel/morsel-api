@@ -103,7 +103,7 @@ class User < ActiveRecord::Base
 
   mount_uploader :photo, UserPhotoUploader
 
-  concerning :Settings do
+  concerning :UserSettings do
     included do
       store_accessor :settings, :unsubscribed, :auto_follow
     end
@@ -191,6 +191,11 @@ class User < ActiveRecord::Base
     elsif last_name
       "#{last_name}"
     end
+  end
+
+  def url
+    # https://eatmorsel.com/marty
+    "#{Settings.morsel.web_url}/#{username}"
   end
 
   def validate_email
