@@ -1,8 +1,11 @@
 class CreateZendeskTicket
   include Service
 
+  attribute :name, String
+  attribute :email, String
   attribute :subject, String
   attribute :description, String
+  attribute :type, String
   attribute :tags, Array
 
   validates :subject, presence: true
@@ -28,12 +31,12 @@ class CreateZendeskTicket
 
   def create_ticket
     ZendeskAPI::Ticket.create(zendesk_client,
+      requester: { name: name, email: email },
       subject: subject,
       description: description,
-      submitter_id: zendesk_client.current_user.id,
       priority: 'low',
-      type: 'incident',
-      tags: tags
+      type: type,
+      tags: tags,
     )
   end
 end

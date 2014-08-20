@@ -104,6 +104,7 @@
 - [Misc Methods](#misc-methods)
   - [GET `/status` - Status](#get-status---status)
   - [GET `/configuration` - Configuration](#get-configuration---configuration)
+  - [POST `/contact` - Contact](#post-contact--contact)
 
 - [Response Objects](#response-objects)
   - [Authentication Objects](#authentication-objects)
@@ -1622,6 +1623,30 @@ __Request Behaviors__
 | __data__ |
 | -------- |
 | [Configuration](#configuration) |
+
+<br />
+<br />
+
+## POST `/contact` - Contact
+Creates a Zendesk ticket for the contact form. NOTE: Zendesk will send an email (if specified) to let them know that their request has been received.
+
+__Request Behaviors__
+* [Public](#public)
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| name | String | The name of the requester | | |
+| email | String | The email of the requester | | |
+| subject | String | The subject of the message | | |
+| description | String | The description of the message | | |
+
+### Response
+
+| Status Code |
+| ----------- |
+|         200 |
 
 <br />
 <br />
