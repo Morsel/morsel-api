@@ -50,6 +50,7 @@ gem 'turbolinks'
 gem "twitter", "~> 5.5.1"
 gem 'uglifier', '>= 1.3.0'
 gem 'virtus'
+gem 'zendesk_api', '~> 1.4.2'
 
 group :development do
   gem 'better_errors'

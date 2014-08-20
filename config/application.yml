@@ -47,3 +47,8 @@ rollbar:
 twitter:
   consumer_key: <%= ENV['TWITTER_CONSUMER_KEY'] %>
   consumer_secret: <%= ENV['TWITTER_CONSUMER_SECRET'] %>
+
+zendesk:
+  url: <%= ENV['ZENDESK_URL'] %>
+  username: <%= ENV['ZENDESK_USERNAME'] %>
+  token: <%= ENV['ZENDESK_TOKEN'] %>

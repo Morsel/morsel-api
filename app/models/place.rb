@@ -81,4 +81,9 @@ class Place < ActiveRecord::Base
       )
     end
   end
+
+  def url
+    # https://eatmorsel.com/places/1-bobs-burgers
+    "#{Settings.morsel.web_url}/places/#{id}-#{slug}"
+  end
 end

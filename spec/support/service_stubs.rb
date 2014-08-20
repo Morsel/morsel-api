@@ -152,6 +152,20 @@ module ServiceStubs
     hipchat_client
   end
 
+  def stub_zendesk_client(options = {})
+    zendesk_client = double('ZendeskAPI::Client')
+    ZendeskAPI::Client.stub(:new).and_return(zendesk_client)
+
+    zendesk_ticket = double('ZendeskAPI::Ticket')
+    ZendeskAPI::Ticket.stub(:create).and_return(zendesk_ticket)
+
+    zendesk_user = double('ZendeskAPI::User')
+    zendesk_user.stub(:id).and_return('12345')
+    zendesk_client.stub(:current_user).and_return(zendesk_user)
+
+    zendesk_client
+  end
+
   def stub_settings(setting, hash, root_setting=true)
     settings = double('Settings')
     hash.each do |k,v|
@@ -164,5 +178,13 @@ module ServiceStubs
 
     Settings.stub(setting).and_return(settings) if root_setting
     settings
+  end
+
+  def stub_zendesk_settings
+    stub_settings(:zendesk, {
+      url: 'zendesk_url',
+      username: 'zendesk_username',
+      token: 'zendesk_t0k3n'
+    })
   end
 end
