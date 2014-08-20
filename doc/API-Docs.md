@@ -286,7 +286,7 @@ __Request Behaviors__
 # Reportable
 
 ## POST `/{{reportables}}/:id/report` - Report _{{Reportable}}_
-Reports the _{{Reportable}}_ with the specified `id`.
+Reports the _{{Reportable}}_ with the specified `id`. Creates a ticket on Zendesk.
 
 ### Response
 

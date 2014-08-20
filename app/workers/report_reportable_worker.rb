@@ -11,7 +11,7 @@ class ReportReportableWorker
     reportable = type.constantize.find id
 
     CreateZendeskTicket.call(
-      subject: "#{type} ##{id} reported!",
+      subject: "[#{Rails.env}] #{type} ##{id} reported!",
       description: "#{reporter.username} (#{reporter.url}) has reported #{reportable.url}",
       tags: ['reported', 'api']
     )
