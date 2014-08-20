@@ -12,7 +12,7 @@ module ServiceStubs
       "signature"=>"SIGNATURE",
       "acl"=>"ACL"
     })
-    presigned_post.stub(:url).and_return(URI.parse('http://www.eatmorsel.com'))
+    presigned_post.stub(:url).and_return(URI.parse('https://www.eatmorsel.com'))
 
     bucket = double('AWS::S3::Bucket')
     bucket.stub(:presigned_post).and_return(presigned_post)

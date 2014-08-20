@@ -6,7 +6,7 @@ class ShortenURL
 
   validate :valid_url?
 
-  # http://www.eatmorsel.com/some/url?utm_source=source&utm_medium=medium&utm_campaign=campaign&utm_keyword=mrsl
+  # https://www.eatmorsel.com/some/url?utm_source=source&utm_medium=medium&utm_campaign=campaign&utm_keyword=mrsl
   def call
     parsed_url = Addressable::URI.parse(url)
     # NOTE: Should eventually check for utms before sending them. Currently the mrsl links generated during the publish flow always have all utms
