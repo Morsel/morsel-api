@@ -3,8 +3,8 @@ require 'spec_helper'
 describe ShortenURL do
   let(:service_class) { ShortenURL }
 
-  let(:url) { 'http://eatmorsel.com/test' }
-  let(:expected_response) { 'http://mrsl.co/test' }
+  let(:url) { 'https://eatmorsel.com/test' }
+  let(:expected_response) { 'https://mrsl.co/test' }
 
   it 'should return the correct url' do
     stub_bitly_client

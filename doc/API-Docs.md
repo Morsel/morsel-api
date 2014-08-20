@@ -1737,7 +1737,7 @@ Response for any Like Item related requests.
   "draft": false,
   "total_like_count": 10,
   "total_comment_count": 3,
-  "url": "http://eatmorsel.com/turdferg/4-butter-rocks",
+  "url": "https://eatmorsel.com/turdferg/4-butter-rocks",
   "mrsl": {
     "facebook_mrsl": "http://mrsl.co/facebook",
     "twitter_mrsl": "http://mrsl.co/twitter",
