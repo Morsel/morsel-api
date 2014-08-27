@@ -34,7 +34,8 @@ describe 'GET /items/{:item_id} items#show' do
       'id' => item.id,
       'description' => item.description,
       'creator_id' => item.creator_id,
-      'liked' => false
+      'liked' => false,
+      'template_order' => item.template_order,
     })
     expect(json_data['photos']).to_not be_nil
   end

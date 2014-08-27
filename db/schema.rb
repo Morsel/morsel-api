@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140813152212) do
+ActiveRecord::Schema.define(version: 20140827200922) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -97,6 +97,8 @@ ActiveRecord::Schema.define(version: 20140813152212) do
     t.integer  "user_id"
     t.string   "title"
     t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "employments", ["place_id", "user_id"], name: "index_employments_on_place_id_and_user_id", using: :btree
@@ -144,6 +146,7 @@ ActiveRecord::Schema.define(version: 20140813152212) do
     t.boolean  "photo_processing"
     t.integer  "morsel_id"
     t.integer  "sort_order"
+    t.integer  "template_order"
   end
 
   add_index "items", ["creator_id"], name: "index_items_on_creator_id", using: :btree
@@ -187,6 +190,7 @@ ActiveRecord::Schema.define(version: 20140813152212) do
     t.datetime "published_at"
     t.hstore   "mrsl"
     t.integer  "place_id"
+    t.integer  "template_id"
   end
 
   add_index "morsels", ["cached_slug"], name: "index_morsels_on_cached_slug", using: :btree

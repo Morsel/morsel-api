@@ -76,7 +76,7 @@ class MorselsController < ApiController
 
   class MorselParams
     def self.build(params)
-      params.require(:morsel).permit(:title, :draft, :primary_item_id, :place_id)
+      params.require(:morsel).permit(:title, :draft, :primary_item_id, :place_id, :template_id)
     end
   end
 

@@ -3,6 +3,7 @@ class MorselSerializer < SlimMorselSerializer
              :total_like_count,
              :total_comment_count,
              :url,
+             :template_id,
              :facebook_mrsl,  # DEPRECATED, use mrsl[facebook_mrsl] instead
              :twitter_mrsl,   # DEPRECATED, use mrsl[twitter_mrsl] instead
              :mrsl

@@ -20,6 +20,7 @@
 # **`photo_processing`**    | `boolean`          |
 # **`morsel_id`**           | `integer`          |
 # **`sort_order`**          | `integer`          |
+# **`template_order`**      | `integer`          |
 #
 
 class Item < ActiveRecord::Base

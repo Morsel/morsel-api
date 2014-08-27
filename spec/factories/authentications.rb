@@ -10,7 +10,7 @@
 # **`provider`**    | `string(255)`      |
 # **`uid`**         | `string(255)`      |
 # **`user_id`**     | `integer`          |
-# **`token`**       | `string(255)`      |
+# **`token`**       | `text`             |
 # **`secret`**      | `string(255)`      |
 # **`name`**        | `string(255)`      |
 # **`link`**        | `string(255)`      |
