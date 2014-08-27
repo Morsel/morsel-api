@@ -11,6 +11,8 @@
 # **`user_id`**     | `integer`          |
 # **`title`**       | `string(255)`      |
 # **`deleted_at`**  | `datetime`         |
+# **`created_at`**  | `datetime`         |
+# **`updated_at`**  | `datetime`         |
 #
 
 class Employment < ActiveRecord::Base

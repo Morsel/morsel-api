@@ -1702,6 +1702,7 @@ __Request Behaviors__
     "created_at": "2014-01-07T16:34:43.071Z",
     "updated_at": "2014-01-07T16:34:43.071Z",
     "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
+    "template_order": null,
     "photos": {
       "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
       "_80x80":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_80x80_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
@@ -1763,6 +1764,7 @@ Response for any Like Item related requests.
   "total_like_count": 10,
   "total_comment_count": 3,
   "url": "https://eatmorsel.com/turdferg/4-butter-rocks",
+  "template_id": null,
   "mrsl": {
     "facebook_mrsl": "http://mrsl.co/facebook",
     "twitter_mrsl": "http://mrsl.co/twitter",

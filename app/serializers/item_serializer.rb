@@ -13,7 +13,8 @@ class ItemSerializer < ActiveModel::Serializer
              :morsel_id,
              :liked,
              :like_count,
-             :comment_count
+             :comment_count,
+             :template_order
 
   has_one :creator, serializer: SlimUserSerializer
   has_one :morsel, serializer: SlimMorselSerializer

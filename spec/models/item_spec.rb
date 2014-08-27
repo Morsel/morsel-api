@@ -20,6 +20,7 @@
 # **`photo_processing`**    | `boolean`          |
 # **`morsel_id`**           | `integer`          |
 # **`sort_order`**          | `integer`          |
+# **`template_order`**      | `integer`          |
 #
 
 require 'spec_helper'
@@ -31,6 +32,7 @@ describe Item do
   it { should respond_to(:photo) }
   it { should respond_to(:nonce) }
   it { should respond_to(:sort_order) }
+  it { should respond_to(:template_order) }
 
   it { should respond_to(:creator) }
   it { should respond_to(:morsel) }

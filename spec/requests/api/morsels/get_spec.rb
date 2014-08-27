@@ -14,6 +14,7 @@ describe 'GET /morsels morsels#show' do
       'title' => morsel_with_items.title,
       'creator_id' => morsel_with_items.creator_id,
       'slug' => morsel_with_items.cached_slug,
+      'template_id' => morsel_with_items.template_id,
       'place' => {
         'widget_url' => morsel_with_items.place.widget_url
       }

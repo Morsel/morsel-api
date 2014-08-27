@@ -22,6 +22,7 @@
 # **`photo_updated_at`**    | `datetime`         |
 # **`mrsl`**                | `hstore`           |
 # **`place_id`**            | `integer`          |
+# **`template_id`**         | `integer`          |
 #
 
 require 'spec_helper'
@@ -36,6 +37,7 @@ describe Morsel do
   it { should respond_to(:primary_item_id) }
   it { should respond_to(:primary_item) }
   it { should respond_to(:photo) }
+  it { should respond_to(:template_id) }
 
   it { should respond_to(:creator) }
   it { should respond_to(:items) }
