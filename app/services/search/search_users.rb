@@ -5,6 +5,7 @@ module Search
     attribute :query, String
     attribute :first_name, String
     attribute :last_name, String
+    attribute :username, String
     attribute :promoted, Boolean
     attribute :count, Integer
     attribute :max_id, Integer
@@ -25,8 +26,9 @@ module Search
                       .where(
                         SearchableUser.arel_table[:first_name].matches(formatted_query)
                         .or(SearchableUser.arel_table[:last_name].matches(formatted_query))
+                        .or(SearchableUser.arel_table[:username].matches(formatted_query))
                       )
-                      .promoted(promoted)
+                      .search_promoted(promoted)
                       .order(SearchableUser.arel_table[:id].desc)
       else
         SearchableUser.paginate({
@@ -34,17 +36,19 @@ module Search
                         max_id: max_id,
                         count: count
                       }, SearchableUser)
-                      .first_name(first_name)
-                      .last_name(last_name)
-                      .promoted(promoted)
+                      .search_first_name(first_name)
+                      .search_last_name(last_name)
+                      .search_username(username)
+                      .search_promoted(promoted)
                       .order(SearchableUser.arel_table[:id].desc)
       end
     end
   end
 
   class SearchableUser < User
-    scope :first_name, -> (first_name) { where(SearchableUser.arel_table[:first_name].matches("#{first_name}%")) if first_name.present? }
-    scope :last_name, -> (last_name) { where(SearchableUser.arel_table[:last_name].matches("#{last_name}%")) if last_name.present? }
-    scope :promoted, -> (promoted) { where('promoted = ?', promoted) if promoted.present? }
+    scope :search_first_name, -> (search_first_name) { where(SearchableUser.arel_table[:first_name].matches("#{search_first_name}%")) if search_first_name.present? }
+    scope :search_last_name, -> (search_last_name) { where(SearchableUser.arel_table[:last_name].matches("#{search_last_name}%")) if search_last_name.present? }
+    scope :search_username, -> (search_username) { where(SearchableUser.arel_table[:username].matches("#{search_username}%")) if search_username.present? }
+    scope :search_promoted, -> (search_promoted) { where('promoted = ?', search_promoted) if search_promoted.present? }
   end
 end

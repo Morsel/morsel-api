@@ -7,15 +7,16 @@ describe 'GET /users/search users#search' do
     before do
       FactoryGirl.create(:user, first_name: 'TURd')
       FactoryGirl.create(:user, last_name: 'tURD')
+      FactoryGirl.create(:user, username: 'turdski')
     end
 
-    it 'returns Users matching both `first_name` and `last_name`' do
+    it 'returns Users matching `first_name`, `last_name`, and `username`' do
       get_endpoint  user: {
                             query: 'turd'
                           }
 
       expect_success
-      expect_json_data_count 2
+      expect_json_data_count 3
       expect(json_data.first['following']).to be_false
     end
 
@@ -25,7 +26,7 @@ describe 'GET /users/search users#search' do
                           }
 
       expect_success
-      expect_json_data_count 2
+      expect_json_data_count 3
       expect(json_data.first['following']).to be_false
     end
   end
