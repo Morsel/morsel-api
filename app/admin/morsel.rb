@@ -53,7 +53,7 @@ ActiveAdmin.register Morsel do
     column :draft
     column :creator
     column 'Collage' do |morsel|
-      image_tag(morsel.photo_url) if morsel.photo
+      link_to(image_tag(morsel.photo_url, size: '280x140'), morsel.photo_url, target: :_blank) if morsel.photo_url
     end
     column 'Cover Item' do |morsel|
       link_to("#{morsel.primary_item_id}", admin_item_path(morsel.primary_item)) if morsel.primary_item
@@ -87,7 +87,7 @@ ActiveAdmin.register Morsel do
       row :draft
       row :creator
       row 'Collage' do
-        image_tag(morsel.photo_url) if morsel.photo
+        link_to(image_tag(morsel.photo_url), morsel.photo_url, target: :_blank) if morsel.photo_url
       end
       row 'Cover Item' do
         link_to("#{morsel.primary_item_id}", admin_item_path(morsel.primary_item)) if morsel.primary_item_id
