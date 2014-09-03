@@ -115,7 +115,7 @@ ActiveAdmin.register Morsel do
         column :id
         column :description
         column :photo do |item|
-          image_tag(item.photo.url(:_50x50)) if item.photo
+          link_to(image_tag(item.photo_url(:_50x50)), item.photo_url, target: :_blank) if item.photo_url
         end
         column :creator
         column :morsel do |item|
