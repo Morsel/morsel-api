@@ -9,9 +9,8 @@ ActiveAdmin.register Morsel do
     end
   end
 
+  filter :id
   filter :title
-  filter :creator
-  filter :place
 
   scope_to do
     Class.new do
@@ -65,7 +64,7 @@ ActiveAdmin.register Morsel do
     column :updated_at
     column :deleted_at
     actions defaults: true do |morsel|
-      link_to 'View on Web', morsel.url
+      link_to('View on Web', morsel.url, target: :_blank)
     end
   end
 
@@ -101,7 +100,7 @@ ActiveAdmin.register Morsel do
       row 'Links' do
         links = ''.html_safe
         if morsel.url
-          links += link_to('View on Web', morsel.url)
+          links += link_to('View on Web', morsel.url, target: :_blank)
         end
         links
       end

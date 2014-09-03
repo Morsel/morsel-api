@@ -61,9 +61,19 @@ class Place < ActiveRecord::Base
     end
   end
 
+  concerning :Facebook do
+    def facebook_url
+      "https://facebook.com/#{facebook_page_id}" if facebook_page_id
+    end
+  end
+
   concerning :Foursquare do
     included do
       after_commit :import_foursquare_venue_data, on: :create
+    end
+
+    def foursquare_url
+      "https://foursquare.com/v/#{foursquare_venue_id}" if foursquare_venue_id
     end
 
     def recently_imported?
@@ -79,6 +89,12 @@ class Place < ActiveRecord::Base
           id: id
         }
       )
+    end
+  end
+
+  concerning :Twitter do
+    def twitter_url
+      "https://twitter.com/#{twitter_username}" if twitter_username
     end
   end
 

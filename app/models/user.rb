@@ -90,6 +90,11 @@ class User < ActiveRecord::Base
   has_many :employments, inverse_of: :user
   has_many :places, through: :employments
 
+  scope :active, -> { where(active: true) }
+  scope :inactive, -> { where(active: false) }
+  scope :promoted, -> { where(promoted: true) }
+  scope :professional, -> { where(professional: true) }
+
   validates :industry,
             inclusion: {
               in: %w(chef media diner),
