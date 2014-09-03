@@ -63,7 +63,7 @@ ActiveAdmin.register User do
     column :updated_at
     column :deleted_at
     actions defaults: true do |user|
-      link_to 'View on Web', user.url
+      link_to ' View on Web', user.url
     end
   end
 
@@ -98,7 +98,7 @@ ActiveAdmin.register User do
       row 'Links' do
         links = ''.html_safe
         if user.url
-          links += link_to('View on Web', user.url, target: :_blank)
+          links += link_to(' View on Web', user.url, target: :_blank)
         end
         links
       end
@@ -130,9 +130,9 @@ ActiveAdmin.register User do
         column :last_imported_at
         column '' do |place|
           links = ''.html_safe
-          links += link_to('View on Web', place.url, target: :_blank)
-          links += link_to('Widget', place.widget_url, target: :_blank) if place.widget_url
-          # links += link_to 'Edit', edit_admin_place_path(place.id)
+          links += link_to(' View on Web', place.url, target: :_blank)
+          links += link_to(' Widget', place.widget_url, target: :_blank) if place.widget_url
+          # links += link_to ' Edit', edit_admin_place_path(place.id)
           links
         end
       end
@@ -169,8 +169,8 @@ ActiveAdmin.register User do
         column :deleted_at
         column '' do |morsel|
           links = ''.html_safe
-          links += link_to('View on Web', morsel.url, target: :_blank)
-          links += link_to 'Edit', edit_admin_morsel_path(morsel.id)
+          links += link_to(' View on Web', morsel.url, target: :_blank)
+          links += link_to ' Edit', edit_admin_morsel_path(morsel.id)
           links
         end
       end

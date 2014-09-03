@@ -38,7 +38,6 @@ class Morsel < ActiveRecord::Base
 
   has_one :feed_item, as: :subject
   accepts_nested_attributes_for :feed_item
-  delegate :featured, to: :feed_item, allow_nil: true
 
   belongs_to  :place
 

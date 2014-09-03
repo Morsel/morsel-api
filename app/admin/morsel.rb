@@ -27,7 +27,7 @@ ActiveAdmin.register Morsel do
   controller do
     def update
       morsel = Morsel.find params[:id]
-      if morsel.update(MorselsController::MorselParams.build(params, current_user))
+      if morsel.update(MorselsController::MorselParams.build(params, current_user)) && (morsel.feed_item ? morsel.feed_item.save : true)
         redirect_to(edit_admin_morsel_path(morsel), { notice: 'Morsel updated!' })
       else
         redirect_to(edit_admin_morsel_path(morsel), { alert: 'Error updating morsel, ask Marty for help.' })
@@ -64,7 +64,7 @@ ActiveAdmin.register Morsel do
     column :updated_at
     column :deleted_at
     actions defaults: true do |morsel|
-      link_to('View on Web', morsel.url, target: :_blank)
+      link_to(' View on Web', morsel.url, target: :_blank)
     end
   end
 
@@ -100,7 +100,7 @@ ActiveAdmin.register Morsel do
       row 'Links' do
         links = ''.html_safe
         if morsel.url
-          links += link_to('View on Web', morsel.url, target: :_blank)
+          links += link_to(' View on Web', morsel.url, target: :_blank)
         end
         links
       end
@@ -123,7 +123,7 @@ ActiveAdmin.register Morsel do
         column :deleted_at
         column '' do |item|
           links = ''.html_safe
-          links += link_to 'Edit', edit_admin_item_path(item.id)
+          links += link_to ' Edit', edit_admin_item_path(item.id)
           links
         end
       end
