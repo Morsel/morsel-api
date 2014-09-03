@@ -77,6 +77,7 @@ class Morsel < ActiveRecord::Base
   def photos
     if photo?
       {
+        _840x420: photo_url,
         _800x600: photo_url
       }
     end
