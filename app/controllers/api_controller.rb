@@ -34,9 +34,8 @@ class ApiController < ActionController::Base
 
   # api_key is expected to be in the format: "#{user.id}:#{user.authentication_token}"
   def authenticate_user_from_token!
-    api_key = params[:api_key]
-    if api_key.present?
-      split_key = api_key.split(':')
+    if params[:api_key].present?
+      split_key = params[:api_key].split(':')
       if split_key.size == 2
         user = User.find(split_key[0])
 

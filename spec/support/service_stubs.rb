@@ -27,7 +27,7 @@ module ServiceStubs
     Bitly.stub(:client).and_return(bitly_client)
 
     bitly_url = double('Bitly::Url')
-    bitly_url.stub(:short_url).and_return('http://mrsl.co/test')
+    bitly_url.stub(:short_url).and_return('https://mrsl.co/test')
     bitly_client.stub(:shorten).and_return(bitly_url)
 
     bitly_client
