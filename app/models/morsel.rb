@@ -36,6 +36,10 @@ class Morsel < ActiveRecord::Base
   alias_attribute :user, :creator
   alias_attribute :user_id, :creator_id
 
+  has_one :feed_item, as: :subject
+  accepts_nested_attributes_for :feed_item
+  delegate :featured, to: :feed_item, allow_nil: true
+
   belongs_to  :place
 
   has_many    :items, -> { order(Item.arel_table[:sort_order].asc) }, dependent: :destroy

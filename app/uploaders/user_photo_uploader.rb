@@ -10,7 +10,7 @@ class UserPhotoUploader < BasePhotoUploader
     process resize_to_fill: [72, 72]
   end
 
-  # Thumbnail (Retina)
+  # Thumbnail (Retina), Admin
   version :_80x80 do
     process resize_to_fill: [80, 80]
   end
