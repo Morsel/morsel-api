@@ -11,7 +11,7 @@ class ItemPhotoUploader < BasePhotoUploader
     process resize_to_fill: [640, 640]
   end
 
-  # Web
+  # Web, Admin
   version :_480x480, from_version: :_640x640 do
     process resize_to_fill: [480, 480]
   end
@@ -31,7 +31,7 @@ class ItemPhotoUploader < BasePhotoUploader
     process resize_to_fill: [100, 100]
   end
 
-  # Web
+  # Web, Admin
   version :_80x80, from_version: :_100x100 do
     process resize_to_fill: [80, 80]
   end

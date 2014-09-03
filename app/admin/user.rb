@@ -12,7 +12,7 @@ ActiveAdmin.register User do
     selectable_column
     column :id
     column :photo do |user|
-      link_to(image_tag(user.photo.url(:_40x40)), user.photo_url, target: :_blank) if user.photo_url
+      link_to(image_tag(user.photo.url(:_80x80)), user.photo_url, target: :_blank) if user.photo_url
     end
     column :email
     column :username

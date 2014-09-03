@@ -1,5 +1,5 @@
 ActiveAdmin.register Morsel do
-  actions :index, :show#, :edit
+  actions :index, :show, :edit
 
   before_filter do
     Morsel.class_eval do
@@ -28,8 +28,7 @@ ActiveAdmin.register Morsel do
   controller do
     def update
       morsel = Morsel.find params[:id]
-
-      if morsel.update(MorselsController::MorselParams.build(params))
+      if morsel.update(MorselsController::MorselParams.build(params, current_user))
         redirect_to(edit_admin_morsel_path(morsel), { notice: 'Morsel updated!' })
       else
         redirect_to(edit_admin_morsel_path(morsel), { alert: 'Error updating morsel, ask Marty for help.' })
@@ -38,7 +37,6 @@ ActiveAdmin.register Morsel do
   end
 
   index do
-    # selectable_column
     column 'Status' do |morsel|
       if morsel.deleted?
         status_tag('Deleted', :error)
@@ -115,7 +113,7 @@ ActiveAdmin.register Morsel do
         column :id
         column :description
         column :photo do |item|
-          link_to(image_tag(item.photo_url(:_50x50)), item.photo_url, target: :_blank) if item.photo_url
+          link_to(image_tag(item.photo_url(:_80x80)), item.photo_url, target: :_blank) if item.photo_url
         end
         column :creator
         column :morsel do |item|
@@ -136,8 +134,12 @@ ActiveAdmin.register Morsel do
   end
 
   form do |f|
-    f.inputs 'Details' do
+    f.inputs 'Morsel' do
       f.input :title
+    end
+
+    f.inputs 'Feed Item', for: [:feed_item, f.object.feed_item] do |fi_f|
+      fi_f.input :featured, as: :boolean, input_html: { disabled: f.object.draft }
     end
     f.actions
   end

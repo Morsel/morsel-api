@@ -36,7 +36,7 @@ class CommentsController < ApiController
   end
 
   class CommentParams
-    def self.build(params)
+    def self.build(params, scope = nil)
       params.require(:comment).permit(:description)
     end
   end
