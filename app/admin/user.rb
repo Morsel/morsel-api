@@ -45,7 +45,16 @@ ActiveAdmin.register User do
         status_tag('Inactive', :warning)
       end
     end
-    column :id
+    column :id do |user|
+      link_to user.id, admin_user_path(user)
+    end
+    column 'Links' do |user|
+      links = ''.html_safe
+      links += link_to 'Edit', edit_admin_user_path(user.id)
+      links += '<br />'.html_safe
+      links += link_to('View on Web', user.url, target: :_blank)
+      links
+    end
     column :email
     column :username
     column :first_name
@@ -62,9 +71,6 @@ ActiveAdmin.register User do
     column :created_at
     column :updated_at
     column :deleted_at
-    actions defaults: true do |user|
-      link_to ' View on Web', user.url
-    end
   end
 
   show do |user|
@@ -79,6 +85,13 @@ ActiveAdmin.register User do
         end
       end
       row :id
+      row 'Links' do
+        links = ''.html_safe
+        if user.url
+          links += link_to('View on Web', user.url, target: :_blank)
+        end
+        links
+      end
       row :email
       row :username
       row :first_name
@@ -95,18 +108,22 @@ ActiveAdmin.register User do
       row :created_at
       row :updated_at
       row :deleted_at
-      row 'Links' do
-        links = ''.html_safe
-        if user.url
-          links += link_to(' View on Web', user.url, target: :_blank)
-        end
-        links
-      end
     end
 
     panel 'Places' do
       table_for user.places.order(Place.arel_table[:name].asc) do
         column :id
+        # column :id do |place|
+        #   link_to place.id, admin_place_path(place)
+        # end
+        column 'Links' do |place|
+          links = ''.html_safe
+          links += link_to('View on Web', place.url, target: :_blank)
+          links += '<br />'.html_safe
+          links += link_to('View Widget', place.widget_url, target: :_blank) if place.widget_url
+          # links += link_to 'Edit', edit_admin_place_path(place.id)
+          links
+        end
         column :name
         column :slug
         column :address
@@ -128,13 +145,6 @@ ActiveAdmin.register User do
         column :updated_at
         column :deleted_at
         column :last_imported_at
-        column '' do |place|
-          links = ''.html_safe
-          links += link_to(' View on Web', place.url, target: :_blank)
-          links += link_to(' Widget', place.widget_url, target: :_blank) if place.widget_url
-          # links += link_to ' Edit', edit_admin_place_path(place.id)
-          links
-        end
       end
     end
 
@@ -149,7 +159,16 @@ ActiveAdmin.register User do
             status_tag('Published', :ok)
           end
         end
-        column :id
+        column :id do |morsel|
+          link_to morsel.id, admin_morsel_path(morsel)
+        end
+        column 'Links' do |morsel|
+          links = ''.html_safe
+          links += link_to 'Edit', edit_admin_morsel_path(morsel.id)
+          links += '<br />'.html_safe
+          links += link_to('View on Web', morsel.url, target: :_blank)
+          links
+        end
         column :title
         column :draft
         column :creator
@@ -167,12 +186,6 @@ ActiveAdmin.register User do
         column :published_at
         column :updated_at
         column :deleted_at
-        column '' do |morsel|
-          links = ''.html_safe
-          links += link_to(' View on Web', morsel.url, target: :_blank)
-          links += link_to ' Edit', edit_admin_morsel_path(morsel.id)
-          links
-        end
       end
     end
 

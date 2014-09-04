@@ -16,7 +16,9 @@ ActiveAdmin.register Item do
   end
 
   index do
-    column :id
+    column :id do |item|
+      link_to item.id, admin_item_path(item)
+    end
     column :description
     column 'Photo' do |item|
       link_to(image_tag(item.photo_url(:_80x80)), item.photo_url, target: :_blank) if item.photo_url

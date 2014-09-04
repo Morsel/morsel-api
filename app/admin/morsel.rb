@@ -45,7 +45,9 @@ ActiveAdmin.register Morsel do
         status_tag('Published', :ok)
       end
     end
-    column :id
+    column :id do |morsel|
+      link_to morsel.id, admin_morsel_path(morsel)
+    end
     column :title
     column :draft
     column :creator
@@ -109,7 +111,9 @@ ActiveAdmin.register Morsel do
     panel 'Items' do
       table_for morsel.items do
         column :sort_order
-        column :id
+        column :id do |item|
+          link_to item.id, admin_item_path(item)
+        end
         column :description
         column :photo do |item|
           link_to(image_tag(item.photo_url(:_80x80)), item.photo_url, target: :_blank) if item.photo_url
@@ -121,7 +125,7 @@ ActiveAdmin.register Morsel do
         column :created_at
         column :updated_at
         column :deleted_at
-        column '' do |item|
+        column 'Links' do |item|
           links = ''.html_safe
           links += link_to ' Edit', edit_admin_item_path(item.id)
           links
