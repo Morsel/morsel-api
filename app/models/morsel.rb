@@ -36,7 +36,6 @@ class Morsel < ActiveRecord::Base
   alias_attribute :user, :creator
   alias_attribute :user_id, :creator_id
 
-  has_one :feed_item, as: :subject
   accepts_nested_attributes_for :feed_item
 
   belongs_to  :place

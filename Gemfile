@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-    ruby '2.1.2'
+ruby '2.1.2'
 
 gem 'unicorn', '~> 4.8.3'
 gem 'rails', '~> 4.1.5'
@@ -14,7 +14,7 @@ gem "authority", "~> 2.9.0"
 gem 'bitly', '~> 0.10.1'
 gem 'bootstrap-sass', '>= 3.0.0.0'
 gem 'coffee-rails', '~> 4.0.0'
-gem "carrierwave", "~> 0.9.0"
+gem "carrierwave", '~> 0.10.0'
 gem 'carrierwave-aws'
 gem 'carrierwave_backgrounder'
 gem 'dalli', '~> 2.7.2'
@@ -23,7 +23,7 @@ gem 'devise', "~> 3.2.2"
 # gem 'formtastic'
 gem 'foursquare2', '~> 1.9.8'
 gem 'hipchat', '~> 1.3.0'
-gem 'hirefire-resource', '~> 0.3.2'
+gem 'hirefire-resource', '~> 0.3.4'
 gem 'instagram', '~> 1.0.0'
 gem 'jbuilder', '~> 1.2'
 gem 'jquery-rails'
@@ -41,7 +41,7 @@ gem 'rollbar', '~> 1.0.0'
 gem 'sass-rails', '~> 4.0.0'
 gem 'seedbank'
 gem 'settingslogic'
-gem 'sidekiq', '~> 3.0.0'
+gem 'sidekiq', '~> 3.2.3'
 gem 'sidekiq-failures', '~> 0.4.3'
 gem 'sinatra', '>= 1.3.0', require: nil
 gem 'slim-rails', '~> 2.1.4'
