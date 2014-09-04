@@ -93,6 +93,7 @@ class User < ActiveRecord::Base
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
   scope :promoted, -> { where(promoted: true) }
+  scope :suggested, -> { promoted }
   scope :professional, -> { where(professional: true) }
 
   validates :industry,

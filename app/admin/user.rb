@@ -7,7 +7,7 @@ ActiveAdmin.register User do
   filter :first_name
   filter :last_name
   filter :sign_in_count
-  filter :promoted
+  filter :promoted, label: 'Suggested'
   filter :professional
 
   scope_to do
@@ -21,7 +21,7 @@ ActiveAdmin.register User do
   scope :all, default: true
   scope :active
   scope :inactive
-  scope :promoted
+  scope :suggested
   scope :professional
 
   controller do
@@ -54,7 +54,7 @@ ActiveAdmin.register User do
       link_to(image_tag(user.photo.url(:_80x80)), user.photo_url, target: :_blank) if user.photo_url
     end
     column :bio
-    column :promoted
+    column :promoted, label: 'Suggested'
     column :professional
     column :sign_in_count
     column :current_sign_in_at
@@ -87,7 +87,7 @@ ActiveAdmin.register User do
         link_to(image_tag(user.photo.url(:_80x80)), user.photo_url, target: :_blank) if user.photo_url
       end
       row :bio
-      row :promoted
+      row :promoted, label: 'Suggested'
       row :professional
       row :sign_in_count
       row :current_sign_in_at
@@ -185,7 +185,7 @@ ActiveAdmin.register User do
       f.input :last_name
       f.input :email
       f.input :bio
-      f.input :promoted, as: :boolean
+      f.input :promoted, as: :boolean, label: 'Find People Suggested'
       f.input :professional, as: :boolean
     end
 
