@@ -76,7 +76,7 @@ class MorselsController < ApiController
 
   class MorselParams
     def self.build(params, scope = nil)
-      if scope.admin?
+      if scope && scope.admin?
         params.require(:morsel).permit(:title, :draft, :primary_item_id, :place_id, :template_id, feed_item_attributes: [:id, :featured])
       else
         params.require(:morsel).permit(:title, :draft, :primary_item_id, :place_id, :template_id)
