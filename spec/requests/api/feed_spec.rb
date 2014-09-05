@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'Feed API' do
   describe 'GET /feed' do
     let(:endpoint) { '/feed' }
-    let(:morsels_count) { rand(2..6) }
+    let(:morsels_count) { rand(3..6) }
 
     before do
       morsels_count.times { FactoryGirl.create(:morsel_with_items) }
@@ -17,7 +17,7 @@ describe 'Feed API' do
     end
 
     context '`featured` Feed Items exist' do
-      let(:featured_feed_items_count) { rand(2..6) }
+      let(:featured_feed_items_count) { rand(3..6) }
 
       it_behaves_like 'TimelinePaginateable' do
         let(:paginateable_object_class) { FeedItem }
@@ -34,6 +34,30 @@ describe 'Feed API' do
 
         expect_success
         expect_json_data_count featured_feed_items_count
+      end
+
+      context 'previous_for_id' do
+        let(:expected_feed_item) { FeedItem.featured.third }
+        it 'returns the previous FeedItem' do
+          get_endpoint previous_for_id: FeedItem.featured.second.id
+          expect_success
+
+          expect_json_data_eq({
+            'id' => expected_feed_item.id
+          })
+        end
+      end
+
+      context 'next_for_id' do
+        let(:expected_feed_item) { FeedItem.featured.first }
+        it 'returns the next FeedItem' do
+          get_endpoint next_for_id: FeedItem.featured.second.id
+          expect_success
+
+          expect_json_data_eq({
+            'id' => expected_feed_item.id
+          })
+        end
       end
 
       context 'Morsel is deleted' do
@@ -63,7 +87,7 @@ describe 'Feed API' do
       let(:current_user) { FactoryGirl.create(:user) }
 
       context 'following Users' do
-        let(:morsels_from_followed_users) { rand(2..6) }
+        let(:morsels_from_followed_users) { rand(3..6) }
 
         it_behaves_like 'TimelinePaginateable' do
           let(:paginateable_object_class) { FeedItem }
@@ -102,7 +126,7 @@ describe 'Feed API' do
         end
 
         context 'current_user Feed Item exists' do
-          let(:current_user_morsel_count) { rand(2..6) }
+          let(:current_user_morsel_count) { rand(3..6) }
           before { current_user_morsel_count.times { FactoryGirl.create(:morsel_with_items, creator: current_user) }}
 
           it 'returns any Feed Items from current_user\'s Followed Users in addition to the current_user\'s' do
@@ -115,7 +139,7 @@ describe 'Feed API' do
       end
 
       context 'following Places' do
-        let(:morsels_from_followed_places) { rand(2..6) }
+        let(:morsels_from_followed_places) { rand(3..6) }
 
         it_behaves_like 'TimelinePaginateable' do
           let(:paginateable_object_class) { FeedItem }
@@ -154,7 +178,7 @@ describe 'Feed API' do
         end
 
         context 'current_user Feed Item exists' do
-          let(:current_user_morsel_count) { rand(2..6) }
+          let(:current_user_morsel_count) { rand(3..6) }
           before { current_user_morsel_count.times { FactoryGirl.create(:morsel_with_items, creator: current_user) }}
 
           it 'returns any Feed Items from current_user\'s Followed Places in addition to the current_user\'s' do
@@ -170,7 +194,7 @@ describe 'Feed API' do
 
   describe 'GET /feed_all' do
     let(:endpoint) { '/feed_all' }
-    let(:morsels_count) { rand(2..6) }
+    let(:morsels_count) { rand(3..6) }
     let(:current_user) { FactoryGirl.create(:staff) }
 
     before do

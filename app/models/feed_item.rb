@@ -19,12 +19,16 @@
 #
 
 class FeedItem < ActiveRecord::Base
-  include Authority::Abilities, TimelinePaginateable
+  include Authority::Abilities, OrderQuery, TimelinePaginateable
   acts_as_paranoid
 
   belongs_to :subject, polymorphic: true
   belongs_to :place
   belongs_to :user
+
+  order_query :order_for_index, [
+    [:id, :desc]
+  ]
 
   scope :visible, -> { where(visible: true) }
   scope :featured, -> { where(featured: true) }

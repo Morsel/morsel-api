@@ -76,4 +76,8 @@ module JSONEnvelopable
             },
            status: http_status
   end
+
+  def render_json_nil
+    render_json(nil)
+  end
 end
