@@ -32,6 +32,7 @@ gem "mandrill_mailer", "~> 0.4.3"
 gem 'mime-types'
 gem 'mini_magick', github: 'minimagick/minimagick'
 gem 'newrelic_rpm'
+gem 'order_query', '~> 0.1.3'
 gem 'paranoia', '~> 2.0'
 gem 'perforated', '~> 0.8.2'
 gem 'piet-binary', '~> 0.2.0'

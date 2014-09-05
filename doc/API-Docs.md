@@ -358,11 +358,19 @@ __Request Behaviors__
 * [Pagination](#pagination)
 * [Public](#public)
 
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| next_for_id | Number | Returns the [Feed Item](#feed-item) after this in the response or nil if none exists | | |
+| previous_for_id | Number | Returns the [Feed Item](#feed-item) before this in the response or nil if none exists | | |
+
 ### Response
 
-| __data__ |
-| -------- |
-| [Feed Items](#feed-item)[] |
+| Condition | __data__ |
+| --------- | -------- |
+| `next_for_id` or `previous_for_id` passed | [Feed Item](#feed-item) |
+| default | [Feed Items](#feed-item)[] |
 
 <br />
 <br />
