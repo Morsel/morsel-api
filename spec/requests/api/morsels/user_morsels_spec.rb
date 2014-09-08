@@ -7,9 +7,10 @@ describe 'GET /users/:id|:username/morsels' do
 
   it_behaves_like 'TimelinePaginateable' do
     let(:paginateable_object_class) { Morsel }
+    let(:paginateable_key) { :published_at }
     before do
       paginateable_object_class.delete_all
-      30.times { FactoryGirl.create(:morsel_with_creator, creator: user_with_morsels) }
+      30.times { FactoryGirl.create(:morsel_with_items, creator: user_with_morsels) }
     end
   end
 

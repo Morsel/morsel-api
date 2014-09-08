@@ -1,10 +1,10 @@
 class String
-  def normalize
+  def mrsl_normalize
     ActiveSupport::Multibyte::Chars.new(self).normalize(:c).to_s
   end
 
-  def twitter_string(suffix_string)
-    twitter_string = normalize
+  def mrsl_twitter_string(suffix_string)
+    twitter_string = mrsl_normalize
 
     twitter_max_tweet_length = 140
 

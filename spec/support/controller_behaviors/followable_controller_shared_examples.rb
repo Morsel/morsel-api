@@ -81,10 +81,13 @@ shared_examples 'FollowableController' do
     before { followers_count.times { FactoryGirl.create(:follow, followable: followable) }}
 
     it_behaves_like 'TimelinePaginateable' do
-      let(:paginateable_object_class) { User }
+      let(:paginateable_object_class) { Follow }
+      let(:paginateable_key) { :created_at }
+      let(:paginateable_response_key) { :followed_at }
+
       before do
         paginateable_object_class.delete_all
-        30.times { FactoryGirl.create(:follow, followable: followable) }
+        30.times { |i| FactoryGirl.create(:follow, followable: followable, created_at:Time.at(i) + 1000) }
       end
     end
 

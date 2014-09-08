@@ -22,7 +22,7 @@ module Search
                         since_id: since_id,
                         max_id: max_id,
                         count: count
-                      }, SearchableUser)
+                      }, :id, SearchableUser)
                       .where(
                         SearchableUser.arel_table[:first_name].matches(formatted_query)
                         .or(SearchableUser.arel_table[:last_name].matches(formatted_query))
@@ -35,7 +35,7 @@ module Search
                         since_id: since_id,
                         max_id: max_id,
                         count: count
-                      }, SearchableUser)
+                      }, :id, SearchableUser)
                       .search_first_name(first_name)
                       .search_last_name(last_name)
                       .search_username(username)

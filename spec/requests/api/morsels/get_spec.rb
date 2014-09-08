@@ -55,10 +55,10 @@ describe 'GET /morsels' do
 
   it_behaves_like 'TimelinePaginateable' do
     let(:paginateable_object_class) { Morsel }
+    let(:paginateable_key) { :published_at }
     before do
       paginateable_object_class.delete_all
-      15.times { FactoryGirl.create(:morsel_with_items, creator: current_user) }
-      15.times { FactoryGirl.create(:draft_morsel_with_items, creator: current_user) }
+      30.times { FactoryGirl.create(:morsel_with_items, creator: current_user) }
     end
   end
 
@@ -84,6 +84,7 @@ describe 'GET /morsels/drafts morsels#drafts' do
 
   it_behaves_like 'TimelinePaginateable' do
     let(:paginateable_object_class) { Morsel }
+    let(:paginateable_key) { :updated_at }
     before do
       paginateable_object_class.delete_all
       30.times { FactoryGirl.create(:draft_morsel_with_items, creator: current_user) }

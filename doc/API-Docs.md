@@ -277,9 +277,9 @@ __Request Behaviors__
 
 ### Response
 
-| __data__ |
-| -------- |
-| [User Followers](#user-follower)[] |
+| __data__ | __order__ |
+| -------- | --------- |
+| [User Followers](#user-follower)[] | `followed_at` DESC |
 
 <br />
 <br />
@@ -300,32 +300,34 @@ Reports the _{{Reportable}}_ with the specified `id`. Creates a ticket on Zendes
 
 # Pagination
 
-The API uses a pagination method similar to how Facebook and Twitter do. For a nice article about why and how it works, check out this [link](https://dev.twitter.com/docs/working-with-timelines). You'll use `max_id` OR `since_id` per API call, don't combine them as the API will ignore it.
+The API uses a pagination method similar to how Facebook and Twitter do. For a nice article about why and how it works, check out this [link](https://dev.twitter.com/docs/working-with-timelines). If your response is ordered by `id` (most common case), you'll use either `max_id` OR `since_id` per API call. Otherwise if you're dealing w/ dates, use `before_date` OR `after_date`. Don't combine any of them as the API will ignore it (or crap out). When passing a date, passing either `max_id` (w/ `before_date`) or `since_id` (w/ `after_date`) is optional but helps prevent duplicates showing up if they happen to have the same date.
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return results up to and including this `id` | | |
+| max_id | Number | Return results up to __and including__ this `id` | | |
 | since_id | Number | Return results since this `id` | | |
+| before_date | Unix timestamp | Return results before this date | | |
+| after_date | Unix timestamp | Return results after this date | | |
 
 
 ## Example
 
-### Getting the recent Morsels:
-Make a call to the API: `/morsels.json?api_key=whatever&count=10`
-The API responds with the 10 most recent Morsels, let's say their id's are from 100-91.
+### Getting the recent Feed:
+Make a call to the API: `/feed.json?count=10`
+The API responds with the 10 most recent FeedItems, let's say their id's are from 100-91.
 
-### Getting a next set of Morsels going back:
-Based on the previous results, you want to get Morsels that are older than id 91 (the lowest/oldest id). So you'll want to set a `max_id` parameter to that id - 1 (`max_id` is inclusive, meaning it will include the Morsel with the id passed in the results, which in this case would duplicate a Morsel). So set `max_id` to 91-1, 90.
-Make a call to the API: `/morsels.json?api_key=whatever&count=10&max_id=90`
-The API responds with the next 10 Morsels, in this case their id's are from 90-81.
+### Getting a next set of FeedItems going back:
+Based on the previous results, you want to get Feeds that are older than id 91 (the lowest/oldest id). So you'll want to set a `max_id` parameter to that id - 1 (`max_id` is inclusive, meaning it will include the FeedItem with the id passed in the results, which in this case would duplicate a FeedItem). So set `max_id` to 91-1, 90.
+Make a call to the API: `/feed.json?count=10&max_id=90`
+The API responds with the next 10 FeedItem, in this case their id's are from 90-81.
 And repeat this process as you go further back until you get no results (or `max_id` < 1).
 
-### Getting a set of Morsels going forward (new Morsels):
-Apps like Facebook and Twitter will show a floating message while you're scrolling through a list telling you that X new Morsels have been added to the top of your feed.
-We can achieve the same thing by sending a call to the API every once awhile asking for any new Morsels since the most recent one you have. To do this, you'll set a `since_id` parameter (which is not inclusive) to the id of the most recent Morsel. Continuing the example, this would be `since_id` = 100.
-Make a call to the API: `/morsels.json?api_key=whatever&count=10&since_id=100`
-The API responds with any new Morsels since the Morsel with id = 100. So if there were three new Morsels added, it would return Morsels with id's from 101-103.
+### Getting a set of FeedItems going forward (new FeedItems):
+Apps like Facebook and Twitter will show a floating message while you're scrolling through a list telling you that X new things have been added to the top of your feed.
+We can achieve the same thing by sending a call to the API every once awhile asking for any new FeedItems since the most recent one you have. To do this, you'll set a `since_id` parameter (which is not inclusive) to the id of the most recent FeedItem. Continuing the example, this would be `since_id` = 100.
+Make a call to the API: `/feed.json?count=10&since_id=100`
+The API responds with any new FeedItems since the FeedItem with id = 100. So if there were three new FeedItems added, it would return FeedItems with id's from 101-103.
 
 <br />
 <br />
@@ -878,9 +880,9 @@ __Request Behaviors__
 
 ### Response
 
-| __data__ |
-| -------- |
-| [Morsels](#morsel)[] |
+| __data__ | __order__ |
+| -------- | --------- |
+| [Morsels](#morsel)[] | [Morsel](#morsel) `published_at` DESC |
 
 <br />
 <br />
@@ -1151,9 +1153,9 @@ __Request Behaviors__
 
 ### Response
 
-| __data__ |
-| -------- |
-| [Morsels](#morsel)[] |
+| __data__ | __order__ |
+| -------- | --------- |
+| [Morsels](#morsel)[] | [Morsel](#morsel) `published_at` DESC |
 
 <br />
 <br />
@@ -1400,9 +1402,9 @@ __Request Behaviors__
 
 ### Response
 
-| __data__ |
-| -------- |
-| [Morsels](#morsel)[] |
+| __data__ | __order__ |
+| -------- | --------- |
+| [Morsels](#morsel)[] | [Morsel](#morsel) `published_at` DESC |
 
 <br />
 <br />
@@ -1415,9 +1417,9 @@ __Request Behaviors__
 
 ### Response
 
-| __data__ |
-| -------- |
-| [Morsels](#morsel)[] |
+| __data__ | __order__ |
+| -------- | --------- |
+| [Morsels](#morsel)[] | [Morsel](#morsel) `updated_at` DESC |
 
 <br />
 <br />

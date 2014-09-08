@@ -25,9 +25,8 @@ class MorselsController < ApiController
   def drafts
     morsels = Morsel.includes(:items, :creator)
                     .drafts
-                    .paginate(pagination_params)
+                    .paginate(pagination_params, :updated_at)
                     .where(creator_id: current_user.id)
-                    .order(Morsel.arel_table[:updated_at].desc)
 
     custom_respond_with morsels
   end
@@ -96,15 +95,13 @@ class MorselsController < ApiController
         end
 
         Morsel.published
-              .paginate(pagination_params)
+              .paginate(pagination_params, :published_at)
               .where_creator_id(user_id)
               .where_place_id(params[:place_id])
-              .order(Morsel.arel_table[:id].desc)
       elsif current_user.present?
         Morsel.with_drafts(true)
-              .paginate(pagination_params)
+              .paginate(pagination_params, :published_at)
               .where_creator_id(current_user.id)
-              .order(Morsel.arel_table[:id].desc)
       end
     end
   end

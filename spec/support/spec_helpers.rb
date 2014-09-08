@@ -1,6 +1,6 @@
 module SpecHelpers
   def json
-    @json ||= JSON.parse(response.body)
+    @json
   end
 
   def json_data
@@ -86,6 +86,14 @@ module SpecHelpers
     Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
   end
 
+  def pagination_key
+    @pagination_key ||= defined?(paginateable_key) ? paginateable_key : :id
+  end
+
+  def pagination_response_key
+    @pagination_response_key ||= defined?(paginateable_response_key) ? paginateable_response_key : pagination_key
+  end
+
   def expect_success
     expect(response).to be_success
   end
@@ -99,7 +107,7 @@ module SpecHelpers
   end
 
   def call_service(*args)
-    @service ||= service_class.call(*args)
+    @service = service_class.call(*args)
   end
 
   def service_valid?
@@ -131,6 +139,7 @@ module SpecHelpers
         else
           send(_action, endpoint, _params.merge(format: :json))
         end
+        @json = JSON.parse(response.body)
       end
     end
   end

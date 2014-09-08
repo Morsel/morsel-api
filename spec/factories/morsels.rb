@@ -70,11 +70,14 @@ FactoryGirl.define do
           create_list(:item, evaluator.items_count, morsel: morsel, creator: morsel.creator)
           morsel.primary_item_id = morsel.item_ids.last
           morsel.build_feed_item(subject_id: morsel.id, subject_type: 'Morsel', visible: true, user: morsel.creator, place: morsel.place, featured: evaluator.featured_feed_item) if evaluator.build_feed_item
+          morsel.published_at = Time.at(morsel.id) + 1000 if morsel.published_at
+          morsel.updated_at = Time.at(morsel.id) + 1000
           morsel.save
         end
 
         factory :draft_morsel_with_items, class: Morsel do
           draft true
+          published_at nil
         end
       end
     end
