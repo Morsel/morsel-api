@@ -13,7 +13,7 @@ class PlacesController < ApiController
 
   PUBLIC_ACTIONS << def users
     custom_respond_with User.joins(:employments)
-                            .paginate(pagination_params, User)
+                            .paginate(pagination_params)
                             .where(employments: { place_id: params[:id] })
                             .order(User.arel_table[:id].desc)
                             .select('users.*, employments.title'),

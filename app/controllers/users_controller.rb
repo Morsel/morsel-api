@@ -140,7 +140,7 @@ class UsersController < ApiController
 
     if followable_type == 'Keyword'
       custom_respond_with Keyword.followed_by(params[:id])
-                            .paginate(pagination_params, Keyword)
+                            .paginate(pagination_params)
                             .order(Follow.arel_table[:id].desc),
                           each_serializer: FollowedKeywordSerializer,
                           context: {
@@ -150,7 +150,7 @@ class UsersController < ApiController
 
     elsif followable_type == 'User'
       custom_respond_with User.followed_by(params[:id])
-                              .paginate(pagination_params, User)
+                              .paginate(pagination_params)
                               .order(Follow.arel_table[:id].desc),
                           each_serializer: SlimFollowedUserSerializer,
                           context: {
@@ -165,7 +165,7 @@ class UsersController < ApiController
     if likeable_type == 'Item'
       custom_respond_with_cached_serializer(
         Item.liked_by(params[:id])
-            .paginate(pagination_params, Item)
+            .paginate(pagination_params)
             .order(Like.arel_table[:id].desc),
         LikedItemSerializer,
         {
@@ -178,7 +178,7 @@ class UsersController < ApiController
 
   PUBLIC_ACTIONS << def places
     custom_respond_with Place.joins(:employments)
-                            .paginate(pagination_params, Employment)
+                            .paginate(pagination_params, :id, Employment)
                             .where(employments: { user_id: params[:id] })
                             .order(Employment.arel_table[:id].desc)
                             .select('places.*, employments.title'),
