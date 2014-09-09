@@ -23,9 +23,16 @@ class MorselsController < ApiController
   end
 
   def drafts
+    # HACK: Support for older clients that don't yet support before_/after_date
+    if pagination_params.include? :max_id
+      pagination_key = :id
+    else
+      pagination_key = :updated_at
+    end
+
     morsels = Morsel.includes(:items, :creator)
                     .drafts
-                    .paginate(pagination_params, :updated_at)
+                    .paginate(pagination_params, pagination_key)
                     .where(creator_id: current_user.id)
 
     custom_respond_with morsels
@@ -94,13 +101,20 @@ class MorselsController < ApiController
           user.id
         end
 
+        # HACK: Support for older clients that don't yet support before_/after_date
+        if pagination_params.include? :max_id
+          pagination_key = :id
+        else
+          pagination_key = :published_at
+        end
+
         Morsel.published
-              .paginate(pagination_params, :published_at)
+              .paginate(pagination_params, pagination_key)
               .where_creator_id(user_id)
               .where_place_id(params[:place_id])
       elsif current_user.present?
         Morsel.with_drafts(true)
-              .paginate(pagination_params, :published_at)
+              .paginate(pagination_params, pagination_key)
               .where_creator_id(current_user.id)
       end
     end
