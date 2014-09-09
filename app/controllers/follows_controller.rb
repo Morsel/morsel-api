@@ -26,8 +26,14 @@ class FollowsController < ApiController
   end
 
   PUBLIC_ACTIONS << def followers
+    # HACK: Support for older clients that don't yet support before_/after_date
+    if pagination_params.include? :max_id
+      pagination_key = :id
+    else
+      pagination_key = :created_at
+    end
     custom_respond_with User.joins(:followable_follows)
-                            .paginate(pagination_params, :created_at, Follow)
+                            .paginate(pagination_params, pagination_key, Follow)
                             .where(follows: { followable_id: params[:id], followable_type: followable_type }),
                         each_serializer: SlimFollowedUserSerializer,
                         context: {

@@ -138,9 +138,16 @@ class UsersController < ApiController
   PUBLIC_ACTIONS << def followables
     followable_type = params.fetch(:type)
 
+    # HACK: Support for older clients that don't yet support before_/after_date
+    if pagination_params.include? :max_id
+      pagination_key = :id
+    else
+      pagination_key = :created_at
+    end
+
     if followable_type == 'Keyword'
       custom_respond_with Keyword.followed_by(params[:id])
-                            .paginate(pagination_params, :created_at, Follow),
+                            .paginate(pagination_params, pagination_key, Follow),
                           each_serializer: FollowedKeywordSerializer,
                           context: {
                             follower_id: params[:id],
@@ -149,7 +156,7 @@ class UsersController < ApiController
 
     elsif followable_type == 'User'
       custom_respond_with User.followed_by(params[:id])
-                            .paginate(pagination_params, :created_at, Follow),
+                            .paginate(pagination_params, pagination_key, Follow),
                           each_serializer: SlimFollowedUserSerializer,
                           context: {
                             follower_id: params[:id],
