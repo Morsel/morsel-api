@@ -60,7 +60,7 @@ class ApiController < ActionController::Base
 
   def pagination_params
     @pagination_params ||= begin
-      pagination_params = params.slice(:max_id, :since_id, :before_date, :after_date, :count)
+      pagination_params = params.slice(:max_id, :since_id, :before_date, :before_id, :after_date, :after_id, :count)
       pagination_params[:count] ||= pagination_count
       pagination_params
     end

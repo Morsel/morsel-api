@@ -300,7 +300,7 @@ Reports the _{{Reportable}}_ with the specified `id`. Creates a ticket on Zendes
 
 # Pagination
 
-The API uses a pagination method similar to how Facebook and Twitter do. For a nice article about why and how it works, check out this [link](https://dev.twitter.com/docs/working-with-timelines). If your response is ordered by `id` (most common case), you'll use either `max_id` OR `since_id` per API call. Otherwise if you're dealing w/ dates, use `before_date` OR `after_date`. Don't combine any of them as the API will ignore it (or crap out). When passing a date, passing either `max_id` (w/ `before_date`) or `since_id` (w/ `after_date`) is optional but helps prevent duplicates showing up if they happen to have the same date.
+The API uses a pagination method similar to how Facebook and Twitter do. For a nice article about why and how it works, check out this [link](https://dev.twitter.com/docs/working-with-timelines). If your response is ordered by `id` (most common case), you'll use either `max_id` OR `since_id` per API call. Otherwise if you're dealing w/ dates, use `before_date` OR `after_date`. Don't combine any of them as the API will ignore it (or crap out). When passing a date, passing either `before_id` (w/ `before_date`) or `after_id` (w/ `after_date`) is optional but helps prevent duplicates showing up if they happen to have the same date.
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
@@ -309,6 +309,8 @@ The API uses a pagination method similar to how Facebook and Twitter do. For a n
 | since_id | Number | Return results since this `id` | | |
 | before_date | Unix timestamp | Return results before this date | | |
 | after_date | Unix timestamp | Return results after this date | | |
+| before_id | Number | Return results before this `id` | | |
+| after_id | Number | Return results after this `id` | | |
 
 
 ## Example
