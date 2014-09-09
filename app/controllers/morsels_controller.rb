@@ -94,18 +94,18 @@ class MorselsController < ApiController
 
   def morsels_for_params
     @morsels_for_params ||= begin
+      # HACK: Support for older clients that don't yet support before_/after_date
+      if pagination_params.include? :max_id
+        pagination_key = :id
+      else
+        pagination_key = :published_at
+      end
+
       if params[:place_id] || params[:user_id] || params[:username]
         user_id = params[:user_id] || if params[:place_id].nil?
           user = User.find_by_id_or_username params[:username]
           raise ActiveRecord::RecordNotFound if user.nil?
           user.id
-        end
-
-        # HACK: Support for older clients that don't yet support before_/after_date
-        if pagination_params.include? :max_id
-          pagination_key = :id
-        else
-          pagination_key = :published_at
         end
 
         Morsel.published

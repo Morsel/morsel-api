@@ -307,8 +307,8 @@ The API uses a pagination method similar to how Facebook and Twitter do. For a n
 | count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
 | max_id | Number | Return results up to __and including__ this `id` | | |
 | since_id | Number | Return results since this `id` | | |
-| before_date | Unix timestamp | Return results before this date | | |
-| after_date | Unix timestamp | Return results after this date | | |
+| before_date | DateTime | Return results before this date | | |
+| after_date | DateTime | Return results after this date | | |
 | before_id | Number | Return results before this `id` | | |
 | after_id | Number | Return results after this `id` | | |
 

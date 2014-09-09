@@ -38,15 +38,15 @@ shared_examples 'TimelinePaginateable' do
       pending 'pagination_key == :id' if pagination_key == :id
 
       expected_count = rand(3..6)
-      before_date_epoch = paginateable_object_class.first[pagination_key].to_i + expected_count
+      before_date = paginateable_object_class.first[pagination_key] + expected_count
 
       params = (defined?(additional_params) && additional_params.present?) ? additional_params : {}
-      params.merge!({ before_date: before_date_epoch })
+      params.merge!({ before_date: before_date })
       get_endpoint params
 
       expect_success
       expect_json_data_count expected_count
-      expect(DateTime.parse(json_data.first[pagination_response_key.to_s]).to_i).to eq(before_date_epoch - 1)
+      expect(DateTime.parse(json_data.first[pagination_response_key.to_s])).to eq(before_date - 1)
     end
   end
 
@@ -55,15 +55,15 @@ shared_examples 'TimelinePaginateable' do
       pending 'pagination_key == :id' if pagination_key == :id
 
       expected_count = rand(3..6)
-      after_date_epoch = paginateable_object_class.last[pagination_key].to_i - expected_count
+      after_date = paginateable_object_class.last[pagination_key] - expected_count
 
       params = (defined?(additional_params) && additional_params.present?) ? additional_params : {}
-      params.merge!({ after_date: after_date_epoch })
+      params.merge!({ after_date: after_date })
       get_endpoint params
 
       expect_success
       expect_json_data_count expected_count
-      expect(DateTime.parse(json_data.last[pagination_response_key.to_s]).to_i).to eq(after_date_epoch + 1)
+      expect(DateTime.parse(json_data.last[pagination_response_key.to_s])).to eq(after_date + 1)
     end
   end
 
