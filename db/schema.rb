@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140827200922) do
+ActiveRecord::Schema.define(version: 20140909233319) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -129,6 +129,7 @@ ActiveRecord::Schema.define(version: 20140827200922) do
     t.datetime "deleted_at"
   end
 
+  add_index "follows", ["created_at"], name: "index_follows_on_created_at", using: :btree
   add_index "follows", ["followable_id", "follower_id"], name: "index_follows_on_followable_id_and_follower_id", using: :btree
   add_index "follows", ["followable_type"], name: "index_follows_on_followable_type", using: :btree
 
@@ -196,6 +197,7 @@ ActiveRecord::Schema.define(version: 20140827200922) do
   add_index "morsels", ["cached_slug"], name: "index_morsels_on_cached_slug", using: :btree
   add_index "morsels", ["creator_id"], name: "index_morsels_on_creator_id", using: :btree
   add_index "morsels", ["place_id"], name: "index_morsels_on_place_id", using: :btree
+  add_index "morsels", ["updated_at", "published_at"], name: "index_morsels_on_updated_at_and_published_at", using: :btree
 
   create_table "notifications", force: true do |t|
     t.integer  "payload_id"
