@@ -4,7 +4,6 @@ class UserSerializer < SlimUserSerializer
   attributes :created_at,
              :facebook_uid,
              :twitter_username,
-             :morsel_count,
              :following,
              :followed_user_count,
              :follower_count
