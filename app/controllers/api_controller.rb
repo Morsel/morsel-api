@@ -61,13 +61,13 @@ class ApiController < ActionController::Base
   def pagination_params
     @pagination_params ||= begin
       pagination_params = params.slice(:max_id, :since_id, :before_date, :before_id, :after_date, :after_id, :count)
-      pagination_params[:count] ||= pagination_count
+      pagination_params[:count] = pagination_count
       pagination_params
     end
   end
 
   def pagination_count
-    params[:count] || Settings.pagination_default_count || 20
+    (params[:count].to_i > 20) ? 20 : (params[:count] || Settings.pagination_default_count || 20)
   end
 
   def record_not_found(error = nil)
