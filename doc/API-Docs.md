@@ -1837,7 +1837,6 @@ Response for any Like Item related requests.
   "created_at": "2014-01-07T18:35:57.877Z",
   "facebook_uid": "1234567890",
   "twitter_username": "morsel_marty",
-  "morsel_count": 1,
   "following": false,
   "followed_user_count": 3,
   "follower_count": 3
