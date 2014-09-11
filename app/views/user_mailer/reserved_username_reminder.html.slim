@@ -1,0 +1,34 @@
+| Greetings,
+
+p
+  'You claimed your username,
+  b = @resource.username
+  ' , on
+  = link_to 'Morsel', "#{Settings.morsel.web_url}?utm_source=morsel&utm_medium=email&utm_campaign=claim1"
+  '  and now we're ready for you to check out our new iOS app and website.
+
+p Getting started is as easy as 1-2-3:
+ol
+  li
+    = link_to 'Click here to complete your Morsel account.', "#{Settings.morsel.web_url}/auth/reserved-username?reserved_username_token=#{@token}&email=#{@resource.email}&username=#{@resource.username}&id=#{@resource.id}&utm_source=morsel&utm_medium=email&utm_campaign=claim1"
+  li
+    = link_to 'Download the app from the App Store', "https://itunes.apple.com/us/app/id888118457?utm_source=morsel&utm_medium=email&utm_campaign=claim1"
+    '  (Android will be coming in the future).
+  li
+    ' Log in with your username,
+    b = @resource.username
+    ' , and password from step 1.
+
+p Thank you so very much for your time and support! We appreciate any and all feedback. Please don't hesitate to reach out to us at support@eatmorsel.com. We look forward to making Morsel a vibrant culinary community sharing food stories, cooking inspiration and kitchen hacks!
+
+br/
+| Sincerely,
+br/
+br/
+| Ellen Malloy & The Morsel Team
+br/
+a href="#{Settings.morsel.web_url}?utm_source=morsel&utm_medium=email&utm_campaign=claim1" www.eatmorsel.com
+| &nbsp;&nbsp;⚆&nbsp;&nbsp;
+a href="https://twitter.com/eatmorsel" Follow on Twitter
+| &nbsp;&nbsp;⚆&nbsp;&nbsp;
+a href="https://facebook.com/eatmorsel" Find on Facebook
