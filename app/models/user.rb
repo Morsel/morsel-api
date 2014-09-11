@@ -134,6 +134,10 @@ class User < ActiveRecord::Base
     def mrsl_send_reserved_username_instructions_notification(token)
       send_devise_notification(:reserved_username_instructions, token, {})
     end
+
+    def mrsl_send_reserved_username_reminder_notification(token)
+      send_devise_notification(:reserved_username_reminder, token, {})
+    end
   end
 
   def self.find_first_by_auth_conditions(warden_conditions)
