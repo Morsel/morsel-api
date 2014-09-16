@@ -34,6 +34,10 @@ class FacebookAuthenticatedUserDecorator < SimpleDelegator
     nil
   end
 
+  def get_connections(authentication = facebook_authentication)
+    facebook_client(authentication).get_connections('me', 'friends')
+  end
+
   private
 
   def facebook_authentication
@@ -45,6 +49,6 @@ class FacebookAuthenticatedUserDecorator < SimpleDelegator
   end
 
   def facebook_client(authentication = facebook_authentication)
-    Koala::Facebook::API.new(authentication.token) if authenticated_with_facebook?(authentication)
+    @facebook_client ||= Koala::Facebook::API.new(authentication.token) if authenticated_with_facebook?(authentication)
   end
 end

@@ -130,6 +130,10 @@ module SpecHelpers
     expect(service_valid?).to be_false
   end
 
+  def expect_service_error(key, error)
+    expect(service_errors[key].first).to eq(error)
+  end
+
   # Creates [get|post|delete|put]_endpoint methods
   self.class_eval do
     [:get, :post, :delete, :put].each do |_action|
