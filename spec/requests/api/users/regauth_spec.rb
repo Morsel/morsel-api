@@ -153,6 +153,44 @@ describe 'POST /users registrations#create' do
         expect(new_facebook_user.provider).to eq('facebook')
         expect(new_facebook_user.password_set).to be_false
       end
+
+      context 'Facebook friends already on Morsel' do
+        let(:number_of_connections) { rand(2..6) }
+        let(:stubbed_connections) do
+          _stubbed_connections = []
+          number_of_connections.times { _stubbed_connections << { 'id' => Faker::Number.number(rand(5..10)), 'name' => Faker::Name.name }}
+          _stubbed_connections
+        end
+
+        it 'finds and follows any Facebook friends on Morsel' do
+          stubbed_connections.each do |c|
+            FactoryGirl.create(:facebook_authentication, uid: c['id'], name: c['name'])
+          end
+          stub_facebook_client(connections: stubbed_connections)
+
+          Sidekiq::Testing.inline! do
+            post_endpoint user: {
+                            email: Faker::Internet.email,
+                            first_name: 'Foo',
+                            last_name: 'Bar',
+                            username: "user_#{Faker::Lorem.characters(10)}",
+                            bio: 'Foo to the Stars',
+                            industry: 'diner',
+                            photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
+                          },
+                          authentication: {
+                            provider: 'facebook',
+                            uid: 'facebook_uid',
+                            token: 'dummy_token'
+                          }
+          end
+
+          expect_success
+
+          new_user = User.find json_data['id']
+          expect(new_user.followed_user_count).to eq(number_of_connections)
+        end
+      end
     end
 
     context 'Twitter' do

@@ -68,22 +68,8 @@ describe 'GET /users/:id|:username users#show' do
       'encrypted_password' => nil,
       'photos' => nil,
       'facebook_uid' => FacebookAuthenticatedUserDecorator.new(user_with_morsels).facebook_uid,
-      'twitter_username' => TwitterAuthenticatedUserDecorator.new(user_with_morsels).twitter_username,
-      'morsel_count' => user_with_morsels.morsels.count
+      'twitter_username' => TwitterAuthenticatedUserDecorator.new(user_with_morsels).twitter_username
     })
-  end
-
-  context 'User has Morsel drafts' do
-    before do
-      user_with_morsels.morsels << FactoryGirl.create(:draft_morsel_with_items)
-    end
-
-    it '`morsel_count` should NOT include draft Morsels' do
-      get_endpoint
-
-      expect_success
-      expect_json_data_eq('morsel_count' => user_with_morsels.morsels.published.count)
-    end
   end
 
   context 'username passed instead of id' do
@@ -104,8 +90,7 @@ describe 'GET /users/:id|:username users#show' do
         'encrypted_password' => nil,
         'photos' => nil,
         'facebook_uid' => FacebookAuthenticatedUserDecorator.new(user_with_morsels).facebook_uid,
-        'twitter_username' => TwitterAuthenticatedUserDecorator.new(user_with_morsels).twitter_username,
-        'morsel_count' => user_with_morsels.morsels.count
+        'twitter_username' => TwitterAuthenticatedUserDecorator.new(user_with_morsels).twitter_username
       })
     end
   end

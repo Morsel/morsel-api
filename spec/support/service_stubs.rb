@@ -48,6 +48,7 @@ module ServiceStubs
     facebook_client.stub(:get_object).with('me').and_return('id' => options[:id])
     facebook_client.stub(:put_connections).and_return('id' => options[:id])
     facebook_client.stub(:put_picture).and_return('id' => options[:id])
+    facebook_client.stub(:get_connections).with('me', 'friends').and_return(options[:connections])
 
     facebook_client
   end
