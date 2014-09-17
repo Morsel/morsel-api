@@ -62,6 +62,75 @@ describe 'Authentications API Methods' do
         expect(twitter_authenticated_user.twitter_authentications.count).to eq(1)
         expect(twitter_authenticated_user.twitter_username).to eq(screen_name)
       end
+
+      context 'Twitter friends already on Morsel' do
+        context 'auto_follow=true' do
+          before do
+            current_user.auto_follow = 'true'
+            current_user.save
+          end
+
+          let(:number_of_connections) { rand(2..6) }
+          let(:stubbed_connections) do
+            _stubbed_connections = []
+            number_of_connections.times { _stubbed_connections << Faker::Number.number(rand(5..10)) }
+            _stubbed_connections
+          end
+
+          it 'finds and follows any Twitter friends on Morsel' do
+            stubbed_connections.each do |c|
+              FactoryGirl.create(:twitter_authentication, uid: c, name: Faker::Name.name)
+            end
+            stub_twitter_client(connections: stubbed_connections)
+
+            Sidekiq::Testing.inline! do
+              post_endpoint authentication: {
+                            provider: 'twitter',
+                            uid: 'twitter_uid',
+                            token: 'token',
+                            secret: 'secret'
+                          }
+            end
+
+            expect_success
+
+            expect(current_user.followed_user_count).to eq(number_of_connections)
+          end
+        end
+
+        context 'auto_follow=false' do
+          before do
+            current_user.auto_follow = 'false'
+            current_user.save
+          end
+
+          let(:number_of_connections) { rand(2..6) }
+          let(:stubbed_connections) do
+            _stubbed_connections = []
+            number_of_connections.times { _stubbed_connections << Faker::Number.number(rand(5..10)) }
+            _stubbed_connections
+          end
+
+          it 'finds and follows any Twitter friends on Morsel' do
+            stubbed_connections.each do |c|
+              FactoryGirl.create(:twitter_authentication, uid: c, name: Faker::Name.name)
+            end
+            stub_twitter_client(connections: stubbed_connections)
+
+            Sidekiq::Testing.inline! do
+              post_endpoint authentication: {
+                            provider: 'twitter',
+                            uid: 'twitter_uid',
+                            token: 'token',
+                            secret: 'secret'
+                          }
+            end
+
+            expect_success
+            expect(current_user.followed_user_count).to be_zero
+          end
+        end
+      end
     end
 
     context 'Instagram' do
