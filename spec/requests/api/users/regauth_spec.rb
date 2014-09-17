@@ -231,7 +231,7 @@ describe 'POST /users registrations#create' do
           _stubbed_connections
         end
 
-        it 'finds and follows any Facebook friends on Morsel' do
+        it 'finds and follows any Twitter friends on Morsel' do
           stubbed_connections.each do |c|
             FactoryGirl.create(:twitter_authentication, uid: c, name: Faker::Name.name)
           end

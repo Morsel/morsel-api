@@ -144,6 +144,73 @@ describe 'Authentications API Methods' do
         expect(facebook_authenticated_user.facebook_authentications.count).to eq(1)
         expect(facebook_authenticated_user.facebook_uid).to eq(dummy_fb_uid)
       end
+
+      context 'Facebook friends already on Morsel' do
+        context 'auto_follow=true' do
+          before do
+            current_user.auto_follow = 'true'
+            current_user.save
+          end
+
+          let(:number_of_connections) { rand(2..6) }
+          let(:stubbed_connections) do
+            _stubbed_connections = []
+            number_of_connections.times { _stubbed_connections << { 'id' => Faker::Number.number(rand(5..10)), 'name' => Faker::Name.name }}
+            _stubbed_connections
+          end
+
+          it 'finds and follows any Facebook friends on Morsel' do
+            stubbed_connections.each do |c|
+              FactoryGirl.create(:facebook_authentication, uid: c['id'], name: c['name'])
+            end
+            stub_facebook_client(connections: stubbed_connections)
+
+            Sidekiq::Testing.inline! do
+              post_endpoint authentication: {
+                            provider: 'facebook',
+                            uid: 'facebook_uid',
+                            token: 'token'
+                          }
+            end
+
+            expect_success
+
+            expect(current_user.followed_user_count).to eq(number_of_connections)
+          end
+        end
+
+        context 'auto_follow=false' do
+          before do
+            current_user.auto_follow = 'false'
+            current_user.save
+          end
+
+          let(:number_of_connections) { rand(2..6) }
+          let(:stubbed_connections) do
+            _stubbed_connections = []
+            number_of_connections.times { _stubbed_connections << { 'id' => Faker::Number.number(rand(5..10)), 'name' => Faker::Name.name }}
+            _stubbed_connections
+          end
+
+          it 'finds and follows any Facebook friends on Morsel' do
+            stubbed_connections.each do |c|
+              FactoryGirl.create(:facebook_authentication, uid: c['id'], name: c['name'])
+            end
+            stub_facebook_client(connections: stubbed_connections)
+
+            Sidekiq::Testing.inline! do
+              post_endpoint authentication: {
+                            provider: 'facebook',
+                            uid: 'facebook_uid',
+                            token: 'token'
+                          }
+            end
+
+            expect_success
+            expect(current_user.followed_user_count).to be_zero
+          end
+        end
+      end
     end
   end
 

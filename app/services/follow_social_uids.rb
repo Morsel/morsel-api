@@ -3,15 +3,13 @@ class FollowSocialUids
 
   attribute :authentication, Authentication
   attribute :uids, Array
-  attribute :user, User
 
   validates :authentication, presence: true
-  validates :user, presence: true
 
   def call
     followed_users = []
     connected_users.find_each do |connected_user|
-      follow = Follow.create(followable: connected_user, follower_id: user.id)
+      follow = Follow.create(followable: connected_user, follower_id: authentication.user_id)
       followed_users << follow if follow.id
     end
     followed_users
