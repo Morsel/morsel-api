@@ -1,5 +1,7 @@
 class FetchAndFollowSocialUidsWorker
   include Sidekiq::Worker
+  sidekiq_options queue: :low
+
   # options:
   #   user_id: The `id` of the eventual follower
   #   provider: The social provider to fetch and follow Users from
