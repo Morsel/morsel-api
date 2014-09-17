@@ -69,6 +69,7 @@ module ServiceStubs
 
     Twitter::Client.stub(:new).and_return(twitter_client)
     twitter_client.stub(:update_with_media).and_return(tweet)
+    twitter_client.stub(:friend_ids).and_return(options[:connections])
 
     twitter_user = double('Twitter::User')
     twitter_client.stub(:current_user).and_return(twitter_user)

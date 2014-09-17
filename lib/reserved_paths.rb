@@ -5,6 +5,7 @@ module ReservedPaths
       account
       accounts
       activity
+      add
       admin
       all
       announcements
