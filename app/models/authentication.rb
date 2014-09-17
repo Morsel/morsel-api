@@ -41,6 +41,25 @@ class Authentication < ActiveRecord::Base
                   }
   validates :user, presence: true
 
+  concerning :AutoFollow do
+    included do
+      after_commit :fetch_and_follow_social_connections, on: :create
+      attr_accessor :auto_follow
+    end
+
+    private
+
+    def auto_follow?
+      ActiveRecord::ConnectionAdapters::Column.value_to_boolean(auto_follow)
+    end
+
+    def fetch_and_follow_social_connections
+      FetchAndFollowSocialUidsWorker.perform_async({
+        authentication_id: id
+      }) if auto_follow?
+    end
+  end
+
   def exchange_access_token
     self.token = Koala::Facebook::OAuth.new(Settings.facebook.app_id, Settings.facebook.app_secret).exchange_access_token(token) if short_lived? && facebook?
   end
@@ -60,6 +79,6 @@ class Authentication < ActiveRecord::Base
   private
 
   def short_lived?
-    short_lived == 'true'
+    ActiveRecord::ConnectionAdapters::Column.value_to_boolean(short_lived)
   end
 end

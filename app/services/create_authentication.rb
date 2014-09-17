@@ -26,6 +26,7 @@ class CreateAuthentication
       authentication = user.authentications.build(authentication_attributes)
     end
 
+    authentication.auto_follow = user.auto_follow?
     authentication.save
     authentication
   end

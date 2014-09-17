@@ -11,13 +11,11 @@ class RegistrationsController < Devise::RegistrationsController
     user = User.new(user_params)
 
     authentication_errors = []
-    authentication = nil
     if params[:authentication].present?
       service = BuildAuthentication.call(AuthenticationsController::AuthenticationParams.build(params).merge(user: user))
       if service.valid?
-        authentication = service.response
-        user.provider = authentication.provider
-        user.uid = authentication.uid
+        user.provider = service.response.provider
+        user.uid = service.response.uid
       else
         authentication_errors = service.errors.delete(:uid) if service.errors[:uid].include?('already exists')
         authentication_errors += service.errors.full_messages
@@ -31,13 +29,6 @@ class RegistrationsController < Devise::RegistrationsController
 
     if user.valid? && authentication_errors.empty? && user.save
       create_user_event(:created_account, user.id)
-
-      if authentication && authentication.id.present?
-        FetchAndFollowSocialUidsWorker.perform_async({
-          user_id: user.id,
-          provider: authentication.provider
-        })
-      end
 
       if params[:prepare_presigned_upload] == 'true'
         handle_presigned_upload(user, serializer: UserWithAuthTokenSerializer)

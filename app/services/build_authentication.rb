@@ -17,14 +17,17 @@ class BuildAuthentication
 
   def call
     if provider == 'facebook'
-      FacebookAuthenticatedUserDecorator.new(user).build_facebook_authentication(authentication_attributes)
+      authentication = FacebookAuthenticatedUserDecorator.new(user).build_facebook_authentication(authentication_attributes)
     elsif provider == 'instagram'
-      InstagramAuthenticatedUserDecorator.new(user).build_instagram_authentication(authentication_attributes)
+      authentication = InstagramAuthenticatedUserDecorator.new(user).build_instagram_authentication(authentication_attributes)
     elsif provider == 'twitter'
-      TwitterAuthenticatedUserDecorator.new(user).build_twitter_authentication(authentication_attributes)
+      authentication = TwitterAuthenticatedUserDecorator.new(user).build_twitter_authentication(authentication_attributes)
     else
-      user.authentications.build(authentication_attributes)
+      authentication = user.authentications.build(authentication_attributes)
     end
+    authentication.auto_follow = user.auto_follow? || !user.id?
+
+    authentication
   end
 
   private

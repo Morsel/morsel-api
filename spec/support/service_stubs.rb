@@ -136,6 +136,7 @@ module ServiceStubs
 
     instagram_user = double('Hash')
     instagram_client.stub(:user).and_return(instagram_user)
+    instagram_client.stub(:user_follows).and_return(options[:connections])
     instagram_user.stub(:id).and_return(options[:id])
     instagram_user.stub(:username).and_return('eatmorsel')
     instagram_user.stub(:url).and_return("https://instagram.com/eatmorsel")
