@@ -35,6 +35,15 @@ FactoryGirl.define do
       token { Faker::Lorem.characters(20) }
     end
 
+    factory :instagram_authentication do
+      provider 'instagram'
+      name 'instagram_screen_name'
+      uid { "instauid_#{Faker::Number.number(10)}" }
+      link 'instagram.com/twitter_screen_name'
+      token { Faker::Lorem.characters(20) }
+      secret { Faker::Lorem.characters(20) }
+    end
+
     factory :twitter_authentication do
       provider 'twitter'
       name 'twitter_screen_name'

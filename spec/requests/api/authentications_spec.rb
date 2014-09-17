@@ -157,6 +157,73 @@ describe 'Authentications API Methods' do
         expect(instagram_authenticated_user.instagram_authentications.count).to eq(1)
         expect(instagram_authenticated_user.instagram_username).to eq(screen_name)
       end
+
+      context 'Instagram friends already on Morsel' do
+        context 'auto_follow=true' do
+          before do
+            current_user.auto_follow = 'true'
+            current_user.save
+          end
+
+          let(:number_of_connections) { rand(2..6) }
+          let(:stubbed_connections) do
+            _stubbed_connections = []
+            number_of_connections.times { _stubbed_connections << { 'id' => Faker::Number.number(rand(5..10)), 'name' => Faker::Name.name }}
+            _stubbed_connections
+          end
+
+          it 'finds and follows any Instagram friends on Morsel' do
+            stubbed_connections.each do |c|
+              FactoryGirl.create(:instagram_authentication, uid: c['id'], name: c['name'])
+            end
+            stub_instagram_client(connections: stubbed_connections)
+
+            Sidekiq::Testing.inline! do
+              post_endpoint authentication: {
+                            provider: 'instagram',
+                            uid: 'instagram_uid',
+                            token: 'token'
+                          }
+            end
+
+            expect_success
+
+            expect(current_user.followed_user_count).to eq(number_of_connections)
+          end
+        end
+
+        context 'auto_follow=false' do
+          before do
+            current_user.auto_follow = 'false'
+            current_user.save
+          end
+
+          let(:number_of_connections) { rand(2..6) }
+          let(:stubbed_connections) do
+            _stubbed_connections = []
+            number_of_connections.times { _stubbed_connections << { 'id' => Faker::Number.number(rand(5..10)), 'name' => Faker::Name.name }}
+            _stubbed_connections
+          end
+
+          it 'finds and follows any Instagram friends on Morsel' do
+            stubbed_connections.each do |c|
+              FactoryGirl.create(:instagram_authentication, uid: c['id'], name: c['name'])
+            end
+            stub_instagram_client(connections: stubbed_connections)
+
+            Sidekiq::Testing.inline! do
+              post_endpoint authentication: {
+                            provider: 'instagram',
+                            uid: 'instagram_uid',
+                            token: 'token'
+                          }
+            end
+
+            expect_success
+            expect(current_user.followed_user_count).to be_zero
+          end
+        end
+      end
     end
 
     context 'Facebook' do
