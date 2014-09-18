@@ -70,18 +70,18 @@ describe 'Authentications API Methods' do
             current_user.save
           end
 
-          let(:number_of_connections) { rand(2..6) }
-          let(:stubbed_connections) do
-            _stubbed_connections = []
-            number_of_connections.times { _stubbed_connections << Faker::Number.number(rand(5..10)) }
-            _stubbed_connections
+          let(:number_of_friends) { rand(2..6) }
+          let(:stubbed_friends) do
+            _stubbed_friends = []
+            number_of_friends.times { _stubbed_friends << Faker::Number.number(rand(5..10)) }
+            _stubbed_friends
           end
 
           it 'finds and follows any Twitter friends on Morsel' do
-            stubbed_connections.each do |c|
+            stubbed_friends.each do |c|
               FactoryGirl.create(:twitter_authentication, uid: c, name: Faker::Name.name)
             end
-            stub_twitter_client(connections: stubbed_connections)
+            stub_twitter_client(friends: stubbed_friends)
 
             Sidekiq::Testing.inline! do
               post_endpoint authentication: {
@@ -94,7 +94,53 @@ describe 'Authentications API Methods' do
 
             expect_success
 
-            expect(current_user.followed_user_count).to eq(number_of_connections)
+            expect(current_user.followed_user_count).to eq(number_of_friends)
+          end
+
+          context 'followed users have auto_follow enabled' do
+            it 'should follow them back' do
+              stubbed_friends.each do |c|
+                FactoryGirl.create(:twitter_authentication, uid: c, name: Faker::Name.name)
+              end
+              stub_twitter_client(friends: stubbed_friends, followers: stubbed_friends)
+              first_authentication_user = Authentication.first.user
+              first_authentication_user.update auto_follow: 'true'
+
+              Sidekiq::Testing.inline! do
+                post_endpoint authentication: {
+                              provider: 'twitter',
+                              uid: 'twitter_uid',
+                              token: 'token',
+                              secret: 'secret'
+                            }
+              end
+
+              expect_success
+              expect(first_authentication_user.followed_user_count).to eq(1)
+            end
+          end
+
+          context 'followed users have auto_follow DISABLED' do
+            it 'should follow them back' do
+              stubbed_friends.each do |c|
+                FactoryGirl.create(:twitter_authentication, uid: c, name: Faker::Name.name)
+              end
+              stub_twitter_client(friends: stubbed_friends, followers: stubbed_friends)
+              first_authentication_user = Authentication.first.user
+              first_authentication_user.update auto_follow: 'false'
+
+              Sidekiq::Testing.inline! do
+                post_endpoint authentication: {
+                              provider: 'twitter',
+                              uid: 'twitter_uid',
+                              token: 'token',
+                              secret: 'secret'
+                            }
+              end
+
+              expect_success
+              expect(first_authentication_user.followed_user_count).to eq(0)
+            end
           end
         end
 
@@ -104,18 +150,18 @@ describe 'Authentications API Methods' do
             current_user.save
           end
 
-          let(:number_of_connections) { rand(2..6) }
-          let(:stubbed_connections) do
-            _stubbed_connections = []
-            number_of_connections.times { _stubbed_connections << Faker::Number.number(rand(5..10)) }
-            _stubbed_connections
+          let(:number_of_friends) { rand(2..6) }
+          let(:stubbed_friends) do
+            _stubbed_friends = []
+            number_of_friends.times { _stubbed_friends << Faker::Number.number(rand(5..10)) }
+            _stubbed_friends
           end
 
           it 'finds and follows any Twitter friends on Morsel' do
-            stubbed_connections.each do |c|
+            stubbed_friends.each do |c|
               FactoryGirl.create(:twitter_authentication, uid: c, name: Faker::Name.name)
             end
-            stub_twitter_client(connections: stubbed_connections)
+            stub_twitter_client(friends: stubbed_friends)
 
             Sidekiq::Testing.inline! do
               post_endpoint authentication: {
@@ -165,18 +211,18 @@ describe 'Authentications API Methods' do
             current_user.save
           end
 
-          let(:number_of_connections) { rand(2..6) }
-          let(:stubbed_connections) do
-            _stubbed_connections = []
-            number_of_connections.times { _stubbed_connections << { 'id' => Faker::Number.number(rand(5..10)), 'name' => Faker::Name.name }}
-            _stubbed_connections
+          let(:number_of_friends) { rand(2..6) }
+          let(:stubbed_friends) do
+            _stubbed_friends = []
+            number_of_friends.times { _stubbed_friends << { 'id' => Faker::Number.number(rand(5..10)), 'name' => Faker::Name.name }}
+            _stubbed_friends
           end
 
           it 'finds and follows any Instagram friends on Morsel' do
-            stubbed_connections.each do |c|
+            stubbed_friends.each do |c|
               FactoryGirl.create(:instagram_authentication, uid: c['id'], name: c['name'])
             end
-            stub_instagram_client(connections: stubbed_connections)
+            stub_instagram_client(friends: stubbed_friends)
 
             Sidekiq::Testing.inline! do
               post_endpoint authentication: {
@@ -188,7 +234,51 @@ describe 'Authentications API Methods' do
 
             expect_success
 
-            expect(current_user.followed_user_count).to eq(number_of_connections)
+            expect(current_user.followed_user_count).to eq(number_of_friends)
+          end
+
+          context 'followed users have auto_follow enabled' do
+            it 'should follow them back' do
+              stubbed_friends.each do |c|
+                FactoryGirl.create(:instagram_authentication, uid: c['id'], name: c['name'])
+              end
+              stub_instagram_client(friends: stubbed_friends, followers: stubbed_friends)
+              first_authentication_user = Authentication.first.user
+              first_authentication_user.update auto_follow: 'true'
+
+              Sidekiq::Testing.inline! do
+                post_endpoint authentication: {
+                              provider: 'instagram',
+                              uid: 'instagram_uid',
+                              token: 'token'
+                            }
+              end
+
+              expect_success
+              expect(first_authentication_user.followed_user_count).to eq(1)
+            end
+          end
+
+          context 'followed users have auto_follow DISABLED' do
+            it 'should follow them back' do
+              stubbed_friends.each do |c|
+                FactoryGirl.create(:instagram_authentication, uid: c['id'], name: c['name'])
+              end
+              stub_instagram_client(friends: stubbed_friends, followers: stubbed_friends)
+              first_authentication_user = Authentication.first.user
+              first_authentication_user.update auto_follow: 'false'
+
+              Sidekiq::Testing.inline! do
+                post_endpoint authentication: {
+                              provider: 'instagram',
+                              uid: 'instagram_uid',
+                              token: 'token'
+                            }
+              end
+
+              expect_success
+              expect(first_authentication_user.followed_user_count).to eq(0)
+            end
           end
         end
 
@@ -198,18 +288,18 @@ describe 'Authentications API Methods' do
             current_user.save
           end
 
-          let(:number_of_connections) { rand(2..6) }
-          let(:stubbed_connections) do
-            _stubbed_connections = []
-            number_of_connections.times { _stubbed_connections << { 'id' => Faker::Number.number(rand(5..10)), 'name' => Faker::Name.name }}
-            _stubbed_connections
+          let(:number_of_friends) { rand(2..6) }
+          let(:stubbed_friends) do
+            _stubbed_friends = []
+            number_of_friends.times { _stubbed_friends << { 'id' => Faker::Number.number(rand(5..10)), 'name' => Faker::Name.name }}
+            _stubbed_friends
           end
 
           it 'finds and follows any Instagram friends on Morsel' do
-            stubbed_connections.each do |c|
+            stubbed_friends.each do |c|
               FactoryGirl.create(:instagram_authentication, uid: c['id'], name: c['name'])
             end
-            stub_instagram_client(connections: stubbed_connections)
+            stub_instagram_client(friends: stubbed_friends)
 
             Sidekiq::Testing.inline! do
               post_endpoint authentication: {
@@ -288,18 +378,18 @@ describe 'Authentications API Methods' do
             current_user.save
           end
 
-          let(:number_of_connections) { rand(2..6) }
-          let(:stubbed_connections) do
-            _stubbed_connections = []
-            number_of_connections.times { _stubbed_connections << { 'id' => Faker::Number.number(rand(5..10)), 'name' => Faker::Name.name }}
-            _stubbed_connections
+          let(:number_of_friends) { rand(2..6) }
+          let(:stubbed_friends) do
+            _stubbed_friends = []
+            number_of_friends.times { _stubbed_friends << { 'id' => Faker::Number.number(rand(5..10)), 'name' => Faker::Name.name }}
+            _stubbed_friends
           end
 
           it 'finds and follows any Facebook friends on Morsel' do
-            stubbed_connections.each do |c|
+            stubbed_friends.each do |c|
               FactoryGirl.create(:facebook_authentication, uid: c['id'], name: c['name'])
             end
-            stub_facebook_client(connections: stubbed_connections)
+            stub_facebook_client(friends: stubbed_friends)
 
             Sidekiq::Testing.inline! do
               post_endpoint authentication: {
@@ -311,7 +401,51 @@ describe 'Authentications API Methods' do
 
             expect_success
 
-            expect(current_user.followed_user_count).to eq(number_of_connections)
+            expect(current_user.followed_user_count).to eq(number_of_friends)
+          end
+
+          context 'followed users have auto_follow enabled' do
+            it 'should follow them back' do
+              stubbed_friends.each do |c|
+                FactoryGirl.create(:facebook_authentication, uid: c['id'], name: c['name'])
+              end
+              stub_facebook_client(friends: stubbed_friends)
+              first_authentication_user = Authentication.first.user
+              first_authentication_user.update auto_follow: 'true'
+
+              Sidekiq::Testing.inline! do
+                post_endpoint authentication: {
+                              provider: 'facebook',
+                              uid: 'facebook_uid',
+                              token: 'token'
+                            }
+              end
+
+              expect_success
+              expect(first_authentication_user.followed_user_count).to eq(1)
+            end
+          end
+
+          context 'followed users have auto_follow DISABLED' do
+            it 'should follow them back' do
+              stubbed_friends.each do |c|
+                FactoryGirl.create(:facebook_authentication, uid: c['id'], name: c['name'])
+              end
+              stub_facebook_client(friends: stubbed_friends)
+              first_authentication_user = Authentication.first.user
+              first_authentication_user.update auto_follow: 'false'
+
+              Sidekiq::Testing.inline! do
+                post_endpoint authentication: {
+                              provider: 'facebook',
+                              uid: 'facebook_uid',
+                              token: 'token'
+                            }
+              end
+
+              expect_success
+              expect(first_authentication_user.followed_user_count).to eq(0)
+            end
           end
         end
 
@@ -321,18 +455,18 @@ describe 'Authentications API Methods' do
             current_user.save
           end
 
-          let(:number_of_connections) { rand(2..6) }
-          let(:stubbed_connections) do
-            _stubbed_connections = []
-            number_of_connections.times { _stubbed_connections << { 'id' => Faker::Number.number(rand(5..10)), 'name' => Faker::Name.name }}
-            _stubbed_connections
+          let(:number_of_friends) { rand(2..6) }
+          let(:stubbed_friends) do
+            _stubbed_friends = []
+            number_of_friends.times { _stubbed_friends << { 'id' => Faker::Number.number(rand(5..10)), 'name' => Faker::Name.name }}
+            _stubbed_friends
           end
 
           it 'finds and follows any Facebook friends on Morsel' do
-            stubbed_connections.each do |c|
+            stubbed_friends.each do |c|
               FactoryGirl.create(:facebook_authentication, uid: c['id'], name: c['name'])
             end
-            stub_facebook_client(connections: stubbed_connections)
+            stub_facebook_client(friends: stubbed_friends)
 
             Sidekiq::Testing.inline! do
               post_endpoint authentication: {

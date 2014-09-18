@@ -34,7 +34,7 @@ class FacebookAuthenticatedUserDecorator < SimpleDelegator
     nil
   end
 
-  def get_connections(authentication = facebook_authentication)
+  def get_friends(authentication = facebook_authentication)
     facebook_client(authentication).get_connections('me', 'friends')
   end
 

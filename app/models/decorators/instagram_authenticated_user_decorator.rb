@@ -20,8 +20,12 @@ class InstagramAuthenticatedUserDecorator < SimpleDelegator
     authentication
   end
 
-  def get_connections(authentication = instagram_authentication)
+  def get_friends(authentication = instagram_authentication)
     instagram_client(authentication).user_follows
+  end
+
+  def get_followers(authentication = instagram_authentication)
+    instagram_client(authentication).user_followed_by
   end
 
   private

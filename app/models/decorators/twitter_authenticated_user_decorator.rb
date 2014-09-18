@@ -41,8 +41,12 @@ class TwitterAuthenticatedUserDecorator < SimpleDelegator
     nil
   end
 
-  def get_connections(authentication = twitter_authentication)
+  def get_friends(authentication = twitter_authentication)
     twitter_client(authentication).friend_ids
+  end
+
+  def get_followers(authentication = twitter_authentication)
+    twitter_client(authentication).follower_ids
   end
 
   private
