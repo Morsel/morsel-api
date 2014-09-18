@@ -20,8 +20,19 @@ class FetchAndFollowSocialUidsWorker
 
         # Follow back
         if authentication.facebook?
+          # Since Facebook has a two way relationship between connections, just follow back the same people
           follow_social_uids_service.response.each do |followed_user|
             Follow.create(followable_id: authentication.user_id, followable_type: 'User', follower_id: followed_user.id) if followed_user.auto_follow?
+          end
+        else
+          fetch_social_follower_uids_service = FetchSocialFollowerUids.call({
+            authentication: authentication
+          })
+          if fetch_social_follower_uids_service.valid? && fetch_social_follower_uids_service.response.count > 0
+            ReverseFollowSocialUids.call({
+              authentication: authentication,
+              uids: fetch_social_follower_uids_service.response
+            })
           end
         end
       end

@@ -45,6 +45,10 @@ class TwitterAuthenticatedUserDecorator < SimpleDelegator
     twitter_client(authentication).friend_ids
   end
 
+  def get_followers(authentication = twitter_authentication)
+    twitter_client(authentication).follower_ids
+  end
+
   private
 
   def twitter_authentication

@@ -322,6 +322,70 @@ describe 'POST /users registrations#create' do
           new_user = User.find json_data['id']
           expect(new_user.followed_user_count).to eq(number_of_friends)
         end
+
+        context 'followed users have auto_follow enabled' do
+          it 'should follow them back' do
+            stubbed_friends.each do |c|
+              FactoryGirl.create(:twitter_authentication, uid: c, name: Faker::Name.name)
+            end
+            stub_twitter_client(friends: stubbed_friends, followers: stubbed_friends)
+            first_authentication_user = Authentication.first.user
+            first_authentication_user.update auto_follow: 'true'
+
+            Sidekiq::Testing.inline! do
+              post_endpoint user: {
+                              email: Faker::Internet.email,
+                              first_name: 'Foo',
+                              last_name: 'Bar',
+                              username: "user_#{Faker::Lorem.characters(10)}",
+                              bio: 'Foo to the Stars',
+                              industry: 'diner',
+                              photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
+                            },
+                            authentication: {
+                              provider: 'twitter',
+                              uid: 'twitter_uid',
+                              token: 'dummy_token',
+                              secret: 'dummy_secret'
+                            }
+            end
+
+            expect_success
+            expect(first_authentication_user.followed_user_count).to eq(1)
+          end
+        end
+
+        context 'followed users have auto_follow DISABLED' do
+          it 'should follow them back' do
+            stubbed_friends.each do |c|
+              FactoryGirl.create(:twitter_authentication, uid: c, name: Faker::Name.name)
+            end
+            stub_twitter_client(friends: stubbed_friends, followers: stubbed_friends)
+            first_authentication_user = Authentication.first.user
+            first_authentication_user.update auto_follow: 'false'
+
+            Sidekiq::Testing.inline! do
+              post_endpoint user: {
+                              email: Faker::Internet.email,
+                              first_name: 'Foo',
+                              last_name: 'Bar',
+                              username: "user_#{Faker::Lorem.characters(10)}",
+                              bio: 'Foo to the Stars',
+                              industry: 'diner',
+                              photo: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png'))),
+                            },
+                            authentication: {
+                              provider: 'twitter',
+                              uid: 'twitter_uid',
+                              token: 'dummy_token',
+                              secret: 'dummy_secret'
+                            }
+            end
+
+            expect_success
+            expect(first_authentication_user.followed_user_count).to eq(0)
+          end
+        end
       end
     end
   end
