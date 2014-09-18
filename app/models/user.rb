@@ -114,8 +114,8 @@ class User < ActiveRecord::Base
       store_accessor :settings, :unsubscribed, :auto_follow
     end
 
-    def auto_follow?; auto_follow == true || auto_follow == 'true' end
-    def unsubscribed?; unsubscribed == true || unsubscribed == 'true' end
+    def auto_follow?; ActiveRecord::ConnectionAdapters::Column.value_to_boolean(auto_follow) end
+    def unsubscribed?; ActiveRecord::ConnectionAdapters::Column.value_to_boolean(unsubscribed) end
   end
 
   concerning :DeviseOverrides do

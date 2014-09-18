@@ -48,7 +48,7 @@ module ServiceStubs
     facebook_client.stub(:get_object).with('me').and_return('id' => options[:id])
     facebook_client.stub(:put_connections).and_return('id' => options[:id])
     facebook_client.stub(:put_picture).and_return('id' => options[:id])
-    facebook_client.stub(:get_connections).with('me', 'friends').and_return(options[:connections])
+    facebook_client.stub(:get_connections).with('me', 'friends').and_return(options[:friends])
 
     facebook_client
   end
@@ -69,7 +69,8 @@ module ServiceStubs
 
     Twitter::Client.stub(:new).and_return(twitter_client)
     twitter_client.stub(:update_with_media).and_return(tweet)
-    twitter_client.stub(:friend_ids).and_return(options[:connections])
+    twitter_client.stub(:follower_ids).and_return(options[:followers])
+    twitter_client.stub(:friend_ids).and_return(options[:friends])
 
     twitter_user = double('Twitter::User')
     twitter_client.stub(:current_user).and_return(twitter_user)
@@ -136,7 +137,8 @@ module ServiceStubs
 
     instagram_user = double('Hash')
     instagram_client.stub(:user).and_return(instagram_user)
-    instagram_client.stub(:user_follows).and_return(options[:connections])
+    instagram_client.stub(:user_followed_by).and_return(options[:followers])
+    instagram_client.stub(:user_follows).and_return(options[:friends])
     instagram_user.stub(:id).and_return(options[:id])
     instagram_user.stub(:username).and_return('eatmorsel')
     instagram_user.stub(:url).and_return("https://instagram.com/eatmorsel")

@@ -16,6 +16,6 @@ module Followable
   end
 
   def follow_count
-    follows.count
+    follower_follows.count
   end
 end
