@@ -83,7 +83,7 @@ class Morsel < ActiveRecord::Base
 
   def url
     # https://eatmorsel.com/marty/1-my-first-morsel
-    "#{Settings.morsel.web_url}/#{creator.username}/#{id}-#{cached_slug}"
+    "#{Settings.morsel.web_url}/#{creator.username}/#{id}-#{cached_slug}" if creator.username
   end
 
   def url_for_item(item)
