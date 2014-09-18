@@ -105,9 +105,9 @@ MorselApp::Application.routes.draw do
 
       # Note: Keep these at the end
       get ':id' => 'users#show', id: /\d+/
-      get ':username' => 'users#show', username: /[a-zA-Z][A-Za-z0-9_]+/
+      get ':username' => 'users#show', username: /[a-zA-Z]([A-Za-z0-9_]*)/
       get ':user_id/morsels' => 'morsels#index', user_id: /\d+/
-      get ':username/morsels' => 'morsels#index', username: /[a-zA-Z][A-Za-z0-9_]+/
+      get ':username/morsels' => 'morsels#index', username: /[a-zA-Z]([A-Za-z0-9_]*)/
     end
 
     member do

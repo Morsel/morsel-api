@@ -29,6 +29,7 @@ module Search
                         .or(SearchableUser.arel_table[:username].matches(formatted_query))
                       )
                       .search_promoted(promoted)
+                      .where(active:true)
                       .order(SearchableUser.arel_table[:id].desc)
       else
         SearchableUser.paginate({
@@ -40,6 +41,7 @@ module Search
                       .search_last_name(last_name)
                       .search_username(username)
                       .search_promoted(promoted)
+                      .where(active:true)
                       .order(SearchableUser.arel_table[:id].desc)
       end
     end
