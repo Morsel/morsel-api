@@ -48,6 +48,9 @@ ActiveAdmin.register Morsel do
     column :id do |morsel|
       link_to morsel.id, admin_morsel_path(morsel)
     end
+    actions defaults: true do |morsel|
+      link_to(' View on Web', morsel.url, target: :_blank)
+    end
     column :title
     column :draft
     column :creator
@@ -65,9 +68,6 @@ ActiveAdmin.register Morsel do
     column :published_at
     column :updated_at
     column :deleted_at
-    actions defaults: true do |morsel|
-      link_to(' View on Web', morsel.url, target: :_blank)
-    end
   end
 
   show do |morsel|
