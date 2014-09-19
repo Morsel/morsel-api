@@ -380,7 +380,7 @@ __Request Behaviors__
 <br />
 
 ## GET `/feed_all` - Feed (All)
-Returns all Feed Items. Only `staff` users may call this.
+Returns all Feed Items.
 
 __Request Behaviors__
 * [Pagination](#pagination)
