@@ -1,9 +1,9 @@
 class MorselMrslDecorator < SimpleDelegator
   def generate_mrsl_links!
     Mrslable.mrsl_sources.each do |source|
-      next if send(source)
+      next if self.send(source)
 
-      url = source.to_s.include?('media') ? media_url : url
+      url = source.to_s.include?('media') ? media_url : self.url
       service = ShortenURL.call(
         url: url,
         utm: {
@@ -12,7 +12,7 @@ class MorselMrslDecorator < SimpleDelegator
           campaign: "morsel-#{id}"
         }
       )
-      send("#{source}=", service.response)
+      self.send("#{source}=", service.response)
     end
 
     save if changed?
