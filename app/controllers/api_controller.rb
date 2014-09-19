@@ -54,7 +54,7 @@ class ApiController < ActionController::Base
     unauthorized_token
   end
 
-  def foursquare_api_error(error)
+  def foursquare_api_error
     render_json_errors({ api: ['unable to process Foursquare request'] }, :unprocessable_entity)
   end
 
@@ -70,7 +70,7 @@ class ApiController < ActionController::Base
     (params[:count].to_i > 20) ? 20 : (params[:count] || Settings.pagination_default_count || 20)
   end
 
-  def record_not_found(error = nil)
+  def record_not_found
     render_json_errors({ base: ['Record not found'] }, :not_found)
   end
 

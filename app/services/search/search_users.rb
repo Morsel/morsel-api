@@ -19,30 +19,30 @@ module Search
       if query.present?
         formatted_query = "#{query}%"
         SearchableUser.paginate({
-                        since_id: since_id,
-                        max_id: max_id,
-                        count: count
-                      }, :id, SearchableUser)
-                      .where(
-                        SearchableUser.arel_table[:first_name].matches(formatted_query)
-                        .or(SearchableUser.arel_table[:last_name].matches(formatted_query))
-                        .or(SearchableUser.arel_table[:username].matches(formatted_query))
-                      )
-                      .search_promoted(promoted)
-                      .where(active:true)
-                      .order(SearchableUser.arel_table[:id].desc)
+          since_id: since_id,
+          max_id: max_id,
+          count: count
+        }, :id, SearchableUser)
+        .where(
+          SearchableUser.arel_table[:first_name].matches(formatted_query)
+          .or(SearchableUser.arel_table[:last_name].matches(formatted_query))
+          .or(SearchableUser.arel_table[:username].matches(formatted_query))
+        )
+        .search_promoted(promoted)
+        .where(active: true)
+        .order(SearchableUser.arel_table[:id].desc)
       else
         SearchableUser.paginate({
-                        since_id: since_id,
-                        max_id: max_id,
-                        count: count
-                      }, :id, SearchableUser)
-                      .search_first_name(first_name)
-                      .search_last_name(last_name)
-                      .search_username(username)
-                      .search_promoted(promoted)
-                      .where(active:true)
-                      .order(SearchableUser.arel_table[:id].desc)
+          since_id: since_id,
+          max_id: max_id,
+          count: count
+        }, :id, SearchableUser)
+        .search_first_name(first_name)
+        .search_last_name(last_name)
+        .search_username(username)
+        .search_promoted(promoted)
+        .where(active: true)
+        .order(SearchableUser.arel_table[:id].desc)
       end
     end
   end

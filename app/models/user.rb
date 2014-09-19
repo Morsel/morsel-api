@@ -61,18 +61,15 @@ class User < ActiveRecord::Base
   has_many :authentications, inverse_of: :user
 
   has_many :comments, through: :items
-  has_many  :facebook_authentications,
-            -> { where provider: 'facebook' },
-            class_name: 'Authentication',
-            foreign_key: :user_id
-  has_many  :instagram_authentications,
-            -> { where provider: 'instagram' },
-            class_name: 'Authentication',
-            foreign_key: :user_id
-  has_many  :twitter_authentications,
-            -> { where provider: 'twitter' },
-            class_name: 'Authentication',
-            foreign_key: :user_id
+  has_many :facebook_authentications, -> { where provider: 'facebook' },
+           class_name: 'Authentication',
+           foreign_key: :user_id
+  has_many :instagram_authentications, -> { where provider: 'instagram' },
+           class_name: 'Authentication',
+           foreign_key: :user_id
+  has_many :twitter_authentications, -> { where provider: 'twitter' },
+           class_name: 'Authentication',
+           foreign_key: :user_id
 
   has_many :likes, foreign_key: :liker_id
   has_many :liked_items, through: :likes, source: :likeable, source_type: 'Item'
@@ -115,6 +112,7 @@ class User < ActiveRecord::Base
     end
 
     def auto_follow?; ActiveRecord::ConnectionAdapters::Column.value_to_boolean(auto_follow) end
+
     def unsubscribed?; ActiveRecord::ConnectionAdapters::Column.value_to_boolean(unsubscribed) end
   end
 
@@ -124,7 +122,7 @@ class User < ActiveRecord::Base
     end
 
     def after_password_reset
-      self.update_attributes password_set: true
+      update_attributes password_set: true
     end
 
     def login
@@ -142,7 +140,9 @@ class User < ActiveRecord::Base
 
   def self.find_first_by_auth_conditions(warden_conditions)
     conditions = warden_conditions.dup
-    if login = conditions.delete(:login)
+    login = conditions.delete(:login)
+
+    if login
       login.downcase!
       where(conditions).where(
         User.arel_table[:username].lower.eq(login)
@@ -154,7 +154,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_id_or_username(id_or_username)
-    if (id_or_username.to_s =~ /\A[-+]?\d*\.?\d+\z/) == nil
+    if (id_or_username.to_s =~ /\A[-+]?\d*\.?\d+\z/).nil?
       find_by User.arel_table[:username].lower.eq(id_or_username.downcase)
     else
       find id_or_username
@@ -264,9 +264,9 @@ class User < ActiveRecord::Base
   end
 
   def process_remote_photo_url
-    if remote_photo_url && photo_changed?
-      self.process_photo_upload = true
-      self.remote_photo_url = remote_photo_url
-    end
+    return unless remote_photo_url && photo_changed?
+
+    self.process_photo_upload = true
+    self.remote_photo_url = remote_photo_url
   end
 end

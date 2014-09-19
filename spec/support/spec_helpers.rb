@@ -136,12 +136,12 @@ module SpecHelpers
 
   # Creates [get|post|delete|put]_endpoint methods
   self.class_eval do
-    [:get, :post, :delete, :put].each do |_action|
-      define_method :"#{_action}_endpoint" do |_params = {}|
+    [:get, :post, :delete, :put].each do |http_method|
+      define_method :"#{http_method}_endpoint" do |endpoint_params = {}|
         if defined?(current_user) && current_user.present?
-          send(_action, endpoint, _params.merge(api_key: api_key_for_user(current_user), format: :json))
+          send(http_method, endpoint, endpoint_params.merge(api_key: api_key_for_user(current_user), format: :json))
         else
-          send(_action, endpoint, _params.merge(format: :json))
+          send(http_method, endpoint, endpoint_params.merge(format: :json))
         end
         @json = JSON.parse(response.body)
       end

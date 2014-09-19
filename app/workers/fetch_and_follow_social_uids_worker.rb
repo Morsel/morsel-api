@@ -9,14 +9,14 @@ class FetchAndFollowSocialUidsWorker
 
     authentication = Authentication.find(options['authentication_id'])
     if authentication
-      fetch_social_friend_uids_service = FetchSocialFriendUids.call({
+      fetch_social_friend_uids_service = FetchSocialFriendUids.call(
         authentication: authentication
-      })
+      )
       if fetch_social_friend_uids_service.valid? && fetch_social_friend_uids_service.response.count > 0
-        follow_social_uids_service = FollowSocialUids.call({
+        follow_social_uids_service = FollowSocialUids.call(
           authentication: authentication,
           uids: fetch_social_friend_uids_service.response
-        })
+        )
 
         # Follow back
         if authentication.facebook?
@@ -25,14 +25,14 @@ class FetchAndFollowSocialUidsWorker
             Follow.create(followable_id: authentication.user_id, followable_type: 'User', follower_id: followed_user.id) if followed_user.auto_follow?
           end
         else
-          fetch_social_follower_uids_service = FetchSocialFollowerUids.call({
+          fetch_social_follower_uids_service = FetchSocialFollowerUids.call(
             authentication: authentication
-          })
+          )
           if fetch_social_follower_uids_service.valid? && fetch_social_follower_uids_service.response.count > 0
-            ReverseFollowSocialUids.call({
+            ReverseFollowSocialUids.call(
               authentication: authentication,
               uids: fetch_social_follower_uids_service.response
-            })
+            )
           end
         end
       end

@@ -1,5 +1,5 @@
 class ApplicationAuthorizer < Authority::Authorizer
-  def self.default(adjective, user)
+  def self.default(_adjective, user)
     user.admin?
   end
 

@@ -31,12 +31,15 @@ class CreateZendeskTicket
 
   def create_ticket
     ZendeskAPI::Ticket.create(zendesk_client,
-      requester: { name: name, email: email },
+      requester: {
+        name: name,
+        email: email
+      },
       subject: subject,
       description: description,
       priority: 'low',
       type: type,
-      tags: tags,
+      tags: tags
     )
   end
 end

@@ -9,10 +9,11 @@ class TwitterAuthenticatedUserDecorator < SimpleDelegator
     else
       twitter_photo_file = URI.parse(twitter_photo_url).open
     end
-    if twitter_photo_file
-      twitter_client.update_with_media(twitter_message, twitter_photo_file)
-      twitter_photo_file.close
-    end
+
+    return unless twitter_photo_file
+
+    twitter_client.update_with_media(twitter_message, twitter_photo_file)
+    twitter_photo_file.close
   end
 
   def twitter_username
@@ -36,9 +37,12 @@ class TwitterAuthenticatedUserDecorator < SimpleDelegator
   end
 
   def get_twitter_uid(authentication)
-    twitter_client(authentication).current_user.id.to_s
-  rescue NoMethodError
-    nil
+    twitter_client = twitter_client(authentication)
+    if twitter_client.respond_to? :current_user
+      twitter_client.current_user.id.to_s
+    else
+      nil
+    end
   end
 
   def get_friends(authentication = twitter_authentication)

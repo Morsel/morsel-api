@@ -2,15 +2,21 @@ module TimelinePaginateable
   extend ActiveSupport::Concern
 
   included do
-    scope :since, -> (since_id, klass = self) { where(klass.arel_table[:id].gt(since_id)) if since_id.present? }
-    scope :after_date, -> (after_date, date_key, after_id = nil, klass = self) {
-      where("(#{klass.table_name}.#{date_key}, #{klass.table_name}.id) > (?, ?)", after_date, after_id) if after_date.present?
-    }
+    scope :since, -> (since_id, klass = self) do
+      where(klass.arel_table[:id].gt(since_id)) if since_id.present?
+    end
 
-    scope :max, -> (max_id, klass = self) { where(klass.arel_table[:id].lteq(max_id)) if max_id.present? }
-    scope :before_date, -> (before_date, date_key, before_id = nil, klass = self) {
+    scope :after_date, -> (after_date, date_key, after_id = nil, klass = self) do
+      where("(#{klass.table_name}.#{date_key}, #{klass.table_name}.id) > (?, ?)", after_date, after_id) if after_date.present?
+    end
+
+    scope :max, -> (max_id, klass = self) do
+      where(klass.arel_table[:id].lteq(max_id)) if max_id.present?
+    end
+
+    scope :before_date, -> (before_date, date_key, before_id = nil, klass = self) do
       where("(#{klass.table_name}.#{date_key}, #{klass.table_name}.id) < (?, ?)", before_date, before_id) if before_date.present?
-    }
+    end
 
     scope :paginate, -> (pagination_params, pagination_key = :id, klass = self) do
       if pagination_key == :id

@@ -28,9 +28,9 @@ ActiveAdmin.register Morsel do
     def update
       morsel = Morsel.find params[:id]
       if morsel.update(MorselsController::MorselParams.build(params, current_user)) && (morsel.feed_item ? morsel.feed_item.save : true)
-        redirect_to(edit_admin_morsel_path(morsel), { notice: 'Morsel updated!' })
+        redirect_to(edit_admin_morsel_path(morsel), notice: 'Morsel updated!')
       else
-        redirect_to(edit_admin_morsel_path(morsel), { alert: 'Error updating morsel, ask Marty for help.' })
+        redirect_to(edit_admin_morsel_path(morsel), alert: 'Error updating morsel, ask Marty for help.')
       end
     end
   end

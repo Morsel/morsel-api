@@ -10,5 +10,4 @@ class SlimMorselSerializer < ActiveModel::Serializer
              :updated_at,
              :published_at,
              :primary_item_id
-
 end

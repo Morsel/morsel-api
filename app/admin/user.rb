@@ -28,9 +28,9 @@ ActiveAdmin.register User do
     def update
       user = User.find params[:id]
       if user.update(UsersController::UserParams.build(params, current_user))
-        redirect_to(edit_admin_user_path(user), { notice: 'User updated!' })
+        redirect_to(edit_admin_user_path(user), notice: 'User updated!')
       else
-        redirect_to(edit_admin_user_path(user), { alert: 'Error updating user, ask Marty for help.' })
+        redirect_to(edit_admin_user_path(user), alert: 'Error updating user, ask Marty for help.')
       end
     end
   end
@@ -87,9 +87,7 @@ ActiveAdmin.register User do
       row :id
       row 'Links' do
         links = ''.html_safe
-        if user.url
-          links += link_to('View on Web', user.url, target: :_blank)
-        end
+        links += link_to('View on Web', user.url, target: :_blank) if user.url
         links
       end
       row :email

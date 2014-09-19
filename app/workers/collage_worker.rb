@@ -7,9 +7,7 @@ class CollageWorker
     morsel = Morsel.find(options['morsel_id'])
     service = GenerateCollage.call morsel: morsel
 
-    if service.valid?
-      morsel.update photo:service.response
-    end
+    morsel.update photo: service.response if service.valid?
 
     MrslWorker.perform_async(options)
   end

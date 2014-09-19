@@ -1,35 +1,34 @@
 class GenerateCollage
   include Service
 
-  COLLAGE_WIDTH=840
-  COLLAGE_HEIGHT=420
-  COLLAGE_LOCAL_PATH = Rails.env.development? ? "#{Rails.root}/public" : ''
-  COLLAGE_PADDING=4
-  COLLAGE_HALF_PADDING=2
-  COLLAGE_COVER_WIDTH=630
-  COLLAGE_CELL_WIDTH=210
+  COLLAGE_WIDTH = 840
+  COLLAGE_HEIGHT = 420
+  COLLAGE_LOCAL_PATH  =  Rails.env.development? ? "#{Rails.root}/public" : ''
+  COLLAGE_PADDING = 4
+  COLLAGE_HALF_PADDING = 2
+  COLLAGE_COVER_WIDTH = 630
+  COLLAGE_CELL_WIDTH = 210
 
   attribute :morsel, Morsel
 
   validates :morsel, presence: true
 
-  validate :has_cover_item?
-  validate :has_items?
+  validate :cover_item?
+  validate :items?
 
   def call
-    if collage
-      collage.format 'jpg'
-      collage
-    end
+    return unless collage
+    collage.format 'jpg'
+    collage
   end
 
   private
 
-  def has_cover_item?
+  def cover_item?
     errors.add(:morsel, 'should have a cover item set') if morsel.primary_item.nil?
   end
 
-  def has_items?
+  def items?
     errors.add(:morsel, 'should have at least 1 item') unless morsel.item_count > 0
   end
 
@@ -59,12 +58,12 @@ class GenerateCollage
   end
 
   def image_for_item(item, photo_version = :_320x320)
-    MiniMagick::Image.open(COLLAGE_LOCAL_PATH+item.photo_url(photo_version))
+    MiniMagick::Image.open(COLLAGE_LOCAL_PATH + item.photo_url(photo_version))
   end
 
   def canvas
     @canvas ||= begin
-      tmp = Tempfile.new(%W[mini_magick_collage_ .png])
+      tmp = Tempfile.new %w(mini_magick_collage_ .png)
       if item_count > 1
         `convert -size #{COLLAGE_WIDTH}x#{COLLAGE_HEIGHT} xc:white #{tmp.path}`
       else
@@ -101,15 +100,15 @@ class GenerateCollage
     canvas.composite(image_for_item(cover_item, :_640x640)) do |cover|
       cover.compose 'Over'
       cover.gravity 'West'
-      cover.geometry "#{COLLAGE_COVER_WIDTH-COLLAGE_HALF_PADDING}x#{COLLAGE_COVER_WIDTH-COLLAGE_HALF_PADDING}+0+0"
+      cover.geometry "#{COLLAGE_COVER_WIDTH - COLLAGE_HALF_PADDING}x#{COLLAGE_COVER_WIDTH - COLLAGE_HALF_PADDING}+0+0"
     end.composite(image_for_item(additional_items.first)) do |first_item|
       first_item.compose 'Over'
       first_item.gravity 'NorthEast'
-      first_item.geometry "#{COLLAGE_CELL_WIDTH-COLLAGE_HALF_PADDING}x#{COLLAGE_CELL_WIDTH-COLLAGE_HALF_PADDING}+0+0"
+      first_item.geometry "#{COLLAGE_CELL_WIDTH - COLLAGE_HALF_PADDING}x#{COLLAGE_CELL_WIDTH - COLLAGE_HALF_PADDING}+0+0"
     end.composite(image_for_item(additional_items.second)) do |second_item|
       second_item.compose 'Over'
       second_item.gravity 'SouthEast'
-      second_item.geometry "#{COLLAGE_CELL_WIDTH-COLLAGE_HALF_PADDING}x#{COLLAGE_CELL_WIDTH-COLLAGE_HALF_PADDING}+0+0"
+      second_item.geometry "#{COLLAGE_CELL_WIDTH - COLLAGE_HALF_PADDING}x#{COLLAGE_CELL_WIDTH - COLLAGE_HALF_PADDING}+0+0"
     end
   end
 end
@@ -119,7 +118,7 @@ module MiniMagick
     COLLAGE_WATERMARK_IMAGE = Rails.root.join('app', 'assets', 'images', 'watermark.png')
 
     def mrsl_watermark
-      self.composite(watermark_image) do |watermark|
+      composite(watermark_image) do |watermark|
         watermark.compose 'Over'
         watermark.gravity 'SouthWest'
         watermark.geometry "140x60+#{GenerateCollage::COLLAGE_PADDING * 3}+#{GenerateCollage::COLLAGE_PADDING * 3}"

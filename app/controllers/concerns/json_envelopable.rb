@@ -13,9 +13,9 @@ module JSONEnvelopable
     respond_with(*(resources << options), &block)
   end
 
-  def custom_respond_with_cached_serializer(relation, serializer, context = {}, &block)
+  def custom_respond_with_cached_serializer(relation, serializer, context = {})
     relation_is_array = relation.respond_to? :count
-    if (relation_is_array ? relation.count > 0 : relation.present?)
+    if relation_is_array ? relation.count > 0 : relation.present?
       custom_respond_with CachedSerializer.new(
         relation,
         serializer: serializer,
@@ -23,7 +23,7 @@ module JSONEnvelopable
         context: context
       ).to_json(rooted: true)
     else
-      render_json (relation_is_array ? [] : {})
+      render_json relation_is_array ? [] : {}
     end
   end
 
@@ -35,7 +35,7 @@ module JSONEnvelopable
     end
   end
 
-  def render_json_with_service(service, options = {})
+  def render_json_with_service(service, _options = {})
     if service.valid?
       render_json service.response
     else
@@ -67,14 +67,13 @@ module JSONEnvelopable
   def render_json_envelope(data, errors = nil, http_status = :ok)
     status_code = Rack::Utils.status_code(http_status)
     render json: {
-            meta: {
-              status: status_code,
-              message: Rack::Utils::HTTP_STATUS_CODES[status_code]
-            },
-            errors: errors,
-            data: data
-            },
-           status: http_status
+      meta: {
+        status: status_code,
+        message: Rack::Utils::HTTP_STATUS_CODES[status_code]
+      },
+      errors: errors,
+      data: data
+    }, status: http_status
   end
 
   def render_json_nil

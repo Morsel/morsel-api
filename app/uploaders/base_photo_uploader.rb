@@ -22,14 +22,8 @@ class BasePhotoUploader < CarrierWave::Uploader::Base
   end
 
   def filename
-    if original_filename
-      # TODO: Fix this so that duplicate files aren't created
-      # if model && model.read_attribute(mounted_as).present?
-      #   model.read_attribute(mounted_as)
-      # else
-        "#{secure_token}.#{file.extension}"
-      # end
-    end
+    return unless original_filename
+    "#{secure_token}.#{file.extension}"
   end
 
   def secure_token

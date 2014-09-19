@@ -83,8 +83,6 @@ class Email < ActiveRecord::Base
     }
   end
 
-  private
-
   def self._email(user = nil)
     email = find_or_create_by(class_name: to_s) do |e|
       e.class_name = to_s

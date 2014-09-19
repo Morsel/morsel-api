@@ -167,18 +167,16 @@ class UsersController < ApiController
 
   PUBLIC_ACTIONS << def likeables
     likeable_type = params.fetch(:type)
-    if likeable_type == 'Item'
-      custom_respond_with_cached_serializer(
-        Item.liked_by(params[:id])
-            .paginate(pagination_params)
-            .order(Like.arel_table[:id].desc),
-        LikedItemSerializer,
-        {
-          liker_id: params[:id],
-          likeable_type: likeable_type
-        }
-      )
-    end
+    return unless likeable_type == 'Item'
+
+    custom_respond_with_cached_serializer(
+      Item.liked_by(params[:id])
+          .paginate(pagination_params)
+          .order(Like.arel_table[:id].desc),
+      LikedItemSerializer,
+      liker_id: params[:id],
+      likeable_type: likeable_type
+    )
   end
 
   PUBLIC_ACTIONS << def places
@@ -191,7 +189,7 @@ class UsersController < ApiController
   end
 
   class UserParams
-    def self.build(params, scope = nil)
+    def self.build(params, _scope = nil)
       params.require(:user).permit(:email, :username, :password, :current_password,
                                    :first_name, :last_name, :bio, :industry,
                                    :photo, :remote_photo_url, :promoted, :query,
