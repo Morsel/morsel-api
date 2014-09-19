@@ -3,7 +3,7 @@
   - [Versioning](#versioning)
   - [Response Format](#response-format)
   - [Errors](#errors)
-  - [About the API Documentation](#about-the-api-documentation)
+  - [About the API Documentation](#about-the-api-documentation)File
 
 - [API Authentication](#api-authentication)
 
@@ -1230,7 +1230,7 @@ Updates the Item with the specified `id`
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | item[description] | String | The description for the Item | | |
-| item[photo] | String | The photo for the Item | | |
+| item[photo] | File | The photo. Can be GIF, JPG, or PNG. | | |
 | item[sort_order] | Number | Changes the `sort_order` of a Morsel when combined with `morsel_id`. | | |
 | item[morsel_id] | Number | Changes the `sort_order` of a Morsel when combined with `sort_order`. | | |
 
