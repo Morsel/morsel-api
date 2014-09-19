@@ -32,22 +32,22 @@ class Morsel < ActiveRecord::Base
   is_sluggable :title
   alias_attribute :slug, :cached_slug
 
-  belongs_to  :creator, class_name: 'User', foreign_key: 'creator_id'
+  belongs_to :creator, class_name: 'User', foreign_key: 'creator_id'
   alias_attribute :user, :creator
   alias_attribute :user_id, :creator_id
 
   accepts_nested_attributes_for :feed_item
 
-  belongs_to  :place
+  belongs_to :place
 
-  has_many    :items, -> { order(Item.arel_table[:sort_order].asc) }, dependent: :destroy
-  belongs_to  :primary_item, class_name: 'Item'
+  has_many :items, -> { order(Item.arel_table[:sort_order].asc) }, dependent: :destroy
+  belongs_to :primary_item, class_name: 'Item'
 
   before_save :update_published_at_if_necessary
 
   mount_uploader :photo, MorselPhotoUploader
 
-  validate  :primary_item_belongs_to_morsel
+  validate :primary_item_belongs_to_morsel
 
   validates :title,
             presence: true,
@@ -73,12 +73,11 @@ class Morsel < ActiveRecord::Base
 
   # Since there are no 'versions' for a Morsel photo (the collage), override the photos method from PhotoUploadable and return it as the default size.
   def photos
-    if photo?
-      {
-        _840x420: photo_url,
-        _800x600: photo_url
-      }
-    end
+    return unless photo?
+    {
+      _840x420: photo_url,
+      _800x600: photo_url
+    }
   end
 
   def url

@@ -54,9 +54,9 @@ class Authentication < ActiveRecord::Base
     end
 
     def fetch_and_follow_social_connections
-      FetchAndFollowSocialUidsWorker.perform_async({
+      FetchAndFollowSocialUidsWorker.perform_async(
         authentication_id: id
-      }) if auto_follow?
+      ) if auto_follow?
     end
   end
 

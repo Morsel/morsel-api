@@ -1,6 +1,6 @@
 class TagAuthorizer < ApplicationAuthorizer
   def creatable_by?(user)
-    if resource.kind_of?(User)
+    if resource.is_a? User
       user.professional? || user.has_role?(:creator, resource) || user == resource
     else
       user.professional? || user.has_role?(:creator, resource) || user.has_role?(:creator, resource.taggable)

@@ -9,10 +9,10 @@ namespace :morsel do
 
   def recreate_and_reprocess_class_photos(klass)
     $stdout.sync = true
-    puts "Total #{klass.to_s}: #{klass.all.count}"
+    puts "Total #{klass}: #{klass.all.count}"
     klass.all.each do |k|
       if k.photo.nil?
-        print " "
+        print ' '
         next
       end
       begin
@@ -21,11 +21,10 @@ namespace :morsel do
         k.photo.retrieve_from_cache!(k.photo.cache_name)
         k.photo.recreate_versions!
         k.save!
-        print "."
+        print '.'
       rescue => e
-        puts  "ERROR: #{klass.to_s}: #{k.id} -> #{e.to_s}"
+        puts  "ERROR: #{klass}: #{k.id} -> #{e}"
       end
     end
   end
 end
-

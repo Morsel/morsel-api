@@ -25,7 +25,7 @@ class PlacesController < ApiController
   authorize_actions_for Place, except: PUBLIC_ACTIONS, actions: { suggest: :create }
 
   class PlaceParams
-    def self.build(params, scope = nil)
+    def self.build(params, _scope = nil)
       params.require(:place).permit(:id, :foursquare_venue_id, :name, :address, :city, :state)
     end
   end

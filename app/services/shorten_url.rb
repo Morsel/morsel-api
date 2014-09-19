@@ -19,7 +19,7 @@ class ShortenURL
 
   def valid_url?
     valid_url = URI.parse(url) rescue false
-    errors.add(:url, 'is not valid') unless valid_url.kind_of?(URI::HTTP) || valid_url.kind_of?(URI::HTTPS)
+    errors.add(:url, 'is not valid') unless valid_url.is_a?(URI::HTTP) || valid_url.is_a?(URI::HTTPS)
   end
 
   def bitly_client

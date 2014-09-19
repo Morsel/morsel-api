@@ -34,6 +34,6 @@ class Notification < ActiveRecord::Base
   end
 
   def mark_read!
-    self.update(marked_read_at: DateTime.now) unless marked_read_at
+    update(marked_read_at: DateTime.now) unless marked_read_at
   end
 end

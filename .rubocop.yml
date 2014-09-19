@@ -1,9 +1,9 @@
 AllCops:
-  Excludes:
-    - db/**
-    - config/**
-    - script/**
-    - spec/**
+  Exclude:
+    - db/**/*
+    - config/**/*
+    - script/**/*
+    - spec/**/*
 
 CyclomaticComplexity:
   Max: 10

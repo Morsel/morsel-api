@@ -8,9 +8,9 @@ ActiveAdmin.register Item do
     def update
       item = Item.find params[:id]
       if item.update(ItemsController::ItemParams.build(params))
-        redirect_to(edit_admin_item_path(item), { notice: 'Item updated!' })
+        redirect_to(edit_admin_item_path(item), notice: 'Item updated!')
       else
-        redirect_to(edit_admin_item_path(item), { alert: 'Error updating item, ask Marty for help.' })
+        redirect_to(edit_admin_item_path(item), alert: 'Error updating item, ask Marty for help.')
       end
     end
   end

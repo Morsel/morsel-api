@@ -34,30 +34,30 @@ class Place < ActiveRecord::Base
   acts_as_paranoid
   is_sluggable :name, slug_column: :slug
 
-  belongs_to  :creator, class_name: 'User'
-  has_many    :employments, inverse_of: :place
-  has_many    :users, through: :employments
+  belongs_to :creator, class_name: 'User'
+  has_many :employments, inverse_of: :place
+  has_many :users, through: :employments
 
   self.authorizer_name = 'ProfessionalAuthorizer'
 
   concerning :Information do
     included do
-      store_accessor  :information,
-                      :credit_cards,
-                      :dining_options,
-                      :dining_style,
-                      :dress_code,
-                      :formatted_phone,
-                      :menu_mobile_url,
-                      :menu_url,
-                      :outdoor_seating,
-                      :parking,
-                      :parking_details,
-                      :price_tier,
-                      :public_transit,
-                      :reservations,
-                      :reservations_url,
-                      :website_url
+      store_accessor :information,
+                     :credit_cards,
+                     :dining_options,
+                     :dining_style,
+                     :dress_code,
+                     :formatted_phone,
+                     :menu_mobile_url,
+                     :menu_url,
+                     :outdoor_seating,
+                     :parking,
+                     :parking_details,
+                     :price_tier,
+                     :public_transit,
+                     :reservations,
+                     :reservations_url,
+                     :website_url
     end
   end
 

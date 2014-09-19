@@ -32,7 +32,7 @@ class FeedItem < ActiveRecord::Base
 
   scope :visible, -> { where(visible: true) }
   scope :featured, -> { where(featured: true) }
-  scope :personalized_for, -> (user_id) {
+  scope :personalized_for, -> (user_id) do
     where(
       FeedItem.arel_table[:user_id].in(
         Follow.select(:followable_id).where(
@@ -49,5 +49,5 @@ class FeedItem < ActiveRecord::Base
       )).or(FeedItem.arel_table[:user_id].eq(user_id)
       ).or(FeedItem.arel_table[:featured].eq(true))
     )
-  }
+  end
 end

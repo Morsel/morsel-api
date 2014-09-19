@@ -7,16 +7,21 @@ module PhotoUploadable
   end
 
   def photos
-    photo.versions.keys.reduce({}) { |a, e| a[e] = photo_url(e); a } if photo?
+    return unless photo?
+
+    photo.versions.keys.reduce({}) do |a, e|
+      a[e] = photo_url(e)
+      a
+    end
   end
 
   private
 
   def update_photo_attributes
-    if photo? && photo_changed?
-      self.photo_content_type = photo.file.content_type
-      self.photo_file_size = photo.file.size
-      self.photo_updated_at = Time.now
-    end
+    return unless photo? && photo_changed?
+
+    self.photo_content_type = photo.file.content_type
+    self.photo_file_size = photo.file.size
+    self.photo_updated_at = Time.now
   end
 end

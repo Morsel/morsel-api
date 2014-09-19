@@ -9,13 +9,13 @@ class HandlePhotoKey
   def call
     ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET photo=#{ActiveRecord::Base.sanitize(photo_identifier)} WHERE #{table_name}.id = #{model.id}")
     model.reload
+
     if model.photo?
       model.photo.recreate_versions!
       model.photo_processing = true
     end
-    unless model.save
-      errors.add :model, model.errors
-    end
+
+    errors.add :model, model.errors unless model.save
 
     model
   end

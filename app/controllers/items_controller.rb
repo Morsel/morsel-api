@@ -68,7 +68,7 @@ class ItemsController < ApiController
   end
 
   class ItemParams
-    def self.build(params, scope = nil)
+    def self.build(params, _scope = nil)
       params.require(:item).permit(:description, :photo, :nonce, :sort_order, :morsel_id, :photo_key, :template_order)
     end
   end

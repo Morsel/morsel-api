@@ -48,7 +48,7 @@ class TagsController < ApiController
   end
 
   class TagParams
-    def self.build(params, scope = nil)
+    def self.build(params, _scope = nil)
       params.require(:tag).permit(:keyword_id)
     end
   end
