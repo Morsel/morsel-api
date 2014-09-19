@@ -1,12 +1,30 @@
 Morsel API
 ==========
 
+The API for Morsel (https://api.eatmorsel.com) <br />
+Valid endpoints available in [API Docs](doc/API-Docs.md) <br />
+User Events can be found in [User Events](doc/User-Events.md) <br />
 
-[![Code Climate](https://codeclimate.com/repos/52b35105f3ea0062e700353a/badges/ff8fda8c47176e04cee8/gpa.png)](https://codeclimate.com/repos/52b35105f3ea0062e700353a/feed)
-
-The API for Morsel (https://api.eatmorsel.com)
-Valid endpoints available in [API Docs](doc/API-Docs.md).
-User Events can be found in [User Events](doc/User-Events.md).
+## Built w/
+* Hosted on Heroku
+* Ruby on Rails (see [Gemfile](Gemfile) for current versions)
+* [Unicorn](unicorn.bogomips.org) webserver
+* [Sidekiq](https://github.com/mperham/sidekiq) for background jobs
+* PostgreSQL v9.3+, with pgbackups
+* redis v2.8+ via [openredis.io](openredis.io) and monitored via [redisgreen.net](redisgreen.net)
+* memcached via [redislabs.com](redislabs.com)
+* Active Admin for the admin dashboard
+* S3 for static content/image hosting
+* Carrierwave for image processing
+* Devise for managing users
+* [Mandrill](mandrillapp.com) for sending emails
+* [Rollbar](https://rollbar.com) for exception tracking
+* [bit.ly](bit.ly) URL shortener
+* [Foursquare](foursquare.com) for Place searching/populating
+* [New Relic](newrelic.com) for monitoring/pretty graphcs
+* [Loggly](loggly.com) for searching and archiving logs to S3
+* [Zendesk](zendesk.com) for support emails and users reporting content
+* [HireFire](hirefire.io) for auto-scaling dynos up/down
 
 ## Environment Variables
 
