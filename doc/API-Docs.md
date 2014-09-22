@@ -1081,8 +1081,8 @@ Creating a new Place will kick off a background job to import all of its data fr
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | title| String | [current_user](#current_user)'s `title` at the Place | | X |
-| place[id] | String |  | | if `foursquare_venue_id` not passed |
-| place[foursquare_venue_id] | String | The photo for the new Item | | if `id` not passed |
+| place[id] | String | | | if `foursquare_venue_id` not passed |
+| place[foursquare_venue_id] | String | The Foursquare Venue ID | | if `id` not passed |
 | place[name] | String | The name of the Place | | |
 | place[address] | String | The address of the Place | | |
 | place[city] | String | The city of the Place | | |
@@ -1192,7 +1192,7 @@ Image processing is done in a background job. `photo_processing` will be set to 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | item[description] | String | The description for the new Item | | |
-| item[photo] | String | The photo for the new Item | | |
+| item[photo] | File | The photo. Can be GIF, JPG, or PNG. | | |
 | item[nonce] | String | Unique UUID to prevent duplicates | | |
 | item[sort_order] | Number | The `sort_order` for the Item in the Morsel. | end of Morsel | |
 | item[morsel_id] | Number | The ID of the Morsel to set this Item to. | | X |
