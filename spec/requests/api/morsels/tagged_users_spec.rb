@@ -75,32 +75,32 @@ describe 'DELETE /morsels/:id/tagged_users/:user_id' do
 
   context 'current_user is NOT the morsel creator' do
     let(:current_user) { FactoryGirl.create(:user) }
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { current_user }
 
-    before do
-      morsel.tagged_users << user
+    context 'current_user is tagged to the morsel' do
+      before do
+        morsel.tagged_users << current_user
+      end
+
+      it 'untags the User from the morsel' do
+        delete_endpoint
+
+        expect_success
+
+        expect(morsel.tagged_users).to_not include(current_user)
+      end
     end
 
-    it 'should return an error' do
-      delete_endpoint
+    context 'User is NOT tagged to the morsel' do
+      let(:current_user) { FactoryGirl.create(:user) }
 
-      expect_failure
+      it 'should return an error' do
+        delete_endpoint
 
-      expect_authority_error :delete, MorselTaggedUser
+        expect_failure
+
+        expect_record_not_found_error
+      end
     end
   end
-
-  context 'User is NOT tagged to the morsel' do
-    let(:current_user) { FactoryGirl.create(:user) }
-    let(:user) { FactoryGirl.create(:user) }
-
-    it 'should return an error' do
-      delete_endpoint
-
-      expect_failure
-
-      expect_record_not_found_error
-    end
-  end
-
 end
