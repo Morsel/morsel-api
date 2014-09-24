@@ -92,6 +92,10 @@ class Morsel < ActiveRecord::Base
     "#{url}/#{items.find_index(item) + 1}"
   end
 
+  def tagged_users?
+    morsel_tagged_users.count > 0
+  end
+
   private
 
   def primary_item_belongs_to_morsel
