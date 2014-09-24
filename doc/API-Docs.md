@@ -88,6 +88,9 @@
   - [PUT `/morsels/:id` - Update Morsel](#put-morselsid---update-morsel)
   - [POST `/morsels/:id/publish` - Publish Morsel](#post-morselsidpublish---Publish-morsel)
   - [DELETE `/morsels/:id` - Delete Morsel](#delete-morselsid---delete-morsel)
+  - [POST `/morsels/:id/tagged_users` - Tag User](#post-morselsidtagged_users---tag-user)
+  - [DELETE `/morsels/:id/tagged_users` - Untag User](#delete-morselsidtagged_users---untag-user)
+  - [GET `/morsels/:id/tagged_users` - Tagged Users](#get-morselsidtagged_users---tagged-users)
 
 - [Keyword Methods](#keyword-methods) [\<Followable\>](#followable)
   - [GET `/cuisines` - Cuisines](#get-cuisines---cuisines)
@@ -1478,6 +1481,54 @@ Publishes the Morsel with the specified `id` by setting a `published_at` DateTim
 | __data__ |
 | -------- |
 | Publishes [Morsel](#morsel) |
+
+<br />
+<br />
+
+## DELETE `/morsels/:id` - Delete Morsel
+Deletes the morsel w/ the specified `id`
+
+### Response
+
+| Status Code |
+| ----------- |
+|         204 |
+
+<br />
+<br />
+
+## POST `/morsels/:id/tagged_users` - Tag User
+Tags the specified [User](#user) to the morsel
+
+### Response
+
+| Status Code |
+| ----------- |
+|         201 |
+
+<br />
+<br />
+
+## DELETE `/morsels/:id/tagged_users` - Untag User
+Untags the specified [User](#user) from the morsel
+
+### Response
+
+| Status Code |
+| ----------- |
+|         204 |
+
+<br />
+<br />
+
+## GET `/morsels/:id/tagged_users` - Tagged Users
+Returns all [Users](#user) tagged to the morsel
+
+### Response
+
+| __data__ |
+| -------- |
+| [User](#user)[] |
 
 <br />
 <br />
