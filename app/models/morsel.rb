@@ -43,6 +43,9 @@ class Morsel < ActiveRecord::Base
   has_many :items, -> { order(Item.arel_table[:sort_order].asc) }, dependent: :destroy
   belongs_to :primary_item, class_name: 'Item'
 
+  has_many :morsel_tagged_users, dependent: :destroy
+  has_many :tagged_users, through: :morsel_tagged_users, source: :user
+
   before_save :update_published_at_if_necessary
 
   mount_uploader :photo, MorselPhotoUploader

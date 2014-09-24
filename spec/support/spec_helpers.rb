@@ -74,6 +74,14 @@ module SpecHelpers
     expect_first_error('api', error)
   end
 
+  def expect_unauthorized_error
+    expect_api_error 'unauthorized'
+  end
+
+  def expect_authority_error(action, resource)
+    expect_api_error "Not authorized to #{action} #{resource}"
+  end
+
   def expect_base_error(error)
     expect_first_error('base', error)
   end
