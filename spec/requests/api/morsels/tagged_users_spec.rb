@@ -51,6 +51,44 @@ describe 'POST /morsels/:id/tagged_users/:user_id' do
   end
 end
 
+describe 'GET /morsels/:id/tagged_users' do
+  let(:endpoint) { "/morsels/#{morsel.id}/tagged_users" }
+  let(:morsel) { FactoryGirl.create(:morsel_with_creator) }
+  let(:morsel_creator) { morsel.creator }
+
+  let(:tagged_users_count) { rand(2..6) }
+
+  before { tagged_users_count.times { FactoryGirl.create(:morsel_tagged_user, morsel: morsel) }}
+
+  it_behaves_like 'TimelinePaginateable' do
+    let(:paginateable_object_class) { User }
+
+    before do
+      paginateable_object_class.delete_all
+      30.times { |i| FactoryGirl.create(:morsel_tagged_user, morsel: morsel) }
+    end
+  end
+
+  it 'returns the Users that are tagged to the morsel' do
+    get_endpoint
+
+    expect_success
+
+    expect_json_data_count tagged_users_count
+  end
+
+  context 'last User unfollowed Followable' do
+    before { MorselTaggedUser.last.destroy }
+
+    it 'returns one less tagged User' do
+      get_endpoint
+
+      expect_success
+      expect_json_data_count(tagged_users_count - 1)
+    end
+  end
+end
+
 describe 'DELETE /morsels/:id/tagged_users/:user_id' do
   let(:endpoint) { "/morsels/#{morsel.id}/tagged_users/#{user.id}" }
   let(:morsel) { FactoryGirl.create(:morsel_with_creator) }

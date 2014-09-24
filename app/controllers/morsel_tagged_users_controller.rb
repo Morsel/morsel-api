@@ -10,6 +10,13 @@ class MorselTaggedUsersController < ApiController
     end
   end
 
+  PUBLIC_ACTIONS << def users
+    custom_respond_with User.joins(:morsel_tagged_users)
+                            .paginate(pagination_params)
+                            .where(morsel_tagged_users: { morsel_id: params[:id] })
+                            .order(MorselTaggedUser.arel_table[:id].desc)
+  end
+
   def destroy
     morsel_tagged_user = MorselTaggedUser.find_by(morsel_id: params[:id], user_id: params[:user_id])
 

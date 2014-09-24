@@ -87,6 +87,8 @@ class User < ActiveRecord::Base
   has_many :employments, inverse_of: :user
   has_many :places, through: :employments
 
+  has_many :morsel_tagged_users, dependent: :destroy
+
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
   scope :promoted, -> { where(promoted: true) }
