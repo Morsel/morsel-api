@@ -78,8 +78,8 @@ module SpecHelpers
     expect_api_error 'unauthorized'
   end
 
-  def expect_authority_error_for(resource)
-    expect_api_error "Not authorized to create #{resource}"
+  def expect_authority_error(action, resource)
+    expect_api_error "Not authorized to #{action} #{resource}"
   end
 
   def expect_base_error(error)
