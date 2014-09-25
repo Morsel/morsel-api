@@ -17,9 +17,40 @@ describe 'GET /morsels morsels#show' do
       'template_id' => morsel_with_items.template_id,
       'place' => {
         'widget_url' => morsel_with_items.place.widget_url
-      }
+      },
+      'has_tagged_users' => false
     })
     expect(json_data['items'].count).to eq(items_count)
+  end
+
+  context 'has tagged Users' do
+    context 'current_user is tagged' do
+      let(:current_user) { FactoryGirl.create(:user) }
+
+      before do
+        morsel_with_items.tagged_users << current_user
+      end
+
+      it 'returns `tagged`=true' do
+        get_endpoint
+
+        expect_success
+        expect_json_data_eq({
+          'id' => morsel_with_items.id,
+          'tagged' => true
+        })
+      end
+
+      it 'returns `has_tagged_users`=true' do
+        get_endpoint
+
+        expect_success
+        expect_json_data_eq({
+          'id' => morsel_with_items.id,
+          'has_tagged_users' => true
+        })
+      end
+    end
   end
 
   context 'has a photo' do
