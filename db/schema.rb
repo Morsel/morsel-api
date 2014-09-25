@@ -11,11 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140923041409) do
+ActiveRecord::Schema.define(version: 20140925125823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
+  enable_extension "pg_stat_statements"
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -193,12 +194,12 @@ ActiveRecord::Schema.define(version: 20140923041409) do
     t.string   "cached_slug"
     t.datetime "deleted_at"
     t.boolean  "draft",              default: true, null: false
+    t.datetime "published_at"
     t.integer  "primary_item_id"
     t.string   "photo"
     t.string   "photo_content_type"
     t.string   "photo_file_size"
     t.datetime "photo_updated_at"
-    t.datetime "published_at"
     t.hstore   "mrsl"
     t.integer  "place_id"
     t.integer  "template_id"
