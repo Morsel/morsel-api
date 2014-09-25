@@ -14,7 +14,7 @@ describe 'GET /items/{:item_id} items#show' do
     let(:endpoint_method) { :get }
   end
 
-  context 'authenticated and current_user likes the Item' do
+  context 'current_user likes the Item' do
     let(:current_user) { FactoryGirl.create(:user) }
     before { Like.create(likeable: item, liker: current_user) }
 

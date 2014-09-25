@@ -24,18 +24,32 @@ describe 'GET /morsels morsels#show' do
   end
 
   context 'has tagged Users' do
-    before do
-      morsel_with_items.tagged_users << FactoryGirl.create(:user)
-    end
+    context 'current_user is tagged' do
+      let(:current_user) { FactoryGirl.create(:user) }
 
-    it 'returns the Morsel w/ `has_tagged_users`=true' do
-      get_endpoint
+      before do
+        morsel_with_items.tagged_users << current_user
+      end
 
-      expect_success
-      expect_json_data_eq({
-        'id' => morsel_with_items.id,
-        'has_tagged_users' => true
-      })
+      it 'returns `tagged`=true' do
+        get_endpoint
+
+        expect_success
+        expect_json_data_eq({
+          'id' => morsel_with_items.id,
+          'tagged' => true
+        })
+      end
+
+      it 'returns `has_tagged_users`=true' do
+        get_endpoint
+
+        expect_success
+        expect_json_data_eq({
+          'id' => morsel_with_items.id,
+          'has_tagged_users' => true
+        })
+      end
     end
   end
 
