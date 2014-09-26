@@ -54,6 +54,21 @@ describe 'GET /users/activities' do
     })
   end
 
+  context 'User has hidden activities' do
+    let(:hidden_activities_count) { rand(3..6) }
+
+    before do
+      hidden_activities_count.times { FactoryGirl.create(:hidden_activity, creator: current_user) }
+    end
+
+    it 'does NOT return the hidden activities' do
+      get_endpoint
+
+      expect_success
+      expect_json_data_count items_count
+    end
+  end
+
   context 'subject is deleted' do
     before do
       Like.last.destroy
@@ -119,6 +134,21 @@ describe 'GET /users/followables_activities' do
         'nonce' => last_item.nonce
       }
     })
+  end
+
+  context 'User has hidden activities' do
+    let(:hidden_activities_count) { rand(3..6) }
+
+    before do
+      hidden_activities_count.times { FactoryGirl.create(:hidden_activity, creator: followed_users.sample) }
+    end
+
+    it 'does NOT return the hidden activities' do
+      get_endpoint
+
+      expect_success
+      expect_json_data_count items_count
+    end
   end
 
   context 'subject is deleted' do

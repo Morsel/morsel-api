@@ -17,6 +17,7 @@
 # **`deleted_at`**       | `datetime`         |
 # **`created_at`**       | `datetime`         |
 # **`updated_at`**       | `datetime`         |
+# **`hidden`**           | `boolean`          | `default(FALSE)`
 #
 
 class Activity < ActiveRecord::Base

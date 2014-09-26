@@ -1842,6 +1842,8 @@ Response for any Like Item related requests.
     "linkedin_media_mrsl": "http://mrsl.co/linkedin_media",
     "googleplus_media_mrsl": "http://mrsl.co/googleplus_media"
   },
+  "has_tagged_users": false,
+  "tagged": false,
   "photos": {
     "_800x600":"https://morsel-staging.s3.amazonaws.com/morsel-images/4/648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
   }

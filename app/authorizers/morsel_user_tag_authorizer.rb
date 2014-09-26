@@ -1,4 +1,4 @@
-class MorselTaggedUserAuthorizer < ApplicationAuthorizer
+class MorselUserTagAuthorizer < ApplicationAuthorizer
   def creatable_by?(user)
     # current_user is the tagged morsel creator
     return false unless resource.morsel.creator_id == user.id
