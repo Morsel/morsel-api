@@ -37,6 +37,20 @@ describe 'GET /users/:id|:username/morsels' do
     end
   end
 
+  context 'has tagged morsels' do
+    let(:tagged_morsels_count) { rand(3..6) }
+
+    before { tagged_morsels_count.times { FactoryGirl.create(:morsel_tagged_user, user: user_with_morsels) }}
+
+    it 'should include tagged morsels' do
+      get_endpoint
+
+      expect_success
+
+      expect_json_data_count morsels_count + tagged_morsels_count
+    end
+  end
+
   context 'username passed instead of id' do
     let(:endpoint) { "/users/#{user_with_morsels.username}/morsels" }
     it 'returns all of the User\'s Morsels' do
