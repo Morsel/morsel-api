@@ -110,12 +110,12 @@ class MorselsController < ApiController
 
         Morsel.published
               .paginate(pagination_params, pagination_key)
-              .where_creator_id(user_id)
+              .where_creator_id_or_tagged_user_id(user_id)
               .where_place_id(params[:place_id])
       elsif current_user.present?
         Morsel.with_drafts(true)
               .paginate(pagination_params, pagination_key)
-              .where_creator_id(current_user.id)
+              .where_creator_id_or_tagged_user_id(current_user.id)
       end
     end
   end

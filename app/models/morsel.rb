@@ -61,6 +61,8 @@ class Morsel < ActiveRecord::Base
   scope :with_drafts, -> (include_drafts = true) { where(draft: false) unless include_drafts }
   scope :where_place_id, -> (place_id) { where(place_id: place_id) unless place_id.nil? }
   scope :where_creator_id, -> (creator_id) { where(creator_id: creator_id) unless creator_id.nil? }
+  scope :where_tagged_user_id, -> (tagged_user_id) { includes(:morsel_tagged_users).where(MorselTaggedUser.arel_table[:user_id].eq(tagged_user_id)) unless tagged_user_id.nil? }
+  scope :where_creator_id_or_tagged_user_id, -> (creator_id_or_tagged_user_id) { includes(:morsel_tagged_users).where(Morsel.arel_table[:creator_id].eq(creator_id_or_tagged_user_id).or(MorselTaggedUser.arel_table[:user_id].eq(creator_id_or_tagged_user_id))).references(:morsel_tagged_users) unless creator_id_or_tagged_user_id.nil? }
 
   def total_like_count
     items.map(&:like_count).reduce(:+)
