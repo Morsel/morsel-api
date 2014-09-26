@@ -877,7 +877,7 @@ Updates the User with the specified `user_id`. If a new `email`, `username`, or 
 <br />
 
 ## GET `/users/:id|:username/morsels` - User Morsels
-Returns the Morsels for the User with the specified `user_id` or `user_username`.
+Returns the Morsels created by or tagged with the User with the specified `user_id` or `user_username`.
 
 __Request Behaviors__
 * [Pagination](#pagination)
