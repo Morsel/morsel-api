@@ -17,6 +17,7 @@
 # **`deleted_at`**       | `datetime`         |
 # **`created_at`**       | `datetime`         |
 # **`updated_at`**       | `datetime`         |
+# **`hidden`**           | `boolean`          | `default(FALSE)`
 #
 
 FactoryGirl.define do
@@ -24,5 +25,9 @@ FactoryGirl.define do
     association(:creator, factory: :user)
     association(:action, factory: :item_like)
     association(:subject, factory: :item_with_creator_and_morsel)
+  end
+
+  factory :hidden_activity, class: Activity do
+    hidden true
   end
 end

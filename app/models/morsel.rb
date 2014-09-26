@@ -43,8 +43,8 @@ class Morsel < ActiveRecord::Base
   has_many :items, -> { order(Item.arel_table[:sort_order].asc) }, dependent: :destroy
   belongs_to :primary_item, class_name: 'Item'
 
-  has_many :morsel_tagged_users, dependent: :destroy
-  has_many :tagged_users, through: :morsel_tagged_users, source: :user
+  has_many :morsel_user_tags, dependent: :destroy
+  has_many :tagged_users, through: :morsel_user_tags, source: :user
 
   before_save :update_published_at_if_necessary
 
@@ -61,8 +61,8 @@ class Morsel < ActiveRecord::Base
   scope :with_drafts, -> (include_drafts = true) { where(draft: false) unless include_drafts }
   scope :where_place_id, -> (place_id) { where(place_id: place_id) unless place_id.nil? }
   scope :where_creator_id, -> (creator_id) { where(creator_id: creator_id) unless creator_id.nil? }
-  scope :where_tagged_user_id, -> (tagged_user_id) { includes(:morsel_tagged_users).where(MorselTaggedUser.arel_table[:user_id].eq(tagged_user_id)) unless tagged_user_id.nil? }
-  scope :where_creator_id_or_tagged_user_id, -> (creator_id_or_tagged_user_id) { includes(:morsel_tagged_users).where(Morsel.arel_table[:creator_id].eq(creator_id_or_tagged_user_id).or(MorselTaggedUser.arel_table[:user_id].eq(creator_id_or_tagged_user_id))).references(:morsel_tagged_users) unless creator_id_or_tagged_user_id.nil? }
+  scope :where_tagged_user_id, -> (tagged_user_id) { includes(:morsel_user_tags).where(MorselUserTag.arel_table[:user_id].eq(tagged_user_id)) unless tagged_user_id.nil? }
+  scope :where_creator_id_or_tagged_user_id, -> (creator_id_or_tagged_user_id) { includes(:morsel_user_tags).where(Morsel.arel_table[:creator_id].eq(creator_id_or_tagged_user_id).or(MorselUserTag.arel_table[:user_id].eq(creator_id_or_tagged_user_id))).references(:morsel_user_tags) unless creator_id_or_tagged_user_id.nil? }
 
   def total_like_count
     items.map(&:like_count).reduce(:+)
@@ -99,7 +99,7 @@ class Morsel < ActiveRecord::Base
   end
 
   def tagged_users?
-    morsel_tagged_users.count > 0
+    morsel_user_tags.count > 0
   end
 
   private

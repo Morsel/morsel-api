@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140925125823) do
+ActiveRecord::Schema.define(version: 20140926193323) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,7 @@ ActiveRecord::Schema.define(version: 20140925125823) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "hidden",          default: false
   end
 
   add_index "activities", ["creator_id"], name: "index_activities_on_creator_id", using: :btree
@@ -176,7 +177,7 @@ ActiveRecord::Schema.define(version: 20140925125823) do
   add_index "likes", ["likeable_type"], name: "index_likes_on_likeable_type", using: :btree
   add_index "likes", ["liker_id", "likeable_id"], name: "index_likes_on_liker_id_and_likeable_id", using: :btree
 
-  create_table "morsel_tagged_users", force: true do |t|
+  create_table "morsel_user_tags", force: true do |t|
     t.integer  "morsel_id"
     t.integer  "user_id"
     t.datetime "deleted_at"
@@ -184,7 +185,7 @@ ActiveRecord::Schema.define(version: 20140925125823) do
     t.datetime "updated_at"
   end
 
-  add_index "morsel_tagged_users", ["morsel_id", "user_id"], name: "index_morsel_tagged_users_on_morsel_id_and_user_id", using: :btree
+  add_index "morsel_user_tags", ["morsel_id", "user_id"], name: "index_morsel_user_tags_on_morsel_id_and_user_id", using: :btree
 
   create_table "morsels", force: true do |t|
     t.string   "title"

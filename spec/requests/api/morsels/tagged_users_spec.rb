@@ -32,7 +32,7 @@ describe 'POST /morsels/:id/tagged_users/:user_id' do
 
         expect_failure
 
-        expect_authority_error :create, MorselTaggedUser
+        expect_authority_error :create, MorselUserTag
       end
     end
   end
@@ -46,7 +46,7 @@ describe 'POST /morsels/:id/tagged_users/:user_id' do
 
       expect_failure
 
-      expect_authority_error :create, MorselTaggedUser
+      expect_authority_error :create, MorselUserTag
     end
   end
 end
@@ -58,14 +58,14 @@ describe 'GET /morsels/:id/tagged_users' do
 
   let(:tagged_users_count) { rand(2..6) }
 
-  before { tagged_users_count.times { FactoryGirl.create(:morsel_tagged_user, morsel: morsel) }}
+  before { tagged_users_count.times { FactoryGirl.create(:morsel_user_tag, morsel: morsel) }}
 
   it_behaves_like 'TimelinePaginateable' do
     let(:paginateable_object_class) { User }
 
     before do
       paginateable_object_class.delete_all
-      30.times { |i| FactoryGirl.create(:morsel_tagged_user, morsel: morsel) }
+      30.times { |i| FactoryGirl.create(:morsel_user_tag, morsel: morsel) }
     end
   end
 
@@ -78,7 +78,7 @@ describe 'GET /morsels/:id/tagged_users' do
   end
 
   context 'last User unfollowed Followable' do
-    before { MorselTaggedUser.last.destroy }
+    before { MorselUserTag.last.destroy }
 
     it 'returns one less tagged User' do
       get_endpoint

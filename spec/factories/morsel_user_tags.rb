@@ -14,15 +14,9 @@
 # **`updated_at`**  | `datetime`         |
 #
 
-class MorselTaggedUser < ActiveRecord::Base
-  include Authority::Abilities
-
-  acts_as_paranoid
-
-  belongs_to :morsel
-  belongs_to :user
-
-  validates :morsel_id, uniqueness: { scope: [:user_id], conditions: -> { where(deleted_at: nil) } }
-  validates :morsel, presence: true
-  validates :user, presence: true
+FactoryGirl.define do
+  factory :morsel_user_tag do
+    association(:morsel, factory: :morsel_with_creator)
+    association(:user)
+  end
 end

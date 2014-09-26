@@ -40,7 +40,7 @@ describe 'GET /users/:id|:username/morsels' do
   context 'has tagged morsels' do
     let(:tagged_morsels_count) { rand(3..6) }
 
-    before { tagged_morsels_count.times { FactoryGirl.create(:morsel_tagged_user, user: user_with_morsels) }}
+    before { tagged_morsels_count.times { FactoryGirl.create(:morsel_user_tag, user: user_with_morsels) }}
 
     it 'should include tagged morsels' do
       get_endpoint

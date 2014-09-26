@@ -70,7 +70,7 @@ shared_examples 'CommentableController' do
       expect(notification.payload).to eq(activity)
 
         # TODO: Make this not Item-specific
-      expect(notification.message).to eq("#{current_user.full_name} (#{current_user.username}) commented on #{commentable.morsel_title_with_description}".truncate(100, separator: ' ', omission: '... '))
+      expect(notification.message).to eq("#{current_user.full_name} (#{current_user.username}) commented on #{commentable.morsel_title_with_description}".truncate(Settings.morsel.notification_length, separator: ' ', omission: '... '))
     end
 
     context 'missing Commentable' do

@@ -129,9 +129,9 @@ MorselApp::Application.routes.draw do
 
     member do
       post 'publish' => 'morsels#publish'
-      get 'tagged_users' => 'morsel_tagged_users#users'
-      post 'tagged_users/:user_id' => 'morsel_tagged_users#create'
-      delete 'tagged_users/:user_id' => 'morsel_tagged_users#destroy'
+      get 'tagged_users' => 'morsel_user_tags#users'
+      post 'tagged_users/:user_id' => 'morsel_user_tags#create'
+      delete 'tagged_users/:user_id' => 'morsel_user_tags#destroy'
     end
   end
 
