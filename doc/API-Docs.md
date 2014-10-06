@@ -1498,8 +1498,8 @@ Deletes the morsel w/ the specified `id`
 <br />
 <br />
 
-## POST `/morsels/:id/tagged_users` - Tag User
-Tags the specified [User](#user) to the morsel. Only eligible Users can be tagged (see [GET `/morsels/:id/eligible_tagged_users` - Eligible Tagged Users](#get-morselsideligible_tagged_users---eligible-tagged-users)).
+## POST `/morsels/:id/tagged_users/:user_id` - Tag User
+Tags the [User](#user) with the specified `user_id` to the morsel. Only eligible Users can be tagged (see [GET `/morsels/:id/eligible_tagged_users` - Eligible Tagged Users](#get-morselsideligible_tagged_users---eligible-tagged-users)).
 
 ### Response
 
@@ -1510,8 +1510,8 @@ Tags the specified [User](#user) to the morsel. Only eligible Users can be tagge
 <br />
 <br />
 
-## DELETE `/morsels/:id/tagged_users` - Untag User
-Untags the specified [User](#user) from the morsel
+## DELETE `/morsels/:id/tagged_users/:user_id` - Untag User
+Untags the [User](#user) with the specified `user_id` from the morsel
 
 ### Response
 
