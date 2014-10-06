@@ -17,8 +17,8 @@ shared_examples 'Activityable' do
 
       context 'creator is the receiver' do
         it 'should NOT create a Notification if the creator is the receiver' do
-          unless activityable_object.subject.kind_of?(User)
-            activityable_object.subject.creator = activityable_object.user
+          unless activityable_object.activity_subject.kind_of?(User)
+            activityable_object.activity_subject.creator = activityable_object.user
             expect{
               Sidekiq::Testing.inline! { activityable_object.save }
             }.to change(Notification, :count).by(0)

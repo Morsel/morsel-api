@@ -18,10 +18,10 @@ class CreateActivity
   def activity
     @activity ||= Activity.create(
       creator_id: creator_id,
-      action_id: action['id'],
-      action_type: action['type'],
-      subject_id: subject['id'],
-      subject_type: subject['type'],
+      action_id: safe_action[:id],
+      action_type: safe_action[:type],
+      subject_id: safe_subject[:id],
+      subject_type: safe_subject[:type],
       recipient_id: recipient_id,
       hidden: hidden?
     )
@@ -44,5 +44,13 @@ class CreateActivity
       payload: activity,
       user_id: recipient_id
     )
+  end
+
+  def safe_subject
+    @safe_subject ||= subject ? subject.symbolize_keys : {}
+  end
+
+  def safe_action
+    @safe_action ||= action ? action.symbolize_keys : {}
   end
 end

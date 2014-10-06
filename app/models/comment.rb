@@ -23,7 +23,7 @@ class Comment < ActiveRecord::Base
 
   include Activityable
   def self.activity_notification; true end
-  def subject; commentable end
+  def activity_subject; commentable end
 
   acts_as_paranoid
 

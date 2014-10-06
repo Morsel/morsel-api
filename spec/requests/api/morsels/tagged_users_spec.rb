@@ -22,6 +22,12 @@ describe 'POST /morsels/:id/tagged_users/:user_id' do
 
         expect(morsel.tagged_users).to include(user)
       end
+
+      it 'does NOT create a Notification' do
+        expect {
+          post_endpoint
+        }.to_not change(Notification.count, :size).by(1)
+      end
     end
 
     context 'User does NOT follow the morsel creator' do

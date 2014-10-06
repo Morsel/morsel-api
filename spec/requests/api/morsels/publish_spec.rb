@@ -35,6 +35,46 @@ describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
     expect(new_morsel.primary_item_id).to eq(draft_morsel.items.first.id)
   end
 
+  context 'morsel has tagged Users' do
+    let(:tagged_user) { FactoryGirl.create(:user) }
+
+    before { FactoryGirl.create(:morsel_user_tag, user: tagged_user, morsel: draft_morsel) }
+
+    it 'should notify them of the published morsel' do
+      stub_bitly_client
+
+      GenerateCollage.any_instance.should_receive(:call).exactly(1).times.and_return { Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))}
+      ShortenURL.should_receive(:call).exactly(12).times.and_call_original
+      FeedItem.should_receive(:new).exactly(1).times.and_call_original
+      FacebookAuthenticatedUserDecorator.any_instance.should_not_receive(:post_facebook_photo_url)
+      TwitterAuthenticatedUserDecorator.any_instance.should_not_receive(:post_twitter_photo_url)
+      CreateNotification.any_instance.should_receive(:call).exactly(1).times.and_call_original
+
+      Sidekiq::Testing.inline! { post_endpoint }
+
+      expect_success
+      expect_json_data_eq('draft' => false)
+
+      new_morsel = Morsel.find(draft_morsel.id)
+      expect(new_morsel.draft).to eq(false)
+
+      activity = current_user.activities.last
+
+      expect(activity).to_not be_nil
+      expect(activity.creator).to eq(current_user)
+      expect(activity.recipient).to eq(tagged_user)
+      expect(activity.subject).to eq(draft_morsel)
+      expect(activity.action).to eq(MorselUserTag.last)
+
+      notification = tagged_user.notifications.last
+      expect(notification).to_not be_nil
+      expect(notification.user).to eq(tagged_user)
+      expect(notification.payload).to eq(activity)
+
+      expect(notification.message).to eq("#{current_user.full_name} (#{current_user.username}) tagged you in #{draft_morsel.title}".truncate(Settings.morsel.notification_length, separator: ' ', omission: '... '))
+    end
+  end
+
   context 'post_to_facebook included in parameters' do
     let(:current_user) { FactoryGirl.create(:chef_with_facebook_authentication) }
     let(:draft_morsel) { FactoryGirl.create(:draft_morsel_with_items, creator: current_user, build_feed_item: false, include_mrsl: false) }

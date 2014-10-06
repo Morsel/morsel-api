@@ -90,7 +90,7 @@ group :test do
   gem 'codeclimate-test-reporter', group: :test, require: nil
   gem 'database_cleaner', '1.0.1'
   gem 'email_spec'
-  gem 'test_after_commit', '~> 0.2.4'
+  gem 'test_after_commit', '~> 0.3.0'
 end
 
 group :production, :staging do
