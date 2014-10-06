@@ -17,6 +17,12 @@
 class MorselUserTag < ActiveRecord::Base
   include Authority::Abilities
 
+  include Activityable
+  def self.activity_hidden; true end
+  def self.activity_notification; false end
+  def activity_subject; morsel end
+  def activity_creator; morsel.creator end
+
   acts_as_paranoid
 
   belongs_to :morsel

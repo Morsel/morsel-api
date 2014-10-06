@@ -20,7 +20,7 @@ class Follow < ActiveRecord::Base
 
   include Activityable
   def self.activity_notification; true end
-  def subject; followable end
+  def activity_subject; followable end
 
   acts_as_paranoid
 

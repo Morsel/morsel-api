@@ -20,7 +20,7 @@ class Like < ActiveRecord::Base
 
   include Activityable
   def self.activity_notification; true end
-  def subject; likeable end
+  def activity_subject; likeable end
 
   acts_as_paranoid
 
