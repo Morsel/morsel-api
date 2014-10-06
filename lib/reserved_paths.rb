@@ -36,6 +36,7 @@ module ReservedPaths
       downloads
       eatmorsel
       engineering
+      events
       faq
       favorites
       feed
