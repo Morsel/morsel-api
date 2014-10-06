@@ -91,6 +91,7 @@
   - [POST `/morsels/:id/tagged_users` - Tag User](#post-morselsidtagged_users---tag-user)
   - [DELETE `/morsels/:id/tagged_users` - Untag User](#delete-morselsidtagged_users---untag-user)
   - [GET `/morsels/:id/tagged_users` - Tagged Users](#get-morselsidtagged_users---tagged-users)
+  - [GET `/morsels/:id/eligible_tagged_users` - Eligible Tagged Users](#get-morselsideligible_tagged_users---eligible-tagged-users)
 
 - [Keyword Methods](#keyword-methods) [\<Followable\>](#followable)
   - [GET `/cuisines` - Cuisines](#get-cuisines---cuisines)
@@ -1498,7 +1499,7 @@ Deletes the morsel w/ the specified `id`
 <br />
 
 ## POST `/morsels/:id/tagged_users` - Tag User
-Tags the specified [User](#user) to the morsel
+Tags the specified [User](#user) to the morsel. Only eligible Users can be tagged (see [GET `/morsels/:id/eligible_tagged_users` - Eligible Tagged Users](#get-morselsideligible_tagged_users---eligible-tagged-users)).
 
 ### Response
 
@@ -1524,11 +1525,29 @@ Untags the specified [User](#user) from the morsel
 ## GET `/morsels/:id/tagged_users` - Tagged Users
 Returns all [Users](#user) tagged to the morsel
 
+__Request Behaviors__
+* [Public](#public)
+
 ### Response
 
 | __data__ |
 | -------- |
-| [User](#user)[] |
+| [Slim User](#slim-user)[] |
+
+<br />
+<br />
+
+## GET `/morsels/:id/eligible_tagged_users` - Eligible Tagged Users
+Returns all [Users](#user) eligible to be tagged to the morsel. If an eligible User is already tagged, `tagged` will return `true`.
+
+__Request Behaviors__
+* [Public](#public)
+
+### Response
+
+| __data__ |
+| -------- |
+| [Slim Tagged User](#slim-tagged-user)[] |
 
 <br />
 <br />
@@ -1882,6 +1901,16 @@ Response for any Like Item related requests.
 }
 ```
 
+### Slim Tagged User
+* Inherits from [Slim User](#slim-user)
+
+```json
+{
+  "tagged": false
+}
+```
+
+
 ### User
 * Inherits from [Slim User](#slim-user)
 
@@ -1941,6 +1970,7 @@ Response for any User Follower related requests.
   "followed_at": "2014-04-28T16:50:42.352Z"
 }
 ```
+
 
 ## Feed Objects
 
