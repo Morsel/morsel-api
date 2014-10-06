@@ -43,7 +43,7 @@ module SpecHelpers
   end
 
   def expect_json_data_count(count)
-    expect(json_data.count).to eq(count)
+    expect(json_data.count).to eq(count), "expected JSON 'data' to have #{count} elements, got #{json_data.count}"
   end
 
   def expect_json_keys(json, obj, keys)

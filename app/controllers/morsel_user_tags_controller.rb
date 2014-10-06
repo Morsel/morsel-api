@@ -14,7 +14,20 @@ class MorselUserTagsController < ApiController
     custom_respond_with User.joins(:morsel_user_tags)
                             .paginate(pagination_params)
                             .where(morsel_user_tags: { morsel_id: params[:id] })
-                            .order(MorselUserTag.arel_table[:id].desc)
+                            .order(MorselUserTag.arel_table[:id].desc),
+                        each_serializer: SlimUserSerializer
+  end
+
+  PUBLIC_ACTIONS << def eligible_users
+    # Eligible Users currently are those that follow the User
+    morsel = Morsel.find params[:id]
+    custom_respond_with User.joins(:followable_follows)
+                            .paginate(pagination_params)
+                            .where(follows: { followable_id: morsel.creator_id, followable_type: User }),
+                        each_serializer: SlimTaggedUserSerializer,
+                        context: {
+                          morsel: morsel
+                        }
   end
 
   def destroy

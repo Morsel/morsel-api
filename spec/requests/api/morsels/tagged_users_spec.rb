@@ -89,6 +89,62 @@ describe 'GET /morsels/:id/tagged_users' do
   end
 end
 
+describe 'GET /morsels/:id/eligible_tagged_users' do
+  let(:endpoint) { "/morsels/#{morsel.id}/eligible_tagged_users" }
+  let(:morsel) { FactoryGirl.create(:morsel_with_creator) }
+  let(:morsel_creator) { morsel.creator }
+
+  let(:eligible_tagged_users_count) { rand(2..6) }
+
+  before { eligible_tagged_users_count.times { |i| FactoryGirl.create(:user_follow, followable: morsel_creator, follower: FactoryGirl.create(:user), created_at:Time.at(i) + 1000) }}
+
+  it_behaves_like 'TimelinePaginateable' do
+    let(:paginateable_object_class) { User }
+
+    before do
+      paginateable_object_class.delete_all
+      30.times { |i| FactoryGirl.create(:user_follow, followable: morsel_creator, follower: FactoryGirl.create(:user), created_at:Time.at(i) + 1000) }
+    end
+  end
+
+  it 'returns the Users that are eligible to be tagged to the morsel' do
+    get_endpoint
+
+    expect_success
+
+    expect_json_data_count eligible_tagged_users_count
+    expect_first_json_data_eq({
+      'tagged' => false
+    })
+  end
+
+  context 'first eligible User is already tagged' do
+    before { FactoryGirl.create(:morsel_user_tag, morsel: morsel, user: Follow.last.follower) }
+
+    it 'returns `tagged`=true for that User' do
+      get_endpoint
+
+      expect_success
+
+      expect_json_data_count eligible_tagged_users_count
+      expect_first_json_data_eq({
+        'tagged' => true
+      })
+    end
+  end
+
+  context 'last User unfollowed morsel creator' do
+    before { Follow.last.destroy }
+
+    it 'returns one less eligible User' do
+      get_endpoint
+
+      expect_success
+      expect_json_data_count(eligible_tagged_users_count - 1)
+    end
+  end
+end
+
 describe 'DELETE /morsels/:id/tagged_users/:user_id' do
   let(:endpoint) { "/morsels/#{morsel.id}/tagged_users/#{user.id}" }
   let(:morsel) { FactoryGirl.create(:morsel_with_creator) }
