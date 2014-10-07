@@ -30,7 +30,7 @@ class MorselsController < ApiController
       pagination_key = :updated_at
     end
 
-    morsels = Morsel.includes(:items, :creator)
+    morsels = Morsel.includes(:items, :place, :creator)
                     .drafts
                     .paginate(pagination_params, pagination_key)
                     .where(creator_id: current_user.id)
@@ -39,11 +39,11 @@ class MorselsController < ApiController
   end
 
   PUBLIC_ACTIONS << def show
-    custom_respond_with Morsel.includes(:items, :creator).find(params[:id])
+    custom_respond_with Morsel.includes(:items, :place, :creator).find(params[:id])
   end
 
   def update
-    morsel = Morsel.find params[:id]
+    morsel = Morsel.includes(:items, :place, :creator).find params[:id]
     authorize_action_for morsel
 
     if morsel.update(MorselParams.build(params))
@@ -65,7 +65,7 @@ class MorselsController < ApiController
   end
 
   def publish
-    morsel = Morsel.find params[:id]
+    morsel = Morsel.includes(:items, :place, :creator).find params[:id]
     authorize_action_for morsel
 
     service = PublishMorsel.call(
@@ -108,12 +108,14 @@ class MorselsController < ApiController
           user.id
         end
 
-        Morsel.published
+        Morsel.includes(:items, :place, :creator)
+              .published
               .paginate(pagination_params, pagination_key)
               .where_creator_id_or_tagged_user_id(user_id)
               .where_place_id(params[:place_id])
       elsif current_user.present?
-        Morsel.with_drafts(true)
+        Morsel.includes(:items, :place, :creator)
+              .with_drafts(true)
               .paginate(pagination_params, pagination_key)
               .where_creator_id_or_tagged_user_id(current_user.id)
       end

@@ -19,6 +19,6 @@ class MorselSerializer < SlimMorselSerializer
   end
 
   def tagged
-    scope.present? && object.tagged_user?(scope)
+    has_tagged_users && scope.present? && object.tagged_user?(scope)
   end
 end

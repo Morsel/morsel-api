@@ -4,8 +4,7 @@ class ItemsController < ApiController
   def create
     Authority.enforce :create, Item, current_user
 
-    item = Item.new(ItemParams.build(params))
-    item.creator = current_user
+    item = current_user.items.build(ItemParams.build(params))
 
     if item.save
       if params[:prepare_presigned_upload] == 'true'
