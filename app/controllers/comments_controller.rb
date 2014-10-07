@@ -10,7 +10,8 @@ class CommentsController < ApiController
   end
 
   PUBLIC_ACTIONS << def index
-    custom_respond_with Comment.paginate(pagination_params)
+    custom_respond_with Comment.includes(:commenter)
+                               .paginate(pagination_params)
                                .where(commentable_type: commentable_type, commentable_id: params[:id])
                                .order(Comment.arel_table[:id].desc)
   end

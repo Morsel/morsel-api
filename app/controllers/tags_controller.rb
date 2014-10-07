@@ -1,12 +1,12 @@
 class TagsController < ApiController
   PUBLIC_ACTIONS << def cuisines
-    custom_respond_with Tag.joins(:keyword)
+    custom_respond_with Tag.includes(:keyword)
                            .where(keywords: { type: 'Cuisine' }, tags: { taggable_type: taggable_type, taggable_id: params[:id] })
                            .order(Tag.arel_table[:id].asc)
   end
 
   PUBLIC_ACTIONS << def specialties
-    custom_respond_with Tag.joins(:keyword)
+    custom_respond_with Tag.includes(:keyword)
                            .where(keywords: { type: 'Specialty' }, tags: { taggable_type: taggable_type, taggable_id: params[:id] })
                            .order(Tag.arel_table[:id].asc)
   end

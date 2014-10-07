@@ -30,4 +30,15 @@ MorselApp::Application.configure do
   config.logger = Logger.new(config.paths['log'].first, 50, 5.megabyte)
 
   config.middleware.use Oink::Middleware, logger: Hodel3000CompliantLogger.new(STDOUT)
+
+  config.after_initialize do
+    Bullet.enable = false
+    if Bullet.enable?
+      Bullet.alert = true
+      Bullet.bullet_logger = true
+      Bullet.console = true
+      Bullet.rails_logger = true
+      Bullet.add_footer = true
+    end
+  end
 end

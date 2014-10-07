@@ -4,7 +4,7 @@ class NotifyTaggedMorselUsersWorker
   def perform(options = nil)
     return if options.nil?
 
-    morsel = Morsel.find(options['morsel_id'])
+    morsel = Morsel.includes(:morsel_user_tags).find(options['morsel_id'])
 
     Activity.where(action_id: morsel.morsel_user_tag_ids, action_type: MorselUserTag).find_each do |activity|
       CreateNotification.call(

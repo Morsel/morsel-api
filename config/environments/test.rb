@@ -35,4 +35,16 @@ MorselApp::Application.configure do
   config.active_support.deprecation = :stderr
 
   config.logger = Logger.new(config.paths['log'].first, 50, 5.megabyte)
+
+  config.after_initialize do
+    Bullet.enable = false
+    if Bullet.enable?
+      Bullet.bullet_logger = true
+      Bullet.raise = true
+      Bullet.add_whitelist type: :counter_cache, class_name: "Item", association: :roles
+      Bullet.add_whitelist type: :n_plus_one_query, class_name: "Item", association: :roles
+      Bullet.add_whitelist type: :n_plus_one_query, class_name: "User", association: :roles
+      Bullet.add_whitelist type: :n_plus_one_query, class_name: "Morsel", association: :creator
+    end
+  end
 end

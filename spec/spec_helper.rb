@@ -58,10 +58,17 @@ RSpec.configure do |config|
     else
       Sidekiq::Testing.fake!
     end
+
+    Bullet.start_request if Bullet.enable?
   end
 
   config.after(:each) do
     DatabaseCleaner.clean
     FileUtils.rm_rf(Dir["#{Rails.root}/spec/support/uploads"])
+
+    if Bullet.enable?
+      Bullet.perform_out_of_channel_notifications if Bullet.notification?
+      Bullet.end_request
+    end
   end
 end
