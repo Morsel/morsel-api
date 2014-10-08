@@ -35,6 +35,16 @@ describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
     expect(new_morsel.primary_item_id).to eq(draft_morsel.items.first.id)
   end
 
+  context 'morsel has no title' do
+    before { draft_morsel.update title: nil }
+    it 'should return an error' do
+      Sidekiq::Testing.inline! { post_endpoint }
+
+      expect_failure
+      expect(json_errors['title'].first).to eq('is required')
+    end
+  end
+
   context 'morsel has tagged Users' do
     let(:tagged_user) { FactoryGirl.create(:user) }
 

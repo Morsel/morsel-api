@@ -53,7 +53,6 @@ class Morsel < ActiveRecord::Base
   validate :primary_item_belongs_to_morsel
 
   validates :title,
-            presence: true,
             length: { maximum: 50 }
 
   scope :drafts, -> { where(draft: true) }

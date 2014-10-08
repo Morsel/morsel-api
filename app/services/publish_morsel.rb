@@ -6,6 +6,7 @@ class PublishMorsel
   attribute :social_params, Hash
 
   validates :morsel, presence: true
+  validate :title_exists?
 
   def call
     set_primary_item_id_if_specified
@@ -35,5 +36,9 @@ class PublishMorsel
 
   def safe_social_params
     @safe_social_params ||= social_params ? social_params.symbolize_keys : {}
+  end
+
+  def title_exists?
+    errors.add(:title, 'is required') if morsel.title.blank?
   end
 end
