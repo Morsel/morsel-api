@@ -2,6 +2,7 @@ module PhotoUploadable
   extend ActiveSupport::Concern
 
   included do
+    attr_accessor :uploaded_from_remote
     before_save :update_photo_attributes
     process_in_background :photo, ProcessPhotoWorker
   end
@@ -18,6 +19,7 @@ module PhotoUploadable
   private
 
   def update_photo_attributes
+    self.uploaded_from_remote = remote_photo_url.present?
     return unless photo? && photo_changed?
 
     self.photo_content_type = photo.file.content_type
