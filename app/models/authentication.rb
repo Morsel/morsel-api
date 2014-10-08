@@ -50,7 +50,7 @@ class Authentication < ActiveRecord::Base
     private
 
     def auto_follow?
-      ActiveRecord::ConnectionAdapters::Column.value_to_boolean(auto_follow)
+      Settings.flags.enable_auto_follow && ActiveRecord::ConnectionAdapters::Column.value_to_boolean(auto_follow)
     end
 
     def fetch_and_follow_social_connections

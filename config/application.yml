@@ -10,6 +10,9 @@ morsel:
 
 pagination_default_count: <%= ENV['PAGINATION_DEFAULT_COUNT'] || 20 %>
 
+flags:
+  enable_auto_follow: <%= ENV['ENABLE_AUTO_FOLLOW'] || true %>
+
 aws:
   credentials:
     access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
