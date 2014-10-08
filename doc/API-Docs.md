@@ -1390,6 +1390,7 @@ Creates a new Morsel for the current User.
 | morsel[title] | String | The title for the new Morsel | | x |
 | morsel[place_id] | Number | A [Place](#place) to associate this Morsel to | | |
 | morsel[draft] | Boolean | Set to true if the Morsel is a draft | false | |
+| morsel[template_id] | Number | The ID of the template used for this morsel. | | |
 
 ### Response
 
@@ -1456,6 +1457,7 @@ Updates the Morsel with the specified `id`
 | morsel[place_id] | Number | A [Place](#place) to associate this Morsel to | | |
 | morsel[draft] | Boolean | Set to true if the Morsel is a draft | false | |
 | morsel[primary_item_id] | Number | The ID of the Item to set as the primary Item for this Morsel. Must be the ID of a Item that is part of the Morsel | | |
+| morsel[template_id] | Number | The ID of the template used for this morsel. | | |
 
 ### Response
 
