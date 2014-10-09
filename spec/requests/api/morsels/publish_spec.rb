@@ -45,6 +45,16 @@ describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
     end
   end
 
+  context 'morsel has no cover set' do
+    before { draft_morsel.update primary_item_id: nil }
+    it 'should return an error' do
+      Sidekiq::Testing.inline! { post_endpoint }
+
+      expect_failure
+      expect(json_errors['cover_photo'].first).to eq('is required')
+    end
+  end
+
   context 'morsel has tagged Users' do
     let(:tagged_user) { FactoryGirl.create(:user) }
 

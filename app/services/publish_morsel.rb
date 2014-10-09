@@ -7,6 +7,7 @@ class PublishMorsel
 
   validates :morsel, presence: true
   validate :title_exists?
+  validate :primary_item_exists?
 
   def call
     set_primary_item_id_if_specified
@@ -36,6 +37,10 @@ class PublishMorsel
 
   def safe_social_params
     @safe_social_params ||= social_params ? social_params.symbolize_keys : {}
+  end
+
+  def primary_item_exists?
+    errors.add(:cover_photo, 'is required') if morsel.primary_item.nil?
   end
 
   def title_exists?

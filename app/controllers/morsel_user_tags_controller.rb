@@ -21,9 +21,15 @@ class MorselUserTagsController < ApiController
   PUBLIC_ACTIONS << def eligible_users
     # Eligible Users currently are those that follow the User
     morsel = Morsel.find params[:id]
-    custom_respond_with User.joins(:followable_follows)
+
+    query = params[:query]
+    query += '%' if query
+
+    custom_respond_with Search::SearchableUser.joins(:followable_follows)
                             .paginate(pagination_params)
-                            .where(follows: { followable_id: morsel.creator_id, followable_type: User }),
+                            .search_query(query)
+                            .where(follows: { followable_id: morsel.creator_id, followable_type: User })
+                            .where(active: true),
                         each_serializer: SlimTaggedUserSerializer,
                         context: {
                           morsel: morsel
