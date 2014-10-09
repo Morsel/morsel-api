@@ -56,7 +56,6 @@ class User < ActiveRecord::Base
   before_validation :ensure_authentication_token
   after_validation :ensure_professional
   before_save :default_values
-  before_save :process_remote_photo_url
 
   has_many :authentications, inverse_of: :user
 
@@ -265,12 +264,5 @@ class User < ActiveRecord::Base
 
   def ensure_professional
     self.professional = industry == 'chef' unless professional || industry.nil?
-  end
-
-  def process_remote_photo_url
-    return unless remote_photo_url && photo_changed?
-
-    self.process_photo_upload = true
-    self.remote_photo_url = remote_photo_url
   end
 end

@@ -119,7 +119,7 @@ GEM
     carrierwave-aws (0.3.2)
       aws-sdk (>= 1.8.0)
       carrierwave (>= 0.7.0)
-    carrierwave_backgrounder (0.3.0)
+    carrierwave_backgrounder (0.4.1)
       carrierwave (~> 0.5)
     celluloid (0.15.2)
       timers (~> 1.1.0)
@@ -549,7 +549,7 @@ DEPENDENCIES
   byebug
   carrierwave (~> 0.10.0)
   carrierwave-aws
-  carrierwave_backgrounder
+  carrierwave_backgrounder (~> 0.4.1)
   childprocess (= 0.3.6)
   codeclimate-test-reporter
   coffee-rails (~> 4.0.0)
