@@ -17,17 +17,12 @@ module Search
 
     def call
       if query.present?
-        formatted_query = "#{query}%"
         SearchableUser.paginate({
           since_id: since_id,
           max_id: max_id,
           count: count
         }, :id, SearchableUser)
-        .where(
-          SearchableUser.arel_table[:first_name].matches(formatted_query)
-          .or(SearchableUser.arel_table[:last_name].matches(formatted_query))
-          .or(SearchableUser.arel_table[:username].matches(formatted_query))
-        )
+        .search_query("#{query}%")
         .search_promoted(promoted)
         .where(active: true)
         .order(SearchableUser.arel_table[:id].desc)
@@ -45,12 +40,5 @@ module Search
         .order(SearchableUser.arel_table[:id].desc)
       end
     end
-  end
-
-  class SearchableUser < User
-    scope :search_first_name, -> (search_first_name) { where(SearchableUser.arel_table[:first_name].matches("#{search_first_name}%")) if search_first_name.present? }
-    scope :search_last_name, -> (search_last_name) { where(SearchableUser.arel_table[:last_name].matches("#{search_last_name}%")) if search_last_name.present? }
-    scope :search_username, -> (search_username) { where(SearchableUser.arel_table[:username].matches("#{search_username}%")) if search_username.present? }
-    scope :search_promoted, -> (search_promoted) { where('promoted = ?', search_promoted) if search_promoted.present? }
   end
 end

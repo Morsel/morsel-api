@@ -684,7 +684,7 @@ __Request Behaviors__
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| user[query] | String | Used to return Users by `first_name` OR `last_name`. Must be at least 3 characters. | | |
+| user[query] | String | Used to return Users by `first_name`, `last_name`, or `username`. Must be at least 3 characters. | | |
 | user[first_name] | String | User's `first_name`. Must be at least 3 characters. | | |
 | user[last_name] | String | User's `last_name`. Must be at least 3 characters. | | |
 | user[promoted] | Boolean | Used to return `promoted` Users | false | |
@@ -1544,6 +1544,10 @@ Returns all [Users](#user) eligible to be tagged to the morsel. If an eligible U
 
 __Request Behaviors__
 * [Public](#public)
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| query | String | Used to return Users by `first_name`, `last_name`, or `username`. Must be at least 3 characters. | | |
 
 ### Response
 
