@@ -29,8 +29,12 @@ shared_examples 'LikeableController' do
         expect(notification.user).to eq(likeable.creator)
         expect(notification.payload).to eq(activity)
 
-        # TODO: Make this not Item-specific
-        expect(notification.message).to eq("#{current_user.full_name} (#{current_user.username}) liked #{likeable.morsel_title_with_description}".truncate(Settings.morsel.notification_length, separator: ' ', omission: '... '))
+        if likeable.is_a? Morsel
+          likeable_description = likeable.title
+        else
+          likeable_description = likeable.morsel_title_with_description
+        end
+        expect(notification.message).to eq("#{current_user.full_name} (#{current_user.username}) liked #{likeable_description}".truncate(Settings.morsel.notification_length, separator: ' ', omission: '... '))
       end
 
       context 'already likes the Likeable' do
@@ -100,7 +104,7 @@ shared_examples 'LikeableController' do
     end
   end
 
-  describe 'GET /likeable/:id/likers items#likers' do
+  describe 'GET /likeable/:id/likers likeables#likers' do
     let(:endpoint) { "#{likeable_route}/#{likeable.id}/likers" }
     let(:likers_count) { rand(2..6) }
 
