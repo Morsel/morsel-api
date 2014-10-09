@@ -86,6 +86,9 @@
   - [GET `/morsels/drafts` - Morsel Drafts](#get-morselsdrafts---morsel-drafts)
   - [GET `/morsels/:id` - Morsel](#get-morselsid----morsel)
   - [PUT `/morsels/:id` - Update Morsel](#put-morselsid---update-morsel)
+  - [POST `/morsels/:id/like` - Like Morsel](#post-morselsidlike---like-morsel)
+  - [DELETE `/morsels/:id/like` - Unlike Morsel](#delete-morselsidlike---unlike-morsel)
+  - [GET `/morsels/:id/likers` - Likers](#get-morselsidlikers---likers)
   - [POST `/morsels/:id/publish` - Publish Morsel](#post-morselsidpublish---Publish-morsel)
   - [DELETE `/morsels/:id` - Delete Morsel](#delete-morselsid---delete-morsel)
   - [POST `/morsels/:id/tagged_users` - Tag User](#post-morselsidtagged_users---tag-user)
@@ -940,13 +943,14 @@ __Request Behaviors__
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| type | String | The type of likeables to return. Currently only 'Item' is acceptable. | | X |
+| type | String | The type of likeables to return. Currently only 'Item' and 'Morsel' are accepted. | | X |
 
 ### Response
 
 | type= | __data__ |
 | --------- | -------- |
 | Item | [Liked Items](#liked-item)[] |
+| Morsel | [Liked Morsels](#liked-morsel)[] |
 
 <br />
 <br />
@@ -1468,6 +1472,66 @@ Updates the Morsel with the specified `id`
 <br />
 <br />
 
+
+## POST `/morsels/:id/like` - Like Morsel
+Likes the Morsel with the specified `id` for [current_user](#current_user)
+
+### Response
+
+| Status Code |
+| ----------- |
+|         201 |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __Already exists__ | 400 (Bad Request) | The Morsel is already liked by the User |
+
+<br />
+<br />
+
+## DELETE `/morsels/:id/like` - Unlike Morsel
+Unlikes the Morsel with the specified `id` for [current_user](#current_user)
+
+### Response
+
+| Status Code |
+| ----------- |
+|         204 |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __Not liked__ | 404 (Not Found) | The Morsel is not liked by the User |
+
+<br />
+<br />
+
+## GET `/morsels/:id/likers` - Likers
+Returns the Users who have liked the Morsel with the specified `id`
+
+__Request Behaviors__
+* [Pagination](#pagination)
+* [Public](#public)
+
+### Response
+
+| __data__ |
+| -------- |
+| [Users](#user)[] |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __Morsel not found__ | 404 (Not Found) | The Morsel could not be found |
+
+<br />
+<br />
+
+
 ## POST `/morsels/:id/publish` - Publish Morsel
 Publishes the Morsel with the specified `id` by setting a `published_at` DateTime and `draft`=false
 
@@ -1872,6 +1936,17 @@ Response for any Like Item related requests.
   "photos": {
     "_800x600":"https://morsel-staging.s3.amazonaws.com/morsel-images/4/648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
   }
+}
+```
+
+### Liked Morsel
+Response for any Like Morsel related requests.
+* Inherits from [Morsel](#morsel)
+
+```json
+{
+  "liked_at": "2014-04-28T16:50:42.352Z"
+
 }
 ```
 

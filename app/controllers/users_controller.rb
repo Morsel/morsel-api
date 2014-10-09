@@ -167,16 +167,26 @@ class UsersController < ApiController
 
   PUBLIC_ACTIONS << def likeables
     likeable_type = params.fetch(:type)
-    return unless likeable_type == 'Item'
 
-    custom_respond_with_cached_serializer(
-      Item.liked_by(params[:id])
-          .paginate(pagination_params)
-          .order(Like.arel_table[:id].desc),
-      LikedItemSerializer,
-      liker_id: params[:id],
-      likeable_type: likeable_type
-    )
+    if likeable_type == 'Item'
+      custom_respond_with_cached_serializer(
+        Item.includes(:creator, :morsel).liked_by(params[:id])
+            .paginate(pagination_params)
+            .order(Like.arel_table[:id].desc),
+        LikedItemSerializer,
+        liker_id: params[:id],
+        likeable_type: likeable_type
+      )
+    elsif likeable_type == 'Morsel'
+      custom_respond_with_cached_serializer(
+        Morsel.includes(:creator).liked_by(params[:id])
+              .paginate(pagination_params)
+              .order(Like.arel_table[:id].desc),
+        LikedMorselSerializer,
+        liker_id: params[:id],
+        likeable_type: likeable_type
+      )
+    end
   end
 
   PUBLIC_ACTIONS << def places

@@ -22,5 +22,9 @@ FactoryGirl.define do
     factory :item_like, class: Like do
       association(:likeable, factory: :item_with_creator)
     end
+
+    factory :morsel_like, class: Like do
+      association(:likeable, factory: :morsel_with_creator)
+    end
   end
 end

@@ -24,4 +24,28 @@ describe 'GET /users/:id/likeables' do
       expect_first_json_data_eq('liked_at' => Like.last.created_at.as_json)
     end
   end
+
+  context 'type=Morsel' do
+    let(:endpoint) { "/users/#{liker.id}/likeables?type=Morsel" }
+    let(:liker) { FactoryGirl.create(:user) }
+    let(:liked_morsel_count) { rand(2..6) }
+
+    before { liked_morsel_count.times { FactoryGirl.create(:morsel_like, liker: liker) }}
+
+    it_behaves_like 'TimelinePaginateable' do
+      let(:paginateable_object_class) { Morsel }
+      before do
+        paginateable_object_class.delete_all
+        30.times { FactoryGirl.create(:morsel_like, liker: liker) }
+      end
+    end
+
+    it 'returns the Morsels that the User has liked' do
+      get_endpoint
+
+      expect_success
+      expect_json_data_count liked_morsel_count
+      expect_first_json_data_eq('liked_at' => Like.last.created_at.as_json)
+    end
+  end
 end
