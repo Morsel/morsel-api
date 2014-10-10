@@ -100,10 +100,6 @@ describe Morsel do
       it 'should update the slug' do
         expect(morsel.cached_slug.to_s).to eq('some-new-title')
       end
-
-      it 'should still be searchable from it\'s old slug' do
-        expect(Morsel.find_using_slug(@old_slug)).to_not be_nil
-      end
     end
   end
 

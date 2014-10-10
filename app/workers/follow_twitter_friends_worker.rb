@@ -6,7 +6,7 @@ class FollowTwitterFriendsWorker
   #   authentication_id: The `id` of the authentication
   #   cursor
   def perform(options = nil)
-    return if options.nil? || options['cursor'].zero?
+    return if options.nil? || options['cursor'] == 0
     authentication = Authentication.find(options['authentication_id'])
 
     fetch_social_friend_uids_service = FetchSocialFriendUids.call(
@@ -21,10 +21,10 @@ class FollowTwitterFriendsWorker
       )
 
       next_cursor = fetch_social_friend_uids_service.response.attrs[:next_cursor]
-      FollowTwitterFriendsWorker.perform_in(15.minutes, {
+      FollowTwitterFriendsWorker.delay_for(1.minute).perform_async(
         authentication_id: authentication.id,
         cursor: next_cursor
-      }) if next_cursor > 0
+      ) if next_cursor > 0
     end
   end
 end

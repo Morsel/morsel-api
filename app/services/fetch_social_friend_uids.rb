@@ -2,7 +2,7 @@ class FetchSocialFriendUids
   include Service
 
   attribute :authentication, Authentication
-  attribute :cursor, Number
+  attribute :cursor, Integer
 
   validates :authentication, presence: true
 
