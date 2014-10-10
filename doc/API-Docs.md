@@ -1074,7 +1074,8 @@ Proxy for the [Foursquare Venues suggestcompletion](https://developer.foursquare
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | query | String | String to search for. Must be at least 3 characters. | | X |
-| lat_lon | String | The User's lat, lon | | X |
+| lat_lon | String | The User's lat, lon | | unless `near` passed |
+| near | String | A string naming a place in the world | | unless `lat_lon` passed |
 
 <br />
 <br />
