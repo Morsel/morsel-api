@@ -21,7 +21,7 @@ class FollowTwitterFollowersWorker
       )
 
       next_cursor = fetch_social_follower_uids_service.response.attrs[:next_cursor]
-      FollowTwitterFollowersWorker.delay_for(1.minute).perform_async(
+      FollowTwitterFollowersWorker.perform_async(
         authentication_id: authentication.id,
         cursor: next_cursor
       ) if next_cursor > 0
