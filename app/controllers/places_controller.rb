@@ -5,9 +5,8 @@ class PlacesController < ApiController
 
   def suggest
     query = params.fetch(:query)
-    lat_lon = params.fetch(:lat_lon)
 
-    service = SuggestFoursquareVenue.call(query: query, lat_lon: lat_lon)
+    service = SuggestFoursquareVenue.call(query: query, lat_lon: params[:lat_lon], near: params[:near])
     render_json_with_service service
   end
 
