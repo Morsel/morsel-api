@@ -15,7 +15,7 @@ class FetchAndFollowSocialUidsWorker
       if fetch_social_friend_uids_service.valid? && fetch_social_friend_uids_service.response.count > 0
         follow_social_uids_service = FollowSocialUids.call(
           authentication: authentication,
-          uids: fetch_social_friend_uids_service.response
+          uids: (authentication.twitter? ? fetch_social_friend_uids_service.response.map(&:to_s) : fetch_social_friend_uids_service.response)
         )
 
         # Follow back
@@ -31,7 +31,7 @@ class FetchAndFollowSocialUidsWorker
           if fetch_social_follower_uids_service.valid? && fetch_social_follower_uids_service.response.count > 0
             ReverseFollowSocialUids.call(
               authentication: authentication,
-              uids: fetch_social_follower_uids_service.response
+              uids: (authentication.twitter? ? fetch_social_follower_uids_service.response.map(&:to_s) : fetch_social_follower_uids_service.response)
             )
           end
         end

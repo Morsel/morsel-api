@@ -45,20 +45,18 @@ class TwitterAuthenticatedUserDecorator < SimpleDelegator
     end
   end
 
-  def get_friends(authentication = twitter_authentication)
-    friend_ids = twitter_client(authentication).friend_ids
+  def get_friends(authentication = twitter_authentication, cursor = -1)
     begin
-      friend_ids.to_a
+      twitter_client(authentication).friend_ids(cursor: cursor)
     rescue Twitter::Error::TooManyRequests => error
       sleep error.rate_limit.reset_in + 1
       retry
     end
   end
 
-  def get_followers(authentication = twitter_authentication)
-    follower_ids = twitter_client(authentication).follower_ids
+  def get_followers(authentication = twitter_authentication, cursor = -1)
     begin
-      follower_ids.to_a
+      twitter_client(authentication).follower_ids(cursor: cursor)
     rescue Twitter::Error::TooManyRequests => error
       sleep error.rate_limit.reset_in + 1
       retry

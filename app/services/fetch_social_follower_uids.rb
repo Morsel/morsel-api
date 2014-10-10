@@ -2,6 +2,7 @@ class FetchSocialFollowerUids
   include Service
 
   attribute :authentication, Authentication
+  attribute :cursor, Number
 
   validates :authentication, presence: true
 
@@ -20,6 +21,6 @@ class FetchSocialFollowerUids
   end
 
   def twitter_uids
-    TwitterAuthenticatedUserDecorator.new(authentication.user).get_followers(authentication).map(&:to_s)
+    TwitterAuthenticatedUserDecorator.new(authentication.user).get_followers(authentication, cursor)
   end
 end
