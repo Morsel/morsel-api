@@ -8,14 +8,7 @@ class FetchAndFollowSocialUidsWorker
     return if options.nil?
     authentication = Authentication.find(options['authentication_id'])
 
-    if authentication.twitter?
-      FollowTwitterFollowersWorker.perform_async({
-        authentication_id: authentication.id
-      })
-      FollowTwitterFriendsWorker.perform_async({
-        authentication_id: authentication.id
-      })
-    elsif authentication
+    if authentication
       fetch_social_friend_uids_service = FetchSocialFriendUids.call(
         authentication: authentication
       )
