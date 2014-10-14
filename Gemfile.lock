@@ -54,6 +54,7 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     addressable (2.3.6)
+    aggregate (0.2.2)
     annotate (2.6.5)
       activerecord (>= 2.3.0)
       rake (>= 0.8.7)
@@ -267,6 +268,16 @@ GEM
       multi_json
     launchy (2.4.2)
       addressable (~> 2.3)
+    librato-metrics (1.4.0)
+      aggregate (~> 0.2.2)
+      faraday (~> 0.7)
+      multi_json
+    librato-rack (0.4.5)
+      librato-metrics (~> 1.1)
+    librato-rails (0.11.1)
+      activesupport (>= 3.0)
+      librato-rack (~> 0.4.2)
+      railties (>= 3.0)
     listen (2.7.5)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
@@ -576,6 +587,7 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   koala (~> 1.8.0rc1)
+  librato-rails (~> 0.11.1)
   mandrill_mailer (~> 0.4.3)
   mime-types
   mini_magick!
