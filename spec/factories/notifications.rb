@@ -15,6 +15,7 @@
 # **`deleted_at`**      | `datetime`         |
 # **`created_at`**      | `datetime`         |
 # **`updated_at`**      | `datetime`         |
+# **`sent_at`**         | `datetime`         |
 #
 
 FactoryGirl.define do

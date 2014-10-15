@@ -7,7 +7,7 @@ class SendHipChatNotification
   validate :auth_token_set?
 
   def auth_token_set?
-    errors.add(:auth_token, 'is not set') if Settings.hipchat.auth_token.nil?
+    errors.add(:auth_token, 'is not set') unless Settings.hipchat.auth_token
   end
 
   def call

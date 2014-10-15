@@ -15,6 +15,7 @@
 # **`deleted_at`**      | `datetime`         |
 # **`created_at`**      | `datetime`         |
 # **`updated_at`**      | `datetime`         |
+# **`sent_at`**         | `datetime`         |
 #
 
 class Notification < ActiveRecord::Base
@@ -33,7 +34,15 @@ class Notification < ActiveRecord::Base
     marked_read_at.present?
   end
 
+  def sent?
+    sent_at.present?
+  end
+
   def mark_read!
     update(marked_read_at: DateTime.now) unless marked_read_at
+  end
+
+  def mark_sent!
+    update(sent_at: DateTime.now) unless sent_at
   end
 end

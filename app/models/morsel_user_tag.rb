@@ -1,6 +1,6 @@
 # ## Schema Information
 #
-# Table name: `morsel_tagged_users`
+# Table name: `morsel_user_tags`
 #
 # ### Columns
 #

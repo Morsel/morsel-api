@@ -188,6 +188,7 @@ GEM
     fuubar (1.3.2)
       rspec (>= 2.14.0, < 3.1.0)
       ruby-progressbar (~> 1.3)
+    grocer (0.6.0)
     guard (2.6.1)
       formatador (>= 0.2.4)
       listen (~> 2.7)
@@ -562,6 +563,7 @@ DEPENDENCIES
   faker
   foursquare2 (~> 1.9.8)
   fuubar (~> 1.3.2)
+  grocer (~> 0.6.0)
   guard-brakeman
   guard-bundler
   guard-rails
