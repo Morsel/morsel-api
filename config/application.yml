@@ -14,7 +14,6 @@ flags:
   enable_auto_follow: <%= ENV['ENABLE_AUTO_FOLLOW'] || true %>
 
 apns:
-  cert: <%= ENV['APNS_CERT'] %>
   cert_path: <%= ENV['APNS_CERT_PATH'] %>
 
 aws:
