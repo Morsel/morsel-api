@@ -13,6 +13,10 @@ pagination_default_count: <%= ENV['PAGINATION_DEFAULT_COUNT'] || 20 %>
 flags:
   enable_auto_follow: <%= ENV['ENABLE_AUTO_FOLLOW'] || true %>
 
+apns:
+  cert: <%= ENV['APNS_CERT'] %>
+  cert_path: <%= ENV['APNS_CERT_PATH'] %>
+
 aws:
   credentials:
     access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>

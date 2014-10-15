@@ -32,10 +32,10 @@ describe 'GET /places/suggest places#suggest' do
     end
   end
 
-  describe 'lat_lon' do
+  describe 'lat_lon or near' do
     it 'is required' do
       get_endpoint query: 'asdf'
-      expect_missing_param_error_for_param 'lat_lon'
+      expect_first_error 'lat_lon_or_near', 'is required'
     end
   end
 end

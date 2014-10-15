@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140926193323) do
+ActiveRecord::Schema.define(version: 20141014231500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,21 @@ ActiveRecord::Schema.define(version: 20140926193323) do
   add_index "authentications", ["uid", "name"], name: "index_authentications_on_uid_and_name", using: :btree
   add_index "authentications", ["user_id"], name: "index_authentications_on_user_id", using: :btree
 
+  create_table "authorizations", force: true do |t|
+    t.string   "provider"
+    t.string   "uid"
+    t.integer  "user_id"
+    t.string   "token"
+    t.string   "secret"
+    t.string   "name"
+    t.string   "link"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "authorizations", ["uid", "name"], name: "index_authorizations_on_uid_and_name", using: :btree
+  add_index "authorizations", ["user_id"], name: "index_authorizations_on_user_id", using: :btree
+
   create_table "comments", force: true do |t|
     t.integer  "commenter_id"
     t.integer  "commentable_id"
@@ -81,6 +96,17 @@ ActiveRecord::Schema.define(version: 20140926193323) do
 
   add_index "comments", ["commentable_type"], name: "index_comments_on_commentable_type", using: :btree
   add_index "comments", ["commenter_id", "commentable_id"], name: "index_comments_on_commenter_id_and_commentable_id", using: :btree
+
+  create_table "devices", force: true do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "token"
+    t.string   "model"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "devices", ["user_id"], name: "index_devices_on_user_id", using: :btree
 
   create_table "emails", force: true do |t|
     t.string   "class_name"
@@ -99,8 +125,6 @@ ActiveRecord::Schema.define(version: 20140926193323) do
     t.integer  "user_id"
     t.string   "title"
     t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   add_index "employments", ["place_id", "user_id"], name: "index_employments_on_place_id_and_user_id", using: :btree
@@ -220,6 +244,7 @@ ActiveRecord::Schema.define(version: 20140926193323) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "sent_at"
   end
 
   add_index "notifications", ["payload_type"], name: "index_notifications_on_payload_type", using: :btree
@@ -249,6 +274,20 @@ ActiveRecord::Schema.define(version: 20140926193323) do
   end
 
   add_index "places", ["name", "foursquare_venue_id"], name: "index_places_on_name_and_foursquare_venue_id", using: :btree
+
+  create_table "posts", force: true do |t|
+    t.string   "title"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "creator_id"
+    t.string   "cached_slug"
+    t.datetime "deleted_at"
+    t.boolean  "draft",        default: false, null: false
+    t.datetime "published_at"
+  end
+
+  add_index "posts", ["cached_slug"], name: "index_posts_on_cached_slug", using: :btree
+  add_index "posts", ["creator_id"], name: "index_posts_on_creator_id", using: :btree
 
   create_table "roles", force: true do |t|
     t.string   "name"

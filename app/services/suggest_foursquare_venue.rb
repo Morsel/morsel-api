@@ -6,6 +6,7 @@ class SuggestFoursquareVenue
   attribute :near, String
 
   validates :query, length: { minimum: 3 }
+  validate :lat_lon_or_near_present?
 
   def call
     if lat_lon
@@ -19,5 +20,9 @@ class SuggestFoursquareVenue
 
   def foursquare_client
     Foursquare2::Client.new Settings.foursquare
+  end
+
+  def lat_lon_or_near_present?
+    errors.add(:lat_lon_or_near, 'is required') unless lat_lon || near
   end
 end

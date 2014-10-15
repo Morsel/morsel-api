@@ -107,6 +107,12 @@ class User < ActiveRecord::Base
 
   mount_uploader :photo, UserPhotoUploader
 
+  concerning :Devices do
+    included do
+      has_many :devices, dependent: :destroy
+    end
+  end
+
   concerning :UserSettings do
     included do
       store_accessor :settings, :unsubscribed, :auto_follow
