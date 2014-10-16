@@ -17,6 +17,7 @@
 #
 
 class Device < ActiveRecord::Base
+  include TimelinePaginateable
   acts_as_paranoid
 
   belongs_to :user
