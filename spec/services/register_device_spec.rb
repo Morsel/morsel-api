@@ -17,7 +17,7 @@ describe RegisterDevice do
     })
 
     expect_service_success
-    expect(service_response).to be_a(Device)
+    expect(service_response).to eq(Device.last)
   end
 
   context 'no user specified' do
