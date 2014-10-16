@@ -20,17 +20,15 @@ require 'spec_helper'
 describe Follow do
   subject(:user_follow) { FactoryGirl.build(:user_follow) }
 
+  it_behaves_like 'Activityable'
+  it_behaves_like 'Paranoia'
+  it_behaves_like 'Timestamps'
+  it_behaves_like 'UserCreatable' do
+    let(:user) { subject.user }
+  end
+
   it { should respond_to(:follower) }
   it { should respond_to(:followable) }
-
-  it_behaves_like 'Activityable' do
-    let(:activityable_object) { user_follow }
-  end
-
-  it_behaves_like 'UserCreatable' do
-    let(:user_creatable_object) { FactoryGirl.build(:user_follow) }
-    let(:user) { user_creatable_object.user }
-  end
 
   context 'following two different types of objects with the same id' do
     let(:place_follow) { FactoryGirl.build(:place_follow, followable:FactoryGirl.create(:place, id:user_follow.followable_id), follower_id:user_follow.follower_id) }

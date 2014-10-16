@@ -13,11 +13,12 @@
 # **`model`**       | `string(255)`      |
 # **`created_at`**  | `datetime`         |
 # **`updated_at`**  | `datetime`         |
+# **`deleted_at`**  | `datetime`         |
 #
 
 FactoryGirl.define do
   factory :device do
-    name { "#{Faker::Name.name}'s iPhone" }
+    name { "#{Faker::Name.name}'s Device" }
     token { Faker::Lorem.characters(32) }
     model "iphone"
 

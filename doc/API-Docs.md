@@ -59,6 +59,7 @@
   - [GET `/users/:id/specialties` - User Specialties](#get-usersidspecialties---user-specialties)
   - [GET `/users/:id/followables` - User Followables](#get-usersidfollowables---user-followables)
   - [GET `/users/:id/places` - User Places](#get-usersidplaces---user-places)
+  - [POST `/users/devices` - Create User Device](#post-usersdevices---create-user-device)
 
 - [Place Methods](#place-methods) [\<Followable\>](#followable)
   - [GET `/places/suggest` - Suggest Completion](#get-placessuggest---suggest-completion)
@@ -118,6 +119,8 @@
     - [Authentication](#authentication)
   - [Comment Objects](#comment-objects)
     - [Comment](#comment)
+  - [Device Objects](#device-objects)
+    - [Device](#device)
   - [Item Objects](#item-objects)
     - [Item](#item)
     - [Liked Item](#liked-item)
@@ -1061,6 +1064,26 @@ __Request Behaviors__
 <br />
 <br />
 
+## POST `/users/devices` - Create User Device
+Creates a new device for the [current_user](#current_user). If a matching device already exists (same token and model) for [current_user](#current_user), returns that device. If a matching device exists for another User, the matching device is deleted and a new device is created and returned for [current_user](#current_user).
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| device[name] | String | The name of the device | | X |
+| device[model] | String | The model of the device | | X |
+| device[token] | String | The device's push token | | X |
+
+### Response
+
+| __data__ |
+| -------- |
+| [Device](#device) |
+
+<br />
+<br />
+
 
 # Place Methods
 * [\<Followable\>](#followable)
@@ -1836,6 +1859,21 @@ __Request Behaviors__
   "description": "Wow! Are those Swedish Fish caviar???!?!?!one!?!11!?1?!",
   "commentable_id": 5,
   "commentable_type": "Item",
+  "created_at": "2014-01-07T18:37:19.661Z"
+}
+```
+
+## Device Objects
+
+### Device
+
+```json
+{
+  "id": 4,
+  "name": "Cosmo Kramer's iPhone 3G",
+  "token": "s0me t0k3n f0r pu5h n0t1f1c4t10n",
+  "model": "iPhone 3G",
+  "user_id": 12,
   "created_at": "2014-01-07T18:37:19.661Z"
 }
 ```

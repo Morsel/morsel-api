@@ -19,5 +19,8 @@ require 'spec_helper'
 describe Keyword do
   subject(:cuisine) { FactoryGirl.build(:cuisine) }
 
+  it_behaves_like 'Paranoia'
+  it_behaves_like 'Timestamps'
+
   it { should respond_to(:name) }
 end

@@ -34,6 +34,9 @@ require 'spec_helper'
 describe Place do
   subject(:place) { FactoryGirl.build(:place) }
 
+  it_behaves_like 'Paranoia'
+  it_behaves_like 'Timestamps'
+
   it { should respond_to(:creator) }
   it { should respond_to(:name) }
   it { should respond_to(:address) }

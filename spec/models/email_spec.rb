@@ -19,6 +19,8 @@
 require 'spec_helper'
 
 shared_examples 'an email' do
+  it_behaves_like 'Timestamps'
+
   it { should respond_to(:class_name) }
   it { should respond_to(:template_name) }
   it { should respond_to(:from_email) }

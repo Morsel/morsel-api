@@ -48,6 +48,9 @@ require 'spec_helper'
 describe User do
   subject(:user) { FactoryGirl.build(:user) }
 
+  it_behaves_like 'Paranoia'
+  it_behaves_like 'Timestamps'
+
   it { should respond_to(:email) }
   it { should respond_to(:username) }
   it { should respond_to(:encrypted_password) }

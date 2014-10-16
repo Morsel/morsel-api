@@ -24,6 +24,11 @@ require 'spec_helper'
 describe Authentication do
   subject(:authentication) { FactoryGirl.build(:facebook_authentication) }
 
+  it_behaves_like 'Timestamps'
+  it_behaves_like 'UserCreatable' do
+    let(:user) { subject.user }
+  end
+
   it { should respond_to(:provider) }
   it { should respond_to(:uid) }
   it { should respond_to(:user_id) }
@@ -33,11 +38,6 @@ describe Authentication do
   it { should respond_to(:user) }
 
   it { should be_valid }
-
-  it_behaves_like 'UserCreatable' do
-    let(:user_creatable_object) { FactoryGirl.build(:facebook_authentication) }
-    let(:user) { user_creatable_object.user }
-  end
 
   describe 'provider' do
     context 'does not exist' do

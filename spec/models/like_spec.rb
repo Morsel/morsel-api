@@ -20,15 +20,14 @@ require 'spec_helper'
 describe Like do
   subject(:item_like) { FactoryGirl.build(:item_like) }
 
+  it_behaves_like 'Activityable'
+  it_behaves_like 'Paranoia'
+  it_behaves_like 'Timestamps'
+  it_behaves_like 'UserCreatable' do
+    let(:user) { subject.user }
+  end
+
   it { should respond_to(:liker) }
   it { should respond_to(:likeable) }
 
-  it_behaves_like 'Activityable' do
-    let(:activityable_object) { item_like }
-  end
-
-  it_behaves_like 'UserCreatable' do
-    let(:user_creatable_object) { FactoryGirl.build(:item_like) }
-    let(:user) { user_creatable_object.user }
-  end
 end

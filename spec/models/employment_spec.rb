@@ -20,6 +20,9 @@ require 'spec_helper'
 describe Employment do
   subject(:employment) { FactoryGirl.build(:employment) }
 
+  it_behaves_like 'Paranoia'
+  it_behaves_like 'Timestamps'
+
   it { should respond_to(:title) }
   it { should respond_to(:place) }
   it { should respond_to(:user) }

@@ -21,13 +21,15 @@ require 'spec_helper'
 describe Tag do
   subject(:user_cuisine_tag) { FactoryGirl.build(:user_cuisine_tag) }
 
+  it_behaves_like 'Paranoia'
+  it_behaves_like 'Timestamps'
+  it_behaves_like 'UserCreatable' do
+    let(:user) { subject.user }
+  end
+
   it { should respond_to(:tagger) }
   it { should respond_to(:taggable) }
 
-  it_behaves_like 'UserCreatable' do
-    let(:user_creatable_object) { FactoryGirl.build(:user_cuisine_tag) }
-    let(:user) { user_creatable_object.user }
-  end
 
   context 'User Tag' do
     let(:user) { FactoryGirl.create(:user) }
