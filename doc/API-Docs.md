@@ -61,6 +61,7 @@
   - [GET `/users/:id/places` - User Places](#get-usersidplaces---user-places)
   - [GET `/users/devices` - User Devices](#get-usersdevices---user-devices)
   - [POST `/users/devices` - Create User Device](#post-usersdevices---create-user-device)
+  - [DELETE `/users/devices/:id` - Delete User Device](#delete-usersdevicesid---delete-user-device)
 
 - [Place Methods](#place-methods) [\<Followable\>](#followable)
   - [GET `/places/suggest` - Suggest Completion](#get-placessuggest---suggest-completion)
@@ -1098,6 +1099,19 @@ Creates a new device for the [current_user](#current_user). If a matching device
 | __data__ |
 | -------- |
 | [Device](#device) |
+
+<br />
+<br />
+
+
+## DELETE `/users/devices/:id` - Delete User Device
+Deletes the device with the specified `id`
+
+### Response
+
+| Status Code |
+| ----------- |
+|         204 |
 
 <br />
 <br />
