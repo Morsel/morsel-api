@@ -12,10 +12,11 @@ class RegisterDevice
   validates :model, presence: true
 
   def call
-    return existing_device if device_already_exists_for_user?
+    existing_device = Device.includes(:user).find_by model: model, token: token
+    return existing_device if existing_device && existing_device.user == user
 
     if new_device.save
-      destroy_existing_device
+      existing_device.destroy if existing_device
     else
       errors.add :device, new_device.errors
     end
@@ -27,18 +28,6 @@ class RegisterDevice
 
   def device_attributes
     attributes.except :user
-  end
-
-  def device_already_exists_for_user?
-    existing_device && existing_device.user == user
-  end
-
-  def destroy_existing_device
-    existing_device.destroy if existing_device
-  end
-
-  def existing_device
-    @existing_device ||= Device.includes(:user).find_by model: model, token: token
   end
 
   def new_device
