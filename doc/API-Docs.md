@@ -59,6 +59,7 @@
   - [GET `/users/:id/specialties` - User Specialties](#get-usersidspecialties---user-specialties)
   - [GET `/users/:id/followables` - User Followables](#get-usersidfollowables---user-followables)
   - [GET `/users/:id/places` - User Places](#get-usersidplaces---user-places)
+  - [GET `/users/devices` - User Devices](#get-usersdevices---user-devices)
   - [POST `/users/devices` - Create User Device](#post-usersdevices---create-user-device)
 
 - [Place Methods](#place-methods) [\<Followable\>](#followable)
@@ -1063,6 +1064,23 @@ __Request Behaviors__
 
 <br />
 <br />
+
+
+## GET `/users/devices` - User Devices
+Returns the [current_user's](#current_user) [Devices](#device)
+
+__Request Behaviors__
+* [Pagination](#pagination)
+
+### Response
+
+| __data__ |
+| -------- |
+| [Device](#device)[] |
+
+<br />
+<br />
+
 
 ## POST `/users/devices` - Create User Device
 Creates a new device for the [current_user](#current_user). If a matching device already exists (same token and model) for [current_user](#current_user), returns that device. If a matching device exists for another User, the matching device is deleted and a new device is created and returned for [current_user](#current_user).

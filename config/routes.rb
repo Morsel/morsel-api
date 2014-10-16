@@ -99,6 +99,7 @@ MorselApp::Application.routes.draw do
       get 'me' => 'users#me'
       post 'unsubscribe' => 'users#unsubscribe'
       get 'activities' => 'activities#index'
+      get 'devices' => 'devices#index'
       post 'devices' => 'devices#create'
       get 'followables_activities' => 'activities#followables_activities'
       get 'notifications' => 'notifications#index'
