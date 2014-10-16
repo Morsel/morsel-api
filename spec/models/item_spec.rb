@@ -28,6 +28,13 @@ require 'spec_helper'
 describe Item do
   subject(:item) { FactoryGirl.build(:item) }
 
+  it_behaves_like 'Paranoia'
+  it_behaves_like 'Timestamps'
+  it_behaves_like 'UserCreatable' do
+    subject(:user_creatable_object) { FactoryGirl.build(:item_with_creator) }
+    let(:user) { subject.creator }
+  end
+
   it { should respond_to(:description) }
   it { should respond_to(:photo) }
   it { should respond_to(:nonce) }
@@ -38,11 +45,6 @@ describe Item do
   it { should respond_to(:morsel) }
 
   it { should be_valid }
-
-  it_behaves_like 'UserCreatable' do
-    let(:user_creatable_object) { FactoryGirl.build(:item_with_creator) }
-    let(:user) { user_creatable_object.creator }
-  end
 
   context 'saved with creator' do
     subject(:item) { FactoryGirl.create(:item_with_creator) }

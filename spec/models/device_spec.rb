@@ -13,10 +13,52 @@
 # **`model`**       | `string(255)`      |
 # **`created_at`**  | `datetime`         |
 # **`updated_at`**  | `datetime`         |
+# **`deleted_at`**  | `datetime`         |
 #
 
 require 'spec_helper'
 
 describe Device do
-  pending "add some examples to (or delete) #{__FILE__}"
+  subject(:device) { FactoryGirl.build(:device) }
+
+  it_behaves_like 'Paranoia'
+  it_behaves_like 'Timestamps'
+
+  it { should respond_to(:user) }
+
+  it { should be_valid }
+
+  describe 'user' do
+    context 'is not present' do
+      before { device.user = nil }
+      it { should_not be_valid }
+    end
+  end
+
+  describe 'name' do
+    context 'is not present' do
+      before { device.name = '' }
+      it { should_not be_valid }
+    end
+  end
+
+  describe 'token' do
+    context 'is not present' do
+      before { device.token = '' }
+      it { should_not be_valid }
+    end
+  end
+
+  describe 'model' do
+    context 'is not present' do
+      before { device.model = '' }
+      it { should_not be_valid }
+    end
+  end
+
+  context 'user already has a device' do
+    before { FactoryGirl.create(:device, user: device.user) }
+
+    it { should be_valid }
+  end
 end

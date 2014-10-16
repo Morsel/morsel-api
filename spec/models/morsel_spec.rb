@@ -30,6 +30,13 @@ require 'spec_helper'
 describe Morsel do
   subject(:morsel) { FactoryGirl.build(:morsel) }
 
+  it_behaves_like 'Paranoia'
+  it_behaves_like 'Timestamps'
+  it_behaves_like 'UserCreatable' do
+    subject(:morsel_with_creator) { FactoryGirl.build(:morsel_with_creator) }
+    let(:user) { subject.creator }
+  end
+
   it { should respond_to(:title) }
   it { should respond_to(:cached_slug) }
   it { should respond_to(:draft) }
@@ -48,11 +55,6 @@ describe Morsel do
   it { should be_valid }
 
   its(:items) { should be_empty }
-
-  it_behaves_like 'UserCreatable' do
-    let(:user_creatable_object) { FactoryGirl.build(:morsel_with_creator) }
-    let(:user) { user_creatable_object.creator }
-  end
 
   describe 'title' do
     context 'greater than 50 characters' do

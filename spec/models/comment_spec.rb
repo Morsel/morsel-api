@@ -21,16 +21,13 @@ require 'spec_helper'
 describe Comment do
   subject(:item_comment) { FactoryGirl.build(:item_comment) }
 
+  it_behaves_like 'Activityable'
+  it_behaves_like 'Timestamps'
+  it_behaves_like 'UserCreatable' do
+    let(:user) { subject.user }
+  end
+
   it { should respond_to(:commenter) }
   it { should respond_to(:commentable) }
   it { should respond_to(:description) }
-
-  it_behaves_like 'Activityable' do
-    let(:activityable_object) { item_comment }
-  end
-
-  it_behaves_like 'UserCreatable' do
-    let(:user_creatable_object) { FactoryGirl.build(:item_comment) }
-    let(:user) { user_creatable_object.user }
-  end
 end

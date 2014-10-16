@@ -19,6 +19,8 @@ require 'spec_helper'
 describe Cuisine do
   subject(:cuisine) { FactoryGirl.build(:cuisine) }
 
+  it_behaves_like 'Timestamps'
+
   it { should respond_to(:name) }
   it { should respond_to(:deleted_at) }
 end

@@ -23,6 +23,9 @@ require 'spec_helper'
 describe FeedItem do
   subject(:feed_item) { FactoryGirl.build(:morsel_feed_item) }
 
+  it_behaves_like 'Paranoia'
+  it_behaves_like 'Timestamps'
+
   it { should respond_to(:subject) }
   it { should respond_to(:visible) }
 
