@@ -59,3 +59,16 @@ describe 'POST /users/devices' do
     })
   end
 end
+
+describe 'DELETE /users/devices/:id devices#destroy' do
+  let(:endpoint) { "/users/devices/#{existing_device.id}"}
+  let(:current_user) { FactoryGirl.create(:user) }
+  let(:existing_device) { FactoryGirl.create(:device, user: current_user) }
+
+  it 'deletes the device' do
+    delete_endpoint
+
+    expect_success
+    expect(Device.find_by(id: existing_device.id)).to be_nil
+  end
+end
