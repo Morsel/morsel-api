@@ -5,19 +5,14 @@ class SendPushNotification
 
   validates :notification, presence: true
   validate :valid_notification?
-  validate :devices_set?
 
   def valid_notification?
     errors.add(:payload, 'not found') unless notification.payload
     errors.add(:user, 'not found') unless notification.user
   end
 
-  def devices_set?
-    errors.add(:devices, 'not set') unless devices.count > 0
-  end
-
   def call
-    return false if notification.read? || notification.sent?
+    return false if notification.read? || notification.sent? || devices.count == 0
     send_push_notifications
     return notification, push_notifications
   end
