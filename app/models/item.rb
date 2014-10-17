@@ -51,6 +51,7 @@ class Item < ActiveRecord::Base
     message = ''
     message << "#{morsel.title}: " if morsel && morsel.title?
     message << "#{description} " if description.present?
+    message
   end
 
   private
