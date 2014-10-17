@@ -25,6 +25,7 @@ describe Device do
   it_behaves_like 'Timestamps'
 
   it { should respond_to(:user) }
+  it { should respond_to(:notification_settings) }
 
   it { should be_valid }
 
@@ -53,6 +54,13 @@ describe Device do
     context 'is not present' do
       before { device.model = '' }
       it { should_not be_valid }
+    end
+  end
+
+  describe 'notification_settings defaults' do
+    before { subject.save }
+    [:notify_comments_on_my_morsel, :notify_likes_my_morsel, :notify_new_followers].each do |notification_setting|
+      its("#{notification_setting}?") { should be_true }
     end
   end
 

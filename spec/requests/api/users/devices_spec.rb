@@ -55,8 +55,33 @@ describe 'POST /users/devices' do
       'name' => name,
       'token' => token,
       'model' => model,
-      'user_id' => current_user.id
+      'user_id' => current_user.id,
+      'notification_settings' => {
+        'notify_comments_on_my_morsel' => true,
+        'notify_likes_my_morsel' => true,
+        'notify_new_followers' => true
+      }
     })
+  end
+end
+
+describe 'PUT /users/devices/:id devices#update' do
+  let(:endpoint) { "/users/devices/#{existing_device.id}"}
+  let(:current_user) { FactoryGirl.create(:user) }
+  let(:existing_device) { FactoryGirl.create(:device, user: current_user) }
+
+  it 'updates the device' do
+    put_endpoint ({
+      device: {
+        notification_settings: {
+          notify_new_followers: false
+        }
+      }
+    })
+
+    expect_success
+    expect(existing_device.reload.notify_comments_on_my_morsel?).to be_true
+    expect(existing_device.reload.notify_likes_my_morsel?).to be_true
   end
 end
 
