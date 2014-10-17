@@ -4,5 +4,6 @@ class DeviceSerializer < ActiveModel::Serializer
              :token,
              :model,
              :user_id,
-             :created_at
+             :created_at,
+             :notification_settings
 end

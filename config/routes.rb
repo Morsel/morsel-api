@@ -102,6 +102,7 @@ MorselApp::Application.routes.draw do
       get 'devices' => 'devices#index'
       post 'devices' => 'devices#create'
       delete 'devices/:id' => 'devices#destroy'
+      put 'devices/:id' => 'devices#update'
       get 'followables_activities' => 'activities#followables_activities'
       get 'notifications' => 'notifications#index'
       get 'search' => 'users#search'

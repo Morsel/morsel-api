@@ -61,6 +61,7 @@
   - [GET `/users/:id/places` - User Places](#get-usersidplaces---user-places)
   - [GET `/users/devices` - User Devices](#get-usersdevices---user-devices)
   - [POST `/users/devices` - Create User Device](#post-usersdevices---create-user-device)
+  - [PUT `/users/devices/:id` - Update User Device](#put-usersdevicesid---update-user-device)
   - [DELETE `/users/devices/:id` - Delete User Device](#delete-usersdevicesid---delete-user-device)
 
 - [Place Methods](#place-methods) [\<Followable\>](#followable)
@@ -1104,6 +1105,28 @@ Creates a new device for the [current_user](#current_user). If a matching device
 <br />
 
 
+## PUT `/users/devices/:id` - Update User Device
+Updates the device with the specified `id`. Mainly used to toggle `notification_settings`.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| device[notification_settings][notify_comments_on_my_morsel] | Boolean | `true` to send this type of notifications to this device | | |
+| device[notification_settings][notify_likes_my_morsel] | Boolean | `true` to send this type of notifications to this device | | |
+| device[notification_settings][notify_new_followers] | Boolean | `true` to send this type of notifications to this device | | |
+
+### Response
+
+| __data__ |
+| -------- |
+| Updated [Device](#device) |
+
+
+<br />
+<br />
+
+
 ## DELETE `/users/devices/:id` - Delete User Device
 Deletes the device with the specified `id`
 
@@ -1906,7 +1929,12 @@ __Request Behaviors__
   "token": "s0me t0k3n f0r pu5h n0t1f1c4t10n",
   "model": "iPhone 3G",
   "user_id": 12,
-  "created_at": "2014-01-07T18:37:19.661Z"
+  "created_at": "2014-01-07T18:37:19.661Z",
+  "notification_settings": {
+    "notify_comments_on_my_morsel": true,
+    "notify_likes_my_morsel": true,
+    "notify_new_followers": true
+  }
 }
 ```
 
