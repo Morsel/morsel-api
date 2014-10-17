@@ -25,6 +25,8 @@ class Notification < ActiveRecord::Base
   belongs_to :payload, polymorphic: true
   belongs_to :user
 
+  after_commit :queue_push_notification, on: :create
+
   scope :unread, -> { where(marked_read_at: nil) }
   scope :unread_for_user_id, -> (user_id) { unread.where(user_id: user_id) }
 
@@ -44,5 +46,11 @@ class Notification < ActiveRecord::Base
 
   def mark_sent!
     update(sent_at: DateTime.now) unless sent_at
+  end
+
+  private
+
+  def queue_push_notification
+    SendPushNotificationWorker.perform_in(1.minute, notification_id: id)
   end
 end
