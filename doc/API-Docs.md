@@ -1112,9 +1112,9 @@ Updates the device with the specified `id`. Mainly used to toggle `notification_
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| device[notification_settings][notify_comments_on_my_morsel] | Boolean | `true` to send this type of notifications to this device | | |
-| device[notification_settings][notify_likes_my_morsel] | Boolean | `true` to send this type of notifications to this device | | |
-| device[notification_settings][notify_new_followers] | Boolean | `true` to send this type of notifications to this device | | |
+| device[notification_settings][notify_item_comment] | Boolean | `true` to send this type of notifications to this device | | |
+| device[notification_settings][notify_morsel_like] | Boolean | `true` to send this type of notifications to this device | | |
+| device[notification_settings][notify_user_follow] | Boolean | `true` to send this type of notifications to this device | | |
 
 ### Response
 
@@ -1931,9 +1931,9 @@ __Request Behaviors__
   "user_id": 12,
   "created_at": "2014-01-07T18:37:19.661Z",
   "notification_settings": {
-    "notify_comments_on_my_morsel": true,
-    "notify_likes_my_morsel": true,
-    "notify_new_followers": true
+    "notify_item_comment": true,
+    "notify_morsel_like": true,
+    "notify_user_follow": true
   }
 }
 ```

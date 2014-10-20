@@ -2,7 +2,7 @@ module UserCreatable
   extend ActiveSupport::Concern
 
   included do
-    after_commit :ensure_creator_role
+    before_save :ensure_creator_role
     resourcify
   end
 

@@ -7,6 +7,7 @@ class SendPushNotification
   validate :valid_notification?
 
   def valid_notification?
+    return errors.add(:notification, 'not found') unless notification
     errors.add(:payload, 'not found') unless notification.payload
     errors.add(:user, 'not found') unless notification.user
   end
@@ -14,7 +15,7 @@ class SendPushNotification
   def call
     return false if notification.read? || notification.sent? || devices.count == 0
     send_push_notifications
-    return notification, push_notifications
+    push_notifications
   end
 
   private
@@ -57,6 +58,10 @@ class SendPushNotification
     end
   end
 
+  def notification_allowed_for_device(device)
+    ActiveRecord::ConnectionAdapters::Column.value_to_boolean(device.notification_settings["notify_#{decorated_notification.activity_type}"])
+  end
+
   def pusher
     @pusher ||= Grocer.pusher(
       certificate: certificate
@@ -71,9 +76,10 @@ class SendPushNotification
         badge:         unread_badge_count,
         sound:         decorated_notification.sound,
         expiry:        expiry,
-        identifier:    notification.id
-      )
-    end
+        identifier:    notification.id,
+        custom:        decorated_notification.custom_payload
+      ) if notification_allowed_for_device device
+    end.compact
   end
 
   def send_push_notifications
@@ -81,6 +87,6 @@ class SendPushNotification
       pusher.push(push_notification)
     end
     notification.mark_sent!
-    get_feedback
+    get_feedback # Since a notification is marked as sent already this is mainly used to log what errors are happening
   end
 end

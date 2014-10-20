@@ -30,13 +30,16 @@ class Device < ActiveRecord::Base
   validates :model, presence: true
 
   concerning :NotificationSettings do
-    NOTIFICATION_SETTINGS = [:notify_comments_on_my_morsel, :notify_likes_my_morsel, :notify_new_followers]
     included do
-      NOTIFICATION_SETTINGS.each do |notification_setting|
-        store_accessor :notification_settings, notification_setting
+      def self.notification_setting_keys
+        [:notify_item_comment, :notify_morsel_like, :notify_user_follow]
+      end
+
+      self.notification_setting_keys.each do |notification_setting_key|
+        store_accessor :notification_settings, notification_setting_key
         self.class_eval do
-          define_method :"#{notification_setting}?" do
-            ActiveRecord::ConnectionAdapters::Column.value_to_boolean(send(notification_setting))
+          define_method :"#{notification_setting_key}?" do
+            ActiveRecord::ConnectionAdapters::Column.value_to_boolean(send(notification_setting_key))
           end
         end
       end
@@ -45,8 +48,8 @@ class Device < ActiveRecord::Base
     private
 
     def default_notification_values
-      NOTIFICATION_SETTINGS.each do |notification_setting|
-        self.send("#{notification_setting}=", true) if self.send(notification_setting).nil?
+      Device.notification_setting_keys.each do |notification_setting_key|
+        self.send("#{notification_setting_key}=", true) if self.send(notification_setting_key).nil?
       end
     end
   end

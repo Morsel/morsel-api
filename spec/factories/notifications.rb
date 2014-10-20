@@ -23,5 +23,17 @@ FactoryGirl.define do
     association(:payload, factory: :item_like_activity)
     association(:user)
     message 'Some notification message'
+
+    factory :item_comment_activity_notification do
+      association(:payload, factory: :item_comment_activity)
+    end
+
+    factory :morsel_like_activity_notification do
+      association(:payload, factory: :morsel_like_activity)
+    end
+
+    factory :user_follow_activity_notification do
+      association(:payload, factory: :user_follow_activity)
+    end
   end
 end
