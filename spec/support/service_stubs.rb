@@ -1,4 +1,10 @@
 module ServiceStubs
+  def stub_apns_client(options = {})
+    grocer_pusher = double('Grocer::Pusher')
+    Grocer.stub(:pusher).and_return(grocer_pusher)
+    grocer_pusher.stub(:push).and_return true
+  end
+
   def stub_aws_s3_client
     aws_s3_client = double('AWS::S3')
     AWS::S3.stub(:new).and_return(aws_s3_client)

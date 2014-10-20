@@ -14,10 +14,10 @@ class DevicesController < ApiController
     device = Device.find(params[:id])
     authorize_action_for device
 
-    notification_settings = DeviceParams.build(params)[:notification_settings]
-    device.notify_comments_on_my_morsel= notification_settings[:notify_comments_on_my_morsel] unless notification_settings[:notify_comments_on_my_morsel].nil?
-    device.notify_likes_my_morsel= notification_settings[:notify_likes_my_morsel] unless notification_settings[:notify_likes_my_morsel].nil?
-    device.notify_new_followers= notification_settings[:notify_new_followers] unless notification_settings[:notify_new_followers].nil?
+    notification_settings_params = DeviceParams.build(params)[:notification_settings]
+    Device.notification_setting_keys.each do |notification_setting_key|
+      device.send("#{notification_setting_key}=", notification_settings_params[notification_setting_key]) unless notification_settings_params[notification_setting_key].nil?
+    end
 
     if device.save
       custom_respond_with device
@@ -39,7 +39,7 @@ class DevicesController < ApiController
 
   class DeviceParams
     def self.build(params, _scope = nil)
-      params.require(:device).permit(:name, :token, :user_id, :model, notification_settings: [:notify_comments_on_my_morsel, :notify_likes_my_morsel, :notify_new_followers])
+      params.require(:device).permit(:name, :token, :user_id, :model, notification_settings: Device.notification_setting_keys)
     end
   end
 

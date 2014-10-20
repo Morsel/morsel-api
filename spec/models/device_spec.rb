@@ -59,7 +59,7 @@ describe Device do
 
   describe 'notification_settings defaults' do
     before { subject.save }
-    [:notify_comments_on_my_morsel, :notify_likes_my_morsel, :notify_new_followers].each do |notification_setting|
+    Device.notification_setting_keys.each do |notification_setting|
       its("#{notification_setting}?") { should be_true }
     end
   end
