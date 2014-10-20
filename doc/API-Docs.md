@@ -1114,6 +1114,7 @@ Updates the device with the specified `id`. Mainly used to toggle `notification_
 | ------------------- | ------- | ----------- | ------- | --------- |
 | device[notification_settings][notify_item_comment] | Boolean | `true` to send this type of notifications to this device | | |
 | device[notification_settings][notify_morsel_like] | Boolean | `true` to send this type of notifications to this device | | |
+| device[notification_settings][notify_morsel_morsel_user_tag] | Boolean | `true` to send this type of notifications to this device | | |
 | device[notification_settings][notify_user_follow] | Boolean | `true` to send this type of notifications to this device | | |
 
 ### Response
@@ -1933,6 +1934,7 @@ __Request Behaviors__
   "notification_settings": {
     "notify_item_comment": true,
     "notify_morsel_like": true,
+    "notify_morsel_morsel_user_tag": true,
     "notify_user_follow": true
   }
 }

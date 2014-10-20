@@ -39,6 +39,12 @@ FactoryGirl.define do
     association(:subject, factory: :morsel_with_creator)
   end
 
+  factory :morsel_morsel_user_tag_activity, class: Activity do
+    association(:creator, factory: :user)
+    association(:action, factory: :morsel_user_tag)
+    association(:subject, factory: :morsel_with_creator)
+  end
+
   factory :user_follow_activity, class: Activity do
     association(:creator, factory: :user)
     association(:action, factory: :user_follow)

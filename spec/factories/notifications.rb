@@ -32,6 +32,10 @@ FactoryGirl.define do
       association(:payload, factory: :morsel_like_activity)
     end
 
+    factory :morsel_morsel_user_tag_activity_notification do
+      association(:payload, factory: :morsel_morsel_user_tag_activity)
+    end
+
     factory :user_follow_activity_notification do
       association(:payload, factory: :user_follow_activity)
     end

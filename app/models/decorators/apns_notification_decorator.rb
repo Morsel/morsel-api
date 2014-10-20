@@ -9,12 +9,12 @@ class ApnsNotificationDecorator < SimpleDelegator
   end
 
   def sound
-    # Only play a sound for Comments
-    'default' if activity_payload? && payload.action_type == 'Comment'
+    # Only play a sound for Comments or Morsel User Tags
+    'default' if activity_payload? && (payload.action_type == 'Comment' || payload.action_type == 'MorselUserTag')
   end
 
   def activity_type
-    "#{payload.subject_type.downcase}_#{payload.action_type.downcase}" if activity_payload?
+    "#{payload.subject_type.underscore}_#{payload.action_type.underscore}" if activity_payload?
   end
 
   private
@@ -44,6 +44,8 @@ class ApnsNotificationDecorator < SimpleDelegator
       'followers'
     elsif payload.action_type == 'Like'
       'likers'
+    elsif payload.action_type == 'MorselUserTag'
+      'user_tags'
     end
   end
 end

@@ -1,7 +1,7 @@
 class LikesController < ApiController
   def create
     if Like.find_by(likeable_id: params[:id], likeable_type: likeable_type, liker_id: current_user.id)
-      render_json_errors("#{likeable_type.downcase}" => ['already liked'])
+      render_json_errors("#{likeable_type.underscore}" => ['already liked'])
     else
       like = Like.new(likeable_id: params[:id], likeable_type: likeable_type, liker_id: current_user.id)
       if like.save
@@ -14,7 +14,7 @@ class LikesController < ApiController
 
   def destroy
     like = Like.find_by(likeable_id: params[:id], likeable_type: likeable_type, liker_id: current_user.id)
-    render_json_errors("#{likeable_type.downcase}" => ['not liked']) && return unless like
+    render_json_errors("#{likeable_type.underscore}" => ['not liked']) && return unless like
     authorize_action_for like
 
     if like.destroy

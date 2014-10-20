@@ -32,7 +32,7 @@ class Device < ActiveRecord::Base
   concerning :NotificationSettings do
     included do
       def self.notification_setting_keys
-        [:notify_item_comment, :notify_morsel_like, :notify_user_follow]
+        [:notify_item_comment, :notify_morsel_like, :notify_morsel_morsel_user_tag, :notify_user_follow]
       end
 
       self.notification_setting_keys.each do |notification_setting_key|
