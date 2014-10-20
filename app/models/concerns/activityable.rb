@@ -6,6 +6,8 @@ module Activityable
 
     class_attribute :activity_hidden
     class_attribute :activity_notification
+    attr_accessor :silent
+
     after_commit :create_activity_for_activityable, on: :create
     def self.activity_hidden; false end
     def self.activity_notification; false end
@@ -28,7 +30,8 @@ module Activityable
       creator_id: activity_creator.id,
       recipient_id: recipient_id,
       notify_recipient: activity_notification,
-      hidden: activity_hidden
+      hidden: activity_hidden,
+      silent: silent
     )
   end
 

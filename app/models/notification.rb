@@ -25,6 +25,8 @@ class Notification < ActiveRecord::Base
   belongs_to :payload, polymorphic: true
   belongs_to :user
 
+  attr_accessor :silent
+
   after_commit :queue_push_notification, on: :create
 
   scope :unread, -> { where(marked_read_at: nil) }
@@ -51,6 +53,6 @@ class Notification < ActiveRecord::Base
   private
 
   def queue_push_notification
-    SendPushNotificationWorker.perform_in(1.minute, notification_id: id)
+    SendPushNotificationWorker.perform_in(1.minute, notification_id: id) unless silent
   end
 end

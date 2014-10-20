@@ -7,6 +7,7 @@ class CreateActivity
   attribute :recipient_id, String
   attribute :notify_recipient, Boolean, default: false
   attribute :hidden, Boolean, default: false
+  attribute :silent, Boolean, default: false
 
   def call
     create_activity
@@ -42,7 +43,8 @@ class CreateActivity
   def send_notification
     CreateNotification.call(
       payload: activity,
-      user_id: recipient_id
+      user_id: recipient_id,
+      silent:  silent
     )
   end
 

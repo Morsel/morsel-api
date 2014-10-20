@@ -26,6 +26,17 @@ describe FollowSocialUids do
         expect(service_response.count).to eq(number_of_connected_uids)
         expect(authentication.user.followed_user_count).to eq(number_of_connected_uids)
       end
+
+      it 'should NOT queue any push notifications' do
+        Sidekiq::Testing.inline! do
+          expect {
+            call_service({
+              authentication: authentication,
+              uids: stubbed_uids
+            })
+          }.to_not change(SendPushNotificationWorker.jobs, :size).by(1)
+        end
+      end
     end
   end
 
