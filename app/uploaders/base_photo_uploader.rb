@@ -27,8 +27,7 @@ class BasePhotoUploader < CarrierWave::Uploader::Base
   end
 
   def secure_token
-    var = :"@#{mounted_as}_secure_token"
-    model.instance_variable_get(var) || model.instance_variable_set(var, PreparePresignedUpload.short_secure_token)
+    PreparePresignedUpload.secure_token_for_model(model)
   end
 
   process :set_content_type

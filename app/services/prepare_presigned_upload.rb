@@ -25,6 +25,17 @@ class PreparePresignedUpload
     SecureRandom.uuid.split('-')[0]
   end
 
+  def self.secure_token_for_model(model)
+    redis = Redis.new url: ENV['OPENREDIS_URL']
+    redis_key = "photo_secure_token/#{model.class}/#{model.id}"
+    secure_token = redis.get redis_key
+    unless secure_token
+      secure_token = PreparePresignedUpload.short_secure_token
+      redis.setex redis_key, 60, secure_token
+    end
+    secure_token
+  end
+
   def call
     if form
       form.fields.merge('url' => form.url.to_s)
@@ -56,6 +67,6 @@ class PreparePresignedUpload
   end
 
   def key_name
-    @key_name ||= "#{PreparePresignedUpload.store_dir_for_model(model)}/#{PreparePresignedUpload.short_secure_token}-${filename}"
+    @key_name ||= "#{PreparePresignedUpload.store_dir_for_model(model)}/#{PreparePresignedUpload.secure_token_for_model(model)}-${filename}"
   end
 end
