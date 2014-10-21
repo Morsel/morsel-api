@@ -6,7 +6,7 @@ class UserPhotoUploader < BasePhotoUploader
     process resize_to_fill: [144, 144]
   end
 
-  version :_72x72, from_version: :_144x144 do
+  version :_72x72 do
     process resize_to_fill: [72, 72]
   end
 
@@ -16,7 +16,7 @@ class UserPhotoUploader < BasePhotoUploader
   end
 
   # Thumbnail
-  version :_40x40, from_version: :_80x80 do
+  version :_40x40 do
     process resize_to_fill: [40, 40]
   end
 end
