@@ -32,6 +32,6 @@ class HandlePhotoKey
   end
 
   def table_name
-    @table_name ||= model.class.table_name
+    model.class.table_name
   end
 end
