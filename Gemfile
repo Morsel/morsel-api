@@ -92,6 +92,7 @@ group :test do
   gem 'codeclimate-test-reporter', group: :test, require: nil
   gem 'database_cleaner', '1.0.1'
   gem 'email_spec'
+  gem 'fakeredis', '~> 0.5.0', require: 'fakeredis/rspec'
   gem 'test_after_commit', '~> 0.3.0'
 end
 

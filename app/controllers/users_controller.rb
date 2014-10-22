@@ -102,7 +102,7 @@ class UsersController < ApiController
   end
 
   PUBLIC_ACTIONS << def forgot_password
-    user = User.find_by(email: params.fetch(:email))
+    user = User.find_by User.arel_table[:email].lower.eq(params.fetch(:email).downcase)
     EmailUserDecorator.new(user).send_forgot_password_email if user
     render_json('Sending reset password email.')
   end
@@ -126,7 +126,7 @@ class UsersController < ApiController
   end
 
   PUBLIC_ACTIONS << def unsubscribe
-    user = User.find_by(email: params[:email])
+    user = User.find_by User.arel_table[:email].lower.eq(params.fetch(:email).downcase)
 
     if user.update(unsubscribed: true)
       render_json_ok

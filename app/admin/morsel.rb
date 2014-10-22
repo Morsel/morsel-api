@@ -101,7 +101,7 @@ ActiveAdmin.register Morsel do
       row :deleted_at
       row 'Links' do
         links = ''.html_safe
-        if morsel.url
+        if !morsel.deleted? && morsel.url
           links += link_to(' View on Web', morsel.url, target: :_blank)
         end
         links

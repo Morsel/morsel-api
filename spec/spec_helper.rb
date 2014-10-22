@@ -9,6 +9,7 @@ require 'email_spec'
 require 'factory_girl'
 require 'sidekiq/testing'
 require 'mandrill_mailer/offline'
+require 'fakeredis/rspec'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.

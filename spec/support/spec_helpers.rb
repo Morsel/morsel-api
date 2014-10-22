@@ -155,4 +155,18 @@ module SpecHelpers
       end
     end
   end
+
+  def redis_get(key)
+    redis.get key
+  end
+
+  def redis_set(key, value)
+    redis.set key, value
+  end
+
+  private
+
+  def redis
+    @redis ||= Redis.new url: ENV['OPENREDIS_URL']
+  end
 end

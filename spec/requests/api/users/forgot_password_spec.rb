@@ -6,7 +6,7 @@ describe 'POST /users/forgot_password users#forgot_password' do
 
   it 'sends an email' do
     expect{
-      Sidekiq::Testing.inline! { post_endpoint email: user.email }
+      Sidekiq::Testing.inline! { post_endpoint email: user.email.swapcase }
     }.to change(Devise::Mailer.deliveries, :count).by(1)
 
     expect_success

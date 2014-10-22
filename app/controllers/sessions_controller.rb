@@ -9,6 +9,8 @@ class SessionsController < Devise::SessionsController
       return sign_in_with_login_and_password((params[:user][:email] || params[:user][:username] || params[:user][:login]), params[:user][:password])
     elsif params[:authentication].present?
       return sign_in_with_authentication(AuthenticationsController::AuthenticationParams.build(params))
+    elsif params[:shadow_token].present? && params[:user_id].present?
+      return sign_in_with_shadow_token(params[:user_id], params[:shadow_token])
     else
       invalid_login_attempt(:unprocessable_entity)
     end
@@ -51,6 +53,14 @@ class SessionsController < Devise::SessionsController
     else
       render_json_errors(authentication.errors)
     end
+  end
+
+  def sign_in_with_shadow_token(user_id, shadow_token)
+    user = User.find user_id
+    return invalid_login_attempt unless ValidateShadowToken.call(user: user, shadow_token: shadow_token).valid?
+
+    sign_in user, store: false
+    custom_respond_with user, serializer: UserWithAuthTokenSerializer
   end
 
   def invalid_login_attempt(http_status = :unauthorized)

@@ -173,4 +173,35 @@ describe 'POST /users/sign_in sessions#create' do
       expect(json_data['photos']).to be_nil
     end
   end
+
+  context 'shadow_token' do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:shadow_token) { Faker::Lorem.characters(32) }
+    let(:redis_key) { "user_shadow_token/#{user.id}" }
+
+    before do
+      redis_set redis_key, shadow_token
+    end
+
+    it 'signs in the User' do
+      post_endpoint({
+        user_id: user.id,
+        shadow_token: shadow_token
+      })
+
+      expect_success
+      expect_json_data_eq({
+        'id' => user.id,
+        'username' => user.username,
+        'first_name' => user.first_name,
+        'last_name' => user.last_name,
+        'bio' => user.bio,
+        'auth_token' => user.authentication_token,
+        'sign_in_count' => 1,
+        'password' => nil,
+        'encrypted_password' => nil
+      })
+      expect(json_data['photos']).to be_nil
+    end
+  end
 end
