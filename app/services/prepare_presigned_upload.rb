@@ -26,14 +26,19 @@ class PreparePresignedUpload
   end
 
   def self.secure_token_for_model(model)
-    redis = Redis.new url: ENV['OPENREDIS_URL']
-    redis_key = "photo_secure_token/#{model.class}/#{model.id}"
-    secure_token = redis.get redis_key
-    unless secure_token
-      secure_token = PreparePresignedUpload.short_secure_token
-      redis.setex redis_key, 60, secure_token
+    if Rails.env.test?
+      var = :"@photo_secure_token"
+      model.instance_variable_get(var) || model.instance_variable_set(var, PreparePresignedUpload.short_secure_token)
+    else
+      redis = Redis.new url: ENV['OPENREDIS_URL']
+      redis_key = "photo_secure_token/#{model.class}/#{model.id}"
+      secure_token = redis.get redis_key
+      unless secure_token
+        secure_token = PreparePresignedUpload.short_secure_token
+        redis.setex redis_key, 60, secure_token
+      end
+      secure_token
     end
-    secure_token
   end
 
   def call

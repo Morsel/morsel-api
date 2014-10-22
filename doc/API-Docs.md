@@ -5,6 +5,9 @@
   - [Errors](#errors)
   - [About the API Documentation](#about-the-api-documentation)File
 
+- [Admin](#admin)
+  - [Shadowing Users](#shadowing-users)
+
 - [API Authentication](#api-authentication)
 
 - [Constants](#constants)
@@ -222,6 +225,14 @@ Errors are returned as a dictionary in `errors`. Each key represents the resourc
   "data": null
 }
 ```
+
+
+# Admin
+There's an admin dashboard accessible at `/admin` for admin users.
+
+## Shadowing Users
+Admins have the ability to shadow a User onto web. This will redirect them to the website with a special `shadow_token` to log them in as another User. The `shadow_token` expires after it is used or after a minute.
+
 
 # API Authentication
 The API uses two different levels of authentication, depending on the method.
@@ -610,6 +621,12 @@ If the `Authentication` passed in [Sign In w/ Authentication](#sign-in-w--authen
 | authentication[token] | String | The User's Access Token for the provider. | | X |
 | authentication[secret] | String | The User's Access Token Secret for the provider. Only required for Twitter. | | Twitter |
 | authentication[short_lived] | Boolean | Set to `true` if the token passed is a short-lived token. | false | |
+
+#### Sign In w/ Shadow Token
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| authentication[shadow_token] | String | The Shadow Token for the User. | | X |
+| authentication[uid] | String | The User's ID. | | X |
 
 ### Response
 

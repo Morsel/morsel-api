@@ -24,6 +24,14 @@ ActiveAdmin.register User do
   scope :suggested
   scope :professional
 
+  member_action :shadow do
+    user = User.find(params[:id])
+    shadow_token_service = GenerateShadowToken.call(user: user)
+    if shadow_token_service.valid?
+      redirect_to("#{Settings.morsel.web_url}/admin/shadow?user_id=#{user.id}&shadow_token=#{shadow_token_service.response}", target: :_blank)
+    end
+  end
+
   controller do
     def update
       user = User.find params[:id]
@@ -51,8 +59,12 @@ ActiveAdmin.register User do
     column 'Links' do |user|
       links = ''.html_safe
       links += link_to 'Edit', edit_admin_user_path(user.id)
-      links += '<br />'.html_safe
-      links += link_to('View on Web', user.url, target: :_blank)
+      unless user.deleted?
+        links += '<br />'.html_safe
+        links += link_to('View on Web', user.url, target: :_blank)
+        links += '<br />'.html_safe
+        links += link_to('Shadow', shadow_admin_user_path(user), target: :_blank)
+      end
       links
     end
     column :email
@@ -87,7 +99,9 @@ ActiveAdmin.register User do
       row :id
       row 'Links' do
         links = ''.html_safe
-        links += link_to('View on Web', user.url, target: :_blank) if user.url
+        unless user.deleted?
+          links += link_to('View on Web', user.url, target: :_blank) if user.url
+        end
         links
       end
       row :email
@@ -116,8 +130,10 @@ ActiveAdmin.register User do
         # end
         column 'Links' do |place|
           links = ''.html_safe
-          links += link_to('View on Web', place.url, target: :_blank)
-          links += '<br />'.html_safe
+          unless place.deleted?
+            links += link_to('View on Web', place.url, target: :_blank)
+            links += '<br />'.html_safe
+          end
           links += link_to('View Widget', place.widget_url, target: :_blank) if place.widget_url
           # links += link_to 'Edit', edit_admin_place_path(place.id)
           links
@@ -163,8 +179,10 @@ ActiveAdmin.register User do
         column 'Links' do |morsel|
           links = ''.html_safe
           links += link_to 'Edit', edit_admin_morsel_path(morsel.id)
-          links += '<br />'.html_safe
-          links += link_to('View on Web', morsel.url, target: :_blank)
+          unless morsel.deleted?
+            links += '<br />'.html_safe
+            links += link_to('View on Web', morsel.url, target: :_blank)
+          end
           links
         end
         column :title
