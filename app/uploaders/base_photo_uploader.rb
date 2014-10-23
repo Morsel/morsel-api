@@ -22,8 +22,7 @@ class BasePhotoUploader < CarrierWave::Uploader::Base
   end
 
   def filename
-    return unless original_filename
-    "#{secure_token}.#{file.extension}"
+    "#{secure_token}.#{file.extension}" if original_filename.present?
   end
 
   def secure_token
