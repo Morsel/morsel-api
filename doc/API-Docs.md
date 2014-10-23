@@ -54,7 +54,7 @@
   - [GET `/users/:id|:username/morsels` - User Morsels](#get-usersidusernamemorsels---user-morsels)
   - [GET `/users/activities` - User Activities](#get-usersactivities---user-activities)
   - [GET `/users/followables_activities` - User Followables Activities](#get-usersfollowables_activities---user-followables-activities)
-  - [GET `/users/notifications` - User Notifications](#get-usersnotifications---user-notifications) __DEPRECATED__
+  - [GET `/users/notifications` - User Notifications](#get-usersnotifications---user-notifications)
   - [GET `/users/:id/likeables` - User Likeables](#get-usersidlikeables---user-likeables)
   - [POST `/users/:id/tags` - Create User Tag](#post-usersidtags---create-user-tag)
   - [DELETE `/users/:id/tags/:tag_id` - Delete User Tag](#delete-usersidtagstag_id---delete-user-tag)
@@ -764,7 +764,7 @@ __Request Behaviors__
 <br />
 
 ## GET `/users/validate_username` - Validate Username
-__DEPRECATED__ Returns `true` if the username is valid, otherwise errors.
+Returns `true` if the username is valid, otherwise errors.
 
 __Request Behaviors__
 * [Public](#public)
@@ -956,7 +956,7 @@ __Request Behaviors__
 <br />
 
 ## GET `/users/notifications` - User Notifications
-__DEPRECATED__ Alias for [GET `/notifications` - Notifications](#get-notifications---notifications)
+Alias for [GET `/notifications` - Notifications](#get-notifications---notifications)
 
 <br />
 <br />
@@ -1989,8 +1989,7 @@ __Request Behaviors__
       "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
       "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
     },
-    "photo_processing": null,
-    "liked": false
+    "photo_processing": null
   }
 ```
 
@@ -2037,8 +2036,7 @@ Response for any Like Item related requests.
 ```json
 {
   "draft": false,
-  "total_like_count": 10,
-  "total_comment_count": 3,
+  "like_count": 10,
   "url": "https://eatmorsel.com/turdferg/4-butter-rocks",
   "template_id": null,
   "mrsl": {
@@ -2057,6 +2055,7 @@ Response for any Like Item related requests.
   },
   "has_tagged_users": false,
   "tagged": false,
+  "liked": false,
   "photos": {
     "_800x600":"https://morsel-staging.s3.amazonaws.com/morsel-images/4/648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
   }

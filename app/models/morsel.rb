@@ -67,10 +67,6 @@ class Morsel < ActiveRecord::Base
     items.map(&:like_count).reduce(:+)
   end
 
-  def total_comment_count
-    items.map(&:comment_count).reduce(:+)
-  end
-
   def item_count
     items.count
   end

@@ -1,14 +1,15 @@
 class MorselSerializer < SlimMorselSerializer
   attributes :draft,
              :total_like_count,
-             :total_comment_count,
+             :like_count,
              :url,
              :template_id,
              :facebook_mrsl,  # DEPRECATED, use mrsl[facebook_mrsl] instead
              :twitter_mrsl,   # DEPRECATED, use mrsl[twitter_mrsl] instead
              :mrsl,
              :has_tagged_users,
-             :tagged
+             :tagged,
+             :liked
 
   has_one :creator, serializer: SlimUserSerializer
   has_many :items, serializer: ItemSansMorselSerializer
@@ -20,5 +21,9 @@ class MorselSerializer < SlimMorselSerializer
 
   def tagged
     has_tagged_users && scope.present? && object.tagged_user?(scope)
+  end
+
+  def liked
+    scope.present? && scope.likes_morsel?(object)
   end
 end

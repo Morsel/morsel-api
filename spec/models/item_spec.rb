@@ -54,21 +54,6 @@ describe Item do
       expect(item.creator.can_update?(item)).to be_true
     end
 
-    context 'with likes' do
-      let(:likes_count) { rand(3..6) }
-      before do
-        likes_count.times do
-          item.likers << FactoryGirl.create(:user)
-        end
-      end
-
-      describe '.total_like_count' do
-        it 'returns the number of likes for an Item' do
-          expect(item.like_count).to eq(likes_count)
-        end
-      end
-    end
-
     context 'with comments' do
       let(:comments_count) { rand(3..6) }
       before do
