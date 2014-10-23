@@ -40,6 +40,9 @@ class Morsel < ActiveRecord::Base
 
   belongs_to :place
 
+  has_many :collection_morsels, dependent: :destroy
+  has_many :collections, through: :collection_morsels, source: :collection
+
   has_many :items, -> { order(Item.arel_table[:sort_order].asc) }, dependent: :destroy
   belongs_to :primary_item, class_name: 'Item'
 

@@ -153,7 +153,7 @@ describe 'GET /morsels/:id/eligible_tagged_users' do
   context 'query' do
     before { FactoryGirl.create(:user_follow, followable: morsel_creator, follower: FactoryGirl.create(:user, first_name: 'Arya', last_name: 'Stark')) }
     it 'returns eligible Users matching `first_name`, `last_name`, and `username`' do
-      get_endpoint query: 'stark'
+      get_endpoint query: 'Arya'
 
       expect_success
       expect_json_data_count 1

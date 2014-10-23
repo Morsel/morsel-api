@@ -79,6 +79,7 @@ class User < ActiveRecord::Base
   has_many :followed_places, through: :followable_follows, source: :followable, source_type: 'Place'
   has_many :followed_keywords, through: :followable_follows, source: :followable, source_type: 'Keyword'
 
+  has_many :collections
   has_many :items, foreign_key: :creator_id
   has_many :morsels, foreign_key: :creator_id
   has_many :activities, foreign_key: :creator_id
