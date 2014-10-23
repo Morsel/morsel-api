@@ -33,6 +33,7 @@ class Place < ActiveRecord::Base
   include Authority::Abilities, Followable, TimelinePaginateable
   acts_as_paranoid
   is_sluggable :name, slug_column: :slug
+  alias_attribute :cached_slug, :slug
 
   belongs_to :creator, class_name: 'User'
   has_many :employments, inverse_of: :place

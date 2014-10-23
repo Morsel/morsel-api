@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141017153442) do
+ActiveRecord::Schema.define(version: 20141023215540) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,6 +83,33 @@ ActiveRecord::Schema.define(version: 20141017153442) do
 
   add_index "authorizations", ["uid", "name"], name: "index_authorizations_on_uid_and_name", using: :btree
   add_index "authorizations", ["user_id"], name: "index_authorizations_on_user_id", using: :btree
+
+  create_table "collection_morsels", force: true do |t|
+    t.integer  "collection_id"
+    t.integer  "morsel_id"
+    t.integer  "sort_order"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "collection_morsels", ["collection_id"], name: "index_collection_morsels_on_collection_id", using: :btree
+  add_index "collection_morsels", ["morsel_id"], name: "index_collection_morsels_on_morsel_id", using: :btree
+
+  create_table "collections", force: true do |t|
+    t.string   "title"
+    t.text     "description"
+    t.integer  "user_id"
+    t.integer  "place_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "cached_slug"
+  end
+
+  add_index "collections", ["cached_slug"], name: "index_collections_on_cached_slug", using: :btree
+  add_index "collections", ["place_id"], name: "index_collections_on_place_id", using: :btree
+  add_index "collections", ["user_id"], name: "index_collections_on_user_id", using: :btree
 
   create_table "comments", force: true do |t|
     t.integer  "commenter_id"

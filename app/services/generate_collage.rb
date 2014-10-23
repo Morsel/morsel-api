@@ -34,7 +34,6 @@ class GenerateCollage
 
   def collage
     @collage ||= begin
-      puts "item count: #{item_count}"
       if item_count > 2
         composite_three_item_collage.mrsl_watermark
       elsif item_count > 1
@@ -74,7 +73,6 @@ class GenerateCollage
   end
 
   def composite_one_item_collage
-    puts 'one item'
     canvas.composite(image_for_item(cover_item, :_480x480)) do |cover|
       cover.compose 'Over'
       cover.gravity 'Center'
@@ -83,7 +81,6 @@ class GenerateCollage
   end
 
   def composite_two_item_collage
-    puts 'two item'
     canvas.composite(image_for_item(cover_item, :_480x480)) do |cover|
       cover.compose 'Over'
       cover.gravity 'West'
@@ -96,7 +93,6 @@ class GenerateCollage
   end
 
   def composite_three_item_collage
-    puts 'three item'
     canvas.composite(image_for_item(cover_item, :_640x640)) do |cover|
       cover.compose 'Over'
       cover.gravity 'West'

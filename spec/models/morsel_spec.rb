@@ -32,6 +32,7 @@ describe Morsel do
 
   it_behaves_like 'Likeable'
   it_behaves_like 'Paranoia'
+  it_behaves_like 'Sluggable'
   it_behaves_like 'Timestamps'
   it_behaves_like 'UserCreatable' do
     subject(:morsel_with_creator) { FactoryGirl.build(:morsel_with_creator) }
@@ -39,7 +40,6 @@ describe Morsel do
   end
 
   it { should respond_to(:title) }
-  it { should respond_to(:cached_slug) }
   it { should respond_to(:draft) }
   it { should respond_to(:published_at) }
   it { should respond_to(:primary_item_id) }

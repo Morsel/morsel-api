@@ -35,6 +35,7 @@ describe Place do
   subject(:place) { FactoryGirl.build(:place) }
 
   it_behaves_like 'Paranoia'
+  it_behaves_like 'Sluggable'
   it_behaves_like 'Timestamps'
 
   it { should respond_to(:creator) }
