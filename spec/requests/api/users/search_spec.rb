@@ -29,6 +29,24 @@ describe 'GET /users/search users#search' do
       expect_json_data_count 3
       expect(json_data.first['following']).to be_false
     end
+
+    describe 'narrowing down multiple Pauls' do
+      before do
+        FactoryGirl.create(:user, first_name: 'Paul', last_name: 'Fehribach')
+        FactoryGirl.create(:user, first_name: 'Paul', last_name: 'Kahan')
+      end
+
+      it 'returns users by first and last name matching' do
+        get_endpoint  user: {
+                              query: 'Paul Kahan'
+                            }
+
+        expect_success
+        expect_json_data_count 1
+        expect(json_data.first['following']).to be_false
+        expect(json_data.first['last_name']).to eq('Kahan')
+      end
+    end
   end
 
   context 'promoted' do
