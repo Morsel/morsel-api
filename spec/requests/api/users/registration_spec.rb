@@ -51,7 +51,46 @@ describe 'POST /users registrations#create' do
     expect(new_user.promoted).to be_false
 
     expect(json_data['photos']).to_not be_nil
-   end
+  end
+
+  context 'remote_photo_url' do
+    it 'creates a new User' do
+      Sidekiq::Testing.inline! do
+        post_endpoint user: {
+                        email: Faker::Internet.email,
+                        password: 'password',
+                        first_name: 'Foo',
+                        last_name: 'Bar',
+                        username: "user_#{Faker::Lorem.characters(10)}",
+                        bio: 'Foo to the Stars',
+                        industry: 'diner',
+                        remote_photo_url: 'http://placepuppy.it/200/300.jpg',
+                        promoted: true
+                      }
+      end
+
+      expect_success
+      expect(json_data['id']).to_not be_nil
+
+      new_user = User.find json_data['id']
+      expect_json_data_eq({
+        'id' => new_user.id,
+        'username' => new_user.username,
+        'first_name' => new_user.first_name,
+        'last_name' => new_user.last_name,
+        'sign_in_count' => new_user.sign_in_count,
+        'bio' => new_user.bio,
+        'auth_token' => new_user.authentication_token,
+        'password' => nil,
+        'encrypted_password' => nil,
+        'password_set' => true
+      })
+
+      expect(new_user.promoted).to be_false
+
+      expect(json_data['photos']).to_not be_nil
+    end
+  end
 
   it 'creates a user_event' do
     expect {

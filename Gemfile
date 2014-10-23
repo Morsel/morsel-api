@@ -71,6 +71,7 @@ group :development, :test do
   gem 'bullet', '~> 4.14.0'
   gem 'bundler-audit'
   gem 'childprocess', '0.3.6'
+  gem 'did_you_mean'
   gem 'dotenv-rails'
   gem 'factory_girl_rails'
   gem 'faker'
