@@ -5,6 +5,18 @@ describe 'GET /morsels morsels#show' do
   let(:items_count) { 4 }
   let(:morsel_with_items) { FactoryGirl.create(:morsel_with_items, items_count: items_count) }
 
+  context 'current_user likes the Morsel' do
+    let(:current_user) { FactoryGirl.create(:user) }
+    before { Like.create(likeable: morsel_with_items, liker: current_user) }
+
+    it 'returns liked=true' do
+      get_endpoint
+
+      expect_success
+      expect_json_data_eq('liked' => true)
+    end
+  end
+
   it 'returns the Morsel' do
     get_endpoint
 
@@ -18,7 +30,8 @@ describe 'GET /morsels morsels#show' do
       'place' => {
         'widget_url' => morsel_with_items.place.widget_url
       },
-      'has_tagged_users' => false
+      'has_tagged_users' => false,
+      'liked' => false
     })
     expect(json_data['items'].count).to eq(items_count)
   end

@@ -30,6 +30,7 @@ require 'spec_helper'
 describe Morsel do
   subject(:morsel) { FactoryGirl.build(:morsel) }
 
+  it_behaves_like 'Likeable'
   it_behaves_like 'Paranoia'
   it_behaves_like 'Timestamps'
   it_behaves_like 'UserCreatable' do
@@ -50,7 +51,6 @@ describe Morsel do
   it { should respond_to(:items) }
 
   it { should respond_to(:total_like_count) }
-  it { should respond_to(:total_comment_count) }
 
   it { should be_valid }
 
@@ -157,21 +157,6 @@ describe Morsel do
       end
     end
 
-    context 'with likes' do
-      let(:likes_count) { rand(3..6) }
-      before do
-        likes_count.times do
-          morsel_with_items.items.sample.likers << FactoryGirl.create(:user)
-        end
-      end
-
-      describe '.total_like_count' do
-        it 'returns the total number of likes for all Items in a Morsel' do
-          expect(morsel_with_items.total_like_count).to eq(likes_count)
-        end
-      end
-    end
-
     context 'primary_item gets destroyed' do
       before do
         morsel_with_items.primary_item.destroy
@@ -179,19 +164,6 @@ describe Morsel do
       end
       it 'should nil the primary_item_id' do
         expect(morsel_with_items.primary_item_id).to be_nil
-      end
-    end
-
-    context 'with comments' do
-      let(:comments_count) { rand(3..6) }
-      before do
-        comments_count.times { Comment.create(commenter: FactoryGirl.create(:user), commentable: morsel_with_items.items.sample, description: Faker::Lorem.sentence(rand(1..3))) }
-      end
-
-      describe '.total_comment_count' do
-        it 'returns the total number of comments for all Items in a Morsel' do
-          expect(morsel_with_items.total_comment_count).to eq(comments_count)
-        end
       end
     end
   end

@@ -72,6 +72,7 @@ class User < ActiveRecord::Base
 
   has_many :likes, foreign_key: :liker_id
   has_many :liked_items, through: :likes, source: :likeable, source_type: 'Item'
+  has_many :liked_morsels, through: :likes, source: :likeable, source_type: 'Morsel'
 
   has_many :followable_follows, foreign_key: :follower_id, class_name: 'Follow', dependent: :destroy
   has_many :followed_users, through: :followable_follows, source: :followable, source_type: 'User'
@@ -170,12 +171,12 @@ class User < ActiveRecord::Base
     end
   end
 
-  def liked_item_count
-    liked_items.count
-  end
-
   def likes_item?(item)
     liked_items.include?(item)
+  end
+
+  def likes_morsel?(morsel)
+    liked_morsels.include?(morsel)
   end
 
   def morsel_count
