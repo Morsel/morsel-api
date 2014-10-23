@@ -9,6 +9,17 @@ class CollectionsController < ApiController
     end
   end
 
+  def destroy
+    collection = Collection.find(params[:id])
+    authorize_action_for collection
+
+    if collection.destroy
+      render_json_ok
+    else
+      render_json_errors(collection.errors)
+    end
+  end
+
   class CollectionParams
     def self.build(params, _scope = nil)
       params.require(:collection).permit(:title, :description, :place_id)
