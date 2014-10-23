@@ -85,14 +85,21 @@ FactoryGirl.define do
       factory :chef_with_twitter_authentication, traits: [:with_twitter_authentication]
     end
 
+    factory :user_with_collection, traits: [:with_collection]
     factory :user_with_morsels, traits: [:with_morsels]
 
 
     # Traits
 
+    trait :with_collection do
+      after(:create) do |user|
+        create_list(:collection, 1, user: user)
+      end
+    end
+
     trait :with_facebook_authentication do
       after(:create) do |user|
-        create_list(:facebook_authentication, 1, user:user)
+        create_list(:facebook_authentication, 1, user: user)
       end
     end
 
@@ -108,7 +115,7 @@ FactoryGirl.define do
 
     trait :with_twitter_authentication do
       after(:create) do |user|
-        create_list(:twitter_authentication, 1, user:user)
+        create_list(:twitter_authentication, 1, user: user)
       end
     end
   end

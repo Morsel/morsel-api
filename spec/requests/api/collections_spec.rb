@@ -21,4 +21,17 @@ describe 'Collections API Methods' do
       })
     end
   end
+
+  describe 'DELETE /collections/:id collections#destroy' do
+    let(:endpoint) { "/collections/#{collection.id}" }
+    let(:current_user) { FactoryGirl.create(:user_with_collection) }
+    let(:collection) { current_user.collections.first }
+
+    it 'destroys the collection for the current_user' do
+      delete_endpoint
+
+      expect_success
+      expect(Authentication.find_by(id: collection.id)).to be_nil
+    end
+  end
 end
