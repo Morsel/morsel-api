@@ -34,4 +34,7 @@ class Collection < ActiveRecord::Base
             presence: true,
             length: { maximum: 50 }
   validates :user, presence: true
+
+  scope :where_place_id, -> (place_id) { where(place_id: place_id) unless place_id.nil? }
+  scope :where_user_id, -> (user_id) { where(user_id: user_id) unless user_id.nil? }
 end

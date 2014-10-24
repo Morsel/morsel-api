@@ -62,6 +62,7 @@
   - [GET `/users/:id/specialties` - User Specialties](#get-usersidspecialties---user-specialties)
   - [GET `/users/:id/followables` - User Followables](#get-usersidfollowables---user-followables)
   - [GET `/users/:id/places` - User Places](#get-usersidplaces---user-places)
+  - [GET `/users/:id/collections` - User Collection](#get-usersidcollections---user-collections)
   - [GET `/users/devices` - User Devices](#get-usersdevices---user-devices)
   - [POST `/users/devices` - Create User Device](#post-usersdevices---create-user-device)
   - [PUT `/users/devices/:id` - Update User Device](#put-usersdevicesid---update-user-device)
@@ -74,6 +75,7 @@
   - [GET `/places/:id` - Place](#get-placesid--place)
   - [GET `/places/:id/morsels` - Place Morsels](#get-placesidmorsels--place-morsels)
   - [GET `/places/:id/users` - Place Users](#get-placesidusers--place-users)
+  - [GET `/places/:id/collections` - Place Collections](#get-placesidcollections--place-collections)
 
 - [Item Methods](#item-methods)
   - [POST `/items` - Create a new Item](#post-items---create-a-new-item)
@@ -107,7 +109,6 @@
   - [POST `/collections` - Create Collection](#post-collections---create-collection)
   - [PUT `/collections/:id` - Update Collection](#put-collectionsid---update-collection)
   - [DELETE `/collections/:id` - Delete Collection](#delete-collectionsid---delete-collection)
-
 
 - [Keyword Methods](#keyword-methods) [\<Followable\>](#followable)
   - [GET `/cuisines` - Cuisines](#get-cuisines---cuisines)
@@ -1099,6 +1100,23 @@ __Request Behaviors__
 <br />
 
 
+## GET `/users/:id/collections` - User Collections
+Returns [Collections](#collection) belonging to the User with the specified `id`
+
+__Request Behaviors__
+* [Pagination](#pagination)
+* [Public](#public)
+
+### Response
+
+| __data__ |
+| -------- |
+| [Collections](#collection)[] |
+
+<br />
+<br />
+
+
 ## GET `/users/devices` - User Devices
 Returns the [current_user's](#current_user) [Devices](#device)
 
@@ -1281,8 +1299,8 @@ __Request Behaviors__
 <br />
 <br />
 
-## GET `/places/:id/users` - Place Users
-Returns Users belonging to the Place with the specified `id`
+## GET `/places/:id/collections` - Place Collections
+Returns [Collections](#collection) belonging to the Place with the specified `id`
 
 __Request Behaviors__
 * [Pagination](#pagination)
@@ -1292,7 +1310,7 @@ __Request Behaviors__
 
 | __data__ |
 | -------- |
-| [Users](#user)[] |
+| [Collections](#collection)[] |
 
 <br />
 <br />
