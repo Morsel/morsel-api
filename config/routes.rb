@@ -142,6 +142,7 @@ MorselApp::Application.routes.draw do
       get 'eligible_tagged_users' => 'morsel_user_tags#eligible_users'
       post 'tagged_users/:user_id' => 'morsel_user_tags#create'
       delete 'tagged_users/:user_id' => 'morsel_user_tags#destroy'
+      post 'collect' => 'morsels#collect'
     end
   end
 

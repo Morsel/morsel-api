@@ -80,6 +80,19 @@ class MorselsController < ApiController
     custom_respond_with_service service
   end
 
+  def collect
+    morsel = Morsel.find params.fetch(:id)
+    authorize_action_for morsel
+
+    service = CollectMorsel.call(
+      morsel: morsel,
+      collection: Collection.find(params.fetch(:collection_id)),
+      user: current_user
+    )
+
+    custom_respond_with_service service
+  end
+
   class MorselParams
     def self.build(params, _scope = nil)
       if _scope && _scope.admin?
@@ -122,5 +135,5 @@ class MorselsController < ApiController
     end
   end
 
-  authorize_actions_for Morsel, except: PUBLIC_ACTIONS, actions: { publish: :update, drafts: :read }
+  authorize_actions_for Morsel, except: PUBLIC_ACTIONS, actions: { publish: :update, drafts: :read, collect: :read }
 end
