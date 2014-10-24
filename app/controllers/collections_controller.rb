@@ -9,6 +9,17 @@ class CollectionsController < ApiController
     end
   end
 
+  def update
+    collection = Collection.find(params[:id])
+    authorize_action_for collection
+
+    if collection.update(CollectionParams.build(params))
+      custom_respond_with collection
+    else
+      render_json_errors collection.errors
+    end
+  end
+
   def destroy
     collection = Collection.find(params[:id])
     authorize_action_for collection
