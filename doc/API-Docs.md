@@ -104,6 +104,7 @@
   - [DELETE `/morsels/:id/tagged_users` - Untag User](#delete-morselsidtagged_users---untag-user)
   - [GET `/morsels/:id/tagged_users` - Tagged Users](#get-morselsidtagged_users---tagged-users)
   - [GET `/morsels/:id/eligible_tagged_users` - Eligible Tagged Users](#get-morselsideligible_tagged_users---eligible-tagged-users)
+  - [POST `/morsels/:id/collect` - Add Morsel to Collection](#post-morselsidcollect---add-morsel-to-collection)
 
 - [Collection Methods](#collection-methods)
   - [POST `/collections` - Create Collection](#post-collections---create-collection)
@@ -1738,6 +1739,8 @@ Returns all [Users](#user) eligible to be tagged to the morsel. If an eligible U
 __Request Behaviors__
 * [Public](#public)
 
+### Request
+
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | query | String | Used to return Users by `first_name`, `last_name`, or `username`. Must be at least 3 characters. | | |
@@ -1747,6 +1750,31 @@ __Request Behaviors__
 | __data__ |
 | -------- |
 | [Slim Tagged User](#slim-tagged-user)[] |
+
+<br />
+<br />
+
+## POST `/morsels/:id/collect` - Add Morsel to Collection
+Adds the [Morsel](#morsel) specified to the [Collection](#collection) specified
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| collection_id | Number | The `id` of the Collection to add this Morsel to | | X |
+
+### Response
+
+| Status Code |
+| ----------- |
+|         201 |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __morsel__: __already in this collection__ | 400 (Bad Request) | The morsel is already in this collection |
+| __user__: __not authorizedto add to this collection__ | 400 (Bad Request) | `current_user` is not the creator of the [Collection](#collection) |
 
 <br />
 <br />
