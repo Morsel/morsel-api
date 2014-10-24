@@ -114,6 +114,8 @@ MorselApp::Application.routes.draw do
       get ':username/morsels' => 'morsels#index', username: /[a-zA-Z]([A-Za-z0-9_]*)/
     end
 
+    resources :collections, only: [:index]
+
     member do
       put 'updateindustry' => 'users#updateindustry'
       get 'followables' => 'users#followables'
@@ -154,6 +156,8 @@ MorselApp::Application.routes.draw do
       # HACK: Deprecated method
       post 'join' => 'employments#create'
     end
+
+    resources :collections, only: [:index]
 
     member do
       get 'users' => 'places#users'

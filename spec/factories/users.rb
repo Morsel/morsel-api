@@ -86,6 +86,7 @@ FactoryGirl.define do
     end
 
     factory :user_with_collection, traits: [:with_collection]
+    factory :user_with_collections, traits: [:with_collections]
     factory :user_with_morsels, traits: [:with_morsels]
 
 
@@ -94,6 +95,16 @@ FactoryGirl.define do
     trait :with_collection do
       after(:create) do |user|
         create_list(:collection, 1, user: user)
+      end
+    end
+
+    trait :with_collections do
+      ignore do
+        collections_count 3
+      end
+
+      after(:create) do |user, evaluator|
+        create_list(:collection, evaluator.collections_count, user: user)
       end
     end
 

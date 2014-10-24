@@ -36,6 +36,7 @@ class Place < ActiveRecord::Base
   alias_attribute :cached_slug, :slug
 
   belongs_to :creator, class_name: 'User'
+  has_many :collections, inverse_of: :place
   has_many :employments, inverse_of: :place
   has_many :users, through: :employments
 

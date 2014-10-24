@@ -99,6 +99,21 @@ FactoryGirl.define do
     factory :place_with_widget, class: Place do
       widget_url Faker::Internet.url
     end
+
+    factory :place_with_collections, traits: [:with_collections]
+
+
+    # Traits
+
+    trait :with_collections do
+      ignore do
+        collections_count 3
+      end
+
+      after(:create) do |place, evaluator|
+        create_list(:collection, evaluator.collections_count, place: place)
+      end
+    end
   end
 
   factory :big_star do

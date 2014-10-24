@@ -1,4 +1,13 @@
 class CollectionsController < ApiController
+  PUBLIC_ACTIONS << def index
+    custom_respond_with_cached_serializer(
+      Collection.where_user_id(params[:user_id])
+                .where_place_id(params[:place_id])
+                .paginate(pagination_params),
+      CollectionSerializer
+    )
+  end
+
   def create
     collection = current_user.collections.create(CollectionParams.build(params))
 

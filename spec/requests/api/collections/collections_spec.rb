@@ -1,4 +1,4 @@
-require 'spec_helper'
+require_relative '_spec_helper'
 
 describe 'Collections API Methods' do
   describe 'POST /collections collections#create' do
@@ -56,7 +56,7 @@ describe 'Collections API Methods' do
       delete_endpoint
 
       expect_success
-      expect(Authentication.find_by(id: collection.id)).to be_nil
+      expect(Collection.find_by(id: collection.id)).to be_nil
     end
   end
 end
