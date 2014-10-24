@@ -103,6 +103,12 @@
   - [GET `/morsels/:id/tagged_users` - Tagged Users](#get-morselsidtagged_users---tagged-users)
   - [GET `/morsels/:id/eligible_tagged_users` - Eligible Tagged Users](#get-morselsideligible_tagged_users---eligible-tagged-users)
 
+- [Collection Methods](#collection-methods)
+  - [POST `/collections` - Create Collection](#post-collections---create-collection)
+  - [PUT `/collections/:id` - Update Collection](#put-collectionsid---update-collection)
+  - [DELETE `/collections/:id` - Delete Collection](#delete-collectionsid---delete-collection)
+
+
 - [Keyword Methods](#keyword-methods) [\<Followable\>](#followable)
   - [GET `/cuisines` - Cuisines](#get-cuisines---cuisines)
   - [GET `/cuisines/:id/users` - Cuisine Users](#get-cuisinesidusers---cuisine-users)
@@ -133,6 +139,8 @@
   - [Morsel Objects](#morsel-objects)
     - [Slim Morsel](#slim-morsel)
     - [Morsel](#morsel)
+  - [Collection Objects](#collection-objects)
+    - [Collection](#collection)
   - [User Objects](#user-objects)
     - [Slim User](#slim-user)
     - [Slim Followed User](#slim-followed-user)
@@ -1726,6 +1734,61 @@ __Request Behaviors__
 <br />
 
 
+# Collection Methods
+
+## POST `/collections` - Create Collection
+Creates a new Collection for [current_user](#current_user)
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| collection[title] | String | A title for the new collection | | X |
+| collection[description] | String | The description for the collection | | |
+| collection[place_id] | Number | A [Place](#place) to associate this Collection to | | |
+
+### Response
+
+| __data__ |
+| -------- |
+| Created [Collection](#collection) |
+
+<br />
+<br />
+
+## PUT `/collections/:id` - Update Collection
+Updates the collection with the specified `id`
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| collection[title] | String | A title for the new collection | | |
+| collection[description] | String | The description for the collection | | |
+| collection[place_id] | Number | A [Place](#place) to associate this Collection to | | |
+
+### Response
+
+| __data__ |
+| -------- |
+| Updated [Collection](#collection) |
+
+<br />
+<br />
+
+## DELETE `/collections/:id` - Delete Collection
+Deletes the collection with the specified `id`
+
+### Response
+
+| Status Code |
+| ----------- |
+|         204 |
+
+<br />
+<br />
+
+
 # Keyword Methods
 * [\<Followable\>](#followable)
 
@@ -2072,6 +2135,22 @@ Response for any Like Morsel related requests.
 
 }
 ```
+
+
+## Collection Objects
+
+### Collection
+
+```json
+{
+  "id": 42,
+  "title": "This is my bitchin' collection!",
+  "description": "Here's some bitchin' stuff I've been following",
+  "user_id": 1,
+  "place_id": null,
+  "created_at": "2014-10-24T11:00:31.338Z",
+  "updated_at": "2014-10-24T11:00:31.338Z"
+}
 
 
 ## User Objects

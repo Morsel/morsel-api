@@ -22,6 +22,31 @@ describe 'Collections API Methods' do
     end
   end
 
+  describe 'PUT /collections/:id collections#update' do
+    let(:endpoint) { "/collections/#{collection.id}" }
+    let(:current_user) { FactoryGirl.create(:user_with_collection) }
+    let(:new_title) { Faker::Lorem.sentence(rand(2..4)).truncate(50) }
+    let(:new_description) { Faker::Lorem.sentence(rand(2..10)) }
+    let(:collection) { current_user.collections.first }
+
+    it 'updates the collection' do
+      put_endpoint collection: {
+        title: new_title,
+        description: new_description
+      }
+      expect_success
+
+      expect_json_data_eq({
+        'title' => new_title,
+        'description' => new_description
+      })
+
+      collection.reload
+      expect(collection.title).to eq(new_title)
+      expect(collection.description).to eq(new_description)
+    end
+  end
+
   describe 'DELETE /collections/:id collections#destroy' do
     let(:endpoint) { "/collections/#{collection.id}" }
     let(:current_user) { FactoryGirl.create(:user_with_collection) }

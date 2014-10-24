@@ -122,7 +122,7 @@ MorselApp::Application.routes.draw do
     end
   end
 
-  resources :collections, only: [:create, :destroy]
+  resources :collections, only: [:create, :update, :destroy]
 
   # DEPRECATED: likeable
   resources :items, only: [:create, :show, :update, :destroy], concerns: [:commentable, :likeable, :reportable]
