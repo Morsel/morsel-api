@@ -90,7 +90,20 @@ class MorselsController < ApiController
       user: current_user
     )
 
-    custom_respond_with_service service
+    custom_respond_with_service service, each_serializer: SlimMorselSerializer
+  end
+
+  def uncollect
+    morsel = Morsel.find params.fetch(:id)
+    authorize_action_for morsel
+
+    service = UncollectMorsel.call(
+      morsel: morsel,
+      collection: Collection.find(params.fetch(:collection_id)),
+      user: current_user
+    )
+
+    render_json_with_service service, each_serializer: SlimMorselSerializer
   end
 
   class MorselParams
@@ -135,5 +148,5 @@ class MorselsController < ApiController
     end
   end
 
-  authorize_actions_for Morsel, except: PUBLIC_ACTIONS, actions: { publish: :update, drafts: :read, collect: :read }
+  authorize_actions_for Morsel, except: PUBLIC_ACTIONS, actions: { publish: :update, drafts: :read, collect: :read, uncollect: :read }
 end

@@ -105,6 +105,7 @@
   - [GET `/morsels/:id/tagged_users` - Tagged Users](#get-morselsidtagged_users---tagged-users)
   - [GET `/morsels/:id/eligible_tagged_users` - Eligible Tagged Users](#get-morselsideligible_tagged_users---eligible-tagged-users)
   - [POST `/morsels/:id/collect` - Add Morsel to Collection](#post-morselsidcollect---add-morsel-to-collection)
+  - [DELETE `/morsels/:id/collect` - Remove Morsel from Collection](#delete-morselsidcollect---remove-morsel-from-collection)
 
 - [Collection Methods](#collection-methods)
   - [POST `/collections` - Create Collection](#post-collections---create-collection)
@@ -1775,6 +1776,31 @@ Adds the [Morsel](#morsel) specified to the [Collection](#collection) specified
 | ------- | ------ |  ----------- |
 | __morsel__: __already in this collection__ | 400 (Bad Request) | The morsel is already in this collection |
 | __user__: __not authorizedto add to this collection__ | 400 (Bad Request) | `current_user` is not the creator of the [Collection](#collection) |
+
+<br />
+<br />
+
+## DELETE `/morsels/:id/collect` - Remove Morsel from Collection
+Removes the [Morsel](#morsel) specified from the [Collection](#collection) specified
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| collection_id | Number | The `id` of the Collection to remove this Morsel from | | X |
+
+### Response
+
+| Status Code |
+| ----------- |
+|         200 |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __morsel__: __not in this collection__ | 400 (Bad Request) | The morsel is not in this collection |
+| __user__: __not authorizedto remove to this collection__ | 400 (Bad Request) | `current_user` is not the creator of the [Collection](#collection) |
 
 <br />
 <br />

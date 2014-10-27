@@ -34,3 +34,40 @@ describe 'POST /morsels/{:morsel_id}/collect morsels#collect' do
     end
   end
 end
+
+describe 'DELETE /morsels/{:morsel_id}/collect morsels#uncollect' do
+  let(:endpoint) { "/morsels/#{morsel.id}/collect" }
+  let(:current_user) { FactoryGirl.create(:user_with_collection) }
+  let(:morsel) { FactoryGirl.create(:morsel_with_creator) }
+  let(:collection) { current_user.collections.first }
+
+  context 'morsel in collection' do
+    before { collection.morsels << morsel }
+
+    it 'removes the morsel from the collection' do
+      delete_endpoint collection_id: collection.id
+
+      expect_success
+      expect(collection.reload.morsels).to_not include(morsel)
+    end
+  end
+
+  context 'morsel does NOT exist in the collection' do
+    it 'should return an error' do
+      delete_endpoint collection_id: collection.id
+
+      expect_failure
+      expect_first_error('morsel', 'not in this collection')
+    end
+  end
+
+  context 'current_user is NOT the creator of the collection' do
+    let(:someones_collection) { FactoryGirl.create(:collection) }
+    it 'should return an error' do
+      delete_endpoint collection_id: someones_collection.id
+
+      expect_failure
+      expect_first_error('user', 'not authorized to remove from this collection')
+    end
+  end
+end
