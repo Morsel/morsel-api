@@ -30,6 +30,7 @@
 - [Authentication Methods](#authentication-methods)
   - [POST `/authentications` - Create Authentication](#post-authentications---create-authentication)
   - [GET `/authentications` - Authentications](#get-authentications---authentications)
+  - [GET `/authentications/:id` - Authentication](#get-authenticationsid---authentication)
   - [PUT `/authentications/:id` - Update Authentication](#put-authenticationsid---update-authentication)
   - [DELETE `/authentications/:id` - Delete Authentication](#delete-authenticationsid---delete-authentication)
   - [GET `/authentications/check` - Authentication Check](#get-authenticationscheck---authentication-check)
@@ -472,6 +473,25 @@ __Request Behaviors__
 | __data__ |
 | -------- |
 | [Authentications](#authentication)[] |
+
+<br />
+<br />
+
+## GET `/authentications/:id` - Authentication
+Updates the authentication with the specified `id`.
+
+### Response
+
+| __data__ |
+| -------- |
+| [Authentication](#authentication) |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __Authentication not found__ | 404 (Not Found) | The Authentication could not be found |
+| __Forbidden__ | 403 (Forbidden) | The [current_user](#current_user) is not authorized to read the Authentication |
 
 <br />
 <br />

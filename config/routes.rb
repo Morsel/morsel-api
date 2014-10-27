@@ -58,7 +58,7 @@ MorselApp::Application.routes.draw do
     end
   end
 
-  resources :authentications, only: [:create, :index, :update, :destroy] do
+  resources :authentications, only: [:create, :index, :show, :update, :destroy] do
     collection do
       get 'check' => 'authentications#check'
       get 'connections(/provider)' => 'authentications#connections' # DEPRECATED

@@ -10,6 +10,13 @@ class AuthenticationsController < ApiController
                                       .order(Authentication.arel_table[:id].desc)
   end
 
+  def show
+    authentication = Authentication.find(params[:id])
+    authorize_action_for authentication
+
+    custom_respond_with authentication
+  end
+
   def update
     authentication = Authentication.find(params[:id])
     authorize_action_for authentication

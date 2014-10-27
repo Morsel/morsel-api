@@ -27,6 +27,8 @@ class Authentication < ActiveRecord::Base
 
   belongs_to :user
 
+  self.authorizer_name = 'AuthenticationAuthorizer'
+
   validates :provider,  allow_blank: false,
                         inclusion: %w(facebook instagram twitter),
                         presence: true
