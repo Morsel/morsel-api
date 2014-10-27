@@ -31,6 +31,33 @@ describe 'Authentications API Methods' do
     end
   end
 
+  describe 'GET /authentications/:authentication_id authentications#show' do
+    let(:endpoint) { "/authentications/#{authentication.id}" }
+    let(:current_user) { FactoryGirl.create(:chef_with_facebook_authentication) }
+    let(:authentication) { current_user.authentications.first }
+
+    it 'returns the Authentication' do
+      get_endpoint
+
+      expect_success
+      expect_json_data_eq({
+        'token' => authentication.token
+      })
+    end
+
+    context 'invalid api_key' do
+      let(:current_user) { nil }
+      let(:authentication) { FactoryGirl.create(:facebook_authentication) }
+
+      it 'returns an unauthorized error' do
+        get_endpoint api_key: '1:234567890'
+
+        expect_failure
+        expect_status 401
+      end
+    end
+  end
+
   describe 'POST /authentications authentications#create' do
     let(:endpoint) { '/authentications' }
     let(:current_user) { FactoryGirl.create(:user) }
