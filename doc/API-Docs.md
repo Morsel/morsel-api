@@ -1789,7 +1789,7 @@ Creates a new Collection for [current_user](#current_user)
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| collection[title] | String | A title for the new collection | | X |
+| collection[title] | String | A title (70 char max) for the new collection | | X |
 | collection[description] | String | The description for the collection | | |
 | collection[place_id] | Number | A [Place](#place) to associate this Collection to | | |
 

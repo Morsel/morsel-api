@@ -40,9 +40,9 @@ describe Collection do
   its(:morsels) { should be_empty }
 
   describe 'title' do
-    context 'greater than 50 characters' do
+    context 'greater than 70 characters' do
       before do
-        subject.title = Faker::Lorem.characters(51)
+        subject.title = Faker::Lorem.characters(71)
       end
 
       it { should_not be_valid }
