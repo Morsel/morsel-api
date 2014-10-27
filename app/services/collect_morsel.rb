@@ -12,6 +12,7 @@ class CollectMorsel
 
   validate :user_is_collection_user?
   validate :morsel_already_in_collection?
+  validate :morsel_is_published?
 
   def call
     self.validated = true
@@ -26,5 +27,9 @@ class CollectMorsel
 
   def morsel_already_in_collection?
     errors.add(:morsel, 'already in this collection') if !validated && collection.morsels.include?(morsel)
+  end
+
+  def morsel_is_published?
+    errors.add(:morsel, 'not published') if !validated && morsel.draft?
   end
 end

@@ -13,6 +13,17 @@ describe 'POST /morsels/{:morsel_id}/collect morsels#collect' do
     expect(collection.reload.morsels).to include(morsel)
   end
 
+  context 'morsel is a draft' do
+    let(:morsel) { FactoryGirl.create(:draft_morsel) }
+
+    it 'should return an error' do
+      post_endpoint collection_id: collection.id
+
+      expect_failure
+      expect_first_error('morsel', 'not published')
+    end
+  end
+
   context 'morsel already exists in the collection' do
     before { collection.morsels << morsel }
 

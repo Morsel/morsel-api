@@ -124,7 +124,11 @@ MorselApp::Application.routes.draw do
     end
   end
 
-  resources :collections, only: [:create, :update, :destroy]
+  resources :collections, only: [:create, :update, :destroy] do
+    collection do
+      get ':collection_id/morsels' => 'morsels#index'
+    end
+  end
 
   # DEPRECATED: likeable
   resources :items, only: [:create, :show, :update, :destroy], concerns: [:commentable, :likeable, :reportable]

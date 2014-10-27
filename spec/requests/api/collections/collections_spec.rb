@@ -59,4 +59,25 @@ describe 'Collections API Methods' do
       expect(Collection.find_by(id: collection.id)).to be_nil
     end
   end
+
+  describe 'GET /collections/:id/morsels collections#morsels' do
+    let(:endpoint) { "/collections/#{collection.id}/morsels" }
+    let(:collection) { FactoryGirl.create(:collection_with_morsels) }
+
+    it_behaves_like 'TimelinePaginateable' do
+      let(:paginateable_object_class) { Morsel }
+      let(:paginateable_key) { :published_at }
+      before do
+        paginateable_object_class.delete_all
+        30.times { FactoryGirl.create(:collection_morsel, collection: collection, morsel: FactoryGirl.create(:morsel_with_creator)) }
+      end
+    end
+
+    it 'returns all morsels in the collection' do
+      get_endpoint
+
+      expect_success
+      expect_json_data_count collection.morsels.count
+    end
+  end
 end

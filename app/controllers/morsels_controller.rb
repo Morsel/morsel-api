@@ -127,8 +127,8 @@ class MorselsController < ApiController
         pagination_key = :published_at
       end
 
-      if params[:place_id] || params[:user_id] || params[:username]
-        user_id = params[:user_id] || if params[:place_id].nil?
+      if params[:place_id] || params[:user_id] || params[:username] || params[:collection_id]
+        user_id = params[:user_id] || if params[:place_id].nil? && params[:collection_id].nil?
           user = User.find_by_id_or_username params[:username]
           raise ActiveRecord::RecordNotFound if user.nil?
           user.id
@@ -137,6 +137,7 @@ class MorselsController < ApiController
         Morsel.includes(:items, :place, :creator)
               .published
               .paginate(pagination_params, pagination_key)
+              .where_collection_id(params[:collection_id])
               .where_creator_id_or_tagged_user_id(user_id)
               .where_place_id(params[:place_id])
       elsif current_user.present?

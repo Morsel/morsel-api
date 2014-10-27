@@ -1775,6 +1775,7 @@ Adds the [Morsel](#morsel) specified to the [Collection](#collection) specified
 | Message | Status | Description |
 | ------- | ------ |  ----------- |
 | __morsel__: __already in this collection__ | 400 (Bad Request) | The morsel is already in this collection |
+| __morsel__: __not published__ | 400 (Bad Request) | The morsel has not been published |
 | __user__: __not authorizedto add to this collection__ | 400 (Bad Request) | `current_user` is not the creator of the [Collection](#collection) |
 
 <br />
