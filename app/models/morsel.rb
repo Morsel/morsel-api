@@ -62,6 +62,7 @@ class Morsel < ActiveRecord::Base
   scope :published, -> { where(draft: false) }
   scope :with_drafts, -> (include_drafts = true) { where(draft: false) unless include_drafts }
   scope :where_place_id, -> (place_id) { where(place_id: place_id) unless place_id.nil? }
+  scope :where_collection_id, -> (collection_id) { joins(:collection_morsels).where(CollectionMorsel.arel_table[:collection_id].eq(collection_id)) unless collection_id.nil? }
   scope :where_creator_id, -> (creator_id) { where(creator_id: creator_id) unless creator_id.nil? }
   scope :where_tagged_user_id, -> (tagged_user_id) { includes(:morsel_user_tags).where(MorselUserTag.arel_table[:user_id].eq(tagged_user_id)) unless tagged_user_id.nil? }
   scope :where_creator_id_or_tagged_user_id, -> (creator_id_or_tagged_user_id) { includes(:morsel_user_tags).where(Morsel.arel_table[:creator_id].eq(creator_id_or_tagged_user_id).or(MorselUserTag.arel_table[:user_id].eq(creator_id_or_tagged_user_id))).references(:morsel_user_tags) unless creator_id_or_tagged_user_id.nil? }

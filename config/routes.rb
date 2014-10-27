@@ -124,7 +124,11 @@ MorselApp::Application.routes.draw do
     end
   end
 
-  resources :collections, only: [:create, :update, :destroy]
+  resources :collections, only: [:create, :update, :destroy] do
+    collection do
+      get ':collection_id/morsels' => 'morsels#index'
+    end
+  end
 
   # DEPRECATED: likeable
   resources :items, only: [:create, :show, :update, :destroy], concerns: [:commentable, :likeable, :reportable]
@@ -143,6 +147,7 @@ MorselApp::Application.routes.draw do
       post 'tagged_users/:user_id' => 'morsel_user_tags#create'
       delete 'tagged_users/:user_id' => 'morsel_user_tags#destroy'
       post 'collect' => 'morsels#collect'
+      delete 'collect' => 'morsels#uncollect'
     end
   end
 

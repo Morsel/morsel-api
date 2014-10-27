@@ -49,6 +49,11 @@ FactoryGirl.define do
       end
     end
 
+    factory :draft_morsel, class: Morsel do
+      draft true
+      published_at nil
+    end
+
     factory :morsel_with_creator, class: Morsel do
       before(:build) do
         stub_foursquare_venue

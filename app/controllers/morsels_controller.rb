@@ -90,7 +90,20 @@ class MorselsController < ApiController
       user: current_user
     )
 
-    custom_respond_with_service service
+    custom_respond_with_service service, each_serializer: SlimMorselSerializer
+  end
+
+  def uncollect
+    morsel = Morsel.find params.fetch(:id)
+    authorize_action_for morsel
+
+    service = UncollectMorsel.call(
+      morsel: morsel,
+      collection: Collection.find(params.fetch(:collection_id)),
+      user: current_user
+    )
+
+    render_json_with_service service, each_serializer: SlimMorselSerializer
   end
 
   class MorselParams
@@ -114,8 +127,8 @@ class MorselsController < ApiController
         pagination_key = :published_at
       end
 
-      if params[:place_id] || params[:user_id] || params[:username]
-        user_id = params[:user_id] || if params[:place_id].nil?
+      if params[:place_id] || params[:user_id] || params[:username] || params[:collection_id]
+        user_id = params[:user_id] || if params[:place_id].nil? && params[:collection_id].nil?
           user = User.find_by_id_or_username params[:username]
           raise ActiveRecord::RecordNotFound if user.nil?
           user.id
@@ -124,6 +137,7 @@ class MorselsController < ApiController
         Morsel.includes(:items, :place, :creator)
               .published
               .paginate(pagination_params, pagination_key)
+              .where_collection_id(params[:collection_id])
               .where_creator_id_or_tagged_user_id(user_id)
               .where_place_id(params[:place_id])
       elsif current_user.present?
@@ -135,5 +149,5 @@ class MorselsController < ApiController
     end
   end
 
-  authorize_actions_for Morsel, except: PUBLIC_ACTIONS, actions: { publish: :update, drafts: :read, collect: :read }
+  authorize_actions_for Morsel, except: PUBLIC_ACTIONS, actions: { publish: :update, drafts: :read, collect: :read, uncollect: :read }
 end
