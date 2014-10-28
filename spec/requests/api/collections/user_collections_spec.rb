@@ -5,7 +5,7 @@ describe 'GET /users/:id/collections' do
   let(:collections_count) { 3 }
   let(:user_with_collections) { FactoryGirl.create(:user_with_collections, collections_count: collections_count) }
 
-  it_behaves_like 'TimelinePaginateable' do
+  it_behaves_like 'PagePaginateable' do
     let(:paginateable_object_class) { Collection }
 
     before do

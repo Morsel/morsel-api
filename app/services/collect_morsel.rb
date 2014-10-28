@@ -20,7 +20,7 @@ class CollectMorsel
     collection_morsel = CollectionMorsel.new(morsel: morsel, collection: collection, note: note)
 
     if collection_morsel.save
-      decorated_collected_morsel
+      decorated_collected_morsel collection_morsel
     else
       errors.add(:collection_morsel, collection_morsel.errors)
     end
@@ -28,9 +28,10 @@ class CollectMorsel
 
   private
 
-  def decorated_collected_morsel
+  def decorated_collected_morsel(collection_morsel)
     collected_morsel = CollectedMorselDecorator.new(morsel)
-    collected_morsel.note = note
+    collected_morsel.note = collection_morsel.note
+    collected_morsel.sort_order = collection_morsel.sort_order
     collected_morsel
   end
 

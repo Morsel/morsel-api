@@ -3,6 +3,7 @@ class CollectionsController < ApiController
     custom_respond_with_cached_serializer(
       Collection.where_user_id(params[:user_id])
                 .where_place_id(params[:place_id])
+                .order(Collection.arel_table[:id].asc)
                 .paginate(pagination_params),
       CollectionSerializer
     )
@@ -44,9 +45,10 @@ class CollectionsController < ApiController
     custom_respond_with Morsel.includes(:items, :place, :creator)
                               .joins(:collection_morsels)
                               .published
+                              .order(CollectionMorsel.arel_table[:sort_order].asc, CollectionMorsel.arel_table[:id].asc)
                               .paginate(pagination_params)
                               .where_collection_id(params.fetch(:id))
-                              .select('morsels.*, collection_morsels.note'),
+                              .select('morsels.*, collection_morsels.note, collection_morsels.sort_order'),
                         each_serializer: SlimMorselWithNoteSerializer
   end
 

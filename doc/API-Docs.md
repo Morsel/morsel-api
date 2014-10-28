@@ -13,14 +13,16 @@
 - [Constants](#constants)
 
 - [Behaviors](#behaviors)
+  - [Public](#public)
+  - [Pagination](#pagination)
+    - [Paged Pagination](#paged-pagination)
+    - [Timeline Pagination](#timelime-pagination)
   - [Followable](#followable)
     - [POST `/{{followables}}/:id/follow` - Follow {{Followable}}](#post-followablesidfollow---follow-followable)
     - [DELETE `/{{followables}}/:id/follow` - Unfollow {{Followable}}](#delete-followablesidfollow---unfollow-followable)
     - [GET `/{{followables}}/:id/followers` - {{Followable}} Followers](#get-followablesidfollowers---followable-followers)
   - [Reportable](#reportable)
     - [POST `/{{reportables}}/:id/report` - Report {{Reportable}}](#post-reportablesidreport---report-reportable)
-  - [Pagination](#pagination)
-  - [Public](#public)
   - [Presigned Photo Uploadable](#presigned-photo-uploadable)
 
 - [Feed Methods](#feed-methods)
@@ -37,7 +39,7 @@
   - [GET `/authentications/connections` - Authentication Connections](#get-authenticationsconnections---authentication-connections) __DEPRECATED__
   - [POST `/authentications/connections` - Authentication Connections](#post-authenticationsconnections---authentication-connections)
 
-- [User Methods](#user-methods) [\<Followable\>](#followable)
+- [User Methods](#user-methods)
   - [POST `/users` - Create a new User](#post-users---create-a-new-user)
   - [POST `/users/sign_in` - User Authentication](#post-userssign_in---user-authentication)
   - [POST `/users/forgot_password` - Forgot Password](#post-usersforgot_password---forgot-password)
@@ -69,7 +71,7 @@
   - [PUT `/users/devices/:id` - Update User Device](#put-usersdevicesid---update-user-device)
   - [DELETE `/users/devices/:id` - Delete User Device](#delete-usersdevicesid---delete-user-device)
 
-- [Place Methods](#place-methods) [\<Followable\>](#followable)
+- [Place Methods](#place-methods)
   - [GET `/places/suggest` - Suggest Completion](#get-placessuggest---suggest-completion)
   - [POST `/places/:id|:foursquare_venue_id/employment` - Employ User at Place](#post-placesidfoursquare_venue_idemployment---employ-user-at-place)
   - [DELETE `/places/:id/employment` - Unemploy User at Place](#delete-placesidemployment---unemploy-user-at-place)
@@ -114,7 +116,7 @@
   - [DELETE `/collections/:id` - Delete Collection](#delete-collectionsid---delete-collection)
   - [GET `/collections/:id/morsels` - Collection Morsels](#get-collectionsidmorsels---collection-morsels)
 
-- [Keyword Methods](#keyword-methods) [\<Followable\>](#followable)
+- [Keyword Methods](#keyword-methods)
   - [GET `/cuisines` - Cuisines](#get-cuisines---cuisines)
   - [GET `/cuisines/:id/users` - Cuisine Users](#get-cuisinesidusers---cuisine-users)
   - [GET `/specialties` - Specialties](#get-specialties---specialties)
@@ -272,7 +274,60 @@ TIMELINE_DEFAULT_LIMIT = 20
 ```
 
 # Behaviors
-Since a lot of functionality is shared between different resources within the app, certain behaviors have been defined to DRY the API Docs (and code). An example of this is following a User, Place, or Keyword. All three can be followed so we can call any of them _'Followable'_ and define a set of behaviors for anything that can be _'Followable'_. Angled brackets are used a placeholders for the resource that you are dealing with. For example, if you want to follow a Place, you would substitute 'Place' into the [`/{{followables}}/:id/follow`](#post-followablesidfollow---follow-followable) call and get: `/places/:id/follow`. Other existing behaviors will be added here in the future (like pagination)
+Since a lot of functionality is shared between different resources within the app, certain behaviors have been defined to DRY the API Docs (and code). An example of this is following a User, Place, or Keyword. All three can be followed so we can call any of them _'Followable'_ and define a set of behaviors for anything that can be _'Followable'_. Angled brackets are used a placeholders for the resource that you are dealing with. For example, if you want to follow a Place, you would substitute 'Place' into the [`/{{followables}}/:id/follow`](#post-followablesidfollow---follow-followable) call and get: `/places/:id/follow`.
+
+# Public
+
+The request does not require an `api_key` for [API Authentication](#api-authentication).
+
+<br />
+<br />
+
+# Pagination
+
+## Paged Pagination
+
+Paged Pagination returns results based on a `page` number passed. This is the more common approach.
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| page | Number | The page of results to return | 1 | |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+
+
+## Timeline Pagination
+
+Timeline pagination is similar to how Facebook and Twitter do it for their feed responses. For a nice article about why and how it works, check out this [link](https://dev.twitter.com/docs/working-with-timelines). If your response is ordered by `id` (most common case), you'll use either `max_id` OR `since_id` per API call. Otherwise if you're dealing w/ dates, use `before_date` OR `after_date`. Don't combine any of them as the API will ignore it (or crap out). When passing a date, passing either `before_id` (w/ `before_date`) or `after_id` (w/ `after_date`) is optional but helps prevent duplicates showing up if they happen to have the same date.
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
+| max_id | Number | Return results up to __and including__ this `id` | | |
+| since_id | Number | Return results since this `id` | | |
+| before_date | DateTime | Return results before this date | | |
+| after_date | DateTime | Return results after this date | | |
+| before_id | Number | Return results before this `id` | | |
+| after_id | Number | Return results after this `id` | | |
+
+### Example: Getting the recent Feed:
+Make a call to the API: `/feed.json?count=10`
+The API responds with the 10 most recent FeedItems, let's say their id's are from 100-91.
+
+### Example: Getting a next set of FeedItems going back:
+Based on the previous results, you want to get Feeds that are older than id 91 (the lowest/oldest id). So you'll want to set a `max_id` parameter to that id - 1 (`max_id` is inclusive, meaning it will include the FeedItem with the id passed in the results, which in this case would duplicate a FeedItem). So set `max_id` to 91-1, 90.
+Make a call to the API: `/feed.json?count=10&max_id=90`
+The API responds with the next 10 FeedItem, in this case their id's are from 90-81.
+And repeat this process as you go further back until you get no results (or `max_id` < 1).
+
+### Example: Getting a set of FeedItems going forward (new FeedItems):
+Apps like Facebook and Twitter will show a floating message while you're scrolling through a list telling you that X new things have been added to the top of your feed.
+We can achieve the same thing by sending a call to the API every once awhile asking for any new FeedItems since the most recent one you have. To do this, you'll set a `since_id` parameter (which is not inclusive) to the id of the most recent FeedItem. Continuing the example, this would be `since_id` = 100.
+Make a call to the API: `/feed.json?count=10&since_id=100`
+The API responds with any new FeedItems since the FeedItem with id = 100. So if there were three new FeedItems added, it would return FeedItems with id's from 101-103.
+
+<br />
+<br />
+
 
 # Followable
 
@@ -316,7 +371,7 @@ Unfollows the _{{Followable}}_ with the specified `id`.
 Returns the followers for the _{{Followable}}_ with the specified `id`.
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timeline-pagination)
 * [Public](#public)
 
 ### Response
@@ -342,48 +397,6 @@ Reports the _{{Reportable}}_ with the specified `id`. Creates a ticket on Zendes
 <br />
 <br />
 
-# Pagination
-
-The API uses a pagination method similar to how Facebook and Twitter do. For a nice article about why and how it works, check out this [link](https://dev.twitter.com/docs/working-with-timelines). If your response is ordered by `id` (most common case), you'll use either `max_id` OR `since_id` per API call. Otherwise if you're dealing w/ dates, use `before_date` OR `after_date`. Don't combine any of them as the API will ignore it (or crap out). When passing a date, passing either `before_id` (w/ `before_date`) or `after_id` (w/ `after_date`) is optional but helps prevent duplicates showing up if they happen to have the same date.
-
-| Parameter           | Type    | Description | Default | Required? |
-| ------------------- | ------- | ----------- | ------- | --------- |
-| count | Number | The number of results to return | [TIMELINE_DEFAULT_LIMIT](#constants) | |
-| max_id | Number | Return results up to __and including__ this `id` | | |
-| since_id | Number | Return results since this `id` | | |
-| before_date | DateTime | Return results before this date | | |
-| after_date | DateTime | Return results after this date | | |
-| before_id | Number | Return results before this `id` | | |
-| after_id | Number | Return results after this `id` | | |
-
-
-## Example
-
-### Getting the recent Feed:
-Make a call to the API: `/feed.json?count=10`
-The API responds with the 10 most recent FeedItems, let's say their id's are from 100-91.
-
-### Getting a next set of FeedItems going back:
-Based on the previous results, you want to get Feeds that are older than id 91 (the lowest/oldest id). So you'll want to set a `max_id` parameter to that id - 1 (`max_id` is inclusive, meaning it will include the FeedItem with the id passed in the results, which in this case would duplicate a FeedItem). So set `max_id` to 91-1, 90.
-Make a call to the API: `/feed.json?count=10&max_id=90`
-The API responds with the next 10 FeedItem, in this case their id's are from 90-81.
-And repeat this process as you go further back until you get no results (or `max_id` < 1).
-
-### Getting a set of FeedItems going forward (new FeedItems):
-Apps like Facebook and Twitter will show a floating message while you're scrolling through a list telling you that X new things have been added to the top of your feed.
-We can achieve the same thing by sending a call to the API every once awhile asking for any new FeedItems since the most recent one you have. To do this, you'll set a `since_id` parameter (which is not inclusive) to the id of the most recent FeedItem. Continuing the example, this would be `since_id` = 100.
-Make a call to the API: `/feed.json?count=10&since_id=100`
-The API responds with any new FeedItems since the FeedItem with id = 100. So if there were three new FeedItems added, it would return FeedItems with id's from 101-103.
-
-<br />
-<br />
-
-# Public
-
-The request does not require an `api_key` for [API Authentication](#api-authentication).
-<br />
-<br />
-
 # Presigned Photo Uploadable
 
 Since we use S3 for hosting our photos, it makes sense to upload photos directly to S3 from a client. To avoid including sensitive AWS credentials in our client applications, clients will ask the API for temporary access to S3 via presigned credentials that expire after an hour. The expected flow is:
@@ -403,7 +416,7 @@ Since we use S3 for hosting our photos, it makes sense to upload photos directly
 Returns the Feed. If [current_user](#current_user) exists, the results will include your Feed Items, any followed Users' Feed Items, any followed Places' Feed Items, and any Feed Items marked as `featured`. If no [current_user](#current_user) exists only Feed Items marked as `featured` will be returned. In either case results are sorted by their `created_at` date, with the most recent one's appearing first.
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timeline-pagination)
 * [Public](#public)
 
 ### Request
@@ -427,7 +440,7 @@ __Request Behaviors__
 Returns all Feed Items.
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timelime-pagination)
 * [Public](#public)
 
 ### Response
@@ -468,7 +481,7 @@ Creates a new Authentication for [current_user](#current_user)
 Returns authentications for [current_user](#current_user)
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timeline-pagination)
 
 ### Response
 
@@ -559,7 +572,7 @@ __Request Behaviors__
 __DEPRECATED: Use [POST `/authentications/connections` - Authentication Connections](#post-authenticationsconnections---authentication-connections) instead__ Returns the Users that have authenticated with the specified `provider` and have a `uid` that is in `uids`.
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timeline-pagination)
 
 ### Request
 
@@ -581,7 +594,7 @@ __Request Behaviors__
 Returns the Users that have authenticated with the specified `provider` and have a `uid` that is in `uids`.
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timeline-pagination)
 
 ### Request
 
@@ -946,7 +959,7 @@ Updates the User with the specified `user_id`. If a new `email`, `username`, or 
 Returns the Morsels created by or tagged with the User with the specified `user_id` or `user_username`.
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timeline-pagination)
 * [Public](#public)
 
 ### Response
@@ -962,7 +975,7 @@ __Request Behaviors__
 Returns the [current_user](#current_user)'s Activities. An Activity is created when a User likes or comments on a Item. Think Facebook's Activity Log (https://www.facebook.com/<username>/allactivity).
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timelime-pagination)
 
 ### Response
 
@@ -977,7 +990,7 @@ __Request Behaviors__
 Returns the [current_user](#current_user)'s Followed Users' Activities.
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timelime-pagination)
 
 ### Response
 
@@ -998,7 +1011,7 @@ Alias for [GET `/notifications` - Notifications](#get-notifications---notificati
 Returns the Likeables that the User with the specified `user_id` has liked along with a `liked_at` DateTime key
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timeline-pagination)
 * [Public](#public)
 
 ### Request
@@ -1087,7 +1100,7 @@ __Request Behaviors__
 Returns the Followables that the User with the specified `user_id` is following along with a `followed_at` DateTime.
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timeline-pagination)
 * [Public](#public)
 
 ### Request
@@ -1111,7 +1124,7 @@ __Request Behaviors__
 Returns the Place that the User with the specified `user_id` belongs to.
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timeline-pagination)
 * [Public](#public)
 
 ### Response
@@ -1128,7 +1141,7 @@ __Request Behaviors__
 Returns [Collections](#collection) belonging to the User with the specified `id`
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Paged Pagination](#paged-pagination)
 * [Public](#public)
 
 ### Response
@@ -1145,7 +1158,7 @@ __Request Behaviors__
 Returns the [current_user's](#current_user) [Devices](#device)
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timeline-pagination)
 
 ### Response
 
@@ -1295,7 +1308,7 @@ __Request Behaviors__
 Returns Users belonging to the Place with the specified `id`
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timeline-pagination)
 * [Public](#public)
 
 ### Response
@@ -1311,7 +1324,7 @@ __Request Behaviors__
 Returns Morsels belonging to the Place with the specified `id`
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timeline-pagination)
 * [Public](#public)
 
 ### Response
@@ -1327,7 +1340,7 @@ __Request Behaviors__
 Returns [Collections](#collection) belonging to the Place with the specified `id`
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Paged Pagination](#paged-pagination)
 * [Public](#public)
 
 ### Response
@@ -1456,7 +1469,7 @@ Unlikes the Item with the specified `id` for [current_user](#current_user)
 Returns the Users who have liked the Item with the specified `id`
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timeline-pagination)
 * [Public](#public)
 
 ### Response
@@ -1502,7 +1515,7 @@ Create a Comment for the Item with the specified `id`
 List the Comments for the Item with the specified `id`
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timelime-pagination)
 * [Public](#public)
 
 ### Response
@@ -1562,7 +1575,7 @@ Creates a new Morsel for the current User.
 Returns the Morsels (including Drafts) for [current_user](#current_user) sorted by their `id`.
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timeline-pagination)
 
 ### Response
 
@@ -1577,7 +1590,7 @@ __Request Behaviors__
 Returns the Morsel Drafts for [current_user](#current_user) sorted by their updated_at, with the most recent one's appearing first.
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timeline-pagination)
 
 ### Response
 
@@ -1666,7 +1679,7 @@ Unlikes the Morsel with the specified `id` for [current_user](#current_user)
 Returns the Users who have liked the Morsel with the specified `id`
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timeline-pagination)
 * [Public](#public)
 
 ### Response
@@ -1889,7 +1902,7 @@ Deletes the collection with the specified `id`
 Returns the Morsels that belong to the collection with the specified `id`
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Paged Pagination](#paged-pagination)
 * [Public](#public)
 
 ### Response
@@ -1924,7 +1937,7 @@ __Request Behaviors__
 Returns a list of Users who belong to the Cuisine with the specified `id`
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timeline-pagination)
 * [Public](#public)
 
 ### Response
@@ -1955,7 +1968,7 @@ __Request Behaviors__
 Returns a list of Users who belong to the Specialty with the specified `id`
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timeline-pagination)
 * [Public](#public)
 
 ### Response
@@ -1974,7 +1987,7 @@ __Request Behaviors__
 Returns the [current_user](#current_user)'s Notifications. A Notification is created when someone likes or comments on your Items. Think Facebook or Twitter Notifications.
 
 __Request Behaviors__
-* [Pagination](#pagination)
+* [Timeline Pagination](#timelime-pagination)
 
 ### Response
 
@@ -2206,7 +2219,8 @@ Response for any Like Item related requests.
 
 ```json
 {
-  "note": "Some note about this morsel in the collection"
+  "note": "Some note about this morsel in the collection",
+  "sort_order": 1
 }
 ```
 
