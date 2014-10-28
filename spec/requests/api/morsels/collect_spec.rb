@@ -5,12 +5,17 @@ describe 'POST /morsels/{:morsel_id}/collect morsels#collect' do
   let(:current_user) { FactoryGirl.create(:user_with_collection) }
   let(:morsel) { FactoryGirl.create(:morsel_with_creator) }
   let(:collection) { current_user.collections.first }
+  let(:note) { Faker::Lorem.sentence(rand(2..10)) }
 
   it 'adds the morsel to the collection' do
-    post_endpoint collection_id: collection.id
+    post_endpoint collection_id: collection.id, note: note
 
     expect_success
     expect(collection.reload.morsels).to include(morsel)
+    expect_json_data_eq({
+      'id' => morsel.id,
+      'note' => note
+    })
   end
 
   context 'morsel is a draft' do

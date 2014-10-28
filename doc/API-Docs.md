@@ -112,6 +112,7 @@
   - [POST `/collections` - Create Collection](#post-collections---create-collection)
   - [PUT `/collections/:id` - Update Collection](#put-collectionsid---update-collection)
   - [DELETE `/collections/:id` - Delete Collection](#delete-collectionsid---delete-collection)
+  - [GET `/collections/:id/morsels` - Collection Morsels](#get-collectionsidmorsels---collection-morsels)
 
 - [Keyword Methods](#keyword-methods) [\<Followable\>](#followable)
   - [GET `/cuisines` - Cuisines](#get-cuisines---cuisines)
@@ -142,6 +143,7 @@
     - [Liked Item](#liked-item)
   - [Morsel Objects](#morsel-objects)
     - [Slim Morsel](#slim-morsel)
+    - [Slim Morsel (w/ note)](#slim-morsel-w-note)
     - [Morsel](#morsel)
   - [Collection Objects](#collection-objects)
     - [Collection](#collection)
@@ -1786,9 +1788,10 @@ Adds the [Morsel](#morsel) specified to the [Collection](#collection) specified
 
 ### Response
 
-| Status Code |
-| ----------- |
-|         201 |
+| __data__ |
+| -------- |
+| [Slim Morsel (w/ note)](#slim-morsel-w-note) |
+
 
 ### Unique Errors
 
@@ -1877,6 +1880,23 @@ Deletes the collection with the specified `id`
 | Status Code |
 | ----------- |
 |         204 |
+
+<br />
+<br />
+
+
+## GET `/collections/:id/morsels` - Collection Morsels
+Returns the Morsels that belong to the collection with the specified `id`
+
+__Request Behaviors__
+* [Pagination](#pagination)
+* [Public](#public)
+
+### Response
+
+| __data__ |
+| -------- |
+| [Slim Morsel (w/ note)](#slim-morsel-w-note)[] |
 
 <br />
 <br />
@@ -2159,7 +2179,6 @@ Response for any Like Item related requests.
 ```json
 {
   "liked_at": "2014-04-28T16:50:42.352Z"
-
 }
 ```
 
@@ -2179,6 +2198,15 @@ Response for any Like Item related requests.
   "updated_at": "2014-01-07T16:34:44.862Z",
   "published_at": "2014-01-07T16:34:44.862Z",
   "primary_item_id": 2,
+}
+```
+
+### Slim Morsel (w/ note)
+* Inherits from [Slim Morsel](#slim-morsel)
+
+```json
+{
+  "note": "Some note about this morsel in the collection"
 }
 ```
 
@@ -2225,7 +2253,6 @@ Response for any Like Morsel related requests.
 ```json
 {
   "liked_at": "2014-04-28T16:50:42.352Z"
-
 }
 ```
 

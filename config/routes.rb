@@ -125,8 +125,8 @@ MorselApp::Application.routes.draw do
   end
 
   resources :collections, only: [:create, :update, :destroy] do
-    collection do
-      get ':collection_id/morsels' => 'morsels#index'
+    member do
+      get 'morsels'
     end
   end
 

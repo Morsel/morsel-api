@@ -40,6 +40,16 @@ class CollectionsController < ApiController
     end
   end
 
+  PUBLIC_ACTIONS << def morsels
+    custom_respond_with Morsel.includes(:items, :place, :creator)
+                              .joins(:collection_morsels)
+                              .published
+                              .paginate(pagination_params)
+                              .where_collection_id(params.fetch(:id))
+                              .select('morsels.*, collection_morsels.note'),
+                        each_serializer: SlimMorselWithNoteSerializer
+  end
+
   class CollectionParams
     def self.build(params, _scope = nil)
       params.require(:collection).permit(:title, :description, :place_id)

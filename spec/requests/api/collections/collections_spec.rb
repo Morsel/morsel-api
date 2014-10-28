@@ -66,18 +66,23 @@ describe 'Collections API Methods' do
 
     it_behaves_like 'TimelinePaginateable' do
       let(:paginateable_object_class) { Morsel }
-      let(:paginateable_key) { :published_at }
+
       before do
         paginateable_object_class.delete_all
         30.times { FactoryGirl.create(:collection_morsel, collection: collection, morsel: FactoryGirl.create(:morsel_with_creator)) }
       end
     end
 
-    it 'returns all morsels in the collection' do
+    it 'returns all morsels in the collection with `note`' do
       get_endpoint
 
       expect_success
       expect_json_data_count collection.morsels.count
+      collection_morsel = collection.collection_morsels.first
+
+      expect_first_json_data_eq({
+        'note' => collection_morsel.note
+      })
     end
   end
 end
