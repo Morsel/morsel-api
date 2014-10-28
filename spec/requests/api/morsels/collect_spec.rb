@@ -14,7 +14,8 @@ describe 'POST /morsels/{:morsel_id}/collect morsels#collect' do
     expect(collection.reload.morsels).to include(morsel)
     expect_json_data_eq({
       'id' => morsel.id,
-      'note' => note
+      'note' => note,
+      'sort_order' => 1
     })
   end
 

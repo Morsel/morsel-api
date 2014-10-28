@@ -64,8 +64,8 @@ describe 'Collections API Methods' do
     let(:endpoint) { "/collections/#{collection.id}/morsels" }
     let(:collection) { FactoryGirl.create(:collection_with_morsels) }
 
-    it_behaves_like 'TimelinePaginateable' do
-      let(:paginateable_object_class) { Morsel }
+    it_behaves_like 'PagePaginateable' do
+      let(:paginateable_object_class) { CollectionMorsel }
 
       before do
         paginateable_object_class.delete_all
@@ -81,7 +81,8 @@ describe 'Collections API Methods' do
       collection_morsel = collection.collection_morsels.first
 
       expect_first_json_data_eq({
-        'note' => collection_morsel.note
+        'note' => collection_morsel.note,
+        'sort_order' => collection_morsel.sort_order
       })
     end
   end
