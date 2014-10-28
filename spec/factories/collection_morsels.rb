@@ -13,6 +13,7 @@
 # **`deleted_at`**     | `datetime`         |
 # **`created_at`**     | `datetime`         |
 # **`updated_at`**     | `datetime`         |
+# **`note`**           | `text`             |
 #
 
 # Read about factories at https://github.com/thoughtbot/factory_girl

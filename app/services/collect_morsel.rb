@@ -3,6 +3,7 @@ class CollectMorsel
 
   attribute :morsel, Morsel
   attribute :collection # Since virtus has its own Collecton, don't specify the class
+  attribute :note, String
   attribute :user, User
   attribute :validated, Boolean # Hack since .valid? calls morsel_already_in_collection? after it's been run
 
@@ -16,10 +17,22 @@ class CollectMorsel
 
   def call
     self.validated = true
-    collection.morsels << morsel
+    collection_morsel = CollectionMorsel.new(morsel: morsel, collection: collection, note: note)
+
+    if collection_morsel.save
+      decorated_collected_morsel
+    else
+      errors.add(:collection_morsel, collection_morsel.errors)
+    end
   end
 
   private
+
+  def decorated_collected_morsel
+    collected_morsel = CollectedMorselDecorator.new(morsel)
+    collected_morsel.note = note
+    collected_morsel
+  end
 
   def user_is_collection_user?
     errors.add(:user, 'not authorized to add to this collection') unless user && user.id == collection.user_id
