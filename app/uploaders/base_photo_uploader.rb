@@ -18,11 +18,11 @@ class BasePhotoUploader < CarrierWave::Uploader::Base
   end
 
   def extension_white_list
-    %w(jpg jpeg gif png)
+    %w(jpg jpeg png)
   end
 
   def filename
-    "#{secure_token}.#{file.extension}" if original_filename.present?
+    "#{secure_token}.jpg" if original_filename.present?
   end
 
   def secure_token
@@ -31,8 +31,7 @@ class BasePhotoUploader < CarrierWave::Uploader::Base
 
   process :set_content_type
   process :save_content_type_and_size_in_model
-  process :fix_exif_rotation
-  process :strip
+  process :fix_exif_rotation_and_strip_and_convert_to_jpg
   process :optimize
 
   def save_content_type_and_size_in_model
@@ -41,18 +40,15 @@ class BasePhotoUploader < CarrierWave::Uploader::Base
     model.photo_updated_at = Time.now
   end
 
-  def fix_exif_rotation
+  def fix_exif_rotation_and_strip_and_convert_to_jpg
     manipulate! do |img|
-      img.auto_orient
-      img = yield(img) if block_given?
-      img
-    end
-  end
+      img.format('jpg') do |c|
+        # c.quality 90
+        c.auto_orient
 
-  def strip
-    manipulate! do |img|
-      img.strip
-      img = yield(img) if block_given?
+        c.push '+profile'
+        c.+ '!icc,!xmp,*'
+      end
       img
     end
   end
