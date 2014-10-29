@@ -61,6 +61,6 @@ class PreparePresignedUpload
   end
 
   def key_name
-    @key_name ||= "#{PreparePresignedUpload.store_dir_for_model(model)}/#{PreparePresignedUpload.secure_token_for_model(model)}-${filename}"
+    @key_name ||= "#{PreparePresignedUpload.store_dir_for_model(model)}/#{PreparePresignedUpload.secure_token_for_model(model)}.jpg"
   end
 end
