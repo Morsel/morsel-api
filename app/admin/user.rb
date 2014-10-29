@@ -196,7 +196,7 @@ ActiveAdmin.register User do
         end
         column :place
         column :featured do |morsel|
-          morsel.feed_item.featured if morsel.feed_item
+          status_tag('Featured', :ok) if morsel.feed_item && morsel.feed_item.featured
         end
         column :created_at
         column :published_at
