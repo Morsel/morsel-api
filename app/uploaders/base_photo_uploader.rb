@@ -43,7 +43,6 @@ class BasePhotoUploader < CarrierWave::Uploader::Base
   def fix_exif_rotation_and_strip_and_convert_to_jpg
     manipulate! do |img|
       img.format('jpg') do |c|
-        # c.quality 90
         c.auto_orient
 
         c.push '+profile'
