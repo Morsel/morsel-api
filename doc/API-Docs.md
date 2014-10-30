@@ -493,7 +493,7 @@ __Request Behaviors__
 <br />
 
 ## GET `/authentications/:id` - Authentication
-Updates the authentication with the specified `id`.
+Returns the authentication with the specified `id`.
 
 ### Response
 
