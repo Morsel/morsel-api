@@ -9,7 +9,7 @@ class SendPushNotificationWorker
     if notification
       SendPushNotification.call(notification: notification)
     else
-      Rollbar.report_message "Couldn't find Notification ##{options['notification_id']} push, ignoring.", 'info'
+      Rollbar.info "Couldn't find Notification ##{options['notification_id']} push, ignoring."
     end
   end
 end
