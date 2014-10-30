@@ -19,12 +19,11 @@ class UsersController < ApiController
 
     user_params = UserParams.build(params)
     user_params.delete(:promoted) # delete the `promoted` flag since that should only be set via /admin
-    current_password = user_params.delete(:current_password)
 
     if user_params[:photo_key]
       handle_photo_key(user_params[:photo_key], user, serializer: UserWithPrivateAttributesSerializer)
     else
-      if password_required?(user, params) && !user.valid_password?(current_password)
+      if password_required?(user, user_params)
         render_json_errors(user.errors)
       elsif user.update_attributes(user_params)
         if params[:prepare_presigned_upload] == 'true'
@@ -209,10 +208,16 @@ class UsersController < ApiController
 
   private
 
-  def password_required?(user, params)
-    user.errors.add(:current_password, 'is required to change email') if params[:user][:email].present? && user.email != params[:user][:email]
-    user.errors.add(:current_password, 'is required to change username') if params[:user][:username].present? && user.username != params[:user][:username]
-    user.errors.add(:current_password, 'is required to change password') if params[:user][:password].present?
+  def password_required?(user, user_params)
+    current_password = user_params.delete(:current_password)
+
+    if current_password.nil?
+      user.errors.add(:current_password, 'is required to change email') if user_params[:email].present? && user.email != user_params[:email]
+      user.errors.add(:current_password, 'is required to change username') if user_params[:username].present? && user.username != user_params[:username]
+      user.errors.add(:current_password, 'is required to change password') if user_params[:password].present?
+    else
+      user.errors.add(:current_password, 'is invalid') unless user.valid_password?(current_password)
+    end
 
     user.errors.count > 0
   end

@@ -48,6 +48,13 @@ describe 'PUT /users/:id users#update' do
       expect(json_errors['current_password']).to include('is required to change email')
     end
 
+    it 'fails if `current_password` is invalid' do
+      put_endpoint user: { email: new_email, current_password: 'butts' }
+
+      expect_failure
+      expect(json_errors['current_password']).to include('is invalid')
+    end
+
     it 'updates if `current_password` is specified' do
       put_endpoint user: { email: new_email, current_password: current_user.password }
 
@@ -68,6 +75,13 @@ describe 'PUT /users/:id users#update' do
       expect(json_errors['current_password']).to include('is required to change username')
     end
 
+    it 'fails if `current_password` is invalid' do
+      put_endpoint user: { username: new_username, current_password: 'butts' }
+
+      expect_failure
+      expect(json_errors['current_password']).to include('is invalid')
+    end
+
     it 'updates if `current_password` is specified' do
       put_endpoint user: { username: new_username, current_password: current_user.password }
 
@@ -86,6 +100,13 @@ describe 'PUT /users/:id users#update' do
 
       expect_failure
       expect(json_errors['current_password']).to include('is required to change password')
+    end
+
+    it 'fails if `current_password` is invalid' do
+      put_endpoint user: { password: new_password, current_password: 'butts' }
+
+      expect_failure
+      expect(json_errors['current_password']).to include('is invalid')
     end
 
     it 'updates if `current_password` is specified and regenerates `authentication_token`' do
