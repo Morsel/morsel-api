@@ -5,22 +5,22 @@ class ApplicationAuthorizer < Authority::Authorizer
 
   def self.creatable_by?(user)
     # By default, anyone can CREATE resources
-    user.present?
+    user && user.id?
   end
 
   def self.readable_by?(user)
     # By default, anyone can READ resources
-    user.present?
+    user && user.id?
   end
 
   def self.updatable_by?(user)
     # By default, any User can UPDATE resources
-    user.present?
+    user && user.id?
   end
 
   def self.deletable_by?(user)
     # By default, any User can DELETE resources
-    user.present?
+    user && user.id?
   end
 
   def updatable_by?(user)

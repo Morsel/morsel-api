@@ -42,7 +42,7 @@ class AuthenticationsController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def check
+  public_actions << def check
     authentication_params = AuthenticationParams.build(params)
     count = Authentication.where(provider: authentication_params[:provider], uid: authentication_params[:uid]).count
     render_json(count > 0)
@@ -69,5 +69,5 @@ class AuthenticationsController < ApiController
 
   private
 
-  authorize_actions_for Authentication, except: PUBLIC_ACTIONS, actions: { connections: :read }
+  authorize_actions_for Authentication, except: public_actions, actions: { connections: :read }
 end

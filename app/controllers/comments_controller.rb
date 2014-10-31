@@ -9,7 +9,7 @@ class CommentsController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def index
+  public_actions << def index
     custom_respond_with Comment.includes(:commenter)
                                .paginate(pagination_params)
                                .where(commentable_type: commentable_type, commentable_id: params[:id])
@@ -30,7 +30,7 @@ class CommentsController < ApiController
 
   private
 
-  authorize_actions_for Comment, except: PUBLIC_ACTIONS
+  authorize_actions_for Comment, except: public_actions
 
   def commentable_type
     request.path.split('/').second.classify

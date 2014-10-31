@@ -1,12 +1,12 @@
 class UsersController < ApiController
   include PresignedPhotoUploadable
 
-  PUBLIC_ACTIONS << def search
+  public_actions << def search
     service = Search::SearchUsers.call(UserParams.build(params).merge(pagination_params))
     custom_respond_with_service service, each_serializer: SlimFollowedUserSerializer
   end
 
-  PUBLIC_ACTIONS << def show
+  public_actions << def show
     user = User.includes(:authentications, :morsels, :items).find_by_id_or_username(params[:id] || params[:username])
     raise ActiveRecord::RecordNotFound if user.nil? || !user.active?
 
@@ -52,7 +52,7 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def validate_email
+  public_actions << def validate_email
     user = User.new(email: params[:email])
     user.validate_email
 
@@ -63,7 +63,7 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def validate_username
+  public_actions << def validate_username
     user = User.new(username: params[:username])
     user.validate_username
 
@@ -74,7 +74,7 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def reserveusername
+  public_actions << def reserveusername
     user = User.new(UserParams.build(params))
     user.password = Devise.friendly_token
     user.password_set = false
@@ -90,7 +90,7 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def updateindustry
+  public_actions << def updateindustry
     user = User.find(params[:id])
 
     if user.update(industry: UserParams.build(params)[:industry])
@@ -100,13 +100,13 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def forgot_password
+  public_actions << def forgot_password
     user = User.find_by User.arel_table[:email].lower.eq(params.fetch(:email).downcase)
     EmailUserDecorator.new(user).send_forgot_password_email if user
     render_json('Sending reset password email.')
   end
 
-  PUBLIC_ACTIONS << def reset_password
+  public_actions << def reset_password
     reset_password_token = Devise.token_generator.digest(User, :reset_password_token, params.fetch(:reset_password_token))
     user = User.find_by reset_password_token: reset_password_token
     raise ActiveRecord::RecordNotFound if user.nil? || !user.active? || !user.reset_password_period_valid?
@@ -124,7 +124,7 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def unsubscribe
+  public_actions << def unsubscribe
     user = User.find_by User.arel_table[:email].lower.eq(params.fetch(:email).downcase)
 
     if user.update(unsubscribed: true)
@@ -134,7 +134,7 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def followables
+  public_actions << def followables
     followable_type = params.fetch(:type)
 
     # HACK: Support for older clients that don't yet support before_/after_date
@@ -164,7 +164,7 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def likeables
+  public_actions << def likeables
     likeable_type = params.fetch(:type)
 
     if likeable_type == 'Item'
@@ -188,7 +188,7 @@ class UsersController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def places
+  public_actions << def places
     custom_respond_with Place.joins(:employments)
                             .paginate(pagination_params, :id, Employment)
                             .where(employments: { user_id: params[:id] })
@@ -222,5 +222,5 @@ class UsersController < ApiController
     user.errors.count > 0
   end
 
-  authorize_actions_for User, except: PUBLIC_ACTIONS, actions: { me: :read, search: :read, places: :read }
+  authorize_actions_for User, except: public_actions, actions: { me: :read, search: :read, places: :read }
 end

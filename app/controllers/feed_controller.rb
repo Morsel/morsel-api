@@ -1,5 +1,5 @@
 class FeedController < ApiController
-  PUBLIC_ACTIONS << def index
+  public_actions << def index
     if current_user.present?
       if params[:next_for_id].present?
         next_feed_item = FeedItem.includes(:subject).find(params[:next_for_id]).order_for_index(FeedItem.includes(:subject).visible.personalized_for(current_user.id)).next(false)
@@ -37,7 +37,7 @@ class FeedController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def all
+  public_actions << def all
     custom_respond_with_cached_serializer(
       FeedItem.includes(:subject)
               .visible
@@ -46,4 +46,8 @@ class FeedController < ApiController
       FeedItemSerializer
     )
   end
+
+  private
+
+  authorize_actions_for FeedItem, except: public_actions, actions: { all: :read }
 end

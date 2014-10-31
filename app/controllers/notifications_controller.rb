@@ -26,5 +26,5 @@ class NotificationsController < ApiController
 
   private
 
-  authorize_actions_for Notification, actions: { unread_count: :read, mark_read: :update }
+  authorize_actions_for Notification, except: public_actions, actions: { unread_count: :read, mark_read: :update }
 end

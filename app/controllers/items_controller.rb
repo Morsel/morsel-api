@@ -17,7 +17,7 @@ class ItemsController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def show
+  public_actions << def show
     item = Item.find(params[:id])
 
     if params[:prepare_presigned_upload] == 'true'
@@ -71,4 +71,8 @@ class ItemsController < ApiController
       params.require(:item).permit(:description, :photo, :nonce, :sort_order, :morsel_id, :photo_key, :template_order)
     end
   end
+
+  private
+
+  authorize_actions_for Item, except: public_actions
 end

@@ -1,11 +1,11 @@
 class TagsController < ApiController
-  PUBLIC_ACTIONS << def cuisines
+  public_actions << def cuisines
     custom_respond_with Tag.includes(:keyword)
                            .where(keywords: { type: 'Cuisine' }, tags: { taggable_type: taggable_type, taggable_id: params[:id] })
                            .order(Tag.arel_table[:id].asc)
   end
 
-  PUBLIC_ACTIONS << def specialties
+  public_actions << def specialties
     custom_respond_with Tag.includes(:keyword)
                            .where(keywords: { type: 'Specialty' }, tags: { taggable_type: taggable_type, taggable_id: params[:id] })
                            .order(Tag.arel_table[:id].asc)
@@ -41,7 +41,7 @@ class TagsController < ApiController
 
   private
 
-  authorize_actions_for Tag, except: PUBLIC_ACTIONS
+  authorize_actions_for Tag, except: public_actions
 
   def taggable_type
     request.path.split('/').second.classify

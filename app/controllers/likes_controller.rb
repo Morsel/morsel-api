@@ -24,7 +24,7 @@ class LikesController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def likers
+  public_actions << def likers
     custom_respond_with User.joins(:likes)
                             .paginate(pagination_params)
                             .where(likes: { likeable_id: params[:id] })
@@ -33,7 +33,7 @@ class LikesController < ApiController
 
   private
 
-  authorize_actions_for Like, except: PUBLIC_ACTIONS
+  authorize_actions_for Like, except: public_actions
 
   def likeable_type
     request.path.split('/').second.classify

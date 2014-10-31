@@ -11,7 +11,7 @@ class MorselsController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def index
+  public_actions << def index
     if morsels_for_params.nil?
       unauthorized_token
     else
@@ -38,7 +38,7 @@ class MorselsController < ApiController
     custom_respond_with morsels
   end
 
-  PUBLIC_ACTIONS << def show
+  public_actions << def show
     custom_respond_with Morsel.includes(:items, :place, :creator).find(params[:id])
   end
 
@@ -149,5 +149,5 @@ class MorselsController < ApiController
     end
   end
 
-  authorize_actions_for Morsel, except: PUBLIC_ACTIONS, actions: { publish: :update, drafts: :read, collect: :read, uncollect: :read }
+  authorize_actions_for Morsel, except: public_actions, actions: { publish: :update, drafts: :read, collect: :read, uncollect: :read }
 end

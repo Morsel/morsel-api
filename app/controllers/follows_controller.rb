@@ -25,7 +25,7 @@ class FollowsController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def followers
+  public_actions << def followers
     # HACK: Support for older clients that don't yet support before_/after_date
     if pagination_params.include? :max_id
       pagination_key = :id
@@ -44,7 +44,7 @@ class FollowsController < ApiController
 
   private
 
-  authorize_actions_for Follow, except: PUBLIC_ACTIONS, actions: { followers: :read }
+  authorize_actions_for Follow, except: public_actions, actions: { followers: :read }
 
   def followable_type
     request.path.split('/').second.classify
