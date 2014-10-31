@@ -1,5 +1,5 @@
 class CollectionsController < ApiController
-  PUBLIC_ACTIONS << def index
+  public_actions << def index
     custom_respond_with_cached_serializer(
       Collection.where_user_id(params[:user_id])
                 .where_place_id(params[:place_id])
@@ -41,7 +41,7 @@ class CollectionsController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def morsels
+  public_actions << def morsels
     custom_respond_with Morsel.includes(:items, :place, :creator)
                               .joins(:collection_morsels)
                               .published
@@ -60,5 +60,5 @@ class CollectionsController < ApiController
 
   private
 
-  authorize_actions_for Collection, except: PUBLIC_ACTIONS
+  authorize_actions_for Collection, except: public_actions
 end

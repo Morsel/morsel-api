@@ -24,13 +24,21 @@ class ApiController < ActionController::Base
     redirect_to new_user_session_path unless current_user.try(:admin?)
   end
 
+  def current_or_null_user
+    current_user || User.new
+  end
+
   def default_format_json
     request.format = 'json' unless params[:format]
   end
 
   private
 
-  PUBLIC_ACTIONS ||= []
+  class_attribute :public_actions
+
+  def self.public_actions
+    @public_actions ||= []
+  end
 
   # api_key is expected to be in the format: "#{user.id}:#{user.authentication_token}"
   def authenticate_user_from_token!
@@ -47,7 +55,7 @@ class ApiController < ActionController::Base
       else
         unauthorized_token
       end
-    elsif self.class::PUBLIC_ACTIONS.map(&:to_s).exclude? params[:action]
+    elsif self.public_actions.map(&:to_s).exclude? params[:action]
       unauthorized_token
     end
   rescue ActiveRecord::RecordNotFound

@@ -1,13 +1,13 @@
 class KeywordsController < ApiController
-  PUBLIC_ACTIONS << def cuisines
+  public_actions << def cuisines
     custom_respond_with Keyword.where(type: 'Cuisine'), each_serializer: KeywordSerializer
   end
 
-  PUBLIC_ACTIONS << def specialties
+  public_actions << def specialties
     custom_respond_with Keyword.where(type: 'Specialty'), each_serializer: KeywordSerializer
   end
 
-  PUBLIC_ACTIONS << def users
+  public_actions << def users
     custom_respond_with User.joins(:tags)
                             .paginate(pagination_params)
                             .where(tags: { keyword_id: params[:id] })
@@ -16,5 +16,5 @@ class KeywordsController < ApiController
 
   private
 
-  authorize_actions_for Keyword, except: PUBLIC_ACTIONS, actions: { users: :read }
+  authorize_actions_for Keyword, except: public_actions, actions: { users: :read }
 end

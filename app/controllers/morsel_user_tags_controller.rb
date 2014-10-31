@@ -10,7 +10,7 @@ class MorselUserTagsController < ApiController
     end
   end
 
-  PUBLIC_ACTIONS << def users
+  public_actions << def users
     custom_respond_with User.joins(:morsel_user_tags)
                             .paginate(pagination_params)
                             .where(morsel_user_tags: { morsel_id: params[:id] })
@@ -18,7 +18,7 @@ class MorselUserTagsController < ApiController
                         each_serializer: SlimUserSerializer
   end
 
-  PUBLIC_ACTIONS << def eligible_users
+  public_actions << def eligible_users
     # Eligible Users currently are those that follow the User
     morsel = Morsel.find params[:id]
 
@@ -52,5 +52,5 @@ class MorselUserTagsController < ApiController
 
   private
 
-  authorize_actions_for MorselUserTag, except: PUBLIC_ACTIONS
+  authorize_actions_for MorselUserTag, except: public_actions
 end

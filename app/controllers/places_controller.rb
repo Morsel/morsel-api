@@ -1,5 +1,5 @@
 class PlacesController < ApiController
-  PUBLIC_ACTIONS << def show
+  public_actions << def show
     custom_respond_with Place.find params[:id]
   end
 
@@ -10,7 +10,7 @@ class PlacesController < ApiController
     render_json_with_service service
   end
 
-  PUBLIC_ACTIONS << def users
+  public_actions << def users
     custom_respond_with User.joins(:employments)
                             .paginate(pagination_params)
                             .where(employments: { place_id: params[:id] })
@@ -21,7 +21,7 @@ class PlacesController < ApiController
 
   private
 
-  authorize_actions_for Place, except: PUBLIC_ACTIONS, actions: { suggest: :create }
+  authorize_actions_for Place, except: public_actions, actions: { suggest: :create }
 
   class PlaceParams
     def self.build(params, _scope = nil)
