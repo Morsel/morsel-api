@@ -1,4 +1,4 @@
-:concurrency: <%= Settings.sidekiq.concurrency %>
+:concurrency: <%= ENV['SIDEKIQ_CONCURRENCY'].to_i || 5 %>
 :queues:
   - [default, 4]
   - [carrierwave, 2]
