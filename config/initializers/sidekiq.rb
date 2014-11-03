@@ -7,7 +7,8 @@ Sidekiq.configure_client do |config|
     ActiveRecord::Base.connection_pool.disconnect!
 
     ActiveSupport.on_load(:active_record) do
-      config = Rails.application.config.database_configuration[Rails.env]
+      config = ActiveRecord::Base.configurations[Rails.env] ||
+        Rails.application.config.database_configuration[Rails.env]
       config['reaping_frequency'] = ENV['DB_POOL'] || 10
       config['pool'] = ENV['DB_REAP_FREQ'] || 10
       ActiveRecord::Base.establish_connection(config)
@@ -23,7 +24,8 @@ Sidekiq.configure_server do |config|
     ActiveRecord::Base.connection_pool.disconnect!
 
     ActiveSupport.on_load(:active_record) do
-      config = Rails.application.config.database_configuration[Rails.env]
+      config = ActiveRecord::Base.configurations[Rails.env] ||
+        Rails.application.config.database_configuration[Rails.env]
       config['reaping_frequency'] = ENV['SIDEKIQ_DB_REAP_FREQ'] || 10
       config['pool'] = ENV['SIDEKIQ_DB_POOL'] || 10
       ActiveRecord::Base.establish_connection(config)
