@@ -1,7 +1,7 @@
 # config/unicorn.rb
 # based off of: https://gist.github.com/leshill/1401792
 
-worker_processes ENV['UNICORN_WORKER_PROCESS_COUNT'] # Settingslogic craps out so inline ENV
+worker_processes ENV['UNICORN_WORKER_PROCESS_COUNT'].to_i || 2 # Settingslogic craps out so inline ENV
 timeout 30
 preload_app true
 
