@@ -25,8 +25,8 @@ after_fork do |server, worker|
   if defined?(ActiveRecord::Base)
     config = ActiveRecord::Base.configurations[Rails.env] ||
                 Rails.application.config.database_configuration[Rails.env]
-    config['reaping_frequency'] = Settings.database.reaping_frequency
-    config['pool']            =   Settings.database.pool
+    config['pool']            =   ENV['DB_POOL'] || 10
+    config['reaping_frequency'] = ENV['DB_REAP_FREQ'] || 10
     ActiveRecord::Base.establish_connection(config)
     Rails.logger.info('Connected to ActiveRecord')
   end
