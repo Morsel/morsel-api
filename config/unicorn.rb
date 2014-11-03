@@ -1,7 +1,7 @@
 # config/unicorn.rb
 # based off of: https://gist.github.com/leshill/1401792
 
-worker_processes ENV['UNICORN_WORKER_PROCESS_COUNT'].to_i || 2
+worker_processes Settings.unicorn.worker_process
 timeout 30
 preload_app true
 
@@ -25,8 +25,8 @@ after_fork do |server, worker|
   if defined?(ActiveRecord::Base)
     config = ActiveRecord::Base.configurations[Rails.env] ||
                 Rails.application.config.database_configuration[Rails.env]
-    config['reaping_frequency'] = ENV['DB_REAP_FREQ'] || 10 # seconds
-    config['pool']            =   ENV['DB_POOL'] || 2
+    config['reaping_frequency'] = Settings.database.reaping_frequency
+    config['pool']            =   Settings.database.pool
     ActiveRecord::Base.establish_connection(config)
     Rails.logger.info('Connected to ActiveRecord')
   end

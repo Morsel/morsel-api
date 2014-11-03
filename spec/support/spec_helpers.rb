@@ -167,6 +167,6 @@ module SpecHelpers
   private
 
   def redis
-    @redis ||= Redis.new url: ENV['OPENREDIS_URL']
+    @redis ||= Redis.new url: Settings.redis.url
   end
 end

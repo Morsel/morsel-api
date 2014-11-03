@@ -28,7 +28,7 @@ class SendPushNotification
     @certificate ||= if Rails.env.staging? || Rails.env.production?
       StringIO.new ENV['APNS_CERT'] # Settingslogic doesn't correctly handle this, so use ENV directly.
     else
-      Settings.apns.cert_path
+      ENV['APNS_CERT_PATH']
     end
   end
 
