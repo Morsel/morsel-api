@@ -16,7 +16,7 @@ class ValidateShadowToken
   private
 
   def valid_shadow_token?
-    redis = Redis.new url: ENV['OPENREDIS_URL']
+    redis = Redis.new url: Settings.redis.url
     errors.add(:shadow_token, 'is invalid') unless shadow_token == redis.get(redis_key)
   end
 

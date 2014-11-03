@@ -11,7 +11,7 @@ class GenerateShadowToken
   private
 
   def generate_shadow_token
-    redis = Redis.new url: ENV['OPENREDIS_URL']
+    redis = Redis.new url: Settings.redis.url
     token = SecureRandom.uuid.gsub('-', '')
     redis.setex redis_key, 60, token
     token
