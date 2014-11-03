@@ -23,9 +23,6 @@ sidekiq:
   pool: <%= ENV['SIDEKIQ_DB_POOL'] || 10 %>
   reaping_frequency: <%= ENV['SIDEKIQ_DB_REAP_FREQ'] || 10 %>
 
-unicorn:
-  worker_process: <%= ENV['UNICORN_WORKER_PROCESS_COUNT'] || 2 %>
-
 flags:
   enable_auto_follow: <%= ENV['ENABLE_AUTO_FOLLOW'] || true %>
 
