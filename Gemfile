@@ -88,6 +88,7 @@ group :development, :test do
   gem 'rails_best_practices'
   gem 'rspec-instafail'
   gem 'rspec-rails'
+  gem 'simplecov', '~> 0.9.1', require: false
 end
 
 group :test do
