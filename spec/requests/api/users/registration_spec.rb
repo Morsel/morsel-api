@@ -257,7 +257,7 @@ describe 'POST /users registrations#create' do
             end
 
             expect_success
-            expect(first_authentication_user.followed_user_count).to eq(1)
+            expect(first_authentication_user.reload.followed_user_count).to eq(1)
           end
         end
 
@@ -390,7 +390,7 @@ describe 'POST /users registrations#create' do
             end
 
             expect_success
-            expect(first_authentication_user.followed_user_count).to eq(1)
+            expect(first_authentication_user.reload.followed_user_count).to eq(1)
           end
         end
 

@@ -23,6 +23,7 @@
 # **`mrsl`**                | `hstore`           |
 # **`place_id`**            | `integer`          |
 # **`template_id`**         | `integer`          |
+# **`likes_count`**         | `integer`          | `default(0), not null`
 #
 
 require 'spec_helper'

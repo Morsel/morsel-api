@@ -18,7 +18,7 @@ describe 'GET /users/activities' do
     let(:paginateable_object_class) { Activity }
     before do
       paginateable_object_class.delete_all
-      30.times { FactoryGirl.create(:item_like_activity, creator_id: current_user.id) }
+      30.times { FactoryGirl.create(:morsel_like_activity, creator_id: current_user.id) }
     end
   end
 
@@ -114,7 +114,7 @@ describe 'GET /users/followables_activities' do
     let(:paginateable_object_class) { Activity }
     before do
       paginateable_object_class.delete_all
-      30.times { FactoryGirl.create(:item_like_activity, creator_id: followed_users.sample.id) }
+      30.times { FactoryGirl.create(:morsel_like_activity, creator_id: followed_users.sample.id) }
     end
   end
 

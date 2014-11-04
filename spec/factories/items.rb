@@ -21,6 +21,7 @@
 # **`morsel_id`**           | `integer`          |
 # **`sort_order`**          | `integer`          |
 # **`template_order`**      | `integer`          |
+# **`comments_count`**      | `integer`          | `default(0), not null`
 #
 
 FactoryGirl.define do

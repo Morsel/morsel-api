@@ -11,11 +11,5 @@ module Followable
     end
   end
 
-  def follower_count
-    followers.count
-  end
-
-  def follow_count
-    follower_follows.count
-  end
+  alias_attribute :follower_count, :followers_count
 end

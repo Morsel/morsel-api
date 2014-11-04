@@ -18,7 +18,7 @@
 require 'spec_helper'
 
 describe Like do
-  subject(:item_like) { FactoryGirl.build(:item_like) }
+  subject(:morsel_like) { FactoryGirl.build(:morsel_like) }
 
   it_behaves_like 'Activityable'
   it_behaves_like 'Paranoia'
@@ -29,5 +29,4 @@ describe Like do
 
   it { should respond_to(:liker) }
   it { should respond_to(:likeable) }
-
 end

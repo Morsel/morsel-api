@@ -11,7 +11,5 @@ module Likeable
     end
   end
 
-  def like_count
-    likes.count
-  end
+  alias_attribute :like_count, :likes_count
 end

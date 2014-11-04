@@ -27,6 +27,7 @@
 # **`lat`**                    | `float`            |
 # **`lon`**                    | `float`            |
 # **`widget_url`**             | `string(255)`      |
+# **`followers_count`**        | `integer`          | `default(0), not null`
 #
 
 require 'spec_helper'
@@ -34,6 +35,7 @@ require 'spec_helper'
 describe Place do
   subject(:place) { FactoryGirl.build(:place) }
 
+  it_behaves_like 'Followable'
   it_behaves_like 'Paranoia'
   it_behaves_like 'Sluggable'
   it_behaves_like 'Timestamps'

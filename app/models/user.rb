@@ -41,6 +41,9 @@
 # **`settings`**                | `hstore`           | `default({})`
 # **`professional`**            | `boolean`          | `default(FALSE)`
 # **`password_set`**            | `boolean`          | `default(TRUE)`
+# **`drafts_count`**            | `integer`          | `default(0), not null`
+# **`followed_users_count`**    | `integer`          | `default(0), not null`
+# **`followers_count`**         | `integer`          | `default(0), not null`
 #
 
 class User < ActiveRecord::Base
@@ -56,6 +59,9 @@ class User < ActiveRecord::Base
   before_validation :ensure_authentication_token
   after_validation :ensure_professional
   before_save :default_values
+
+  alias_attribute :draft_count, :drafts_count
+  alias_attribute :followed_user_count, :followed_users_count
 
   has_many :authentications, inverse_of: :user
 
@@ -178,22 +184,6 @@ class User < ActiveRecord::Base
 
   def likes_morsel?(morsel)
     liked_morsels.include?(morsel)
-  end
-
-  def morsel_count
-    morsels.published.count
-  end
-
-  def draft_count
-    morsels.drafts.count
-  end
-
-  def follower_count
-    followers.count
-  end
-
-  def followed_user_count
-    followed_users.count
   end
 
   def following_user?(user)

@@ -23,6 +23,7 @@
 # **`mrsl`**                | `hstore`           |
 # **`place_id`**            | `integer`          |
 # **`template_id`**         | `integer`          |
+# **`likes_count`**         | `integer`          | `default(0), not null`
 #
 
 class Morsel < ActiveRecord::Base
@@ -50,6 +51,9 @@ class Morsel < ActiveRecord::Base
   has_many :tagged_users, through: :morsel_user_tags, source: :user
 
   before_save :update_published_at_if_necessary
+
+  after_destroy :update_counter_caches
+  after_save  :update_counter_caches
 
   mount_uploader :photo, MorselPhotoUploader
 
@@ -105,6 +109,10 @@ class Morsel < ActiveRecord::Base
 
   def primary_item_belongs_to_morsel
     errors.add(:primary_item, 'does not belong to this Morsel') if primary_item_id && !item_ids.include?(primary_item_id)
+  end
+
+  def update_counter_caches
+    self.creator.update drafts_count: Morsel.drafts.where(creator_id: creator_id).count if creator
   end
 
   def update_published_at_if_necessary

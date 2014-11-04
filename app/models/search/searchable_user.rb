@@ -41,6 +41,9 @@
 # **`settings`**                | `hstore`           | `default({})`
 # **`professional`**            | `boolean`          | `default(FALSE)`
 # **`password_set`**            | `boolean`          | `default(TRUE)`
+# **`drafts_count`**            | `integer`          | `default(0), not null`
+# **`followed_users_count`**    | `integer`          | `default(0), not null`
+# **`followers_count`**         | `integer`          | `default(0), not null`
 #
 
 module Search

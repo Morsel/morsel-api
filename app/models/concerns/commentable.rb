@@ -6,7 +6,5 @@ module Commentable
     has_many :comments, as: :commentable, dependent: :destroy
   end
 
-  def comment_count
-    comments.count
-  end
+  alias_attribute :comment_count, :comments_count
 end

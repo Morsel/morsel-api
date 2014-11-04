@@ -24,7 +24,7 @@ describe FollowSocialUids do
 
         expect_service_success
         expect(service_response.count).to eq(number_of_connected_uids)
-        expect(authentication.user.followed_user_count).to eq(number_of_connected_uids)
+        expect(authentication.user.reload.followed_user_count).to eq(number_of_connected_uids)
       end
 
       it 'should NOT queue any push notifications' do
@@ -61,7 +61,7 @@ describe FollowSocialUids do
 
         expect_service_success
         expect(service_response.count).to eq(number_of_connected_uids)
-        expect(authentication.user.followed_user_count).to eq(number_of_connected_uids)
+        expect(authentication.user.reload.followed_user_count).to eq(number_of_connected_uids)
       end
     end
   end
@@ -87,7 +87,7 @@ describe FollowSocialUids do
 
         expect_service_success
         expect(service_response.count).to eq(number_of_connected_uids)
-        expect(authentication.user.followed_user_count).to eq(number_of_connected_uids)
+        expect(authentication.user.reload.followed_user_count).to eq(number_of_connected_uids)
       end
     end
   end
