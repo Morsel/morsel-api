@@ -10,6 +10,7 @@ require 'factory_girl'
 require 'sidekiq/testing'
 require 'mandrill_mailer/offline'
 require 'fakeredis/rspec'
+require 'simplecov'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -41,6 +42,15 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
 
     DatabaseCleaner.strategy = :transaction
+    SimpleCov.start 'rails' do
+      add_filter 'app/admin'
+      add_filter 'app/authorizers'
+      add_filter 'app/mailers'
+      add_filter 'app/uploaders'
+      add_filter 'app/workers'
+
+      add_group 'Services', 'app/services'
+    end
   end
 
   config.before(:each) do |example_method|
