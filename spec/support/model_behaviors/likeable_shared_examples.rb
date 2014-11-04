@@ -1,12 +1,15 @@
 shared_examples 'Likeable' do
-  describe '.like_count' do
-    it 'returns the number of likes for a Likeable' do
-      likes_count = rand(3..6)
-      subject.save!
+  describe '.likes_count' do
+    let(:likes_count) { rand(3..6) }
+    before do
+      subject.save! unless subject.persisted?
       likes_count.times do
-        subject.likers << FactoryGirl.create(:user)
+        FactoryGirl.create(:like, likeable: subject)
       end
-      expect(subject.like_count).to eq(likes_count)
+    end
+
+    it 'returns the number of likes for a Likeable' do
+      expect(subject.reload.likes_count).to eq(likes_count)
     end
   end
 end

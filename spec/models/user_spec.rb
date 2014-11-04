@@ -41,6 +41,9 @@
 # **`settings`**                | `hstore`           | `default({})`
 # **`professional`**            | `boolean`          | `default(FALSE)`
 # **`password_set`**            | `boolean`          | `default(TRUE)`
+# **`drafts_count`**            | `integer`          | `default(0), not null`
+# **`followed_users_count`**    | `integer`          | `default(0), not null`
+# **`followers_count`**         | `integer`          | `default(0), not null`
 #
 
 require 'spec_helper'
@@ -48,6 +51,7 @@ require 'spec_helper'
 describe User do
   subject(:user) { FactoryGirl.build(:user) }
 
+  it_behaves_like 'Followable'
   it_behaves_like 'Paranoia'
   it_behaves_like 'Timestamps'
 
@@ -71,12 +75,25 @@ describe User do
 
   it { should be_valid }
 
-  context 'following a User' do
-    let(:followed_user) { FactoryGirl.create(:user) }
-    before { subject.followed_users << followed_user }
+  context 'following Users' do
+    let(:followed_users_count) { rand(3..6) }
+    before do
+      subject.save! unless subject.persisted?
+      followed_users_count.times do
+        FactoryGirl.create(:user_follow, follower: subject)
+      end
+    end
+
+    let(:followed_user) { subject.followed_users.last }
 
     it 'returns `true` for following_user?' do
       expect(subject.following_user?(followed_user)).to be_true
+    end
+
+    describe '.followed_users_count' do
+      it 'returns the number of followed Users' do
+        expect(subject.reload.followed_users_count).to eq(followed_users_count)
+      end
     end
   end
 

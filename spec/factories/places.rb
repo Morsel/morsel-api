@@ -27,6 +27,7 @@
 # **`lat`**                    | `float`            |
 # **`lon`**                    | `float`            |
 # **`widget_url`**             | `string(255)`      |
+# **`followers_count`**        | `integer`          | `default(0), not null`
 #
 
 FactoryGirl.define do

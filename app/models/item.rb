@@ -21,6 +21,7 @@
 # **`morsel_id`**           | `integer`          |
 # **`sort_order`**          | `integer`          |
 # **`template_order`**      | `integer`          |
+# **`comments_count`**      | `integer`          | `default(0), not null`
 #
 
 class Item < ActiveRecord::Base
@@ -52,6 +53,11 @@ class Item < ActiveRecord::Base
     message << "#{morsel.title}: " if morsel && morsel.title?
     message << "#{description} " if description.present?
     message
+  end
+
+  def like_count
+    # HACK: Remove this once Item is no longer 'Likeable'
+    likes.count
   end
 
   private

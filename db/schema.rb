@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141027224840) do
+ActiveRecord::Schema.define(version: 20141104181008) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -207,6 +207,7 @@ ActiveRecord::Schema.define(version: 20141027224840) do
     t.integer  "morsel_id"
     t.integer  "sort_order"
     t.integer  "template_order"
+    t.integer  "comments_count",     default: 0, null: false
   end
 
   add_index "items", ["creator_id"], name: "index_items_on_creator_id", using: :btree
@@ -218,6 +219,7 @@ ActiveRecord::Schema.define(version: 20141027224840) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "followers_count", default: 0, null: false
   end
 
   add_index "keywords", ["type"], name: "index_keywords_on_type", using: :btree
@@ -261,6 +263,7 @@ ActiveRecord::Schema.define(version: 20141027224840) do
     t.hstore   "mrsl"
     t.integer  "place_id"
     t.integer  "template_id"
+    t.integer  "likes_count",        default: 0,    null: false
   end
 
   add_index "morsels", ["cached_slug"], name: "index_morsels_on_cached_slug", using: :btree
@@ -304,6 +307,7 @@ ActiveRecord::Schema.define(version: 20141027224840) do
     t.float    "lat"
     t.float    "lon"
     t.string   "widget_url"
+    t.integer  "followers_count",       default: 0,  null: false
   end
 
   add_index "places", ["name", "foursquare_venue_id"], name: "index_places_on_name_and_foursquare_venue_id", using: :btree
@@ -406,6 +410,9 @@ ActiveRecord::Schema.define(version: 20141027224840) do
     t.hstore   "settings",               default: {}
     t.boolean  "professional",           default: false
     t.boolean  "password_set",           default: true
+    t.integer  "drafts_count",           default: 0,     null: false
+    t.integer  "followed_users_count",   default: 0,     null: false
+    t.integer  "followers_count",        default: 0,     null: false
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree

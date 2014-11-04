@@ -21,12 +21,6 @@
 #
 
 FactoryGirl.define do
-  factory :item_like_activity, class: Activity do
-    association(:creator, factory: :user)
-    association(:action, factory: :item_like)
-    association(:subject, factory: :item_with_creator_and_morsel)
-  end
-
   factory :item_comment_activity, class: Activity do
     association(:creator, factory: :user)
     association(:action, factory: :item_comment)

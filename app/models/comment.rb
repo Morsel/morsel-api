@@ -27,6 +27,9 @@ class Comment < ActiveRecord::Base
 
   acts_as_paranoid
 
+  after_destroy :update_counter_caches
+  after_save :update_counter_caches
+
   belongs_to :commentable, polymorphic: true
   belongs_to :commenter, class_name: 'User'
   alias_attribute :creator, :commenter
@@ -37,4 +40,10 @@ class Comment < ActiveRecord::Base
   validates :commenter, presence: true
   validates :commentable, presence: true
   validates :description, presence: true
+
+  private
+
+  def update_counter_caches
+    self.commentable.update comments_count: Comment.where(commentable_id:commentable_id, commentable_type:commentable_type).count
+  end
 end

@@ -29,6 +29,9 @@ class Follow < ActiveRecord::Base
   alias_attribute :creator, :follower
   alias_attribute :user, :follower
 
+  after_destroy :update_counter_caches
+  after_save :update_counter_caches
+
   validates :follower_id, uniqueness: { scope: [:followable_id, :followable_type], conditions: -> { where(deleted_at: nil) } }
   validates :followable, presence: true
 
@@ -39,5 +42,12 @@ class Follow < ActiveRecord::Base
     else
       super(sType)
     end
+  end
+
+  private
+
+  def update_counter_caches
+    self.follower.update followed_users_count: Follow.where(follower_id:follower_id, followable_type:followable_type).count if followable_type == 'User'
+    self.followable.update followers_count: Follow.where(followable_id:followable_id, followable_type:followable_type).count
   end
 end

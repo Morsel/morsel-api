@@ -121,7 +121,7 @@ describe 'Authentications API Methods' do
 
             expect_success
 
-            expect(current_user.followed_user_count).to eq(number_of_friends)
+            expect(current_user.reload.followed_user_count).to eq(number_of_friends)
           end
 
           context 'followed users have auto_follow enabled' do
@@ -143,7 +143,7 @@ describe 'Authentications API Methods' do
               end
 
               expect_success
-              expect(first_authentication_user.followed_user_count).to eq(1)
+              expect(first_authentication_user.reload.followed_user_count).to eq(1)
             end
           end
 
@@ -166,7 +166,7 @@ describe 'Authentications API Methods' do
               end
 
               expect_success
-              expect(first_authentication_user.followed_user_count).to eq(0)
+              expect(first_authentication_user.reload.followed_user_count).to eq(0)
             end
           end
         end
@@ -200,7 +200,7 @@ describe 'Authentications API Methods' do
             end
 
             expect_success
-            expect(current_user.followed_user_count).to be_zero
+            expect(current_user.reload.followed_user_count).to be_zero
           end
         end
       end
@@ -261,7 +261,7 @@ describe 'Authentications API Methods' do
 
             expect_success
 
-            expect(current_user.followed_user_count).to eq(number_of_friends)
+            expect(current_user.reload.followed_user_count).to eq(number_of_friends)
           end
 
           context 'followed users have auto_follow enabled' do
@@ -282,7 +282,7 @@ describe 'Authentications API Methods' do
               end
 
               expect_success
-              expect(first_authentication_user.followed_user_count).to eq(1)
+              expect(first_authentication_user.reload.followed_user_count).to eq(1)
             end
           end
 
@@ -304,7 +304,7 @@ describe 'Authentications API Methods' do
               end
 
               expect_success
-              expect(first_authentication_user.followed_user_count).to eq(0)
+              expect(first_authentication_user.reload.followed_user_count).to eq(0)
             end
           end
         end
@@ -337,7 +337,7 @@ describe 'Authentications API Methods' do
             end
 
             expect_success
-            expect(current_user.followed_user_count).to be_zero
+            expect(current_user.reload.followed_user_count).to be_zero
           end
         end
       end
@@ -428,7 +428,7 @@ describe 'Authentications API Methods' do
 
             expect_success
 
-            expect(current_user.followed_user_count).to eq(number_of_friends)
+            expect(current_user.reload.followed_user_count).to eq(number_of_friends)
           end
 
           context 'followed users have auto_follow enabled' do
@@ -449,7 +449,7 @@ describe 'Authentications API Methods' do
               end
 
               expect_success
-              expect(first_authentication_user.followed_user_count).to eq(1)
+              expect(first_authentication_user.reload.followed_user_count).to eq(1)
             end
           end
 
@@ -471,7 +471,7 @@ describe 'Authentications API Methods' do
               end
 
               expect_success
-              expect(first_authentication_user.followed_user_count).to eq(0)
+              expect(first_authentication_user.reload.followed_user_count).to eq(0)
             end
           end
         end
@@ -504,7 +504,7 @@ describe 'Authentications API Methods' do
             end
 
             expect_success
-            expect(current_user.followed_user_count).to be_zero
+            expect(current_user.reload.followed_user_count).to be_zero
           end
         end
       end
