@@ -39,7 +39,7 @@ class Morsel < ActiveRecord::Base
 
   accepts_nested_attributes_for :feed_item
 
-  belongs_to :place
+  belongs_to :place, inverse_of: :morsels
 
   has_many :collection_morsels, dependent: :destroy
   has_many :collections, through: :collection_morsels, source: :collection

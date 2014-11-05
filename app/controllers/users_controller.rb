@@ -7,7 +7,7 @@ class UsersController < ApiController
   end
 
   public_actions << def show
-    user = User.includes(:authentications, :morsels, :items).find_by_id_or_username(params[:id] || params[:username])
+    user = User.find_by_id_or_username(params[:id] || params[:username])
     raise ActiveRecord::RecordNotFound if user.nil? || !user.active?
 
     custom_respond_with user
