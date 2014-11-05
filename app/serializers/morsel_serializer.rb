@@ -1,6 +1,5 @@
 class MorselSerializer < SlimMorselSerializer
   attributes :draft,
-             :total_like_count,
              :like_count,
              :url,
              :template_id,

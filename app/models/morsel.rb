@@ -71,10 +71,6 @@ class Morsel < ActiveRecord::Base
   scope :where_tagged_user_id, -> (tagged_user_id) { includes(:morsel_user_tags).where(MorselUserTag.arel_table[:user_id].eq(tagged_user_id)) unless tagged_user_id.nil? }
   scope :where_creator_id_or_tagged_user_id, -> (creator_id_or_tagged_user_id) { includes(:morsel_user_tags).where(Morsel.arel_table[:creator_id].eq(creator_id_or_tagged_user_id).or(MorselUserTag.arel_table[:user_id].eq(creator_id_or_tagged_user_id))).references(:morsel_user_tags) unless creator_id_or_tagged_user_id.nil? }
 
-  def total_like_count
-    items.map(&:like_count).reduce(:+)
-  end
-
   def item_count
     items.count
   end
