@@ -51,8 +51,6 @@ describe Morsel do
   it { should respond_to(:creator) }
   it { should respond_to(:items) }
 
-  it { should respond_to(:total_like_count) }
-
   it { should be_valid }
 
   its(:items) { should be_empty }

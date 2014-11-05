@@ -22,7 +22,6 @@ MorselApp::Application.routes.draw do
     member do
       post 'comments' => 'comments#create'
       get 'comments' => 'comments#index'
-      # put 'comments/:comment_id' => 'comments#update'
       delete 'comments/:comment_id' => 'comments#destroy'
     end
   end
@@ -61,7 +60,7 @@ MorselApp::Application.routes.draw do
   resources :authentications, only: [:create, :index, :show, :update, :destroy] do
     collection do
       get 'check' => 'authentications#check'
-      get 'connections(/provider)' => 'authentications#connections' # DEPRECATED
+      get 'connections(/provider)' => 'authentications#connections' # DEPRECATED, Change: GET `/authentications/connections` - Authentication Connections -> POST `/authentications/connections` - Authentication Connections (https://app.asana.com/0/19486350215520/19486350215528)
       post 'connections(/provider)' => 'authentications#connections'
     end
   end
@@ -92,7 +91,7 @@ MorselApp::Application.routes.draw do
     collection do
       get 'validate_email(/:email)' => 'users#validate_email'
       get 'validate_username(/:username)' => 'users#validate_username'
-      get 'validateusername(/:username)' => 'users#validate_username'
+      get 'validateusername(/:username)' => 'users#validate_username' # DEPRECATED, Change: GET `/users/validateusername` - Validate Username -> [GET `/users/validate_username` - Validate Username (https://app.asana.com/0/19486350215520/19486350215530)
       post 'reserveusername(/:username)' => 'users#reserveusername'
       post 'forgot_password' => 'users#forgot_password'
       post 'reset_password' => 'users#reset_password'
@@ -130,7 +129,9 @@ MorselApp::Application.routes.draw do
     end
   end
 
-  # DEPRECATED: likeable
+  # DEPRECATED, Remove: GET `/items/:id/likers` - Likers (https://app.asana.com/0/19486350215520/19486350215534). Items are no longer likeable
+  # DEPRECATED, Remove: POST `/items/:id/like` - Like Item (https://app.asana.com/0/19486350215520/19486350215536). Items are no longer likeable
+  # DEPRECATED, Remove: DELETE `/items/:id/like` - Unlike Item (https://app.asana.com/0/19486350215520/19486350215538). Items are no longer likeable
   resources :items, only: [:create, :show, :update, :destroy], concerns: [:commentable, :likeable, :reportable]
 
   resources :morsels, only: [:create, :index, :show, :update, :destroy], concerns: [:reportable, :likeable] do
@@ -159,7 +160,7 @@ MorselApp::Application.routes.draw do
       post ':foursquare_venue_id/employment' => 'employments#create', foursquare_venue_id: /[A-Za-z0-9]+/
       delete ':place_id/employment' => 'employments#destroy'
 
-      # HACK: Deprecated method
+      # DEPRECATED, Change: POST `places/join` -> POST `places/:id|:foursquare_venue_id/employment` (https://app.asana.com/0/19486350215520/19486350215542)
       post 'join' => 'employments#create'
     end
 

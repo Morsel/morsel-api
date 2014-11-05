@@ -1,7 +1,7 @@
 class ActivitiesController < ApiController
   def index
     custom_respond_with_cached_serializer(
-      Activity.includes(:action, :subject)
+      Activity.includes(:creator, :action, :subject)
               .paginate(pagination_params)
               .where(creator_id: current_user.id, hidden: false)
               .order(Activity.arel_table[:id].desc),
@@ -11,7 +11,7 @@ class ActivitiesController < ApiController
 
   def followables_activities
     custom_respond_with_cached_serializer(
-      Activity.includes(:action, :subject)
+      Activity.includes(:creator, :action, :subject)
               .paginate(pagination_params)
               .where(creator_id: current_user.followed_user_ids, hidden: false)
               .order(Activity.arel_table[:id].desc),

@@ -7,7 +7,7 @@ gem 'rails', '~> 4.1.6'
 gem 'pg'
 gem 'oink', '~> 0.10.1'
 
-gem 'active_model_serializers'
+gem 'active_model_serializers', '~> 0.8.2'
 gem 'activeadmin', github: 'gregbell/active_admin'
 gem 'addressable', '~> 2.3.6'
 gem 'authority', '~> 2.9.0'

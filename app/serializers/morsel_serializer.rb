@@ -1,18 +1,17 @@
 class MorselSerializer < SlimMorselSerializer
   attributes :draft,
-             :total_like_count,
              :like_count,
              :url,
              :template_id,
-             :facebook_mrsl,  # DEPRECATED, use mrsl[facebook_mrsl] instead
-             :twitter_mrsl,   # DEPRECATED, use mrsl[twitter_mrsl] instead
+             :facebook_mrsl,  # DEPRECATED, Change: facebook_mrsl -> mrsl[facebook_mrsl] (https://app.asana.com/0/19486350215520/19486350215556)
+             :twitter_mrsl,   # DEPRECATED, Change: twitter_mrsl -> mrsl[twitter_mrsl] (https://app.asana.com/0/19486350215520/19486350215558)
              :mrsl,
              :has_tagged_users,
              :tagged,
              :liked
 
   has_one :creator, serializer: SlimUserSerializer
-  has_many :items, serializer: ItemSansMorselSerializer
+  has_many :items, serializer: ItemSansMorselAndCreatorSerializer
   has_one :place, serializer: SlimPlaceSerializer
 
   def has_tagged_users

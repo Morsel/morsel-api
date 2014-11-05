@@ -39,6 +39,7 @@ class Place < ActiveRecord::Base
   belongs_to :creator, class_name: 'User'
   has_many :collections, inverse_of: :place
   has_many :employments, inverse_of: :place
+  has_many :morsels, inverse_of: :place
   has_many :users, through: :employments
 
   self.authorizer_name = 'ProfessionalAuthorizer'
