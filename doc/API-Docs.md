@@ -36,7 +36,7 @@
   - [PUT `/authentications/:id` - Update Authentication](#put-authenticationsid---update-authentication)
   - [DELETE `/authentications/:id` - Delete Authentication](#delete-authenticationsid---delete-authentication)
   - [GET `/authentications/check` - Authentication Check](#get-authenticationscheck---authentication-check)
-  - [GET `/authentications/connections` - Authentication Connections](#get-authenticationsconnections---authentication-connections) __DEPRECATED__
+  - [GET `/authentications/connections` - Authentication Connections](#get-authenticationsconnections---authentication-connections) [__DEPRECATED__](https://app.asana.com/0/19486350215520/19486350215528)
   - [POST `/authentications/connections` - Authentication Connections](#post-authenticationsconnections---authentication-connections)
 
 - [User Methods](#user-methods)
@@ -48,7 +48,7 @@
   - [GET `/users/search` - Search Users](#get-userssearch---search-users)
   - [POST `/users/unsubscribe` - Unsubscribe](#post-usersunsubscribe---unsubscribe)
   - [GET `/users/validate_email` - Validate Email](#get-usersvalidate_email---validate-_email)
-  - [GET `/users/validateusername` - Validate Username](#get-usersvalidateusername---validate-username) __DEPRECATED__
+  - [GET `/users/validateusername` - Validate Username](#get-usersvalidateusername---validate-username) [__DEPRECATED__](https://app.asana.com/0/19486350215520/19486350215530)
   - [GET `/users/validate_username` - Validate Username](#get-usersvalidate_username---validate-username)
   - [POST `/users/reserveusername` - Reserve Username](#post-usersreserveusername---reserve-username)
   - [PUT `/users/:id/updateindustry` - Update Industry](#put-usersidupdateindustry---update-industry)
@@ -85,9 +85,9 @@
   - [GET `/items/:id` - Item](#get-itemsid---item)
   - [PUT `/items/:id` - Update Item](#put-itemsid---update-item)
   - [DELETE `/items/:id` - Delete Item](#delete-itemsid---delete-item)
-  - [POST `/items/:id/like` - Like Item](#post-itemsidlike---like-item)
-  - [DELETE `/items/:id/like` - Unlike Item](#delete-itemsidlike---unlike-item)
-  - [GET `/items/:id/likers` - Likers](#get-itemsidlikers---likers)
+  - [POST `/items/:id/like` - Like Item](#post-itemsidlike---like-item) [__DEPRECATED__](https://app.asana.com/0/19486350215520/19486350215536)
+  - [DELETE `/items/:id/like` - Unlike Item](#delete-itemsidlike---unlike-item) [__DEPRECATED__](https://app.asana.com/0/19486350215520/19486350215538)
+  - [GET `/items/:id/likers` - Likers](#get-itemsidlikers---likers) [__DEPRECATED__](https://app.asana.com/0/19486350215520/19486350215534)
   - [POST `/items/:id/comments` - Create Comment](#post-itemsidcomments---create-comment)
   - [GET `/items/:id/comments` - Item Comments](#get-itemsidcomments---item-comments)
   - [DELETE `/items/:id/comments/:comment_id` - Delete Comment](#delete-itemsidcommentscomment_id---delete-comment)
@@ -569,7 +569,7 @@ __Request Behaviors__
 <br />
 
 ## GET `/authentications/connections` - Authentication Connections
-__DEPRECATED: Use [POST `/authentications/connections` - Authentication Connections](#post-authenticationsconnections---authentication-connections) instead__ Returns the Users that have authenticated with the specified `provider` and have a `uid` that is in `uids`.
+[__DEPRECATED__](https://app.asana.com/0/19486350215520/19486350215528), use [POST `/authentications/connections` - Authentication Connections](#post-authenticationsconnections---authentication-connections) instead. Returns the Users that have authenticated with the specified `provider` and have a `uid` that is in `uids`.
 
 __Request Behaviors__
 * [Timeline Pagination](#timeline-pagination)
@@ -801,7 +801,7 @@ Unsubscribes the User with the specified user_id from all emails
 <br />
 
 ## GET `/users/validateusername` - Validate Username
-__DEPRECATED__ User [GET `/users/validate_username` - Validate Username](#get-usersvalidate_username---validate-username) instead
+[__DEPRECATED__](https://app.asana.com/0/19486350215520/19486350215530), use [GET `/users/validate_username` - Validate Username](#get-usersvalidate_username---validate-username) instead
 
 __Request Behaviors__
 * [Public](#public)
@@ -1430,7 +1430,7 @@ Deletes the Item with the specified `id`.
 <br />
 
 ## POST `/items/:id/like` - Like Item
-Likes the Item with the specified `id` for [current_user](#current_user)
+[__DEPRECATED__](https://app.asana.com/0/19486350215520/19486350215536). Likes the Item with the specified `id` for [current_user](#current_user)
 
 ### Response
 
@@ -1448,7 +1448,7 @@ Likes the Item with the specified `id` for [current_user](#current_user)
 <br />
 
 ## DELETE `/items/:id/like` - Unlike Item
-Unlikes the Item with the specified `id` for [current_user](#current_user)
+[__DEPRECATED__](https://app.asana.com/0/19486350215520/19486350215538). Unlikes the Item with the specified `id` for [current_user](#current_user)
 
 ### Response
 
@@ -1466,7 +1466,7 @@ Unlikes the Item with the specified `id` for [current_user](#current_user)
 <br />
 
 ## GET `/items/:id/likers` - Likers
-Returns the Users who have liked the Item with the specified `id`
+[__DEPRECATED__](https://app.asana.com/0/19486350215520/19486350215534). Returns the Users who have liked the Item with the specified `id`
 
 __Request Behaviors__
 * [Timeline Pagination](#timeline-pagination)
@@ -2156,7 +2156,7 @@ __Request Behaviors__
 
 ### Item
 * Includes:
-  * `creator`: [Slim User](#slim-user)
+  * `creator`: [Slim User](#slim-user) (unless Item is returned as part of a Morsel)
   * `morsel`: [Slim Morsel](#slim-morsel) (unless Item is returned as part of a Morsel)
 
 ```json
@@ -2164,6 +2164,7 @@ __Request Behaviors__
     "id": 2,
     "description": null,
     "creator_id": 1,
+    "morsel_id": 3,
     "created_at": "2014-01-07T16:34:43.071Z",
     "updated_at": "2014-01-07T16:34:43.071Z",
     "nonce": "E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
@@ -2183,6 +2184,7 @@ __Request Behaviors__
 ```
 
 ### Liked Item
+[__DEPRECATED__](https://app.asana.com/0/19486350215520/19486350215550)
 Response for any Like Item related requests.
 * Inherits from [Item](#item)
 * Includes:
