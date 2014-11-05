@@ -261,6 +261,6 @@ class User < ActiveRecord::Base
   end
 
   def ensure_professional
-    self.professional = industry == 'chef' unless professional || industry.nil?
+    self.professional = industry == 'chef' if professional.nil? && industry.present?
   end
 end
