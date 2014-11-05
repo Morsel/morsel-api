@@ -185,24 +185,6 @@ describe User do
     before { user.save }
     its(:authentication_token) { should_not be_nil }
     its(:auto_follow?) { should be_true }
-
-    describe 'industry' do
-      context 'chef' do
-        before { user.update(industry: 'chef') }
-        it 'sets `professional` to true' do
-          expect(user.professional?).to be_true
-        end
-      end
-
-      context 'media' do
-        before do
-          user.update(industry: 'media')
-        end
-        it 'sets `professional` to false' do
-          expect(user.professional?).to be_false
-        end
-      end
-    end
   end
 
   context 'Authorizations' do
