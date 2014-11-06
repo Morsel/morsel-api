@@ -5,21 +5,25 @@ describe 'PUT /morsels/{:morsel_id} morsels#update' do
   let(:current_user) { FactoryGirl.create(:chef) }
   let(:existing_morsel) { FactoryGirl.create(:morsel_with_items, creator: current_user) }
   let(:new_title) { 'Shy Ronnie 2: Ronnie & Clyde' }
+  let(:new_summary) { 'The epic saga continues' }
 
   it 'updates the Morsel' do
     put_endpoint  morsel: {
-                    title: new_title
+                    title: new_title,
+                    summary: new_summary
                   }
 
     expect_success
     expect_json_data_eq({
       'id' => existing_morsel.id,
       'title' => new_title,
+      'summary' => new_summary,
       'draft' => false
     })
 
     new_morsel = Morsel.find(existing_morsel.id)
     expect(new_morsel.title).to eq(new_title)
+    expect(new_morsel.summary).to eq(new_summary)
     expect(new_morsel.draft).to eq(false)
   end
 

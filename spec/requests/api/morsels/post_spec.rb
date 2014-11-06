@@ -4,12 +4,14 @@ describe 'POST /morsels morsels#create', sidekiq: :inline do
   let(:endpoint) { '/morsels' }
   let(:current_user) { FactoryGirl.create(:chef) }
   let(:expected_title) { 'Bake Sale!' }
+  let(:expected_summary) { 'So many #cookies to sell!' }
 
   context 'non-chef' do
     let(:current_user) { FactoryGirl.create(:user) }
     it 'creates a Morsel' do
       post_endpoint morsel: {
-                      title: expected_title
+                      title: expected_title,
+                      summary: expected_summary
                     }
 
       expect_success
@@ -17,7 +19,8 @@ describe 'POST /morsels morsels#create', sidekiq: :inline do
       new_morsel = Morsel.find json_data['id']
       expect_json_data_eq({
         'id' => new_morsel.id,
-        'title' => new_morsel.title,
+        'title' => expected_title,
+        'summary' => expected_summary,
         'creator_id' => new_morsel.creator_id,
         'title' => expected_title,
       })

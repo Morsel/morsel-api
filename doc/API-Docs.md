@@ -1558,6 +1558,7 @@ Creates a new Morsel for the current User.
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | morsel[title] | String | The title for the new Morsel | | x |
+| morsel[summary] | String | The summary for the new Morsel | | |
 | morsel[place_id] | Number | A [Place](#place) to associate this Morsel to | | |
 | morsel[draft] | Boolean | Set to true if the Morsel is a draft | true | |
 | morsel[template_id] | Number | The ID of the template used for this morsel. | | |
@@ -1624,6 +1625,7 @@ Updates the Morsel with the specified `id`
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | morsel[title]         | String  | The title for the Morsel. Changing this will change the slug. | | |
+| morsel[summary]         | String  | The summary for the Morsel. | | |
 | morsel[place_id] | Number | A [Place](#place) to associate this Morsel to | | |
 | morsel[draft] | Boolean | Set to true if the Morsel is a draft | | |
 | morsel[primary_item_id] | Number | The ID of the Item to set as the primary Item for this Morsel. Must be the ID of a Item that is part of the Morsel | | |
@@ -2235,6 +2237,7 @@ Response for any Like Item related requests.
 
 ```json
 {
+  "summary": "Let's see what we can make with #kraftmacncheese today!"
   "draft": false,
   "like_count": 10,
   "url": "https://eatmorsel.com/turdferg/4-butter-rocks",
