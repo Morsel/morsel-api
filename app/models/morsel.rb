@@ -50,7 +50,8 @@ class Morsel < ActiveRecord::Base
   has_many :morsel_user_tags, dependent: :destroy
   has_many :tagged_users, through: :morsel_user_tags, source: :user
 
-  before_save :update_published_at_if_necessary
+  before_save :update_published_at_if_necessary,
+              :update_url
 
   after_destroy :update_counter_caches
   after_save  :update_counter_caches
@@ -84,13 +85,8 @@ class Morsel < ActiveRecord::Base
     }
   end
 
-  def url
-    # https://eatmorsel.com/marty/1-my-first-morsel
-    "#{Settings.morsel.web_url}/#{creator.username}/#{id}-#{cached_slug}" if creator.username
-  end
-
   def url_for_item(item)
-    "#{url}/#{items.find_index(item) + 1}"
+    "#{url}/#{items.find_index(item) + 1}" if item.id?
   end
 
   def tagged_user?(user)
@@ -99,6 +95,10 @@ class Morsel < ActiveRecord::Base
 
   def tagged_users?
     morsel_user_tags.count > 0
+  end
+
+  def url
+    cached_url || update_url
   end
 
   private
@@ -113,5 +113,9 @@ class Morsel < ActiveRecord::Base
 
   def update_published_at_if_necessary
     self.published_at = DateTime.now if !published_at && !draft
+  end
+
+  def update_url
+    self.cached_url = "#{Settings.morsel.web_url}/#{creator.username}/#{id}-#{cached_slug}" if (creator && id?) && (cached_url.nil? || creator_id_changed? || title_changed?)
   end
 end

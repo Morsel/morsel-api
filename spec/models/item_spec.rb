@@ -49,11 +49,15 @@ describe Item do
   it { should be_valid }
 
   context 'saved with creator' do
-    subject(:item) { FactoryGirl.create(:item_with_creator) }
+    subject(:item) { FactoryGirl.create(:item_with_creator_and_morsel, morsel: FactoryGirl.create(:morsel_with_creator)) }
 
     it 'adds :creator Role to the creator' do
       expect(item.creator.has_role?(:creator, item)).to be_true
       expect(item.creator.can_update?(item)).to be_true
+    end
+
+    it 'updates the url' do
+      expect(item.url).to eq("https://test.eatmorsel.com/#{item.morsel.creator.username}/#{item.morsel.id}-#{item.morsel.cached_slug}/1")
     end
 
     describe 'activities' do
@@ -99,13 +103,5 @@ describe Item do
     it 'returns the sort_order' do
       expect(first_item.sort_order).to eq(1)
     end
-  end
-
-  describe '#url' do
-    let(:morsel_with_items) { FactoryGirl.create(:morsel_with_items) }
-    let(:first_item) { morsel_with_items.items.first }
-    subject(:url) { first_item.url }
-
-    it { should eq("https://test.eatmorsel.com/#{first_item.creator.username}/#{morsel_with_items.id}-#{morsel_with_items.cached_slug}/1") }
   end
 end
