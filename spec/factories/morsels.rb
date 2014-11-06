@@ -24,6 +24,8 @@
 # **`place_id`**            | `integer`          |
 # **`template_id`**         | `integer`          |
 # **`likes_count`**         | `integer`          | `default(0), not null`
+# **`url`**                 | `string(255)`      |
+# **`summary`**             | `text`             |
 #
 
 FactoryGirl.define do
@@ -33,6 +35,7 @@ FactoryGirl.define do
     ignore do
       include_mrsl true
     end
+    summary { Faker::Lorem.sentence(rand(1..6)) }
 
     after(:build) do |morsel, evaluator|
       if evaluator.include_mrsl

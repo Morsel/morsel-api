@@ -24,6 +24,8 @@
 # **`place_id`**            | `integer`          |
 # **`template_id`**         | `integer`          |
 # **`likes_count`**         | `integer`          | `default(0), not null`
+# **`url`**                 | `string(255)`      |
+# **`summary`**             | `text`             |
 #
 
 require 'spec_helper'

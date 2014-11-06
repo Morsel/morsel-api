@@ -22,6 +22,7 @@
 # **`sort_order`**          | `integer`          |
 # **`template_order`**      | `integer`          |
 # **`comments_count`**      | `integer`          | `default(0), not null`
+# **`url`**                 | `string(255)`      |
 #
 
 require 'spec_helper'
