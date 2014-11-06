@@ -9,8 +9,8 @@ Sidekiq.configure_client do |config|
     ActiveSupport.on_load(:active_record) do
       config = ActiveRecord::Base.configurations[Rails.env] ||
         Rails.application.config.database_configuration[Rails.env]
-      config['reaping_frequency'] = ENV['DB_POOL'] || 10
-      config['pool'] = ENV['DB_REAP_FREQ'] || 10
+      config['reaping_frequency'] = ENV['DB_REAP_FREQ'] || 10
+      config['pool'] = ENV['DB_POOL'] || 10
       ActiveRecord::Base.establish_connection(config)
 
       # DB connection not available during slug compliation on Heroku
