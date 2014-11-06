@@ -24,6 +24,8 @@
 # **`place_id`**            | `integer`          |
 # **`template_id`**         | `integer`          |
 # **`likes_count`**         | `integer`          | `default(0), not null`
+# **`cached_url`**          | `string(255)`      |
+# **`summary`**             | `text`             |
 #
 
 class Morsel < ActiveRecord::Base

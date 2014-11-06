@@ -22,6 +22,7 @@
 # **`sort_order`**          | `integer`          |
 # **`template_order`**      | `integer`          |
 # **`comments_count`**      | `integer`          | `default(0), not null`
+# **`cached_url`**          | `string(255)`      |
 #
 
 class Item < ActiveRecord::Base

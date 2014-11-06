@@ -24,6 +24,7 @@ describe 'GET /morsels morsels#show' do
     expect_json_data_eq({
       'id' => morsel_with_items.id,
       'title' => morsel_with_items.title,
+      'summary' => morsel_with_items.summary,
       'creator_id' => morsel_with_items.creator_id,
       'slug' => morsel_with_items.cached_slug,
       'template_id' => morsel_with_items.template_id,
