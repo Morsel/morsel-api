@@ -159,9 +159,6 @@ MorselApp::Application.routes.draw do
       post ':place_id/employment' => 'employments#create', place_id: /\d+/
       post ':foursquare_venue_id/employment' => 'employments#create', foursquare_venue_id: /[A-Za-z0-9]+/
       delete ':place_id/employment' => 'employments#destroy'
-
-      # DEPRECATED, Change: POST `places/join` -> POST `places/:id|:foursquare_venue_id/employment` (https://app.asana.com/0/19486350215520/19486350215542)
-      post 'join' => 'employments#create'
     end
 
     resources :collections, only: [:index]
