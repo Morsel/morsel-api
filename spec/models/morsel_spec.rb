@@ -86,9 +86,14 @@ describe Morsel do
   end
 
   context :saved do
+    let(:morsel) { FactoryGirl.build(:morsel_with_creator) }
     before { morsel.save }
 
     its(:cached_slug) { should_not be_nil }
+
+    it 'updates the url' do
+      expect(morsel.url).to eq("https://test.eatmorsel.com/#{morsel.creator.username}/#{morsel.id}-#{morsel.cached_slug}")
+    end
 
     context 'title changes' do
       let(:new_title) { 'Some New Title!' }
@@ -102,13 +107,6 @@ describe Morsel do
         expect(morsel.cached_slug.to_s).to eq('some-new-title')
       end
     end
-  end
-
-  describe '#url' do
-    let(:morsel_with_creator) { FactoryGirl.build(:morsel_with_creator) }
-    subject(:url) { morsel_with_creator.url }
-
-    it { should eq("https://test.eatmorsel.com/#{morsel_with_creator.creator.username}/#{morsel_with_creator.id}-#{morsel_with_creator.cached_slug}") }
   end
 
   describe '#facebook_message' do

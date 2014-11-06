@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141104181008) do
+ActiveRecord::Schema.define(version: 20141105232853) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -208,6 +208,7 @@ ActiveRecord::Schema.define(version: 20141104181008) do
     t.integer  "sort_order"
     t.integer  "template_order"
     t.integer  "comments_count",     default: 0, null: false
+    t.string   "cached_url"
   end
 
   add_index "items", ["creator_id"], name: "index_items_on_creator_id", using: :btree
@@ -264,6 +265,7 @@ ActiveRecord::Schema.define(version: 20141104181008) do
     t.integer  "place_id"
     t.integer  "template_id"
     t.integer  "likes_count",        default: 0,    null: false
+    t.string   "cached_url"
   end
 
   add_index "morsels", ["cached_slug"], name: "index_morsels_on_cached_slug", using: :btree

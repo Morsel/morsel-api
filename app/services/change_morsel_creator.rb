@@ -28,8 +28,8 @@ class ChangeMorselCreator
   def update_morsel
     old_creator.remove_role :creator, morsel
     new_creator.add_role :creator, morsel
-
-    morsel.update creator_id: new_creator.id
+    new_url = "#{Settings.morsel.web_url}/#{new_creator.username}/#{morsel.id}-#{morsel.cached_slug}"
+    morsel.update creator_id: new_creator.id, cached_url: new_url
   end
 
   def update_items

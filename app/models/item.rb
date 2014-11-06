@@ -37,16 +37,12 @@ class Item < ActiveRecord::Base
   belongs_to :morsel, touch: true, inverse_of: :items
 
   before_destroy :nullify_primary_item_id_if_primary_item_on_morsel
-  before_save :check_sort_order
+  before_save :check_sort_order,
+              :update_url
 
   mount_uploader :photo, ItemPhotoUploader
 
   validates :morsel, presence: true
-
-  def url
-    # https://eatmorsel.com/marty/1-my-first-morsel/2
-    "#{morsel.url_for_item(self)}"
-  end
 
   def morsel_title_with_description
     message = ''
@@ -58,6 +54,10 @@ class Item < ActiveRecord::Base
   def like_count
     # HACK: Remove this once Item is no longer 'Likeable'
     likes.count
+  end
+
+  def url
+    cached_url || update_url
   end
 
   private
@@ -84,5 +84,9 @@ class Item < ActiveRecord::Base
 
   def nullify_primary_item_id_if_primary_item_on_morsel
     morsel.update(primary_item_id: nil) if morsel.primary_item_id == id
+  end
+
+  def update_url
+    self.cached_url = morsel.url_for_item(self) if id? && (cached_url.nil? || morsel_id_changed? || id_changed? || sort_order_changed?)
   end
 end

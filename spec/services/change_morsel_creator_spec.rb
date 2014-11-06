@@ -19,6 +19,7 @@ describe ChangeMorselCreator do
     expect(service_response.creator).to eq(new_creator)
     expect(new_creator.has_role?(:creator, morsel)).to be_true
     expect(morsel.roles).to eq(morsel.roles)
+    expect(morsel.url).to eq("#{Settings.morsel.web_url}/#{new_creator.username}/#{morsel.id}-#{morsel.cached_slug}")
   end
 
   context 'no morsel specified' do
