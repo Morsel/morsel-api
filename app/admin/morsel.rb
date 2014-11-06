@@ -83,6 +83,7 @@ ActiveAdmin.register Morsel do
       end
       row :id
       row :title
+      row :summary
       row :draft
       row :creator
       row 'Collage' do
@@ -139,6 +140,7 @@ ActiveAdmin.register Morsel do
   form do |f|
     f.inputs 'Morsel' do
       f.input :title
+      f.input :summary
     end
 
     f.inputs 'Feed Item', for: [:feed_item, f.object.feed_item] do |fi_f|
