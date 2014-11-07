@@ -130,6 +130,6 @@ class Morsel < ActiveRecord::Base
   end
 
   def update_tags
-    UpdateMorselTagsWorker.perform_async if summary_changed?
+    UpdateMorselTagsWorker.perform_async(morsel_id:id) if summary_changed?
   end
 end
