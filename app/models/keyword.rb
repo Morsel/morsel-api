@@ -19,10 +19,14 @@ class Keyword < ActiveRecord::Base
   VALID_TYPES = %w(
     Cuisine
     FoodAndDrink
+    Hashtag
     Specialty
   )
 
-  include Authority::Abilities, Followable, TimelinePaginateable
+  include Authority::Abilities,
+          Followable,
+          TimelinePaginateable
+
   acts_as_paranoid
 
   has_many :tags, dependent: :destroy

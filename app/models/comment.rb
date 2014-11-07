@@ -17,11 +17,11 @@
 #
 
 class Comment < ActiveRecord::Base
-  include Authority::Abilities
-  include TimelinePaginateable
-  include UserCreatable
+  include Authority::Abilities,
+          Activityable,
+          TimelinePaginateable,
+          UserCreatable
 
-  include Activityable
   def self.activity_notification; true end
   def activity_subject; commentable end
 

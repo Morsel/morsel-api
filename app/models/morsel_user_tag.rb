@@ -15,9 +15,9 @@
 #
 
 class MorselUserTag < ActiveRecord::Base
-  include Authority::Abilities
+  include Authority::Abilities,
+          Activityable
 
-  include Activityable
   def self.activity_hidden; true end
   def self.activity_notification; false end
   def activity_subject; morsel end

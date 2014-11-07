@@ -15,20 +15,5 @@
 # **`followers_count`**  | `integer`          | `default(0), not null`
 #
 
-FactoryGirl.define do
-  factory :cuisine, class: Cuisine do
-    name { "cuisine_#{Faker::Lorem.characters(10)}" }
-  end
-
-  factory :food_and_drink, class: FoodAndDrink do
-    name { "food_and_drink_#{Faker::Lorem.characters(10)}" }
-  end
-
-  factory :hashtag, class: Hashtag do
-    name { "hashtag_#{Faker::Lorem.characters(10)}" }
-  end
-
-  factory :specialty, class: Specialty do
-    name { "specialty_#{Faker::Lorem.characters(10)}" }
-  end
+class Hashtag < Keyword
 end

@@ -121,6 +121,7 @@
   - [GET `/cuisines/:id/users` - Cuisine Users](#get-cuisinesidusers---cuisine-users)
   - [GET `/specialties` - Specialties](#get-specialties---specialties)
   - [GET `/specialties/:id/users` - Specialty Users](#get-specialtiesidusers---specialty-users)
+  - [GET `/hashtags/:name/morsels` - Hashtag Morsels](#get-hashtagsnamemorsels---hashtag-morsels)
 
 - [Notification Methods](#notification-methods)
   - [GET `/notifications` - Notifications](#get-notifications---notifications)
@@ -677,8 +678,8 @@ If the `Authentication` passed in [Sign In w/ Authentication](#sign-in-w--authen
 #### Sign In w/ Shadow Token
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| authentication[shadow_token] | String | The Shadow Token for the User. | | X |
-| authentication[uid] | String | The User's ID. | | X |
+| shadow_token | String | The Shadow Token for the User. | | X |
+| user_id | String | The User's ID. | | X |
 
 ### Response
 
@@ -1978,6 +1979,22 @@ __Request Behaviors__
 | __data__ |
 | -------- |
 | [Users](#user)[] |
+
+<br />
+<br />
+
+## GET `/hashtags/:name/morsels` - Hashtag Morsels
+Returns a list of Morsels that belong to the Hashtag with the specified `name` (case insensitive)
+
+__Request Behaviors__
+* [Timeline Pagination](#timeline-pagination)
+* [Public](#public)
+
+### Response
+
+| __data__ |
+| -------- |
+| [Slim Morsels](#slim-morsel)[] |
 
 <br />
 <br />

@@ -18,7 +18,9 @@
 #
 
 class Collection < ActiveRecord::Base
-  include Authority::Abilities, TimelinePaginateable, UserCreatable
+  include Authority::Abilities,
+          TimelinePaginateable,
+          UserCreatable
 
   acts_as_paranoid
   is_sluggable :title

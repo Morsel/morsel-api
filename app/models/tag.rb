@@ -17,7 +17,9 @@
 #
 
 class Tag < ActiveRecord::Base
-  include Authority::Abilities, TimelinePaginateable, UserCreatable
+  include Authority::Abilities,
+          TimelinePaginateable,
+          UserCreatable
 
   acts_as_paranoid
 

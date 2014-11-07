@@ -16,9 +16,10 @@
 #
 
 class Like < ActiveRecord::Base
-  include Authority::Abilities, UserCreatable
+  include Authority::Abilities,
+          Activityable,
+          UserCreatable
 
-  include Activityable
   def self.activity_notification; true end
   def activity_subject; likeable end
 

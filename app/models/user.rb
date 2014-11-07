@@ -47,7 +47,13 @@
 #
 
 class User < ActiveRecord::Base
-  include Authority::UserAbilities, Authority::Abilities, Followable, PhotoUploadable, Taggable, TimelinePaginateable
+  include Authority::UserAbilities,
+          Authority::Abilities,
+          Followable,
+          PhotoUploadable,
+          Taggable,
+          TimelinePaginateable
+
   acts_as_paranoid
   rolify
 
