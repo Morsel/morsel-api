@@ -29,7 +29,14 @@
 #
 
 class Morsel < ActiveRecord::Base
-  include Authority::Abilities, Feedable, Likeable, Mrslable, PhotoUploadable, TimelinePaginateable, UserCreatable
+  include Authority::Abilities,
+          Feedable,
+          Likeable,
+          Mrslable,
+          PhotoUploadable,
+          Taggable,
+          TimelinePaginateable,
+          UserCreatable
 
   acts_as_paranoid
   is_sluggable :title
@@ -56,7 +63,8 @@ class Morsel < ActiveRecord::Base
               :update_url
 
   after_destroy :update_counter_caches
-  after_save  :update_counter_caches
+  after_save  :update_counter_caches,
+              :update_tags
 
   mount_uploader :photo, MorselPhotoUploader
 
@@ -119,5 +127,9 @@ class Morsel < ActiveRecord::Base
 
   def update_url
     self.cached_url = "#{Settings.morsel.web_url}/#{creator.username}/#{id}-#{cached_slug}" if (creator && id?) && (cached_url.nil? || creator_id_changed? || title_changed?)
+  end
+
+  def update_tags
+    UpdateMorselTagsWorker.perform_async if summary_changed?
   end
 end

@@ -129,6 +129,12 @@ describe Morsel do
     it { should include(' via @eatmorsel') }
   end
 
+  it 'should queue up a job to update the tags when the summary changes' do
+    expect {
+      morsel.update summary: Faker::Lorem.sentence(rand(1..6))
+    }.to change(UpdateMorselTagsWorker.jobs, :size).by(1)
+  end
+
   context 'has Items' do
     subject(:morsel_with_items) { Sidekiq::Testing.inline! { FactoryGirl.create(:morsel_with_items) }}
 

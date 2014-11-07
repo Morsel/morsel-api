@@ -26,7 +26,12 @@
 #
 
 class Item < ActiveRecord::Base
-  include Authority::Abilities, Commentable, Likeable, PhotoUploadable, TimelinePaginateable, UserCreatable
+  include Authority::Abilities,
+          Commentable,
+          Likeable,
+          PhotoUploadable,
+          TimelinePaginateable,
+          UserCreatable
 
   acts_as_paranoid
 

@@ -19,7 +19,10 @@
 #
 
 class FeedItem < ActiveRecord::Base
-  include Authority::Abilities, OrderQuery, TimelinePaginateable
+  include Authority::Abilities,
+          OrderQuery,
+          TimelinePaginateable
+
   acts_as_paranoid
 
   belongs_to :subject, polymorphic: true

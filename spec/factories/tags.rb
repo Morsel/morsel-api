@@ -29,4 +29,13 @@ FactoryGirl.define do
       association(:keyword, factory: :specialty)
     end
   end
+
+  factory :morsel_tag, class: Tag do
+    association(:tagger, factory: :user)
+    association(:taggable, factory: :morsel)
+
+    factory :morsel_hashtag_tag, class: Tag do
+      association(:keyword, factory: :hashtag)
+    end
+  end
 end

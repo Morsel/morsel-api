@@ -106,4 +106,27 @@ describe 'Keywords API' do
       expect_json_data_count users_count
     end
   end
+
+  describe 'GET /hashtags/:name/morsels keywords#morsels_by_name' do
+    let(:endpoint) { "/hashtags/#{hashtag.name.swapcase}/morsels" }
+    let(:hashtag) { FactoryGirl.create(:hashtag) }
+    let(:morsels_count) { rand(3..6) }
+
+    before { morsels_count.times { FactoryGirl.create(:morsel_hashtag_tag, keyword: hashtag) }}
+
+    it_behaves_like 'TimelinePaginateable' do
+      let(:paginateable_object_class) { Morsel }
+      before do
+        paginateable_object_class.delete_all
+        30.times { FactoryGirl.create(:morsel_hashtag_tag, keyword: hashtag) }
+      end
+    end
+
+    it 'returns a list of Morsels for the specified hashtag' do
+      get_endpoint
+
+      expect_success
+      expect_json_data_count morsels_count
+    end
+  end
 end

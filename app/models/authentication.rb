@@ -20,7 +20,10 @@
 #
 
 class Authentication < ActiveRecord::Base
-  include Authority::Abilities, TimelinePaginateable, UserCreatable
+  include Authority::Abilities,
+          TimelinePaginateable,
+          UserCreatable
+
   acts_as_paranoid
 
   attr_accessor :short_lived
