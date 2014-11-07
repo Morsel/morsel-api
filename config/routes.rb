@@ -75,6 +75,7 @@ MorselApp::Application.routes.draw do
   end
   match 'cuisines/:id/users', to: 'keywords#users', via: :get
   match 'specialties/:id/users', to: 'keywords#users', via: :get
+  match 'hashtags/:name/morsels', to: 'keywords#morsels_by_name', via: :get, name: /[A-Za-z0-9_]*/
 
   resources :notifications, only: [:index] do
     collection do
