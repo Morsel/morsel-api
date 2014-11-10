@@ -13,6 +13,7 @@ module Activityable
     def self.activity_notification; false end
     def activity_subject; raise 'NotImplementedError - activity_subject is not implemented for this Activityable' end
     def activity_creator; user end
+    def additional_recipient_ids; nil end
   end
 
   private
@@ -28,8 +29,9 @@ module Activityable
         type: self.class.to_s
       },
       creator_id: activity_creator.id,
-      recipient_id: recipient_id,
-      notify_recipient: activity_notification,
+      primary_recipient_id: recipient_id,
+      additional_recipient_ids: additional_recipient_ids,
+      notify_recipients: activity_notification,
       hidden: activity_hidden,
       silent: silent
     )
