@@ -48,6 +48,10 @@ class SendPushNotification
     1.week.since.to_time
   end
 
+  def gateway
+    Rails.env.development? ? 'gateway.sandbox.push.apple.com' : 'gateway.push.apple.com'
+  end
+
   def get_feedback
     feedback ||= Grocer.feedback(
       certificate: certificate
@@ -64,7 +68,8 @@ class SendPushNotification
 
   def pusher
     @pusher ||= Grocer.pusher(
-      certificate: certificate
+      certificate: certificate,
+      gateway: gateway
     )
   end
 
