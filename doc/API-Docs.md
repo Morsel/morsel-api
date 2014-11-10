@@ -244,7 +244,7 @@ Errors are returned as a dictionary in `errors`. Each key represents the resourc
 ```
 
 ## Remote Notifications
-Remote notifications are queued a minute after a [Notification](#notification) is created. After that minute, the Notification is checked for validity (not read, not sent, not deleted) then remotely pushed to all of the recipient of the Notification's devices that allow that type of notification. Remote notifications expire after week. Remote notifications fall into three types:
+Remote notifications are queued for 30 seconds after a [Notification](#notification) is created. After that time, the Notification is checked for validity (not read, not sent, not deleted) then remotely pushed to all of the recipient of the Notification's devices that allow that type of notification. Remote notifications expire after week. Remote notifications fall into three types:
 1. 'buzz' notifications play a sound (or vibrate)
 2. 'silent' notifications are silent
 3. 'badge update' notifications only update the app's badge count without displaying anything

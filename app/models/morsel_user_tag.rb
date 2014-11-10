@@ -25,7 +25,7 @@ class MorselUserTag < ActiveRecord::Base
 
   acts_as_paranoid
 
-  belongs_to :morsel
+  belongs_to :morsel, touch: true
   belongs_to :user
 
   validates :morsel_id, uniqueness: { scope: [:user_id], conditions: -> { where(deleted_at: nil) } }
