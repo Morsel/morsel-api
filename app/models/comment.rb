@@ -24,6 +24,7 @@ class Comment < ActiveRecord::Base
 
   def self.activity_notification; true end
   def activity_subject; commentable end
+  def additional_recipient_ids; commentable.commenter_ids - [commenter_id, commentable.creator_id] end
 
   acts_as_paranoid
 
