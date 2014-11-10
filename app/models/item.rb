@@ -52,8 +52,8 @@ class Item < ActiveRecord::Base
 
   def morsel_title_with_description
     message = ''
-    message << "#{morsel.title}: " if morsel && morsel.title?
-    message << "#{description} " if description.present?
+    message << "#{morsel.title}" if morsel && morsel.title?
+    message << ": #{description} " if description.present?
     message
   end
 

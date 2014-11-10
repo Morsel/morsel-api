@@ -54,6 +54,6 @@ class Notification < ActiveRecord::Base
   private
 
   def queue_push_notification
-    SendPushNotificationWorker.perform_in(1.minute, notification_id: id) unless silent
+    SendPushNotificationWorker.perform_in(30.seconds, notification_id: id) unless silent
   end
 end
