@@ -22,7 +22,7 @@ module Search
           max_id: max_id,
           count: count
         }, :id, SearchableUser)
-        .search_query("%#{query}%")
+        .search_query(query)
         .search_promoted(promoted)
         .where(active: true)
         .order(SearchableUser.arel_table[:id].desc)
