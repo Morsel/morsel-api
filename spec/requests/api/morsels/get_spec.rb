@@ -32,6 +32,7 @@ describe 'GET /morsels morsels#show' do
         'widget_url' => morsel_with_items.place.widget_url
       },
       'has_tagged_users' => false,
+      'tagged_users_count' => 0,
       'liked' => false
     })
     expect(json_data['items'].count).to eq(items_count)
@@ -42,26 +43,18 @@ describe 'GET /morsels morsels#show' do
       let(:current_user) { FactoryGirl.create(:user) }
 
       before do
-        morsel_with_items.tagged_users << current_user
+        MorselUserTag.create(morsel: morsel_with_items, user: current_user)
       end
 
-      it 'returns `tagged`=true' do
+      it 'returns `tagged`=true and `has_tagged_users`=true' do
         get_endpoint
 
         expect_success
         expect_json_data_eq({
           'id' => morsel_with_items.id,
+          'has_tagged_users' => true,
+          'tagged_users_count' => 1,
           'tagged' => true
-        })
-      end
-
-      it 'returns `has_tagged_users`=true' do
-        get_endpoint
-
-        expect_success
-        expect_json_data_eq({
-          'id' => morsel_with_items.id,
-          'has_tagged_users' => true
         })
       end
     end

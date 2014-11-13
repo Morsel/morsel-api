@@ -4,10 +4,11 @@ class MorselSerializer < SlimMorselSerializer
              :like_count,
              :url,
              :template_id,
-             :facebook_mrsl,  # DEPRECATED, Change: facebook_mrsl -> mrsl[facebook_mrsl] (https://app.asana.com/0/19486350215520/19486350215556)
-             :twitter_mrsl,   # DEPRECATED, Change: twitter_mrsl -> mrsl[twitter_mrsl] (https://app.asana.com/0/19486350215520/19486350215558)
+             :facebook_mrsl,    # DEPRECATED, Change: facebook_mrsl -> mrsl[facebook_mrsl] (https://app.asana.com/0/19486350215520/19486350215556)
+             :twitter_mrsl,     # DEPRECATED, Change: twitter_mrsl -> mrsl[twitter_mrsl] (https://app.asana.com/0/19486350215520/19486350215558)
              :mrsl,
-             :has_tagged_users,
+             :has_tagged_users, # DEPRECATED, Remove: has_tagged_users (https://app.asana.com/0/19486350215520/20107444356081)
+             :tagged_users_count,
              :tagged,
              :liked
 

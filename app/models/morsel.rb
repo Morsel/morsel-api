@@ -26,6 +26,7 @@
 # **`likes_count`**         | `integer`          | `default(0), not null`
 # **`cached_url`**          | `string(255)`      |
 # **`summary`**             | `text`             |
+# **`tagged_users_count`**  | `integer`          | `default(0), not null`
 #
 
 class Morsel < ActiveRecord::Base
@@ -104,7 +105,7 @@ class Morsel < ActiveRecord::Base
   end
 
   def tagged_users?
-    morsel_user_tags.count > 0
+    tagged_users_count > 0
   end
 
   def url
