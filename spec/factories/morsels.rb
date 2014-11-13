@@ -26,6 +26,7 @@
 # **`likes_count`**         | `integer`          | `default(0), not null`
 # **`cached_url`**          | `string(255)`      |
 # **`summary`**             | `text`             |
+# **`tagged_users_count`**  | `integer`          | `default(0), not null`
 #
 
 FactoryGirl.define do

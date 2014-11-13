@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141106193942) do
+ActiveRecord::Schema.define(version: 20141112234433) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -267,6 +267,7 @@ ActiveRecord::Schema.define(version: 20141106193942) do
     t.integer  "likes_count",        default: 0,    null: false
     t.string   "cached_url"
     t.text     "summary"
+    t.integer  "tagged_users_count", default: 0,    null: false
   end
 
   add_index "morsels", ["cached_slug"], name: "index_morsels_on_cached_slug", using: :btree

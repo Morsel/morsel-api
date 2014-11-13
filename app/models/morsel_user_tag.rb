@@ -28,7 +28,16 @@ class MorselUserTag < ActiveRecord::Base
   belongs_to :morsel, touch: true
   belongs_to :user
 
+  after_destroy :update_counter_caches
+  after_save :update_counter_caches
+
   validates :morsel_id, uniqueness: { scope: [:user_id], conditions: -> { where(deleted_at: nil) } }
   validates :morsel, presence: true
   validates :user, presence: true
+
+  private
+
+  def update_counter_caches
+    self.morsel.update tagged_users_count: MorselUserTag.where(morsel_id: morsel_id).count
+  end
 end

@@ -2166,7 +2166,8 @@ __Request Behaviors__
     "notify_item_comment": true,
     "notify_morsel_like": true,
     "notify_morsel_morsel_user_tag": true,
-    "notify_user_follow": true
+    "notify_user_follow": true,
+    "notify_tagged_morsel_item_comment": true
   }
 }
 ```
