@@ -15,6 +15,10 @@ module Service
       service
     end
 
+    def self.required_attributes
+      validators.select { |w| w.is_a? ActiveModel::Validations::PresenceValidator }.map(&:attributes).flatten
+    end
+
     def attributes
       super.except :response
     end

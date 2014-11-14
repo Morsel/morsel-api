@@ -85,6 +85,16 @@ FactoryGirl.define do
           morsel.save
         end
 
+        factory :morsel_with_creator_and_tagged_users, class: Morsel do
+          ignore do
+            tagged_users_count 3
+          end
+
+          after(:create) do |morsel, evaluator|
+            evaluator.tagged_users_count.times { morsel.tagged_users << FactoryGirl.create(:user) }
+          end
+        end
+
         factory :draft_morsel_with_items, class: Morsel do
           draft true
           published_at nil

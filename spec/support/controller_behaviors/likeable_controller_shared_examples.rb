@@ -3,7 +3,7 @@ shared_examples 'LikeableController' do
     let(:endpoint) { "#{likeable_route}/#{likeable.id}/like" }
 
     context 'authenticated' do
-      let(:current_user) { FactoryGirl.create(:user) }
+      let(:current_user) { Sidekiq::Testing.inline! { FactoryGirl.create(:user) }}
 
       it 'likes the Likeable' do
         post_endpoint
@@ -20,10 +20,10 @@ shared_examples 'LikeableController' do
         activity = current_user.activities.last
         expect(activity).to_not be_nil
         expect(activity.creator).to eq(current_user)
-        expect(activity.recipient).to eq(likeable.creator)
         expect(activity.subject).to eq(likeable)
         expect(activity.action).to eq(Like.last)
 
+        pending 'Notifications are disabled for Item Like' if likeable.is_a? Item
         notification = likeable.creator.notifications.last
         expect(notification).to_not be_nil
         expect(notification.user).to eq(likeable.creator)

@@ -5,6 +5,6 @@ class AddSentAtToNotifications < ActiveRecord::Migration
   end
 
   def down
-    remove_column :notifications, :sent_at, :datetime
+    remove_column :notifications, :sent_at
   end
 end

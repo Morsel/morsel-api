@@ -30,6 +30,9 @@ require 'spec_helper'
 describe Item do
   subject(:item) { FactoryGirl.build(:item) }
 
+  it_behaves_like 'ActivitySubscribeable' do
+    subject(:item_with_creator) { Sidekiq::Testing.inline! { FactoryGirl.create(:item_with_creator) }}
+  end
   it_behaves_like 'Commentable'
   it_behaves_like 'Paranoia'
   it_behaves_like 'Timestamps'

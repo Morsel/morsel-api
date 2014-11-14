@@ -34,6 +34,9 @@ require 'spec_helper'
 describe Morsel do
   subject(:morsel) { FactoryGirl.build(:morsel) }
 
+  it_behaves_like 'ActivitySubscribeable' do
+    subject(:morsel_with_creator) { Sidekiq::Testing.inline! { FactoryGirl.create(:morsel_with_creator) }}
+  end
   it_behaves_like 'Likeable'
   it_behaves_like 'Paranoia'
   it_behaves_like 'Sluggable'
@@ -57,6 +60,7 @@ describe Morsel do
   it { should be_valid }
 
   its(:items) { should be_empty }
+  its(:activity_subscriptions) { should be_empty }
 
   describe 'title' do
     context 'greater than 70 characters' do
@@ -89,7 +93,7 @@ describe Morsel do
   end
 
   context :saved do
-    let(:morsel) { FactoryGirl.build(:morsel_with_creator) }
+    subject(:morsel) { FactoryGirl.build(:morsel_with_creator) }
     before { morsel.save }
 
     its(:cached_slug) { should_not be_nil }

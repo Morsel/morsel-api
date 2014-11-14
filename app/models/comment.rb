@@ -24,12 +24,14 @@ class Comment < ActiveRecord::Base
 
   def self.activity_notification; true end
   def activity_subject; commentable end
-  def additional_recipient_ids; commentable.commenter_ids - [commenter_id, commentable.creator_id] end
 
   acts_as_paranoid
 
-  after_destroy :update_counter_caches
+  after_destroy :update_counter_caches,
+                :unsubscribe_commenter_from_item
+
   after_save :update_counter_caches
+  after_commit :subscribe_commenter_to_item, on: :create
 
   belongs_to :commentable, polymorphic: true
   belongs_to :commenter, class_name: 'User'
@@ -43,6 +45,28 @@ class Comment < ActiveRecord::Base
   validates :description, presence: true
 
   private
+
+  def subscribe_commenter_to_item
+    SubscribeToSubjectActivityWorker.perform_async(
+      subject_id: commentable.id,
+      subject_type: commentable.class.to_s,
+      subscriber_id: commenter.id,
+      actions: %w(comment),
+      reason: 'commented',
+      active: true
+    )
+  end
+
+  def unsubscribe_commenter_from_item
+    UnsubscribeFromSubjectActivityWorker.perform_async(
+      subject_id: commentable.id,
+      subject_type: commentable.class.to_s,
+      subscriber_id: commenter.id,
+      actions: %w(comment),
+      reason: 'commented',
+      active: true
+    )
+  end
 
   def update_counter_caches
     self.commentable.update comments_count: Comment.where(commentable_id:commentable_id, commentable_type:commentable_type).count

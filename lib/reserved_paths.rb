@@ -11,6 +11,7 @@ module ReservedPaths
       announcements
       anywhere
       apps
+      assets
       auth
       badges
       bar

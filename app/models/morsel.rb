@@ -31,6 +31,7 @@
 
 class Morsel < ActiveRecord::Base
   include Authority::Abilities,
+          ActivitySubscribeable,
           Feedable,
           Likeable,
           Mrslable,
@@ -38,6 +39,9 @@ class Morsel < ActiveRecord::Base
           Taggable,
           TimelinePaginateable,
           UserCreatable
+
+  # ActivitySubscribeable
+  def self.activity_subscription_actions; %w(like) end
 
   acts_as_paranoid
   is_sluggable :title

@@ -18,7 +18,8 @@
 require 'spec_helper'
 
 describe Follow do
-  subject(:user_follow) { FactoryGirl.build(:user_follow) }
+  subject(:user_follow) { FactoryGirl.build(:user_follow, followable: followable_user) }
+  let(:followable_user) { Sidekiq::Testing.inline! { FactoryGirl.create(:user) }}
 
   it_behaves_like 'Activityable'
   it_behaves_like 'Paranoia'

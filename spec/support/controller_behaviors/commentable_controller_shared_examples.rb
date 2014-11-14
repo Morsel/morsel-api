@@ -60,7 +60,6 @@ shared_examples 'CommentableController' do
       activity = current_user.activities.last
       expect(activity).to_not be_nil
       expect(activity.creator).to eq(current_user)
-      expect(activity.recipient).to eq(commentable.creator)
       expect(activity.subject).to eq(commentable)
       expect(activity.action).to eq(Comment.last)
 

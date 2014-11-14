@@ -4,6 +4,7 @@ class ShortenURL
   attribute :url, String
   attribute :utm, Hash
 
+  validates :url, presence: true
   validate :valid_url?
 
   # https://www.eatmorsel.com/some/url?utm_source=source&utm_medium=medium&utm_campaign=campaign&utm_keyword=mrsl

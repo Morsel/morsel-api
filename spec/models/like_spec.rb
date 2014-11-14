@@ -18,7 +18,8 @@
 require 'spec_helper'
 
 describe Like do
-  subject(:morsel_like) { FactoryGirl.build(:morsel_like) }
+  subject(:morsel_like) { FactoryGirl.build(:morsel_like, likeable: morsel) }
+  let(:morsel) { Sidekiq::Testing.inline! { FactoryGirl.create(:morsel_with_creator) }}
 
   it_behaves_like 'Activityable'
   it_behaves_like 'Paranoia'

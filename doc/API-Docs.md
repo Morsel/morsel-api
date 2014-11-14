@@ -1203,6 +1203,7 @@ Updates the device with the specified `id`. Mainly used to toggle `notification_
 | device[notification_settings][notify_morsel_like] | Boolean | `true` to send this type of notifications to this device | | |
 | device[notification_settings][notify_morsel_morsel_user_tag] | Boolean | `true` to send this type of notifications to this device | | |
 | device[notification_settings][notify_user_follow] | Boolean | `true` to send this type of notifications to this device | | |
+| device[notification_settings][notify_tagged_morsel_item_comment] | Boolean | `true` to send this type of notifications to this device | | |
 
 ### Response
 
@@ -2274,7 +2275,7 @@ Response for any Like Item related requests.
     "linkedin_media_mrsl": "http://mrsl.co/linkedin_media",
     "googleplus_media_mrsl": "http://mrsl.co/googleplus_media"
   },
-  "has_tagged_users": false,
+  "tagged_users_count": 0,
   "tagged": false,
   "liked": false,
   "photos": {

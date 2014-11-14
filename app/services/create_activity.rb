@@ -4,35 +4,28 @@ class CreateActivity
   attribute :subject, Hash
   attribute :action, Hash
   attribute :creator_id
-  attribute :primary_recipient_id
-  attribute :additional_recipient_ids, Array, default: []
   attribute :notify_recipients, Boolean, default: false
   attribute :hidden, Boolean, default: false
   attribute :silent, Boolean, default: false
 
   def call
-    primary_activity = create_activity(primary_recipient_id)
-    create_notification(primary_activity) if notify_recipients?
-
-    # Create any additional activities and notifications for additional recipients
-    if !additional_recipient_ids.empty?
-      additional_recipient_ids.each do |recipient_id|
-        activity = create_activity(recipient_id, true)
-        create_notification(activity) if notify_recipients?
+    activity = create_activity
+    if notify_recipients?
+      activity.active_activity_subscribers.each do |activity_subscriber|
+        create_notification(activity, activity_subscriber.id)
       end
     end
   end
 
   private
 
-  def create_activity(recipient_id, hidden = hidden)
+  def create_activity(hidden = hidden)
     Activity.create(
       creator_id: creator_id,
       action_id: safe_action[:id],
       action_type: safe_action[:type],
       subject_id: safe_subject[:id],
       subject_type: safe_subject[:type],
-      recipient_id: recipient_id,
       hidden: hidden
     )
   end
@@ -42,12 +35,12 @@ class CreateActivity
     creator_id.present?
   end
 
-  def create_notification(activity)
+  def create_notification(activity, recipient_id)
     CreateNotification.call(
       payload: activity,
-      user_id: activity.recipient_id,
+      user_id: recipient_id,
       silent:  silent
-    ) if activity.recipient_id.to_i != creator_id.to_i
+    ) unless recipient_id.to_i == creator_id.to_i
   end
 
   def safe_subject

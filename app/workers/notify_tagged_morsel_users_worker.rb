@@ -6,10 +6,10 @@ class NotifyTaggedMorselUsersWorker
 
     morsel = Morsel.includes(:morsel_user_tags).find(options['morsel_id'])
 
-    Activity.where(action_id: morsel.morsel_user_tag_ids, action_type: MorselUserTag).find_each do |activity|
+    Activity.where(action_id: morsel.morsel_user_tag_ids, action_type: MorselUserTag, subject: morsel).find_each do |activity|
       CreateNotification.call(
         payload: activity,
-        user_id: activity.recipient_id
+        user_id: activity.action.user_id
       )
     end
   end

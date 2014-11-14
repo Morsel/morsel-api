@@ -1,9 +1,14 @@
 require 'spec_helper'
 
 describe SendPushNotification do
-  let(:service_class) { SendPushNotification }
-
+  let(:service_class) { described_class }
   let(:notification) { FactoryGirl.create(:item_comment_activity_notification) }
+
+  it_behaves_like 'RequiredAttributes' do
+    let(:valid_attributes) {{
+      notification: notification
+    }}
+  end
 
   context 'receiver has devices' do
     let(:device) { FactoryGirl.create(:device, user: notification.user) }
@@ -75,14 +80,6 @@ describe SendPushNotification do
 
       expect_service_success
       expect(service_response).to be_false
-    end
-  end
-
-  context 'no notification specified' do
-    it 'throws an error' do
-      call_service
-
-      expect_service_failure
     end
   end
 

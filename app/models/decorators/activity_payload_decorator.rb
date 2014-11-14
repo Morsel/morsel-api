@@ -23,7 +23,7 @@ class ActivityPayloadDecorator < SimpleDelegator
   def subject_message
     case subject_type
     when 'User'
-      subject_id == recipient_id ? 'you' : subject.full_name
+      subject.full_name
     when 'Item'
       subject.morsel_title_with_description
     when 'Morsel'
