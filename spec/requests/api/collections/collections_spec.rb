@@ -4,7 +4,7 @@ describe 'Collections API Methods' do
   describe 'POST /collections collections#create' do
     let(:endpoint) { '/collections' }
     let(:current_user) { FactoryGirl.create(:user) }
-    let(:title) { Faker::Lorem.sentence(rand(2..4)).truncate(50) }
+    let(:title) { Faker::Lorem.sentence(rand(2..4)).truncate(70) }
     let(:description) { Faker::Lorem.sentence(rand(2..10)) }
 
     it 'creates a new collection' do
@@ -25,7 +25,7 @@ describe 'Collections API Methods' do
   describe 'PUT /collections/:id collections#update' do
     let(:endpoint) { "/collections/#{collection.id}" }
     let(:current_user) { FactoryGirl.create(:user_with_collection) }
-    let(:new_title) { Faker::Lorem.sentence(rand(2..4)).truncate(50) }
+    let(:new_title) { Faker::Lorem.sentence(rand(2..4)).truncate(70) }
     let(:new_description) { Faker::Lorem.sentence(rand(2..10)) }
     let(:collection) { current_user.collections.first }
 

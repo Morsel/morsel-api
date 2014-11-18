@@ -59,9 +59,9 @@ describe Morsel do
   its(:items) { should be_empty }
 
   describe 'title' do
-    context 'greater than 50 characters' do
+    context 'greater than 70 characters' do
       before do
-        morsel.title = Faker::Lorem.characters(51)
+        morsel.title = Faker::Lorem.characters(71)
       end
 
       it { should_not be_valid }
