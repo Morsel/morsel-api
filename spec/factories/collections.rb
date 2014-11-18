@@ -21,7 +21,7 @@
 
 FactoryGirl.define do
   factory :collection do
-    title { Faker::Lorem.sentence(rand(2..4)).truncate(50) }
+    title { Faker::Lorem.sentence(rand(2..4)).truncate(70) }
     description { Faker::Lorem.sentence(rand(5..100)) }
     association(:user)
     association(:place)

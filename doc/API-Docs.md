@@ -1558,7 +1558,7 @@ Creates a new Morsel for the current User.
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| morsel[title] | String | The title for the new Morsel | | x |
+| morsel[title] | String | The title (70 char max) for the new Morsel | | x |
 | morsel[summary] | String | The summary for the new Morsel | | |
 | morsel[place_id] | Number | A [Place](#place) to associate this Morsel to | | |
 | morsel[draft] | Boolean | Set to true if the Morsel is a draft | true | |
@@ -1625,7 +1625,7 @@ Updates the Morsel with the specified `id`
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| morsel[title]         | String  | The title for the Morsel. Changing this will change the slug. | | |
+| morsel[title]         | String  | The title (70 char max) for the Morsel. Changing this will change the slug. | | |
 | morsel[summary]         | String  | The summary for the Morsel. | | |
 | morsel[place_id] | Number | A [Place](#place) to associate this Morsel to | | |
 | morsel[draft] | Boolean | Set to true if the Morsel is a draft | | |
@@ -1875,7 +1875,7 @@ Updates the collection with the specified `id`
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| collection[title] | String | A title for the new collection | | |
+| collection[title] | String | A title (70 char max) for the new collection | | |
 | collection[description] | String | The description for the collection | | |
 | collection[place_id] | Number | A [Place](#place) to associate this Collection to | | |
 

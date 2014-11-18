@@ -72,7 +72,7 @@ class Morsel < ActiveRecord::Base
   validate :primary_item_belongs_to_morsel
 
   validates :title,
-            length: { maximum: 50 }
+            length: { maximum: 70 }
 
   scope :drafts, -> { where(draft: true) }
   scope :published, -> { where(draft: false) }

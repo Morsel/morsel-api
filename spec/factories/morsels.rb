@@ -31,7 +31,7 @@
 
 FactoryGirl.define do
   factory :morsel do
-    title { Faker::Lorem.sentence(rand(2..4)).truncate(50) }
+    title { Faker::Lorem.sentence(rand(2..4)).truncate(70) }
     draft false
     ignore do
       include_mrsl true
