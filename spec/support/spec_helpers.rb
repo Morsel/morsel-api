@@ -142,6 +142,14 @@ module SpecHelpers
     expect(service_errors[key].first).to eq(error)
   end
 
+  def expect_service_response_count(count)
+    expect(service_response.count).to eq(count)
+  end
+
+  def expect_empty_service_response
+    expect(service_response).to be_empty
+  end
+
   # Creates [get|post|delete|put]_endpoint methods
   self.class_eval do
     [:get, :post, :delete, :put].each do |http_method|

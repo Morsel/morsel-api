@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141112234433) do
+ActiveRecord::Schema.define(version: 20141113221704) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,18 +39,30 @@ ActiveRecord::Schema.define(version: 20141112234433) do
     t.integer  "action_id"
     t.string   "action_type"
     t.integer  "creator_id"
-    t.integer  "recipient_id"
-    t.integer  "notification_id"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "hidden",          default: false
+    t.boolean  "hidden",       default: false
   end
 
   add_index "activities", ["creator_id"], name: "index_activities_on_creator_id", using: :btree
-  add_index "activities", ["recipient_id"], name: "index_activities_on_recipient_id", using: :btree
   add_index "activities", ["subject_id"], name: "index_activities_on_subject_id", using: :btree
   add_index "activities", ["subject_type", "action_type"], name: "index_activities_on_subject_type_and_action_type", using: :btree
+
+  create_table "activity_subscriptions", force: true do |t|
+    t.integer  "subscriber_id"
+    t.integer  "subject_id"
+    t.string   "subject_type"
+    t.integer  "action",        default: 0
+    t.integer  "reason",        default: 0
+    t.boolean  "active",        default: true
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "activity_subscriptions", ["subject_id", "subject_type"], name: "index_activity_subscriptions_on_subject_id_and_subject_type", using: :btree
+  add_index "activity_subscriptions", ["subscriber_id"], name: "index_activity_subscriptions_on_subscriber_id", using: :btree
 
   create_table "authentications", force: true do |t|
     t.string   "provider"

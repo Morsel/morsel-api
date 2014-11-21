@@ -65,6 +65,8 @@ class User < ActiveRecord::Base
   before_validation :ensure_authentication_token
   after_validation :ensure_professional
   before_save :default_values
+  after_commit :create_subscription_for_self, on: :create
+  after_destroy :remove_subscription_for_self
 
   alias_attribute :draft_count, :drafts_count
   alias_attribute :followed_user_count, :followed_users_count
@@ -95,6 +97,7 @@ class User < ActiveRecord::Base
   has_many :items, foreign_key: :creator_id
   has_many :morsels, foreign_key: :creator_id
   has_many :activities, foreign_key: :creator_id
+  has_many :activity_subscriptions, foreign_key: :subscriber_id
   has_many :notifications
 
   has_many :employments, inverse_of: :user
@@ -268,5 +271,26 @@ class User < ActiveRecord::Base
 
   def ensure_professional
     self.professional = industry == 'chef' if professional.nil? && industry.present?
+  end
+
+  def create_subscription_for_self
+    SubscribeToSubjectActivityWorker.perform_async(
+      subject_id: id,
+      subject_type: 'User',
+      subscriber_id: id,
+      active: true,
+      reason: 'created',
+      actions: %w(follow)
+    )
+  end
+
+  def remove_subscription_for_self
+    UnsubscribeFromSubjectActivityWorker.perform_async(
+      subject_id: id,
+      subject_type: 'User',
+      subscriber_id: id,
+      reason: 'created',
+      actions: %w(follow)
+    )
   end
 end

@@ -1,11 +1,16 @@
 require 'spec_helper'
 
 describe ChangeMorselCreator do
-  let(:service_class) { ChangeMorselCreator }
-
   let(:morsel) { FactoryGirl.create(:morsel, creator: creator) }
   let(:creator) { FactoryGirl.create(:user) }
   let(:new_creator) { FactoryGirl.create(:user) }
+
+  it_behaves_like 'RequiredAttributes' do
+    let(:valid_attributes) {{
+      morsel: morsel,
+      new_creator: new_creator
+    }}
+  end
 
   it 'should change the morsel\'s creator to the new creator' do
     call_service ({
@@ -20,28 +25,6 @@ describe ChangeMorselCreator do
     expect(new_creator.has_role?(:creator, morsel)).to be_true
     expect(morsel.roles).to eq(morsel.roles)
     expect(morsel.url).to eq("#{Settings.morsel.web_url}/#{new_creator.username}/#{morsel.id}-#{morsel.cached_slug}")
-  end
-
-  context 'no morsel specified' do
-    it 'throws an error' do
-      call_service ({
-        new_creator: new_creator
-      })
-
-      expect_service_failure
-      expect_service_error('morsel', 'can\'t be blank')
-    end
-  end
-
-  context 'no new creator specified' do
-    it 'throws an error' do
-      call_service ({
-        morsel: morsel
-      })
-
-      expect_service_failure
-      expect_service_error('new_creator', 'can\'t be blank')
-    end
   end
 
   context 'morsel has no existing creator' do

@@ -16,7 +16,9 @@ class FeedWorker
       SocialWorker.perform_async(options.except('post_to_twitter')) if options['post_to_facebook']
       SocialWorker.perform_async(options.except('post_to_facebook')) if options['post_to_twitter']
       PublishedMorselHipChatNotificationWorker.perform_async(options) if Rails.env.production?
-      # NotifyTaggedMorselUsersWorker.perform_async(options) # NOTE: Disabled for now (https://app.asana.com/0/19486350215520/20236290636269)
+      ActivitySubscription.where(subject_id: feed_item.subject_id, subject_type: 'Morsel').update_all active: true
+      ActivitySubscription.where(subject_id: feed_item.subject.item_ids, subject_type: 'Item').update_all active: true
+      NotifyTaggedMorselUsersWorker.perform_async(options)
     end
   end
 end

@@ -1,12 +1,19 @@
 require 'spec_helper'
 
 describe RegisterDevice do
-  let(:service_class) { RegisterDevice }
-
   let(:user) { FactoryGirl.create(:user) }
   let(:name) { "#{Faker::Name.name}'s Device" }
   let(:token) { Faker::Lorem.characters(32) }
   let(:model) { "iphone" }
+
+  it_behaves_like 'RequiredAttributes' do
+    let(:valid_attributes) {{
+      user: user,
+      name: name,
+      token: token,
+      model: model
+    }}
+  end
 
   it 'should create a device' do
     call_service ({
@@ -18,14 +25,6 @@ describe RegisterDevice do
 
     expect_service_success
     expect(service_response).to eq(Device.last)
-  end
-
-  context 'no user specified' do
-    it 'throws an error' do
-      call_service
-
-      expect_service_failure
-    end
   end
 
   context 'device already exists' do

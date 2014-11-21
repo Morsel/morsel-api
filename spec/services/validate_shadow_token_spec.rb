@@ -1,11 +1,16 @@
 require 'spec_helper'
 
 describe ValidateShadowToken do
-  let(:service_class) { ValidateShadowToken }
-
   let(:user) { FactoryGirl.create(:user) }
   let(:shadow_token) { Faker::Lorem.characters(32) }
   let(:redis_key) { "user_shadow_token/#{user.id}" }
+
+  it_behaves_like 'RequiredAttributes' do
+    let(:valid_attributes) {{
+      shadow_token: shadow_token,
+      user: user
+    }}
+  end
 
   context 'shadow_token exists in redis' do
     before do
@@ -40,22 +45,6 @@ describe ValidateShadowToken do
         shadow_token: Faker::Lorem.characters(32),
         user: user
       })
-
-      expect_service_failure
-    end
-  end
-
-  context 'no shadow_token specified' do
-    it 'throws an error' do
-      call_service user: user
-
-      expect_service_failure
-    end
-  end
-
-  context 'no user specified' do
-    it 'throws an error' do
-      call_service shadow_token: shadow_token
 
       expect_service_failure
     end

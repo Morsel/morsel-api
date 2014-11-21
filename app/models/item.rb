@@ -27,11 +27,16 @@
 
 class Item < ActiveRecord::Base
   include Authority::Abilities,
+          ActivitySubscribeable,
           Commentable,
           Likeable,
           PhotoUploadable,
           TimelinePaginateable,
           UserCreatable
+
+
+  # ActivitySubscribeable
+  def self.activity_subscription_actions; %w(comment) end
 
   acts_as_paranoid
 

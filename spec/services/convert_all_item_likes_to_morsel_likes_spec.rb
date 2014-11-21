@@ -10,7 +10,7 @@ describe Scripts::ConvertAllItemLikesToMorselLikes do
   context 'morsels not liked yet' do
     before do
       item_with_likes
-      subject
+      service
     end
 
     it { should be_valid }
@@ -29,7 +29,7 @@ describe Scripts::ConvertAllItemLikesToMorselLikes do
     before do
       item_with_likes
       Like.create(liker:Like.first.liker, likeable: morsel)
-      subject
+      service
     end
 
     its(:response) { should eq([likes_count - 1, 1]) }

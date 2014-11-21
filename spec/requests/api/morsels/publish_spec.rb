@@ -56,9 +56,9 @@ describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
   end
 
   context 'morsel has tagged Users' do
-    let(:tagged_user) { FactoryGirl.create(:user) }
+    let(:tagged_user) { Sidekiq::Testing.inline! { FactoryGirl.create(:user) }}
 
-    before { FactoryGirl.create(:morsel_user_tag, user: tagged_user, morsel: draft_morsel) }
+    before { Sidekiq::Testing.inline! { FactoryGirl.create(:morsel_user_tag, user: tagged_user, morsel: draft_morsel) }}
 
     it 'should notify them of the published morsel' do
       stub_bitly_client
@@ -82,7 +82,6 @@ describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
 
       expect(activity).to_not be_nil
       expect(activity.creator).to eq(current_user)
-      expect(activity.recipient).to eq(tagged_user)
       expect(activity.subject).to eq(draft_morsel)
       expect(activity.action).to eq(MorselUserTag.last)
 

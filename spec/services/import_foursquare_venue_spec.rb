@@ -1,16 +1,13 @@
 require 'spec_helper'
 
 describe ImportFoursquareVenue do
-  let(:service_class) { ImportFoursquareVenue }
   let(:place) { FactoryGirl.build(:place) }
   let(:title) { Faker::Name.title }
 
-  context 'no Place specified' do
-    it 'throws an error' do
-      call_service
-
-      expect_service_failure
-    end
+  it_behaves_like 'RequiredAttributes' do
+    let(:valid_attributes) {{
+      place: place
+    }}
   end
 
   context 'Place exists on Foursquare' do
