@@ -38,10 +38,15 @@ class ActivitySubscription < ActiveRecord::Base
   end
 
   def self.active_subscribers_for_activity(activity)
-    User.joins(:activity_subscriptions).where(activity_subscriptions: {
+    User.includes(:activity_subscriptions).where(activity_subscriptions: {
       active: true,
       subject: activity.subject,
-      action: ActivitySubscription.actions[activity.action_type.underscore]
-    }).uniq.select('users.*, activity_subscriptions.reason AS subscription_reason')
+      action: actions[activity.action_type.underscore]
+    }).uniq
+    # User.joins(:activity_subscriptions).where(activity_subscriptions: {
+    #   active: true,
+    #   subject: activity.subject,
+    #   action: ActivitySubscription.actions[activity.action_type.underscore]
+    # }).uniq.select('users.*, activity_subscriptions.reason AS subscription_reason')
   end
 end
