@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe PreparePresignedUpload do
-  let(:service_class) { described_class }
-
   context 'invalid model specified' do
     let(:invalid_model) { FactoryGirl.create(:cuisine) }
     it 'throws an error' do

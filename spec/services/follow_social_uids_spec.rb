@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe FollowSocialUids do
-  let(:service_class) { described_class }
-
   context "provider is 'facebook'" do
     let(:authentication) { FactoryGirl.create(:facebook_authentication) }
     let(:number_of_connected_uids) { rand(2..6) }

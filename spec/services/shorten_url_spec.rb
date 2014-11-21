@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe ShortenURL do
-  let(:service_class) { described_class }
-
   let(:url) { 'https://eatmorsel.com/test' }
   let(:expected_response) { 'https://mrsl.co/test' }
 

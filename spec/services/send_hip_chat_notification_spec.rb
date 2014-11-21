@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe SendHipChatNotification do
-  let(:service_class) { described_class }
   let(:message) { 'Test HipChat Notification' }
   let(:expected_response) { true }
   let(:test_room) { 'test_room' }

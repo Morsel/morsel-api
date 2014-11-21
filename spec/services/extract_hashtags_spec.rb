@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe ExtractHashtags do
-  let(:service_class) { described_class }
-
   let(:text) { 'I just ate a donut #yolo #blessed #hashtag' }
 
   it_behaves_like 'RequiredAttributes' do

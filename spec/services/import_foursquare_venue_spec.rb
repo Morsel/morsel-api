@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe ImportFoursquareVenue do
-  let(:service_class) { described_class }
   let(:place) { FactoryGirl.build(:place) }
   let(:title) { Faker::Name.title }
 

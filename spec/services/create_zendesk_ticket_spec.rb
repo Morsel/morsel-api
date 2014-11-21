@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe CreateZendeskTicket do
-  let(:service_class) { described_class }
-
   let(:subject) { 'Zendesk Ticket Subject!' }
   let(:description) { 'Zendesk Ticket description' }
 

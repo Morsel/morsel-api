@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe ValidateShadowToken do
-  let(:service_class) { described_class }
-
   let(:user) { FactoryGirl.create(:user) }
   let(:shadow_token) { Faker::Lorem.characters(32) }
   let(:redis_key) { "user_shadow_token/#{user.id}" }

@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe ChangeMorselCreator do
-  let(:service_class) { described_class }
-
   let(:morsel) { FactoryGirl.create(:morsel, creator: creator) }
   let(:creator) { FactoryGirl.create(:user) }
   let(:new_creator) { FactoryGirl.create(:user) }

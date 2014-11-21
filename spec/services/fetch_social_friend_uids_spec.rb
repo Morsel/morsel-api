@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe FetchSocialFriendUids do
-  let(:service_class) { described_class }
-
   context "provider is 'facebook'" do
     let(:authentication) { FactoryGirl.create(:facebook_authentication) }
     let(:number_of_friends) { rand(2..6) }

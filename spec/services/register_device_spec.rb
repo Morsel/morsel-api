@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe RegisterDevice do
-  let(:service_class) { described_class }
-
   let(:user) { FactoryGirl.create(:user) }
   let(:name) { "#{Faker::Name.name}'s Device" }
   let(:token) { Faker::Lorem.characters(32) }

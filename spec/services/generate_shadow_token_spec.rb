@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe GenerateShadowToken do
-  let(:service_class) { described_class }
   let(:user) { FactoryGirl.create(:user) }
 
   it_behaves_like 'RequiredAttributes' do

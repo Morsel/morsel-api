@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe SubscribeToSubjectActivity do
-  let(:service_class) { described_class }
-
   let(:subscriber) { FactoryGirl.create(:user) }
   let(:subject) { FactoryGirl.create(:morsel) }
   let(:actions) { ActivitySubscription.actions.keys.drop(1).sample(rand(2..3)) }

@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe SendPushNotification do
-  let(:service_class) { described_class }
   let(:notification) { FactoryGirl.create(:item_comment_activity_notification) }
 
   it_behaves_like 'RequiredAttributes' do

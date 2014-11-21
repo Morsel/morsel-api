@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe CollectMorsel do
-  let(:service_class) { described_class }
-
   let(:user) { FactoryGirl.create(:user_with_collection) }
   let(:morsel) { FactoryGirl.create(:morsel) }
   let(:collection) { user.collections.first }

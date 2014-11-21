@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe UpdateMorselTags do
-  let(:service_class) { described_class }
-
   let(:summary) { 'I just ate a donut #yolo #blessed #hashtag' }
   let(:morsel) { FactoryGirl.create(:morsel, summary: summary) }
 
