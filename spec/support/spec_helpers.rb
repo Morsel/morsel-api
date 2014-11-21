@@ -115,7 +115,7 @@ module SpecHelpers
   end
 
   def call_service(*args)
-    @service = service_class.call(*args)
+    @service = described_class.call(*args)
   end
 
   def service_valid?
