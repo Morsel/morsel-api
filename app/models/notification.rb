@@ -9,13 +9,14 @@
 # **`id`**              | `integer`          | `not null, primary key`
 # **`payload_id`**      | `integer`          |
 # **`payload_type`**    | `string(255)`      |
-# **`message`**         | `string(255)`      |
+# **`message`**         | `text`             |
 # **`user_id`**         | `integer`          |
 # **`marked_read_at`**  | `datetime`         |
 # **`deleted_at`**      | `datetime`         |
 # **`created_at`**      | `datetime`         |
 # **`updated_at`**      | `datetime`         |
 # **`sent_at`**         | `datetime`         |
+# **`reason`**          | `string(255)`      |
 #
 
 class Notification < ActiveRecord::Base

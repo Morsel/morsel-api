@@ -11,8 +11,9 @@ class CreateActivity
   def call
     activity = create_activity
     if notify_recipients?
-      activity.active_activity_subscribers.each do |activity_subscriber|
-        create_notification(activity, activity_subscriber.id)
+      ActivitySubscription.active_subscribers_for_activity(activity).each do |activity_subscriber|
+        reason = activity_subscriber.respond_to?(:subscription_reason) ? ActivitySubscription.reasons.keys[activity_subscriber.subscription_reason] : nil
+        create_notification(activity, activity_subscriber.id, reason)
       end
     end
   end
@@ -35,11 +36,12 @@ class CreateActivity
     creator_id.present?
   end
 
-  def create_notification(activity, recipient_id)
+  def create_notification(activity, recipient_id, reason = nil)
     CreateNotification.call(
       payload: activity,
       user_id: recipient_id,
-      silent:  silent
+      silent:  silent,
+      reason:  reason
     ) unless recipient_id.to_i == creator_id.to_i
   end
 

@@ -35,4 +35,8 @@ class Activity < ActiveRecord::Base
   def active_activity_subscribers
     ActivitySubscription.active_subscribers_for_activity(self)
   end
+
+  def message
+    ActivityPayloadDecorator.new(self).message
+  end
 end

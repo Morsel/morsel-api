@@ -3,7 +3,8 @@ class NotificationSerializer < ActiveModel::Serializer
              :message,
              :created_at,
              :marked_read_at,
-             :payload_type
+             :payload_type,
+             :reason
 
   has_one :payload
 end
