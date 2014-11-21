@@ -14,21 +14,21 @@ class CreateActivitySubscriptions < ActiveRecord::Migration
     add_index :activity_subscriptions, [:subscriber_id]
     add_index :activity_subscriptions, [:subject_id, :subject_type]
 
-    Morsel.find_each do |morsel|
-      morsel.send(:create_subscription_for_creator) unless morsel.creator.nil?
-    end
+    # Morsel.find_each do |morsel|
+    #   morsel.send(:create_subscription_for_creator) unless morsel.creator.nil?
+    # end
 
-    Item.find_each do |item|
-      item.send(:create_subscription_for_creator) unless item.creator.nil?
-    end
+    # Item.find_each do |item|
+    #   item.send(:create_subscription_for_creator) unless item.creator.nil?
+    # end
 
-    MorselUserTag.find_each do |morsel_user_tag|
-      morsel_user_tag.send(:subscribe_tagged_user_to_morsel_items)
-    end
+    # MorselUserTag.find_each do |morsel_user_tag|
+    #   morsel_user_tag.send(:subscribe_tagged_user_to_morsel_items)
+    # end
 
-    Comment.find_each do |comment|
-      comment.send(:subscribe_commenter_to_item)
-    end
+    # Comment.find_each do |comment|
+    #   comment.send(:subscribe_commenter_to_item)
+    # end
   end
 
   def down
