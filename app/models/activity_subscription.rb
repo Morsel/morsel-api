@@ -37,11 +37,11 @@ class ActivitySubscription < ActiveRecord::Base
     ).uniq
   end
 
-  scope :active_subscribers_for_activity, -> (activity) do
-    User.includes(:activity_subscriptions).where(activity_subscriptions: {
+  def self.active_subscribers_for_activity(activity)
+    User.joins(:activity_subscriptions).where(activity_subscriptions: {
       active: true,
       subject: activity.subject,
-      action: actions[activity.action_type.underscore]
-    }).uniq
+      action: ActivitySubscription.actions[activity.action_type.underscore]
+    }).uniq.select('users.*, activity_subscriptions.reason AS subscription_reason')
   end
 end

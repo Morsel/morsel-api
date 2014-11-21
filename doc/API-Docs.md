@@ -2574,7 +2574,8 @@ Clarification: Notifications can share a payload. So if someone comments on Dan'
   "message": "Drew Muller (user_jtu6g7nacn) followed you"
   "created_at":"2014-03-13T17:04:22.411Z",
   "marked_read_at":"2014-04-11T11:10:42.767Z",
-  "payload_type":"Activity"
+  "payload_type":"Activity",
+  "reason": "created"
 }
 ```
 

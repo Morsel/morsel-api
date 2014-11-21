@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141113221704) do
+ActiveRecord::Schema.define(version: 20141121220932) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -290,13 +290,14 @@ ActiveRecord::Schema.define(version: 20141113221704) do
   create_table "notifications", force: true do |t|
     t.integer  "payload_id"
     t.string   "payload_type"
-    t.string   "message"
+    t.text     "message"
     t.integer  "user_id"
     t.datetime "marked_read_at"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "sent_at"
+    t.string   "reason"
   end
 
   add_index "notifications", ["payload_type"], name: "index_notifications_on_payload_type", using: :btree
