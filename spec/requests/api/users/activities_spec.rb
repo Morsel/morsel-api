@@ -30,9 +30,11 @@ describe 'GET /users/activities' do
 
     last_item = some_morsel.items.last
     last_item_creator = last_item.creator
+    last_item_liker = last_item.likers.last
     last_item_morsel = last_item.morsel
 
     expect_first_json_data_eq({
+      'message' => "#{last_item_liker.full_name} (#{last_item_liker.username}) liked #{last_item.morsel_title_with_description}",
       'action_type' => 'Like',
       'subject_type' => 'Item',
       'subject' => {

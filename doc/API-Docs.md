@@ -2004,7 +2004,7 @@ __Request Behaviors__
 # Notification Methods
 
 ## GET `/notifications` - Notifications
-Returns the [current_user](#current_user)'s Notifications. A Notification is created when someone likes or comments on your Items. Think Facebook or Twitter Notifications.
+Returns the [current_user](#current_user)'s Notifications. A Notification is created when someone likes or comments on your Items, Morsels, tagged morsels, or commented on items. Think Facebook or Twitter Notifications.
 
 __Request Behaviors__
 * [Timeline Pagination](#timelime-pagination)
@@ -2555,7 +2555,8 @@ Response for any Follow Keyword related requests.
   "id":2,
   "action_type":"Like",
   "created_at":"2014-03-13T17:01:38.370Z",
-  "subject_type":"Item"
+  "subject_type":"Item",
+  "message": "Drew Muller (user_jtu6g7nacn) followed Bob Dole"
 }
 ```
 
@@ -2563,13 +2564,14 @@ Response for any Follow Keyword related requests.
 ## Notification Objects
 
 ### Notification
+Clarification: Notifications can share a payload. So if someone comments on Dan's Morsel that Adam, Bob, and Carl are tagged on, the same (single) activity "someone commented on #{morsel.item.description}" will be returned w/ the (different) notifications sent to Adam, Bob, Carl, and Dan.
 * Includes:
   * `payload`: [Activity](#activity)
 
 ```json
 {
   "id":4,
-  "message":"Drew Muller (user_jtu6g7nacn) liked Enim quia sequi aut vel.: Soluta quo saepe nemo voluptatem... ",
+  "message": "Drew Muller (user_jtu6g7nacn) followed you"
   "created_at":"2014-03-13T17:04:22.411Z",
   "marked_read_at":"2014-04-11T11:10:42.767Z",
   "payload_type":"Activity"

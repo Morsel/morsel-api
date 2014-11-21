@@ -1,6 +1,6 @@
 class ActivityPayloadDecorator < SimpleDelegator
-  def message
-    "#{creator.full_name} (#{creator.username}) #{past_tense_action} #{subject_message}"
+  def message(user = nil)
+    "#{creator.full_name} (#{creator.username}) #{past_tense_action} #{subject_message(user)}"
   end
 
   private
@@ -20,10 +20,10 @@ class ActivityPayloadDecorator < SimpleDelegator
     end
   end
 
-  def subject_message
+  def subject_message(user)
     case subject_type
     when 'User'
-      subject.full_name
+      user == subject ? 'you' : subject.full_name
     when 'Item'
       subject.morsel_title_with_description
     when 'Morsel'

@@ -1,7 +1,7 @@
 class ApnsNotificationDecorator < SimpleDelegator
   def alert
     # Don't show a message for Likes
-    message unless activity_payload? && payload.action_type == 'Like'
+    message.truncate(Settings.morsel.notification_length, separator: ' ', omission: '... ') unless activity_payload? && payload.action_type == 'Like'
   end
 
   def custom_payload
