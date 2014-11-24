@@ -5,7 +5,7 @@ describe Scripts::ConvertAllItemLikesToMorselLikes do
 
   let(:item_with_likes) { FactoryGirl.create(:item_with_likers, morsel: morsel, creator: morsel.creator, likes_count: likes_count) }
   let(:morsel) { FactoryGirl.create(:morsel_with_creator) }
-  let(:likes_count) { 5 }
+  let(:likes_count) { rand(2..5) }
 
   context 'morsels not liked yet' do
     before do

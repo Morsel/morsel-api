@@ -16,6 +16,7 @@ class CreateActivity
         create_notification(activity, activity_subscriber.id, reason)
       end
     end
+    activity
   end
 
   private
