@@ -6,7 +6,6 @@ module ActivitySubscribeable
     has_many :activity_subscriptions, as: :subject, dependent: :destroy
 
     after_commit :create_subscription_for_creator, on: :create
-    after_destroy :remove_subscription_for_creator
 
     def self.activity_subscription_actions; raise 'NotImplementedError - activity_subscription_actions is not implemented for this ActivitySubscribeable' end
   end
@@ -36,9 +35,5 @@ module ActivitySubscribeable
 
   def create_subscription_for_creator
     add_subscriber(creator, self.class.activity_subscription_actions, 'created')
-  end
-
-  def remove_subscription_for_creator
-    remove_subscriber(creator, self.class.activity_subscription_actions, 'created')
   end
 end
