@@ -1,5 +1,6 @@
 class KeywordSerializer < ActiveModel::Serializer
   attributes :id,
              :type,
-             :name
+             :name,
+             :tags_count
 end

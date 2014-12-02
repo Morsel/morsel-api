@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141121220932) do
+ActiveRecord::Schema.define(version: 20141202205314) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -232,9 +232,12 @@ ActiveRecord::Schema.define(version: 20141121220932) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "followers_count", default: 0, null: false
+    t.integer  "followers_count", default: 0,     null: false
+    t.boolean  "promoted",        default: false
+    t.integer  "tags_count",      default: 0,     null: false
   end
 
+  add_index "keywords", ["promoted"], name: "index_keywords_on_promoted", using: :btree
   add_index "keywords", ["type"], name: "index_keywords_on_type", using: :btree
 
   create_table "likes", force: true do |t|

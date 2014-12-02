@@ -122,6 +122,7 @@
   - [GET `/specialties` - Specialties](#get-specialties---specialties)
   - [GET `/specialties/:id/users` - Specialty Users](#get-specialtiesidusers---specialty-users)
   - [GET `/hashtags/:name/morsels` - Hashtag Morsels](#get-hashtagsnamemorsels---hashtag-morsels)
+  - [GET `/hashtags/search` - Search Hashtags](#get-hashtagssearch---search-hashtags)
 
 - [Notification Methods](#notification-methods)
   - [GET `/notifications` - Notifications](#get-notifications---notifications)
@@ -1923,7 +1924,7 @@ __Request Behaviors__
 * [\<Followable\>](#followable)
 
 ## GET `/cuisines` - Cuisines
-Returns the list of Cuisines
+Returns the list of Cuisines. `tags_count` returns the number of tagged taggables for the Cuisine.
 
 __Request Behaviors__
 * [Public](#public)
@@ -1954,7 +1955,7 @@ __Request Behaviors__
 <br />
 
 ## GET `/specialties` - Specialties
-Returns the list of Specialties
+Returns the list of Specialties. `tags_count` returns the number of tagged taggables for the Specialty.
 
 __Request Behaviors__
 * [Public](#public)
@@ -1996,6 +1997,34 @@ __Request Behaviors__
 | __data__ |
 | -------- |
 | [Slim Morsels](#slim-morsel)[] |
+
+<br />
+<br />
+
+## GET `/hashtags/search` - Search Hashtags
+Returns [Keywords](#keyword) of type `Hashtag` whose `name` match the parameters. Results are returned for exact matches and matches that begin with the parameters. `tags_count` returns the number of tagged taggables for the Hashtag.
+
+__Request Behaviors__
+* [Public](#public)
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| keyword[query] | String | Used to return Hashtags by `name`. Must be at least 3 characters. | | |
+| keyword[promoted] | Boolean | Used to return `promoted` Hashtags | false | |
+
+### Response
+
+| __data__ |
+| -------- |
+| [Keywords](#keyword)[] |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ | ----------- |
+| __invalid search__ | 400 (Bad Request) | No valid parameters passed |
 
 <br />
 <br />
@@ -2524,7 +2553,8 @@ Response for any User Follower related requests.
 {
   "id":6,
   "type":"Cuisine",
-  "name":"Polish"
+  "name":"Polish",
+  "tags_count":0
 }
 ```
 
