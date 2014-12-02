@@ -11,6 +11,7 @@ ActiveAdmin.register Morsel do
 
   filter :id
   filter :title
+  filter :summary
 
   scope_to do
     Class.new do
