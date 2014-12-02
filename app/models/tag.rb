@@ -32,11 +32,20 @@ class Tag < ActiveRecord::Base
 
   self.authorizer_name = 'TagAuthorizer'
 
+  after_destroy :update_counter_caches
+  after_save  :update_counter_caches
+
   validates :keyword, presence: true
   validates :taggable, presence: true
   validate :validate_keyword_type
 
   def validate_keyword_type
     errors.add(:keyword_type, "not allowed for #{taggable.class}") unless taggable.class.allowed_keyword_types.include?(keyword.type)
+  end
+
+  private
+
+  def update_counter_caches
+    self.keyword.update tags_count: Tag.where(keyword_id: keyword_id).count if keyword_id
   end
 end

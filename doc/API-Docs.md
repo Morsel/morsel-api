@@ -1924,7 +1924,7 @@ __Request Behaviors__
 * [\<Followable\>](#followable)
 
 ## GET `/cuisines` - Cuisines
-Returns the list of Cuisines
+Returns the list of Cuisines. `tags_count` returns the number of tagged taggables for the Cuisine.
 
 __Request Behaviors__
 * [Public](#public)
@@ -1955,7 +1955,7 @@ __Request Behaviors__
 <br />
 
 ## GET `/specialties` - Specialties
-Returns the list of Specialties
+Returns the list of Specialties. `tags_count` returns the number of tagged taggables for the Specialty.
 
 __Request Behaviors__
 * [Public](#public)
@@ -2002,7 +2002,7 @@ __Request Behaviors__
 <br />
 
 ## GET `/hashtags/search` - Search Hashtags
-Returns [Keywords](#keyword) of type `Hashtag` whose `name` match the parameters. Results are returned for exact matches and matches that begin with the parameters.
+Returns [Keywords](#keyword) of type `Hashtag` whose `name` match the parameters. Results are returned for exact matches and matches that begin with the parameters. `tags_count` returns the number of tagged taggables for the Hashtag.
 
 __Request Behaviors__
 * [Public](#public)
@@ -2553,7 +2553,8 @@ Response for any User Follower related requests.
 {
   "id":6,
   "type":"Cuisine",
-  "name":"Polish"
+  "name":"Polish",
+  "tags_count":0
 }
 ```
 
