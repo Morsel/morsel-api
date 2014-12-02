@@ -73,7 +73,7 @@ class GenerateCollage
   end
 
   def composite_one_item_collage
-    canvas.composite(image_for_item(cover_item, :_480x480)) do |cover|
+    canvas.composite(image_for_item(cover_item, :_640x640)) do |cover|
       cover.compose 'Over'
       cover.gravity 'Center'
       cover.geometry "#{COLLAGE_HEIGHT}x#{COLLAGE_HEIGHT}+0+0"
@@ -81,11 +81,11 @@ class GenerateCollage
   end
 
   def composite_two_item_collage
-    canvas.composite(image_for_item(cover_item, :_480x480)) do |cover|
+    canvas.composite(image_for_item(cover_item, :_640x640)) do |cover|
       cover.compose 'Over'
       cover.gravity 'West'
       cover.geometry "#{COLLAGE_HEIGHT}x#{COLLAGE_HEIGHT}-#{COLLAGE_HALF_PADDING}+0"
-    end.composite(image_for_item(additional_items.first, :_480x480)) do |first_item|
+    end.composite(image_for_item(additional_items.first, :_640x640)) do |first_item|
       first_item.compose 'Over'
       first_item.gravity 'East'
       first_item.geometry "#{COLLAGE_HEIGHT}x#{COLLAGE_HEIGHT}-#{COLLAGE_HALF_PADDING}+0"
