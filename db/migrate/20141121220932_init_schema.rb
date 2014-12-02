@@ -1,10 +1,11 @@
 class InitSchema < ActiveRecord::Migration
   def up
+    
     # These are extensions that must be enabled in order to support this database
     enable_extension "plpgsql"
     enable_extension "hstore"
     enable_extension "pg_stat_statements"
-
+    
     create_table "active_admin_comments", force: true do |t|
       t.string   "namespace"
       t.text     "body"
@@ -15,29 +16,42 @@ class InitSchema < ActiveRecord::Migration
       t.datetime "created_at"
       t.datetime "updated_at"
     end
-
+    
     add_index "active_admin_comments", ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id", using: :btree
     add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
     add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
-
+    
     create_table "activities", force: true do |t|
       t.integer  "subject_id"
       t.string   "subject_type"
       t.integer  "action_id"
       t.string   "action_type"
       t.integer  "creator_id"
-      t.integer  "recipient_id"
-      t.integer  "notification_id"
+      t.datetime "deleted_at"
+      t.datetime "created_at"
+      t.datetime "updated_at"
+      t.boolean  "hidden",       default: false
+    end
+    
+    add_index "activities", ["creator_id"], name: "index_activities_on_creator_id", using: :btree
+    add_index "activities", ["subject_id"], name: "index_activities_on_subject_id", using: :btree
+    add_index "activities", ["subject_type", "action_type"], name: "index_activities_on_subject_type_and_action_type", using: :btree
+    
+    create_table "activity_subscriptions", force: true do |t|
+      t.integer  "subscriber_id"
+      t.integer  "subject_id"
+      t.string   "subject_type"
+      t.integer  "action",        default: 0
+      t.integer  "reason",        default: 0
+      t.boolean  "active",        default: true
       t.datetime "deleted_at"
       t.datetime "created_at"
       t.datetime "updated_at"
     end
-
-    add_index "activities", ["creator_id"], name: "index_activities_on_creator_id", using: :btree
-    add_index "activities", ["recipient_id"], name: "index_activities_on_recipient_id", using: :btree
-    add_index "activities", ["subject_id"], name: "index_activities_on_subject_id", using: :btree
-    add_index "activities", ["subject_type", "action_type"], name: "index_activities_on_subject_type_and_action_type", using: :btree
-
+    
+    add_index "activity_subscriptions", ["subject_id", "subject_type"], name: "index_activity_subscriptions_on_subject_id_and_subject_type", using: :btree
+    add_index "activity_subscriptions", ["subscriber_id"], name: "index_activity_subscriptions_on_subscriber_id", using: :btree
+    
     create_table "authentications", force: true do |t|
       t.string   "provider"
       t.string   "uid"
@@ -50,11 +64,39 @@ class InitSchema < ActiveRecord::Migration
       t.datetime "updated_at"
       t.datetime "deleted_at"
     end
-
+    
     add_index "authentications", ["deleted_at"], name: "index_authentications_on_deleted_at", using: :btree
     add_index "authentications", ["uid", "name"], name: "index_authentications_on_uid_and_name", using: :btree
     add_index "authentications", ["user_id"], name: "index_authentications_on_user_id", using: :btree
-
+    
+    create_table "collection_morsels", force: true do |t|
+      t.integer  "collection_id"
+      t.integer  "morsel_id"
+      t.integer  "sort_order"
+      t.datetime "deleted_at"
+      t.datetime "created_at"
+      t.datetime "updated_at"
+      t.text     "note"
+    end
+    
+    add_index "collection_morsels", ["collection_id"], name: "index_collection_morsels_on_collection_id", using: :btree
+    add_index "collection_morsels", ["morsel_id"], name: "index_collection_morsels_on_morsel_id", using: :btree
+    
+    create_table "collections", force: true do |t|
+      t.string   "title"
+      t.text     "description"
+      t.integer  "user_id"
+      t.integer  "place_id"
+      t.datetime "deleted_at"
+      t.datetime "created_at"
+      t.datetime "updated_at"
+      t.string   "cached_slug"
+    end
+    
+    add_index "collections", ["cached_slug"], name: "index_collections_on_cached_slug", using: :btree
+    add_index "collections", ["place_id"], name: "index_collections_on_place_id", using: :btree
+    add_index "collections", ["user_id"], name: "index_collections_on_user_id", using: :btree
+    
     create_table "comments", force: true do |t|
       t.integer  "commenter_id"
       t.integer  "commentable_id"
@@ -64,10 +106,24 @@ class InitSchema < ActiveRecord::Migration
       t.datetime "updated_at"
       t.string   "commentable_type"
     end
-
+    
     add_index "comments", ["commentable_type"], name: "index_comments_on_commentable_type", using: :btree
     add_index "comments", ["commenter_id", "commentable_id"], name: "index_comments_on_commenter_id_and_commentable_id", using: :btree
-
+    
+    create_table "devices", force: true do |t|
+      t.integer  "user_id"
+      t.string   "name"
+      t.string   "token"
+      t.string   "model"
+      t.datetime "created_at"
+      t.datetime "updated_at"
+      t.datetime "deleted_at"
+      t.hstore   "notification_settings", default: {}
+    end
+    
+    add_index "devices", ["deleted_at"], name: "index_devices_on_deleted_at", using: :btree
+    add_index "devices", ["user_id"], name: "index_devices_on_user_id", using: :btree
+    
     create_table "emails", force: true do |t|
       t.string   "class_name"
       t.string   "template_name"
@@ -77,9 +133,9 @@ class InitSchema < ActiveRecord::Migration
       t.datetime "created_at"
       t.datetime "updated_at"
     end
-
+    
     add_index "emails", ["class_name"], name: "index_emails_on_class_name", unique: true, using: :btree
-
+    
     create_table "employments", force: true do |t|
       t.integer  "place_id"
       t.integer  "user_id"
@@ -88,9 +144,9 @@ class InitSchema < ActiveRecord::Migration
       t.datetime "created_at"
       t.datetime "updated_at"
     end
-
+    
     add_index "employments", ["place_id", "user_id"], name: "index_employments_on_place_id_and_user_id", using: :btree
-
+    
     create_table "feed_items", force: true do |t|
       t.integer  "subject_id"
       t.string   "subject_type"
@@ -102,12 +158,12 @@ class InitSchema < ActiveRecord::Migration
       t.boolean  "featured",     default: false
       t.integer  "place_id"
     end
-
+    
     add_index "feed_items", ["featured"], name: "index_feed_items_on_featured", using: :btree
     add_index "feed_items", ["place_id"], name: "index_feed_items_on_place_id", using: :btree
     add_index "feed_items", ["subject_id", "subject_type"], name: "index_feed_items_on_subject_id_and_subject_type", using: :btree
     add_index "feed_items", ["user_id"], name: "index_feed_items_on_user_id", using: :btree
-
+    
     create_table "follows", force: true do |t|
       t.integer  "follower_id"
       t.integer  "followable_id"
@@ -116,10 +172,11 @@ class InitSchema < ActiveRecord::Migration
       t.string   "followable_type"
       t.datetime "deleted_at"
     end
-
+    
+    add_index "follows", ["created_at"], name: "index_follows_on_created_at", using: :btree
     add_index "follows", ["followable_id", "follower_id"], name: "index_follows_on_followable_id_and_follower_id", using: :btree
     add_index "follows", ["followable_type"], name: "index_follows_on_followable_type", using: :btree
-
+    
     create_table "items", force: true do |t|
       t.text     "description"
       t.datetime "created_at"
@@ -135,21 +192,24 @@ class InitSchema < ActiveRecord::Migration
       t.integer  "morsel_id"
       t.integer  "sort_order"
       t.integer  "template_order"
+      t.integer  "comments_count",     default: 0, null: false
+      t.string   "cached_url"
     end
-
+    
     add_index "items", ["creator_id"], name: "index_items_on_creator_id", using: :btree
     add_index "items", ["morsel_id"], name: "index_items_on_post_id", using: :btree
-
+    
     create_table "keywords", force: true do |t|
       t.string   "type"
       t.string   "name"
       t.datetime "deleted_at"
       t.datetime "created_at"
       t.datetime "updated_at"
+      t.integer  "followers_count", default: 0, null: false
     end
-
+    
     add_index "keywords", ["type"], name: "index_keywords_on_type", using: :btree
-
+    
     create_table "likes", force: true do |t|
       t.integer  "liker_id"
       t.integer  "likeable_id"
@@ -158,10 +218,20 @@ class InitSchema < ActiveRecord::Migration
       t.datetime "updated_at"
       t.string   "likeable_type"
     end
-
+    
     add_index "likes", ["likeable_type"], name: "index_likes_on_likeable_type", using: :btree
     add_index "likes", ["liker_id", "likeable_id"], name: "index_likes_on_liker_id_and_likeable_id", using: :btree
-
+    
+    create_table "morsel_user_tags", force: true do |t|
+      t.integer  "morsel_id"
+      t.integer  "user_id"
+      t.datetime "deleted_at"
+      t.datetime "created_at"
+      t.datetime "updated_at"
+    end
+    
+    add_index "morsel_user_tags", ["morsel_id", "user_id"], name: "index_morsel_user_tags_on_morsel_id_and_user_id", using: :btree
+    
     create_table "morsels", force: true do |t|
       t.string   "title"
       t.datetime "created_at"
@@ -179,26 +249,33 @@ class InitSchema < ActiveRecord::Migration
       t.hstore   "mrsl"
       t.integer  "place_id"
       t.integer  "template_id"
+      t.integer  "likes_count",        default: 0,    null: false
+      t.string   "cached_url"
+      t.text     "summary"
+      t.integer  "tagged_users_count", default: 0,    null: false
     end
-
+    
     add_index "morsels", ["cached_slug"], name: "index_morsels_on_cached_slug", using: :btree
     add_index "morsels", ["creator_id"], name: "index_morsels_on_creator_id", using: :btree
     add_index "morsels", ["place_id"], name: "index_morsels_on_place_id", using: :btree
-
+    add_index "morsels", ["updated_at", "published_at"], name: "index_morsels_on_updated_at_and_published_at", using: :btree
+    
     create_table "notifications", force: true do |t|
       t.integer  "payload_id"
       t.string   "payload_type"
-      t.string   "message"
+      t.text     "message"
       t.integer  "user_id"
       t.datetime "marked_read_at"
       t.datetime "deleted_at"
       t.datetime "created_at"
       t.datetime "updated_at"
+      t.datetime "sent_at"
+      t.string   "reason"
     end
-
+    
     add_index "notifications", ["payload_type"], name: "index_notifications_on_payload_type", using: :btree
     add_index "notifications", ["user_id"], name: "index_notifications_on_user_id", using: :btree
-
+    
     create_table "places", force: true do |t|
       t.string   "name"
       t.string   "slug"
@@ -220,10 +297,11 @@ class InitSchema < ActiveRecord::Migration
       t.float    "lat"
       t.float    "lon"
       t.string   "widget_url"
+      t.integer  "followers_count",       default: 0,  null: false
     end
-
+    
     add_index "places", ["name", "foursquare_venue_id"], name: "index_places_on_name_and_foursquare_venue_id", using: :btree
-
+    
     create_table "roles", force: true do |t|
       t.string   "name"
       t.integer  "resource_id"
@@ -231,22 +309,22 @@ class InitSchema < ActiveRecord::Migration
       t.datetime "created_at"
       t.datetime "updated_at"
     end
-
+    
     add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
     add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
-
+    
     create_table "slugs", force: true do |t|
       t.string   "scope"
       t.string   "slug"
       t.integer  "record_id"
       t.datetime "created_at"
     end
-
+    
     add_index "slugs", ["scope", "record_id", "created_at"], name: "index_slugs_on_scope_and_record_id_and_created_at", using: :btree
     add_index "slugs", ["scope", "record_id"], name: "index_slugs_on_scope_and_record_id", using: :btree
     add_index "slugs", ["scope", "slug", "created_at"], name: "index_slugs_on_scope_and_slug_and_created_at", using: :btree
     add_index "slugs", ["scope", "slug"], name: "index_slugs_on_scope_and_slug", using: :btree
-
+    
     create_table "tags", force: true do |t|
       t.integer  "tagger_id"
       t.integer  "keyword_id"
@@ -256,10 +334,10 @@ class InitSchema < ActiveRecord::Migration
       t.datetime "created_at"
       t.datetime "updated_at"
     end
-
+    
     add_index "tags", ["taggable_type"], name: "index_tags_on_taggable_type", using: :btree
     add_index "tags", ["tagger_id", "taggable_id", "keyword_id"], name: "index_tags_on_tagger_id_and_taggable_id_and_keyword_id", using: :btree
-
+    
     create_table "user_events", force: true do |t|
       t.integer  "user_id"
       t.string   "name"
@@ -269,17 +347,17 @@ class InitSchema < ActiveRecord::Migration
       t.datetime "created_at"
       t.datetime "updated_at"
     end
-
+    
     add_index "user_events", ["name"], name: "index_user_events_on_name", using: :btree
     add_index "user_events", ["user_id"], name: "index_user_events_on_user_id", using: :btree
-
+    
     create_table "users", force: true do |t|
-      t.string   "email",                  default: "",         null: false
-      t.string   "encrypted_password",     default: "",         null: false
+      t.string   "email",                  default: "",    null: false
+      t.string   "encrypted_password",     default: "",    null: false
       t.string   "reset_password_token"
       t.datetime "reset_password_sent_at"
       t.datetime "remember_created_at"
-      t.integer  "sign_in_count",          default: 0,          null: false
+      t.integer  "sign_in_count",          default: 0,     null: false
       t.datetime "current_sign_in_at"
       t.datetime "last_sign_in_at"
       t.string   "current_sign_in_ip"
@@ -288,7 +366,7 @@ class InitSchema < ActiveRecord::Migration
       t.datetime "updated_at"
       t.string   "first_name"
       t.string   "last_name"
-      t.boolean  "admin",                  default: false,      null: false
+      t.boolean  "admin",                  default: false, null: false
       t.string   "authentication_token"
       t.string   "photo"
       t.string   "photo_content_type"
@@ -308,21 +386,24 @@ class InitSchema < ActiveRecord::Migration
       t.hstore   "settings",               default: {}
       t.boolean  "professional",           default: false
       t.boolean  "password_set",           default: true
+      t.integer  "drafts_count",           default: 0,     null: false
+      t.integer  "followed_users_count",   default: 0,     null: false
+      t.integer  "followers_count",        default: 0,     null: false
     end
-
+    
     add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
     add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
     add_index "users", ["promoted", "first_name", "last_name"], name: "index_users_on_promoted_and_first_name_and_last_name", using: :btree
     add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
     add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
-
+    
     create_table "users_roles", id: false, force: true do |t|
       t.integer "user_id"
       t.integer "role_id"
     end
-
+    
     add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
-
+    
   end
 
   def down
