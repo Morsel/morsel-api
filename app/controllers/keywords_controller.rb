@@ -22,7 +22,22 @@ class KeywordsController < ApiController
                             .order(Tag.arel_table[:id].desc)
   end
 
+  public_actions << def search
+    service = Search::SearchKeywords.call(KeywordParams.build(params).merge(pagination_params).merge(type: keyword_type))
+    custom_respond_with_service service, each_serializer: KeywordSerializer
+  end
+
   private
 
-  authorize_actions_for Keyword, except: public_actions, actions: { users: :read, morsels_by_name: :read }
+  def keyword_type
+    request.path.split('/').second.classify
+  end
+
+  class KeywordParams
+    def self.build(params, _scope = nil)
+      params.require(:keyword).permit(:name, :type, :query)
+    end
+  end
+
+  authorize_actions_for Keyword, except: public_actions, actions: { users: :read, morsels_by_name: :read, search: :read }
 end

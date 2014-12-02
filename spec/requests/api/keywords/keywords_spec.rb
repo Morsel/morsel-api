@@ -1,4 +1,4 @@
-require 'spec_helper'
+require_relative '_spec_helper'
 
 describe 'Keywords API' do
   it_behaves_like 'FollowableController' do
