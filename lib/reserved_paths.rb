@@ -27,6 +27,7 @@ module ReservedPaths
       city
       claim
       claimed
+      collections
       contact
       contacts
       dev
@@ -38,6 +39,7 @@ module ReservedPaths
       eatmorsel
       engineering
       events
+      explore
       faq
       favorites
       feed
@@ -49,6 +51,7 @@ module ReservedPaths
       friendrequest
       friends
       goodies
+      hashtags
       help
       home
       how_it_works
@@ -73,6 +76,7 @@ module ReservedPaths
       morsels
       notifications
       oauth
+      page
       password
       password_reset
       passwords
@@ -103,6 +107,7 @@ module ReservedPaths
       team
       tech
       terms
+      timeline
       tos
       translate
       trends
