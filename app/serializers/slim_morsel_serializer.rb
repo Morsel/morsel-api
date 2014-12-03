@@ -10,7 +10,8 @@ class SlimMorselSerializer < ActiveModel::Serializer
              :updated_at,
              :published_at,
              :primary_item_id,
-             :primary_item_photos
+             :primary_item_photos,
+             :tagged_users_count
 
   has_one :creator, serializer: SlimUserSerializer
 end
