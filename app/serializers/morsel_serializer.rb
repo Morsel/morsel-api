@@ -12,7 +12,6 @@ class MorselSerializer < SlimMorselSerializer
              :tagged,
              :liked
 
-  has_one :creator, serializer: SlimUserSerializer
   has_many :items, serializer: ItemSansMorselAndCreatorSerializer
   has_one :place, serializer: SlimPlaceSerializer
 

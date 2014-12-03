@@ -2279,6 +2279,8 @@ Response for any Like Item related requests.
 ## Morsel Objects
 
 ### Slim Morsel
+* Includes:
+  * `creator`: [Slim User](#slim-user)
 
 ```json
 {
@@ -2314,7 +2316,6 @@ Response for any Like Item related requests.
 ### Morsel
 * Inherits from [Slim Morsel](#slim-morsel)
 * Includes:
-  * `creator`: [Slim User](#slim-user)
   * `items`: [Items](#item)[] \(ordered by `sort_order` ASC)
   * `place`: [Slim Place](#slim-place)
 
