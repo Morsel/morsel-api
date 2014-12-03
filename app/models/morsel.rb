@@ -128,6 +128,10 @@ class Morsel < ActiveRecord::Base
     cached_url || update_url
   end
 
+  def primary_item_photos
+    primary_item.photos if primary_item_id
+  end
+
   private
 
   def primary_item_belongs_to_morsel

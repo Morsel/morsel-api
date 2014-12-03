@@ -61,6 +61,7 @@ describe Morsel do
 
   its(:items) { should be_empty }
   its(:activity_subscriptions) { should be_empty }
+  its(:primary_item_photos) { should be_nil }
 
   describe 'title' do
     context 'greater than 70 characters' do
@@ -144,6 +145,7 @@ describe Morsel do
     subject(:morsel_with_items) { Sidekiq::Testing.inline! { FactoryGirl.create(:morsel_with_items) }}
 
     its(:items) { should_not be_empty }
+    its(:primary_item_photos) { should eq(subject.primary_item.photos) }
 
     it 'returns Items ordered by sort_order' do
       item_ids = morsel_with_items.item_ids
