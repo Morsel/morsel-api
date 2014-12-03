@@ -107,14 +107,14 @@ describe 'Keywords API' do
     end
   end
 
-  describe 'GET /hashtags/:name/morsels keywords#morsels_by_name' do
+  describe 'GET /hashtags/:name/morsels keywords#morsels_for_name' do
     let(:endpoint) { "/hashtags/#{hashtag.name.swapcase}/morsels" }
     let(:hashtag) { FactoryGirl.create(:hashtag) }
     let(:morsels_count) { rand(3..6) }
 
     before { morsels_count.times { FactoryGirl.create(:morsel_hashtag_tag, keyword: hashtag) }}
 
-    it_behaves_like 'TimelinePaginateable' do
+    it_behaves_like 'PagePaginateable' do
       let(:paginateable_object_class) { Morsel }
       before do
         paginateable_object_class.delete_all

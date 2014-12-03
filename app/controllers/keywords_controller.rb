@@ -7,7 +7,7 @@ class KeywordsController < ApiController
     custom_respond_with Keyword.where(type: 'Specialty'), each_serializer: KeywordSerializer
   end
 
-  public_actions << def morsels_by_name
+  public_actions << def morsels_for_name
     custom_respond_with Morsel.joins(:keywords)
                               .paginate(pagination_params)
                               .where(Hashtag.arel_table[:name].lower.eq(params.fetch(:name).downcase))
@@ -39,5 +39,5 @@ class KeywordsController < ApiController
     end
   end
 
-  authorize_actions_for Keyword, except: public_actions, actions: { users: :read, morsels_by_name: :read, search: :read }
+  authorize_actions_for Keyword, except: public_actions, actions: { users: :read, morsels_for_name: :read, search: :read }
 end

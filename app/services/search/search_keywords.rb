@@ -8,6 +8,7 @@ module Search
     attribute :count, Integer
     attribute :max_id, Integer
     attribute :since_id, Integer
+    attribute :page, Integer
 
     validates :query,
               allow_blank: true,
@@ -18,6 +19,7 @@ module Search
         Keyword.paginate({
           since_id: since_id,
           max_id: max_id,
+          page: page,
           count: count
         }, :id, Keyword)
         .search_query(query)
@@ -28,6 +30,7 @@ module Search
         Keyword.paginate({
           since_id: since_id,
           max_id: max_id,
+          page: page,
           count: count
         }, :id, Keyword)
         .search_promoted(promoted)
