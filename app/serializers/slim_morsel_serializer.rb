@@ -14,4 +14,5 @@ class SlimMorselSerializer < ActiveModel::Serializer
              :tagged_users_count
 
   has_one :creator, serializer: SlimUserSerializer
+  has_one :place, serializer: SlimPlaceSerializer
 end
