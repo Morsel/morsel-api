@@ -109,6 +109,7 @@
   - [GET `/morsels/:id/eligible_tagged_users` - Eligible Tagged Users](#get-morselsideligible_tagged_users---eligible-tagged-users)
   - [POST `/morsels/:id/collect` - Add Morsel to Collection](#post-morselsidcollect---add-morsel-to-collection)
   - [DELETE `/morsels/:id/collect` - Remove Morsel from Collection](#delete-morselsidcollect---remove-morsel-from-collection)
+  - [GET `/morsels/search` - Search Morsels](#get-morselssearch---search-morsels)
 
 - [Collection Methods](#collection-methods)
   - [POST `/collections` - Create Collection](#post-collections---create-collection)
@@ -1803,6 +1804,7 @@ Adds the [Morsel](#morsel) specified to the [Collection](#collection) specified
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | collection_id | Number | The `id` of the Collection to add this Morsel to | | X |
+| note | String | A note similar to Houzz | | |
 
 ### Response
 
@@ -1843,6 +1845,33 @@ Removes the [Morsel](#morsel) specified from the [Collection](#collection) speci
 | ------- | ------ |  ----------- |
 | __morsel__: __not in this collection__ | 400 (Bad Request) | The morsel is not in this collection |
 | __user__: __not authorizedto remove to this collection__ | 400 (Bad Request) | `current_user` is not the creator of the [Collection](#collection) |
+
+<br />
+<br />
+
+## GET `/morsels/search` - Search Morsels
+Returns [Slim Morsels](#slim-morsel) whose `title`, `summary`, or item `description`s match `query`. Results are returned for exact matches and matches that begin with the parameters.
+
+__Request Behaviors__
+* [Public](#public)
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| morsel[query] | String | Find morsels whose `title`, `summary`, or item `description`s match this | | X |
+
+### Response
+
+| __data__ |
+| -------- |
+| [Slim Morsels](#slim-morsel)[] |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ | ----------- |
+| __invalid search__ | 400 (Bad Request) | No valid parameters passed |
 
 <br />
 <br />

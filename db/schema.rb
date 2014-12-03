@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141202205314) do
+ActiveRecord::Schema.define(version: 20141203002103) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -305,6 +305,14 @@ ActiveRecord::Schema.define(version: 20141202205314) do
 
   add_index "notifications", ["payload_type"], name: "index_notifications_on_payload_type", using: :btree
   add_index "notifications", ["user_id"], name: "index_notifications_on_user_id", using: :btree
+
+  create_table "pg_search_documents", force: true do |t|
+    t.text     "content"
+    t.integer  "searchable_id"
+    t.string   "searchable_type"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
 
   create_table "places", force: true do |t|
     t.string   "name"
