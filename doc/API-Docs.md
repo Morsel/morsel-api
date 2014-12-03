@@ -756,7 +756,7 @@ Returns [current_user](#current_user)
 <br />
 
 ## GET `/users/search` - Search Users
-Returns [Slim Followed User](#slim-followed-user)s matching the parameters. Results are returned for exact matches and matches that begin with the parameters.
+Returns [Slim Followed User](#slim-followed-user)s matching the parameters.
 
 __Request Behaviors__
 * [Public](#public)
@@ -1850,9 +1850,10 @@ Removes the [Morsel](#morsel) specified from the [Collection](#collection) speci
 <br />
 
 ## GET `/morsels/search` - Search Morsels
-Returns [Slim Morsels](#slim-morsel) whose `title`, `summary`, or item `description`s match `query`. Results are returned for exact matches and matches that begin with the parameters.
+Returns [Slim Morsels](#slim-morsel) whose `title`, `summary`, or item `description`s match `query`.
 
 __Request Behaviors__
+* [Paged Pagination](#paged-pagination)
 * [Public](#public)
 
 ### Request
@@ -2018,7 +2019,7 @@ __Request Behaviors__
 Returns a list of Morsels that belong to the Hashtag with the specified `name` (case insensitive)
 
 __Request Behaviors__
-* [Timeline Pagination](#timeline-pagination)
+* [Paged Pagination](#paged-pagination)
 * [Public](#public)
 
 ### Response
@@ -2031,9 +2032,10 @@ __Request Behaviors__
 <br />
 
 ## GET `/hashtags/search` - Search Hashtags
-Returns [Keywords](#keyword) of type `Hashtag` whose `name` match the parameters. Results are returned for exact matches and matches that begin with the parameters. `tags_count` returns the number of tagged taggables for the Hashtag.
+Returns [Keywords](#keyword) of type `Hashtag` whose `name` match the parameters. `tags_count` returns the number of tagged taggables for the Hashtag.
 
 __Request Behaviors__
+* [Paged Pagination](#paged-pagination)
 * [Public](#public)
 
 ### Request

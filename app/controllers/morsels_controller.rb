@@ -111,9 +111,9 @@ class MorselsController < ApiController
     morsel_params = MorselParams.build(params)
     custom_respond_with Morsel.includes(:items, :place, :creator)
                               .published
-                              .full_search(morsel_params.fetch(:query)),
+                              .full_search(morsel_params.fetch(:query))
+                              .paginate(pagination_params),
                         each_serializer: SlimMorselSerializer
-                              # .paginate(pagination_params, pagination_key)
   end
 
   class MorselParams

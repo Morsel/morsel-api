@@ -10,7 +10,7 @@ describe 'GET /hashtags/search keywords#search' do
       rand(1..3).times { FactoryGirl.create(:hashtag) }
     end
 
-    it_behaves_like 'TimelinePaginateable' do
+    it_behaves_like 'PagePaginateable' do
       let(:paginateable_object_class) { Keyword }
       let(:additional_params) {{ keyword: { promoted: true }}}
 

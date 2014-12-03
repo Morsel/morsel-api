@@ -177,4 +177,21 @@ describe Morsel do
       end
     end
   end
+
+  describe :full_search do
+    subject(:full_search) { Morsel.full_search(query) }
+    let(:morsel) { Sidekiq::Testing.inline! { FactoryGirl.create(:morsel_with_items) }}
+    context 'morsel title' do
+      let(:query) { morsel.title.split.sample }
+      it { should eq([morsel]) }
+    end
+    context 'morsel summary' do
+      let(:query) { morsel.summary.split.sample }
+      it { should eq([morsel]) }
+    end
+    context 'item description' do
+      let(:query) { morsel.items.first.description.split.sample }
+      it { should eq([morsel]) }
+    end
+  end
 end
