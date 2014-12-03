@@ -35,6 +35,7 @@ class Morsel < ActiveRecord::Base
           Feedable,
           Likeable,
           Mrslable,
+          PgSearch,
           PhotoUploadable,
           Taggable,
           TimelinePaginateable,
@@ -77,6 +78,17 @@ class Morsel < ActiveRecord::Base
 
   validates :title,
             length: { maximum: 70 }
+
+  pg_search_scope :full_search,
+                  against: {
+                    title: 'A',
+                    summary: 'B'
+                  },
+                  associated_against: {
+                    items: {
+                      description: 'C'
+                    }
+                  }
 
   scope :drafts, -> { where(draft: true) }
   scope :published, -> { where(draft: false) }

@@ -142,6 +142,7 @@ MorselApp::Application.routes.draw do
   resources :morsels, only: [:create, :index, :show, :update, :destroy], concerns: [:reportable, :likeable] do
     collection do
       get 'drafts' => 'morsels#drafts'
+      get 'search' => 'morsels#search'
     end
 
     resources :items, only: [:update, :destroy]

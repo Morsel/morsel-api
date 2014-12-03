@@ -107,12 +107,21 @@ class MorselsController < ApiController
     render_json_with_service service, serializer: SlimMorselWithNoteSerializer
   end
 
+  public_actions << def search
+    morsel_params = MorselParams.build(params)
+    custom_respond_with Morsel.includes(:items, :place, :creator)
+                              .published
+                              .full_search(morsel_params.fetch(:query)),
+                        each_serializer: SlimMorselSerializer
+                              # .paginate(pagination_params, pagination_key)
+  end
+
   class MorselParams
     def self.build(params, _scope = nil)
       if _scope && _scope.admin?
-        params.require(:morsel).permit(:title, :summary, :draft, :primary_item_id, :place_id, :template_id, feed_item_attributes: [:id, :featured])
+        params.require(:morsel).permit(:title, :summary, :draft, :primary_item_id, :place_id, :template_id, :query, feed_item_attributes: [:id, :featured])
       else
-        params.require(:morsel).permit(:title, :summary, :draft, :primary_item_id, :place_id, :template_id)
+        params.require(:morsel).permit(:title, :summary, :draft, :primary_item_id, :place_id, :template_id, :query)
       end
     end
   end

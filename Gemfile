@@ -5,6 +5,7 @@ ruby '2.1.4'
 gem 'unicorn', '~> 4.8.3'
 gem 'rails', '~> 4.1.6'
 gem 'pg'
+gem 'pg_search', '~> 0.7.8'
 gem 'oink', '~> 0.10.1'
 
 gem 'active_model_serializers', '~> 0.8.2'
