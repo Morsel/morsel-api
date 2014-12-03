@@ -12,7 +12,6 @@ class MorselSerializer < SlimMorselSerializer
              :liked
 
   has_many :items, serializer: ItemSansMorselAndCreatorSerializer
-  has_one :place, serializer: SlimPlaceSerializer
 
   def has_tagged_users
     object.tagged_users?
