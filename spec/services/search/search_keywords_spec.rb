@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe Search::SearchKeywords do
-  subject(:service) { call_service(service_params) }
-
   let(:service_params) { {query: query, type: type, promoted: promoted} }
   let(:query) { nil }
   let(:promoted) { nil }
@@ -18,11 +16,14 @@ describe Search::SearchKeywords do
         expected_response_count.times do
           FactoryGirl.create(type.downcase.to_sym, name: 'blessed'.gsub(/./){|c| [c,c.swapcase][rand(2)] })
         end
-        service
+
+        call_service service_params
       end
 
-      it { should be_valid }
-      its('response.count') { should eq(expected_response_count) }
+      it 'should return the correct number of matching hashtags' do
+        expect_service_success
+        expect(service_response.count).to eq(expected_response_count)
+      end
     end
 
     context 'promoted' do
@@ -32,11 +33,14 @@ describe Search::SearchKeywords do
       before do
         expected_response_count.times { FactoryGirl.create(type.downcase.to_sym, promoted: true) }
         rand(1..3).times { FactoryGirl.create(type.downcase.to_sym) }
-        service
+
+        call_service service_params
       end
 
-      it { should be_valid }
-      its('response.count') { should eq(expected_response_count) }
+      it 'should return the correct number of matching hashtags' do
+        expect_service_success
+        expect(service_response.count).to eq(expected_response_count)
+      end
     end
   end
 end

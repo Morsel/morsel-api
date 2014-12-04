@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe Search::SearchUsers do
-  subject(:service) { call_service(service_params) }
-
   let(:service_params) { {query: query} }
   let(:query) { 'turd' }
 
@@ -11,23 +9,24 @@ describe Search::SearchUsers do
       FactoryGirl.create(:user, first_name: 'TURd')
       FactoryGirl.create(:user, last_name: 'tURD')
       FactoryGirl.create(:user, username: 'turdski')
-      service
     end
 
-    it { should be_valid }
-    its('response.count') { should eq(3) }
-
     it 'should return `following`=false' do
+      call_service service_params
+
+      expect_service_success
+      expect(service_response.count).to eq(3)
       expect(service_response.first['following']).to be_false
     end
 
     describe 'fuzzy begins with' do
       let(:query) { 'tur' }
 
-      it { should be_valid }
-      its('response.count') { should eq(3) }
-
       it 'should return `following`=false' do
+        call_service service_params
+
+        expect_service_success
+        expect(service_response.count).to eq(3)
         expect(service_response.first['following']).to be_false
       end
     end
@@ -38,15 +37,19 @@ describe Search::SearchUsers do
       before do
         FactoryGirl.create(:user, first_name: 'Paul', last_name: 'Fehribach')
         FactoryGirl.create(:user, first_name: 'Paul', last_name: 'Kahan')
-      end
 
-      it { should be_valid }
-      its('response.count') { should eq(1) }
+        call_service service_params
+      end
 
       it 'should return `following`=false' do
+        expect_service_success
+        expect(service_response.count).to eq(1)
         expect(service_response.first['following']).to be_false
       end
+
       it 'should return Paul Kahan' do
+        expect_service_success
+        expect(service_response.count).to eq(1)
         expect(service_response.first['first_name']).to eq('Paul')
         expect(service_response.first['last_name']).to eq('Kahan')
       end
@@ -60,11 +63,14 @@ describe Search::SearchUsers do
     before do
       promoted_users_count.times { FactoryGirl.create(:user, promoted: true) }
       rand(1..3).times { FactoryGirl.create(:user) }
-      service
+
+      call_service service_params
     end
 
-    it { should be_valid }
-    its('response.count') { should eq(promoted_users_count) }
+    it 'should return the correct number of promoted users' do
+      expect_service_success
+      expect(service_response.count).to eq(promoted_users_count)
+    end
   end
 
   context 'first_name' do
@@ -74,11 +80,14 @@ describe Search::SearchUsers do
     before do
       valid_users_count.times { FactoryGirl.create(:user, first_name: 'Turd') }
       rand(1..3).times { FactoryGirl.create(:user) }
-      service
+
+      call_service service_params
     end
 
-    it { should be_valid }
-    its('response.count') { should eq(valid_users_count) }
+    it 'should return the correct number of users w/ first_name like Turd' do
+      expect_service_success
+      expect(service_response.count).to eq(valid_users_count)
+    end
   end
 
   context 'last_name' do
@@ -88,10 +97,13 @@ describe Search::SearchUsers do
     before do
       valid_users_count.times { FactoryGirl.create(:user, last_name: 'Ferg') }
       rand(1..3).times { FactoryGirl.create(:user) }
-      service
+
+      call_service service_params
     end
 
-    it { should be_valid }
-    its('response.count') { should eq(valid_users_count) }
+    it 'should return the correct number of users w/ last_name like Ferg' do
+      expect_service_success
+      expect(service_response.count).to eq(valid_users_count)
+    end
   end
 end
