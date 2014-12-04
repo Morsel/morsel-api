@@ -13,7 +13,8 @@ class CreateActivity
     if notify_recipients?
       ActivitySubscription.active_subscribers_for_activity(activity).each do |activity_subscriber|
         reason = activity_subscriber.respond_to?(:subscription_reason) ? ActivitySubscription.reasons.keys[activity_subscriber.subscription_reason] : nil
-        create_notification(activity, activity_subscriber.id, reason)
+        # Don't create an additional notification if the subscriber already received one for this activity
+        create_notification(activity, activity_subscriber.id, reason) if Notification.where(payload: activity, user_id: activity_subscriber.id).count.zero?
       end
     end
     activity

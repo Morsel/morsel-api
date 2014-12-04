@@ -93,8 +93,7 @@ FactoryGirl.define do
           after(:create) do |morsel, evaluator|
             evaluator.tagged_users_count.times do
               tagged_user = FactoryGirl.create(:user)
-              morsel_user_tag = MorselUserTag.create(user: tagged_user, morsel: morsel)
-              morsel_user_tag.send(:subscribe_tagged_user_to_morsel_items)
+              MorselUserTag.create(user: tagged_user, morsel: morsel)
             end
           end
         end
