@@ -1,6 +1,7 @@
 class SessionsController < Devise::SessionsController
   include JSONEnvelopable
   prepend_before_filter :require_no_authentication, only: [:create]
+  skip_before_filter :set_paper_trail_whodunnit
 
   respond_to :json
 
