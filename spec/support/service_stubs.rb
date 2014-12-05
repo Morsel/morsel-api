@@ -185,9 +185,12 @@ module ServiceStubs
     settings = double('Settings')
     hash.each do |k,v|
       if v.is_a? Hash
-        settings.stub(k).and_return(stub_settings(k, v, false))
+        additional_settings = stub_settings(k, v, false)
+        settings.stub(k).and_return(additional_settings)
+        settings.stub(:[]).with(k).and_return(additional_settings)
       else
         settings.stub(k).and_return(v)
+        settings.stub(:[]).with(k).and_return(v)
       end
     end
 

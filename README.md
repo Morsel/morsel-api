@@ -43,6 +43,11 @@ PROFILER_PASSWORD=
 DEVELOPER_EMAIL=turdferg@eatmorsel.com
 PAGINATION_DEFAULT_COUNT=20
 
+# Authentication Tokens
+
+LAMBDA_AUTHENTICATION_TOKEN=
+
+
 APNS_CERT=
 - or -
 APNS_CERT_PATH=/path/to/dev/pem
