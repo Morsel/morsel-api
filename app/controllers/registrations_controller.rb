@@ -4,6 +4,8 @@ class RegistrationsController < Devise::RegistrationsController
   include UserEventCreator
   include PresignedPhotoUploadable
 
+  skip_before_filter :set_paper_trail_whodunnit
+
   def create
     user_params = UsersController::UserParams.build(params)
     user_params.delete(:promoted) # delete the `promoted` flag since that should only be set via /admin
