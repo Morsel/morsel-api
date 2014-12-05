@@ -3,8 +3,7 @@ class RegistrationsController < Devise::RegistrationsController
   include JSONEnvelopable
   include UserEventCreator
   include PresignedPhotoUploadable
-
-  skip_before_filter :set_paper_trail_whodunnit
+  include PaperTrailable
 
   def create
     user_params = UsersController::UserParams.build(params)
