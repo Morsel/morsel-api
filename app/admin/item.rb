@@ -4,6 +4,11 @@ ActiveAdmin.register Item do
 
   config.clear_sidebar_sections!
 
+  member_action :history do
+    @versions = resource.versions
+    render 'layouts/history'
+  end
+
   controller do
     def update
       item = Item.find params[:id]

@@ -1,0 +1,14 @@
+panel 'History' do
+  table_for assigns[:versions] do
+    column :event
+    column :whodunnit do |version|
+      if !!(version.whodunnit =~ /\A[-+]?[0-9]+?/)
+        link_to version.whodunnit, admin_user_path(version.whodunnit)
+      else
+        'Unknown'
+      end
+    end
+    column :object
+    column 'Modified At', :created_at
+  end
+end

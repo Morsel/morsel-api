@@ -25,6 +25,11 @@ ActiveAdmin.register Morsel do
   scope :drafts
   scope :published
 
+  member_action :history do
+    @versions = resource.versions
+    render 'layouts/history'
+  end
+
   controller do
     def update
       morsel = Morsel.find params[:id]

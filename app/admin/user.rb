@@ -24,6 +24,11 @@ ActiveAdmin.register User do
   scope :suggested
   scope :professional
 
+  member_action :history do
+    @versions = resource.versions
+    render 'layouts/history'
+  end
+
   member_action :shadow do
     user = User.find(params[:id])
     shadow_token_service = GenerateShadowToken.call(user: user)

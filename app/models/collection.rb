@@ -23,6 +23,7 @@ class Collection < ActiveRecord::Base
           UserCreatable
 
   acts_as_paranoid
+  has_paper_trail
   is_sluggable :title
   alias_attribute :slug, :cached_slug
 

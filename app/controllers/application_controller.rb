@@ -8,4 +8,8 @@ class ApplicationController < ActionController::Base
   def authenticate_admin_user!
     redirect_to new_user_session_path unless current_user.try(:admin?)
   end
+
+  def user_for_paper_trail
+    current_user.try(:admin?) ? current_user : 'Unknown Admin user'
+  end
 end
