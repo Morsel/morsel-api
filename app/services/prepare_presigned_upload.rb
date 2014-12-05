@@ -48,12 +48,12 @@ class PreparePresignedUpload
     @s3 ||= AWS::S3.new Settings.aws.credentials
   end
 
-  def default_bucket
-    @default_bucket ||= s3.buckets[Settings.aws.buckets.default]
+  def uploads_bucket
+    @uploads_bucket ||= s3.buckets[Settings.aws.buckets.uploads]
   end
 
   def form
-    @form ||= default_bucket.presigned_post(
+    @form ||= uploads_bucket.presigned_post(
       key: key_name,
       acl: :public_read,
       success_action_status: 201
