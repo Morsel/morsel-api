@@ -55,6 +55,7 @@ class User < ActiveRecord::Base
           TimelinePaginateable
 
   acts_as_paranoid
+  has_paper_trail
   rolify
 
   self.authorizer_name = 'UserAuthorizer'

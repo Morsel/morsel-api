@@ -39,6 +39,7 @@ class Item < ActiveRecord::Base
   def self.activity_subscription_actions; %w(comment) end
 
   acts_as_paranoid
+  has_paper_trail
 
   belongs_to :creator, class_name: 'User', foreign_key: 'creator_id', inverse_of: :items
   alias_attribute :user, :creator

@@ -45,6 +45,7 @@ class Morsel < ActiveRecord::Base
   def self.activity_subscription_actions; %w(like) end
 
   acts_as_paranoid
+  has_paper_trail
   is_sluggable :title
   alias_attribute :slug, :cached_slug
 
