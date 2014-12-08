@@ -7,7 +7,7 @@ class PreparePresignedUpload
 
   def self.store_dir_for_model(model)
     if Rails.env.production? || Rails.env.staging?
-      "photos/#{model.class.base_class.to_s.underscore}/#{model.id}"
+      "photos/#{model.class.base_class.to_s.tableize}/#{model.id}"
     elsif Rails.env.development?
       "#{Rails.root}/public/assets_dev/photos/#{model.table_name}/#{model.id}"
     else
