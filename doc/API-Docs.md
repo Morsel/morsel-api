@@ -408,7 +408,7 @@ Since we use S3 for hosting our photos, it makes sense to upload photos directly
   2. API responds with the expected response, in addition to a `presigned_upload` object ([Presigned Upload](#presigned-upload))
   3. Client uses the presigned credentials to POST the photo file to S3.
   4. When the upload is complete, client updates the object via PUT with the new `photo_key` (`Key` in the S3 XML response) provided by Amazon.
-  5. API processes additional photos.
+  5. Lambda or API processes additional photos.
 
 
 <br />

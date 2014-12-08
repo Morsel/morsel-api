@@ -7,11 +7,11 @@ class PreparePresignedUpload
 
   def self.store_dir_for_model(model)
     if Rails.env.production? || Rails.env.staging?
-      "#{model.class.base_class.to_s.underscore}-photos/#{model.id}"
+      "photos/#{model.table_name}/#{model.id}"
     elsif Rails.env.development?
-      "#{Rails.root}/public/uploads_dev/#{model.class.base_class.to_s.underscore}-photos/#{model.id}"
+      "#{Rails.root}/public/assets_dev/photos/#{model.table_name}/#{model.id}"
     else
-      "#{Rails.root}/spec/support/uploads/#{model.class.base_class.to_s.underscore}-photos/#{model.id}"
+      "#{Rails.root}/spec/support/assets/#{model.table_name}/#{model.id}"
     end
   end
 
@@ -34,7 +34,7 @@ class PreparePresignedUpload
     if form
       form.fields.merge('url' => form.url.to_s)
     else
-      # TODO: Report error
+      Rollbar.error("Unable to setup presigned post form for key_name: #{key_name}")
     end
   end
 
