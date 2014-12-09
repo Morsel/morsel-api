@@ -72,6 +72,7 @@ describe User do
 
   its(:authentication_token) { should be_nil }
   its(:password_set) { should be_true }
+  its(:remote_notifications) { should be_empty }
 
   it { should be_valid }
 

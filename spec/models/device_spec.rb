@@ -30,6 +30,8 @@ describe Device do
 
   it { should be_valid }
 
+  its(:remote_notifications) { should be_empty }
+
   describe 'user' do
     context 'is not present' do
       before { device.user = nil }

@@ -24,6 +24,7 @@ FactoryGirl.define do
     association(:payload)
     association(:user)
     message 'Some notification message'
+    reason 'created'
 
     factory :item_comment_activity_notification do
       association(:payload, factory: :item_comment_activity)

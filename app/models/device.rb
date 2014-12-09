@@ -24,6 +24,7 @@ class Device < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :user
+  has_many :remote_notifications
 
   before_create :default_values
 

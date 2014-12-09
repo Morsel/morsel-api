@@ -100,6 +100,7 @@ class User < ActiveRecord::Base
   has_many :activities, foreign_key: :creator_id
   has_many :activity_subscriptions, foreign_key: :subscriber_id
   has_many :notifications
+  has_many :remote_notifications
 
   has_many :employments, inverse_of: :user
   has_many :places, through: :employments
