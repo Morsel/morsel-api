@@ -53,4 +53,10 @@ class FeedItem < ActiveRecord::Base
       ).or(FeedItem.arel_table[:featured].eq(true))
     )
   end
+
+  concerning :Caching do
+    def cache_key
+      [super, subject.cache_key].join('/')
+    end
+  end
 end
