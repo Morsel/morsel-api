@@ -41,4 +41,10 @@ class Keyword < ActiveRecord::Base
   validates :type,  allow_blank: false,
                     inclusion: VALID_TYPES,
                     presence: true
+
+  concerning :Caching do
+    def cache_key
+      [super, CachedModelDecorator.new(self).cache_key_for_has_many(:tags)].join('/')
+    end
+  end
 end
