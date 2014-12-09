@@ -16,10 +16,6 @@ class ApnsNotificationDecorator < SimpleDelegator
     'default' if activity_payload? && (payload.action_type == 'Comment' || payload.action_type == 'MorselUserTag')
   end
 
-  def activity_type
-    "#{payload.subject_type.underscore}_#{payload.action_type.underscore}" if activity_payload?
-  end
-
   private
 
   def activity_payload?

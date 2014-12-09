@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141204234602) do
+ActiveRecord::Schema.define(version: 20141209170356) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -353,6 +353,20 @@ ActiveRecord::Schema.define(version: 20141204234602) do
 
   add_index "posts", ["cached_slug"], name: "index_posts_on_cached_slug", using: :btree
   add_index "posts", ["creator_id"], name: "index_posts_on_creator_id", using: :btree
+
+  create_table "remote_notifications", force: true do |t|
+    t.integer  "device_id"
+    t.integer  "notification_id"
+    t.integer  "user_id"
+    t.string   "activity_type"
+    t.string   "reason"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "remote_notifications", ["device_id"], name: "index_remote_notifications_on_device_id", using: :btree
+  add_index "remote_notifications", ["notification_id"], name: "index_remote_notifications_on_notification_id", using: :btree
+  add_index "remote_notifications", ["user_id"], name: "index_remote_notifications_on_user_id", using: :btree
 
   create_table "roles", force: true do |t|
     t.string   "name"

@@ -26,7 +26,8 @@ describe SendPushNotification do
 
             expect_service_success
             expect(service_response.first).to_not be_nil
-            expect(service_response.first.custom).to eq(ApnsNotificationDecorator.new(notification).custom_payload)
+            expect(service_response.first).to eq(RemoteNotification.last)
+            expect(device.remote_notifications.count).to eq(1)
           end
         end
 
@@ -40,6 +41,7 @@ describe SendPushNotification do
 
             expect_service_success
             expect(service_response).to be_empty
+            expect(device.remote_notifications.count).to eq(0)
           end
         end
       end

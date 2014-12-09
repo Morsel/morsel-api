@@ -26,6 +26,7 @@ class Notification < ActiveRecord::Base
   acts_as_paranoid
   belongs_to :payload, polymorphic: true
   belongs_to :user
+  has_many :remote_notifications
 
   attr_accessor :silent
 
@@ -50,6 +51,14 @@ class Notification < ActiveRecord::Base
 
   def mark_sent!
     update(sent_at: DateTime.now) unless sent_at
+  end
+
+  def remote_notification_allowed_for_device?(device)
+    ActiveRecord::ConnectionAdapters::Column.value_to_boolean(device.notification_settings["notify_#{activity_subject_action}"])
+  end
+
+  def activity_subject_action
+    "#{payload.subject_type.underscore}_#{payload.action_type.underscore}" if payload.is_a? Activity
   end
 
   private
