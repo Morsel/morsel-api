@@ -2,10 +2,12 @@ require 'spec_helper'
 
 describe SendPushNotification do
   let(:notification) { FactoryGirl.create(:item_comment_activity_notification) }
+  let(:user) { notification.user }
 
   it_behaves_like 'RequiredAttributes' do
     let(:valid_attributes) {{
-      notification: notification
+      notification: notification,
+      user: user
     }}
   end
 
@@ -22,7 +24,7 @@ describe SendPushNotification do
           it 'should send the notification' do
             stub_apns_client
 
-            call_service notification: notification
+            call_service notification: notification, user: user
 
             expect_service_success
             expect(service_response.first).to_not be_nil
@@ -37,13 +39,24 @@ describe SendPushNotification do
           it 'should NOT send the notification' do
             stub_apns_client
 
-            call_service notification: notification
+            call_service notification: notification, user: user
 
             expect_service_success
             expect(service_response).to be_empty
             expect(device.remote_notifications.count).to eq(0)
           end
         end
+      end
+    end
+
+    context 'empty notification' do
+      it 'should send an empty notification' do
+        call_service user: device.user
+
+        expect_service_success
+        expect(service_response).to be_true
+        expect(device.remote_notifications.count).to eq(1)
+        expect(device.remote_notifications.first.notification).to be_nil
       end
     end
   end
@@ -55,7 +68,7 @@ describe SendPushNotification do
     end
 
     it 'returns false' do
-      call_service notification: notification
+      call_service notification: notification, user: user
 
       expect_service_success
       expect(service_response).to be_false
@@ -66,7 +79,7 @@ describe SendPushNotification do
     before { notification.marked_read_at = DateTime.now }
 
     it 'returns false' do
-      call_service notification: notification
+      call_service notification: notification, user: user
 
       expect_service_success
       expect(service_response).to be_false
@@ -77,7 +90,7 @@ describe SendPushNotification do
     before { notification.sent_at = DateTime.now }
 
     it 'returns false' do
-      call_service notification: notification
+      call_service notification: notification, user: user
 
       expect_service_success
       expect(service_response).to be_false
@@ -87,7 +100,7 @@ describe SendPushNotification do
   context 'notification payload is missing' do
     before { notification.payload = nil }
     it 'throws an error' do
-      call_service notification: notification
+      call_service notification: notification, user: user
 
       expect_service_failure
     end

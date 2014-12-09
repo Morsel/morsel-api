@@ -24,23 +24,33 @@ class RemoteNotification < ActiveRecord::Base
   before_create :default_values
 
   def grocer_notification(options = {})
-    decorated_notification = ApnsNotificationDecorator.new(notification)
-    Grocer::Notification.new({
-      device_token:  device.token,
-      alert:         decorated_notification.alert,
-      badge:         nil,
-      sound:         decorated_notification.sound,
-      expiry:        1.week.since.to_time,
-      identifier:    notification.id,
-      custom:        decorated_notification.custom_payload
-    }.merge(options))
+    if notification
+      decorated_notification = ApnsNotificationDecorator.new(notification)
+      Grocer::Notification.new({
+        device_token:  device.token,
+        alert:         decorated_notification.alert,
+        badge:         nil,
+        sound:         decorated_notification.sound,
+        expiry:        1.week.since.to_time,
+        identifier:    notification.id,
+        custom:        decorated_notification.custom_payload
+      }.merge(options))
+    else
+      Grocer::Notification.new({
+        device_token:  device.token,
+        alert:         nil,
+        badge:         0
+      }.merge(options))
+    end
   end
 
   private
 
   def default_values
-    self.activity_type = notification.activity_subject_action
-    self.reason = notification.reason
-    self.user_id = notification.user_id
+    if notification
+      self.activity_type ||= notification.activity_subject_action
+      self.reason ||= notification.reason
+      self.user_id ||= notification.user_id
+    end
   end
 end

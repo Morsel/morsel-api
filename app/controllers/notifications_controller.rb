@@ -11,11 +11,13 @@ class NotificationsController < ApiController
 
   def mark_read
     if params[:id].present?
-      Notification.includes(:payload, :user).unread.where(id: params[:id]).update_all(marked_read_at: DateTime.now)
+      Notification.includes(:payload, :user).unread.where(id: params[:id], user_id: current_user.id).update_all(marked_read_at: DateTime.now)
     else
       max_id = params.fetch(:max_id)
-      Notification.includes(:payload, :user).unread.where(Notification.arel_table[:id].lteq(max_id)).update_all(marked_read_at: DateTime.now)
+      Notification.includes(:payload, :user).unread.where(user_id: current_user.id).where(Notification.arel_table[:id].lteq(max_id)).update_all(marked_read_at: DateTime.now)
     end
+
+    SendPushNotificationWorker.perform_async(user_id: current_user.id)
 
     render_json_ok
   end
