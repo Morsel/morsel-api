@@ -31,5 +31,4 @@ describe RemoteNotification do
 
   its(:activity_type) { should eq('item_comment') }
   its(:reason) { should eq('created') }
-  its(:user_id) { should eq(subject.notification.user_id) }
 end
