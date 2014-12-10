@@ -20,7 +20,7 @@ class ItemsController < ApiController
   public_actions << def show
     item = Item.find(params[:id])
 
-    if params[:prepare_presigned_upload] == 'true'
+    if params[:prepare_presigned_upload] == 'true' && current_user
       Authority.enforce :update, Item, current_user
       Authority.enforce :update, item, current_user
       handle_presigned_upload(item)
