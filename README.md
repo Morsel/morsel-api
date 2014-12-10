@@ -59,6 +59,7 @@ APNS_CERT_PATH=/path/to/dev/pem
 
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
+AWS_REGION=us-east-1
 S3_DEFAULT_BUCKET=morsel
 S3_ASSETS_BUCKET=morsel-assets
 S3_UPLOADS_BUCKET=morsel-uploads
