@@ -24,6 +24,15 @@ describe Search::SearchKeywords do
         expect_service_success
         expect(service_response.count).to eq(expected_response_count)
       end
+
+      context 'includes `#`' do
+        let(:query) { '#blessed' }
+
+        it 'should return the correct number of matching hashtags' do
+          expect_service_success
+          expect(service_response.count).to eq(expected_response_count)
+        end
+      end
     end
 
     context 'promoted' do
