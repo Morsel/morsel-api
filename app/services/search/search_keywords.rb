@@ -22,7 +22,7 @@ module Search
           page: page,
           count: count
         }, :id, Keyword)
-        .search_query(query)
+        .search_query(safe_query)
         .search_promoted(promoted)
         .where(type: type)
         .order(Keyword.arel_table[:id].desc)
@@ -36,6 +36,20 @@ module Search
         .search_promoted(promoted)
         .where(type: type)
         .order(Keyword.arel_table[:id].desc)
+      end
+    end
+
+    private
+
+    def hashtag?
+      type == 'Hashtag'
+    end
+
+    def safe_query
+      if hashtag? && query.starts_with?('#')
+        query[1..-1]
+      else
+        query
       end
     end
   end

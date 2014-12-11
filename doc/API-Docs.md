@@ -2032,7 +2032,7 @@ __Request Behaviors__
 <br />
 
 ## GET `/hashtags/search` - Search Hashtags
-Returns [Keywords](#keyword) of type `Hashtag` whose `name` match the parameters. `tags_count` returns the number of tagged taggables for the Hashtag.
+Returns [Keywords](#keyword) of type `Hashtag` whose `name` match the parameters. `tags_count` returns the number of tagged taggables for the Hashtag. `#` is optional.
 
 __Request Behaviors__
 * [Paged Pagination](#paged-pagination)
