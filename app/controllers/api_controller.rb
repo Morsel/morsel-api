@@ -41,17 +41,16 @@ class ApiController < ActionController::Base
     @public_actions ||= []
   end
 
-  # api_key is expected to be in the format: "#{user.id}:#{user.authentication_token}"
+  # api_key is expected to be in the format: "#{identifier}:#{user.authentication_token}"
+  # where identifier can be a User ID or a unique string for an external service that communicates w/ the API.
   def authenticate_user_from_token!
     if params[:api_key].present?
       split_key = params[:api_key].split(':')
       if split_key.size == 2
-        user = User.find(split_key[0])
-
-        if user && Devise.secure_compare(user.authentication_token, split_key[1])
-          sign_in user, store: false, bypass: true
+        if (split_key[0] =~ /\A[+-]?\d+\z/).present?
+          authenticate_and_sign_in_as_user(split_key[0], split_key[1])
         else
-          unauthorized_token
+          authenticate_and_sign_in_as_non_user(split_key[0], split_key[1])
         end
       else
         unauthorized_token
@@ -61,6 +60,26 @@ class ApiController < ActionController::Base
     end
   rescue ActiveRecord::RecordNotFound
     unauthorized_token
+  end
+
+  def authenticate_and_sign_in_as_user(identifier, authentication_token)
+    user = User.find(identifier)
+
+    if user && Devise.secure_compare(user.authentication_token, authentication_token)
+      sign_in user, store: false, bypass: true
+    else
+      unauthorized_token
+    end
+  end
+
+  def authenticate_and_sign_in_as_non_user(identifier, authentication_token)
+    # Check if identifier exists in settings
+    token = Settings.authentication_tokens[identifier]
+    if token && Devise.secure_compare(token, authentication_token)
+      # Pass
+    else
+      unauthorized_token
+    end
   end
 
   def foursquare_api_error

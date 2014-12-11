@@ -134,6 +134,7 @@
 - [Misc Methods](#misc-methods)
   - [GET `/status` - Status](#get-status---status)
   - [GET `/configuration` - Configuration](#get-configuration---configuration)
+  - [GET `/api_key_check` - api_key Check](#get-api_key_check---api_key_check)
   - [POST `/contact` - Contact](#post-contact--contact)
 
 - [Response Objects](#response-objects)
@@ -263,7 +264,7 @@ Admins have the ability to shadow a User onto web. This will redirect them to th
 The API uses two different levels of authentication, depending on the method.
 
 1. __None:__ No authentication. Anybody can query the method.
-2. __API key:__ Requires an API key. User API keys are in the following format: `user.id`:`user.auth_token` Example: api_key=3:25TLfL6tvc_Qzx52Zh9q
+2. __API key:__ Requires an API key. API keys are in the format `identifier`:`authentication_token`, where `identifier` can be a User ID (eg: 'api_key=3:25TLfL6tvc_Qzx52Zh9q') or a unique string for an external service (eg: 'api_key=lambda:msrz7w2pyyp9uboxhei2tsaahy2ocdd8mcn40ya4')
 
 
 # Terminology
@@ -407,7 +408,7 @@ Since we use S3 for hosting our photos, it makes sense to upload photos directly
   2. API responds with the expected response, in addition to a `presigned_upload` object ([Presigned Upload](#presigned-upload))
   3. Client uses the presigned credentials to POST the photo file to S3.
   4. When the upload is complete, client updates the object via PUT with the new `photo_key` (`Key` in the S3 XML response) provided by Amazon.
-  5. API processes additional photos.
+  5. Lambda or API processes additional photos.
 
 
 <br />
@@ -2147,6 +2148,18 @@ __Request Behaviors__
 | __data__ |
 | -------- |
 | [Configuration](#configuration) |
+
+<br />
+<br />
+
+## GET `/api_key_check` - api_key Check
+Used internally to check if an `api_key` is valid
+
+### Response
+
+| Status Code |
+| ----------- |
+|         200 |
 
 <br />
 <br />

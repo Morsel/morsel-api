@@ -4,6 +4,7 @@ MorselApp::Application.routes.draw do
   root to: 'status#show'
   get 'status' => 'status#show'
   get 'configuration' => 'configuration#show'
+  get 'api_key_check' => 'configuration#api_key_check'
   get '/proxy', to: redirect('/proxy.html')
 
   authenticate :user, lambda { |u| u.admin? } do

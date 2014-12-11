@@ -23,7 +23,11 @@ module ServiceStubs
     bucket = double('AWS::S3::Bucket')
     bucket.stub(:presigned_post).and_return(presigned_post)
 
-    aws_s3_client.stub(:buckets).and_return({ Settings.aws.buckets.default => bucket })
+    aws_s3_client.stub(:buckets).and_return({
+      Settings.aws.buckets.default => bucket,
+      Settings.aws.buckets.assets => bucket,
+      Settings.aws.buckets.uploads => bucket
+    })
 
     aws_s3_client
   end
@@ -181,9 +185,12 @@ module ServiceStubs
     settings = double('Settings')
     hash.each do |k,v|
       if v.is_a? Hash
-        settings.stub(k).and_return(stub_settings(k, v, false))
+        additional_settings = stub_settings(k, v, false)
+        settings.stub(k).and_return(additional_settings)
+        settings.stub(:[]).with(k).and_return(additional_settings)
       else
         settings.stub(k).and_return(v)
+        settings.stub(:[]).with(k).and_return(v)
       end
     end
 

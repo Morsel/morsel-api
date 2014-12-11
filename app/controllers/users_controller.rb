@@ -202,7 +202,8 @@ class UsersController < ApiController
       params.require(:user).permit(:email, :username, :password, :current_password,
                                    :first_name, :last_name, :bio, :industry,
                                    :photo, :remote_photo_url, :promoted, :query,
-                                   :professional, :photo_key, settings: [:auto_follow])
+                                   :professional, :photo_key, :photo_processing,
+                                   settings: [:auto_follow])
     end
   end
 
