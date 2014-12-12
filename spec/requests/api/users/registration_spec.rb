@@ -94,16 +94,18 @@ describe 'POST /users registrations#create' do
 
   it 'creates a user_event' do
     expect {
-      post_endpoint user: {
-                      email: Faker::Internet.email, password: 'password',
-                      first_name: 'Foo', last_name: 'Bar', username: "user_#{Faker::Lorem.characters(10)}",
-                      bio: 'Foo to the Stars'
-                    },
-                    __utmz: 'source=taco',
-                    client: {
-                      device: 'rspec',
-                      version: '1.2.3'
-                    }
+      Sidekiq::Testing.inline! do
+        post_endpoint user: {
+                        email: Faker::Internet.email, password: 'password',
+                        first_name: 'Foo', last_name: 'Bar', username: "user_#{Faker::Lorem.characters(10)}",
+                        bio: 'Foo to the Stars'
+                      },
+                      __utmz: 'source=taco',
+                      client: {
+                        device: 'rspec',
+                        version: '1.2.3'
+                      }
+      end
     }.to change(UserEvent, :count).by(1)
 
     expect_success

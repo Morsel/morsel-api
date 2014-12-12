@@ -29,7 +29,7 @@ class RegistrationsController < Devise::RegistrationsController
     end
 
     if user.valid? && authentication_errors.empty? && user.save
-      create_user_event(:created_account, user.id)
+      queue_user_event(:created_account, user.id)
 
       if params[:prepare_presigned_upload] == 'true'
         handle_presigned_upload(user, serializer: UserWithAuthTokenSerializer)

@@ -81,7 +81,7 @@ class UsersController < ApiController
     user.active = false
 
     if user.save
-      create_user_event(:reserved_username, user.id)
+      queue_user_event(:reserved_username, user.id)
       EmailUserDecorator.new(user).send_reserved_username_email
       sign_in user, store: false
       render_json(user_id: "#{user.id}")

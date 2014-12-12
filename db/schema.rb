@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141209170356) do
+ActiveRecord::Schema.define(version: 20141212203040) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -412,6 +412,7 @@ ActiveRecord::Schema.define(version: 20141209170356) do
     t.text     "__utmz"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.hstore   "properties",     default: {}
   end
 
   add_index "user_events", ["name"], name: "index_user_events_on_name", using: :btree

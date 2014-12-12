@@ -39,15 +39,17 @@ describe 'POST /users/reserveusername users#reserveusername' do
 
   it 'creates a user_event' do
     expect {
-      post_endpoint user: {
-                      email: fake_email,
-                      username: fake_username
-                    },
-                    __utmz: 'source=taco',
-                    client: {
-                      device: 'rspec',
-                      version: '1.2.3'
-                    }
+      Sidekiq::Testing.inline! do
+        post_endpoint user: {
+                        email: fake_email,
+                        username: fake_username
+                      },
+                      __utmz: 'source=taco',
+                      client: {
+                        device: 'rspec',
+                        version: '1.2.3'
+                      }
+      end
     }.to change(UserEvent, :count).by(1)
 
     expect_success
