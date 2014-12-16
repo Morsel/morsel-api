@@ -54,6 +54,10 @@ describe Collection do
 
     its(:cached_slug) { should_not be_nil }
 
+    it 'updates the url' do
+      expect(collection.url).to eq("https://test.eatmorsel.com/#{collection.user.username}/#{collection.id}-#{collection.cached_slug}")
+    end
+
     context 'title changes' do
       let(:new_title) { 'Some New Title!' }
       before do

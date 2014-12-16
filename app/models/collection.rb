@@ -46,4 +46,8 @@ class Collection < ActiveRecord::Base
       [super, CachedModelDecorator.new(self).cache_key_for_has_many(:collection_morsels)].join('/')
     end
   end
+
+  def url
+    "#{Settings.morsel.web_url}/#{user.username}/#{id}-#{cached_slug}" if user && id?
+  end
 end
