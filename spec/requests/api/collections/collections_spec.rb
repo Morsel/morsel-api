@@ -3,7 +3,8 @@ require_relative '_spec_helper'
 describe 'Collections API Methods' do
   describe 'GET /collections/:id collections#show' do
     let(:endpoint) { "/collections/#{collection.id}" }
-    let(:collection) { FactoryGirl.create(:collection) }
+    let(:morsels_count) { 6 }
+    let(:collection) { FactoryGirl.create(:collection_with_morsels, morsels_count: morsels_count) }
 
     it 'returns the Collection' do
       get_endpoint
@@ -17,6 +18,7 @@ describe 'Collections API Methods' do
         'place_id' => collection.place_id,
         'slug' => collection.cached_slug
       })
+      expect(json_data['primary_morsels'].count).to eq(4) # Created 6, but should only return 4
     end
   end
 

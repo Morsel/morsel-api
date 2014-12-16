@@ -8,4 +8,6 @@ class CollectionSerializer < ActiveModel::Serializer
              :updated_at,
              :slug,
              :url
+
+  has_many :primary_morsels, serializer: SlimMorselSerializer
 end

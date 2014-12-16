@@ -30,7 +30,7 @@ class Collection < ActiveRecord::Base
   belongs_to :user
   belongs_to :place
 
-  has_many :collection_morsels, dependent: :destroy
+  has_many :collection_morsels, -> { order(CollectionMorsel.arel_table[:sort_order].asc) }, dependent: :destroy
   has_many :morsels, through: :collection_morsels, source: :morsel
 
   validates :title,
@@ -49,5 +49,9 @@ class Collection < ActiveRecord::Base
 
   def url
     "#{Settings.morsel.web_url}/#{user.username}/#{id}-#{cached_slug}" if user && id?
+  end
+
+  def primary_morsels
+    morsels.limit 4
   end
 end

@@ -2391,7 +2391,25 @@ Response for any Like Morsel related requests.
   "created_at": "2014-10-24T11:00:31.338Z",
   "updated_at": "2014-10-24T11:00:31.338Z",
   "slug": "this-is-my-bitchin-collection",
-  "url": "https://eatmorsel.com/turdferg/42-this-is-my-bitchin-collection"
+  "url": "https://eatmorsel.com/turdferg/42-this-is-my-bitchin-collection",
+  "primary_morsels": [{
+    "id": 4,
+    "title": "Butter Rocks!",
+    "slug": "butter-rocks",
+    "creator_id": 3,
+    "place_id": 4,
+    "created_at": "2014-01-07T16:34:44.862Z",
+    "updated_at": "2014-01-07T16:34:44.862Z",
+    "published_at": "2014-01-07T16:34:44.862Z",
+    "primary_item_id": 2,
+    "primary_item_photos": {
+      "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_100x100":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_100x100_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
+      "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
+    }
+  }]
 }
 
 
