@@ -28,6 +28,8 @@ class Collection < ActiveRecord::Base
   alias_attribute :slug, :cached_slug
 
   belongs_to :user
+  alias_attribute :creator, :user
+  alias_attribute :creator_id, :user_id
   belongs_to :place
 
   has_many :collection_morsels, -> { order(CollectionMorsel.arel_table[:sort_order].asc) }, dependent: :destroy
