@@ -5,5 +5,9 @@ class CollectionSerializer < ActiveModel::Serializer
              :user_id,
              :place_id,
              :created_at,
-             :updated_at
+             :updated_at,
+             :slug,
+             :url
+
+  has_many :primary_morsels, serializer: SlimMorselSerializer
 end

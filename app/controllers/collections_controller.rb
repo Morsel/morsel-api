@@ -9,6 +9,10 @@ class CollectionsController < ApiController
     )
   end
 
+  public_actions << def show
+    custom_respond_with Collection.find(params[:id])
+  end
+
   def create
     collection = current_user.collections.create(CollectionParams.build(params))
 
