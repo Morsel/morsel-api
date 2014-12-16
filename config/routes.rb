@@ -128,7 +128,7 @@ MorselApp::Application.routes.draw do
     end
   end
 
-  resources :collections, only: [:create, :update, :destroy] do
+  resources :collections, only: [:show, :create, :update, :destroy] do
     member do
       get 'morsels'
     end

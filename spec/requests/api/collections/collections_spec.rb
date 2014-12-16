@@ -1,6 +1,25 @@
 require_relative '_spec_helper'
 
 describe 'Collections API Methods' do
+  describe 'GET /collections/:id collections#show' do
+    let(:endpoint) { "/collections/#{collection.id}" }
+    let(:collection) { FactoryGirl.create(:collection) }
+
+    it 'returns the Collection' do
+      get_endpoint
+
+      expect_success
+      expect_json_data_eq({
+        'id' => collection.id,
+        'title' => collection.title,
+        'description' => collection.description,
+        'user_id' => collection.user_id,
+        'place_id' => collection.place_id,
+        'slug' => collection.cached_slug
+      })
+    end
+  end
+
   describe 'POST /collections collections#create' do
     let(:endpoint) { '/collections' }
     let(:current_user) { FactoryGirl.create(:user) }

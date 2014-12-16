@@ -112,6 +112,7 @@
   - [GET `/morsels/search` - Search Morsels](#get-morselssearch---search-morsels)
 
 - [Collection Methods](#collection-methods)
+  - [GET `/collections/:id` - Collection](#get-collectionsid---collection)
   - [POST `/collections` - Create Collection](#post-collections---create-collection)
   - [PUT `/collections/:id` - Update Collection](#put-collectionsid---update-collection)
   - [DELETE `/collections/:id` - Delete Collection](#delete-collectionsid---delete-collection)
@@ -1880,6 +1881,22 @@ __Request Behaviors__
 
 # Collection Methods
 
+## GET `/collections/:id` -  Collection
+Returns the Collection with the specified `id`
+
+__Request Behaviors__
+* [Public](#public)
+
+### Response
+
+| __data__ |
+| -------- |
+| [Collection](#collection) |
+
+<br />
+<br />
+
+
 ## POST `/collections` - Create Collection
 Creates a new Collection for [current_user](#current_user)
 
@@ -2372,7 +2389,9 @@ Response for any Like Morsel related requests.
   "user_id": 1,
   "place_id": null,
   "created_at": "2014-10-24T11:00:31.338Z",
-  "updated_at": "2014-10-24T11:00:31.338Z"
+  "updated_at": "2014-10-24T11:00:31.338Z",
+  "slug": "this-is-my-bitchin-collection",
+  "url": "https://eatmorsel.com/turdferg/42-this-is-my-bitchin-collection"
 }
 
 
