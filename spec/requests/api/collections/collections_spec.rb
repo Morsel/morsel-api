@@ -10,13 +10,24 @@ describe 'Collections API Methods' do
       get_endpoint
 
       expect_success
+      collection_user = collection.user
+
       expect_json_data_eq({
         'id' => collection.id,
         'title' => collection.title,
         'description' => collection.description,
-        'user_id' => collection.user_id,
+        'creator_id' => collection.creator_id,
         'place_id' => collection.place_id,
-        'slug' => collection.cached_slug
+        'slug' => collection.cached_slug,
+        'creator' => {
+          'id' => collection_user.id,
+          'username' => collection_user.username,
+          'first_name' => collection_user.first_name,
+          'last_name' => collection_user.last_name,
+          'bio' => collection_user.bio,
+          'industry' => collection_user.industry,
+          'professional' => collection_user.professional
+        }
       })
       expect(json_data['primary_morsels'].count).to eq(4) # Created 6, but should only return 4
     end
@@ -36,7 +47,7 @@ describe 'Collections API Methods' do
 
       expect_success
       expect_json_data_eq({
-        'user_id' => current_user.id,
+        'creator_id' => current_user.id,
         'title' => title,
         'description' => description
       })
