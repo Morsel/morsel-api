@@ -7,10 +7,10 @@ describe Search::SearchKeywords do
 
   context Hashtag do
     let(:type) { 'Hashtag' }
-    let(:expected_response_count) { rand(2..6) }
 
     context 'query' do
       let(:query) { 'bless' }
+      let(:expected_response_count) { rand(2..6) }
 
       before do
         expected_response_count.times do
@@ -37,10 +37,10 @@ describe Search::SearchKeywords do
 
     context 'promoted' do
       let(:promoted) { true }
-      let(:expected_response_count) { rand(2..6) }
+      let(:promoted_keywords_count) { rand(2..6) }
 
       before do
-        expected_response_count.times { FactoryGirl.create(type.downcase.to_sym, promoted: true) }
+        promoted_keywords_count.times { FactoryGirl.create(type.downcase.to_sym, promoted: true) }
         rand(1..3).times { FactoryGirl.create(type.downcase.to_sym) }
 
         call_service service_params
@@ -48,7 +48,7 @@ describe Search::SearchKeywords do
 
       it 'should return the correct number of matching hashtags' do
         expect_service_success
-        expect(service_response.count).to eq(expected_response_count)
+        expect(service_response.count).to eq(promoted_keywords_count)
       end
     end
   end
