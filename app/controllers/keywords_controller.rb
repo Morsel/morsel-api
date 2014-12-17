@@ -35,7 +35,7 @@ class KeywordsController < ApiController
 
   class KeywordParams
     def self.build(params, _scope = nil)
-      params.require(:keyword).permit(:name, :type, :query)
+      params.require(:keyword).permit(:name, :type, :promoted, :query)
     end
   end
 

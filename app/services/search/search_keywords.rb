@@ -22,9 +22,9 @@ module Search
           page: page,
           count: count
         }, :id, Keyword)
+        .where(type: type)
         .search_query(safe_query)
         .search_promoted(promoted)
-        .where(type: type)
         .order(Keyword.arel_table[:id].desc)
       else
         Keyword.paginate({
@@ -33,8 +33,8 @@ module Search
           page: page,
           count: count
         }, :id, Keyword)
-        .search_promoted(promoted)
         .where(type: type)
+        .search_promoted(promoted)
         .order(Keyword.arel_table[:id].desc)
       end
     end
