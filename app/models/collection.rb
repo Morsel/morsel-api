@@ -50,7 +50,7 @@ class Collection < ActiveRecord::Base
   end
 
   def url
-    "#{Settings.morsel.web_url}/#{user.username}/#{id}-#{cached_slug}" if user && id?
+    "#{Settings.morsel.web_url}/#{user.username}/collections/#{id}-#{cached_slug}" if user && id?
   end
 
   def primary_morsels
