@@ -17,7 +17,7 @@ class CollectMorsel
 
   def call
     self.validated = true
-    collection_morsel = CollectionMorsel.new(morsel: morsel, collection: collection, note: note)
+    collection_morsel = CollectionMorsel.new(morsel: morsel, collection: collection, note: note, sort_order: 1)
 
     if collection_morsel.save
       decorated_collected_morsel collection_morsel
@@ -30,8 +30,7 @@ class CollectMorsel
 
   def decorated_collected_morsel(collection_morsel)
     collected_morsel = CollectedMorselDecorator.new(morsel)
-    collected_morsel.note = collection_morsel.note
-    collected_morsel.sort_order = collection_morsel.sort_order
+    collected_morsel.update_with_collection_morsel(collection_morsel)
     collected_morsel
   end
 

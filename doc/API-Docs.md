@@ -1151,9 +1151,9 @@ __Request Behaviors__
 
 ### Response
 
-| __data__ |
-| -------- |
-| [Collections](#collection)[] |
+| __data__ | __order__ |
+| -------- | --------- |
+| [Collections](#collection)[] | `id` DESC |
 
 <br />
 <br />
@@ -1351,9 +1351,9 @@ __Request Behaviors__
 
 ### Response
 
-| __data__ |
-| -------- |
-| [Collections](#collection)[] |
+| __data__ | __order__ |
+| -------- | --------- |
+| [Collections](#collection)[] | `id` DESC |
 
 <br />
 <br />
@@ -1799,7 +1799,7 @@ __Request Behaviors__
 <br />
 
 ## POST `/morsels/:id/collect` - Add Morsel to Collection
-Adds the [Morsel](#morsel) specified to the [Collection](#collection) specified
+Adds the [Morsel](#morsel) specified to the beginning of the [Collection](#collection) specified.
 
 ### Request
 
@@ -1960,9 +1960,9 @@ __Request Behaviors__
 
 ### Response
 
-| __data__ |
-| -------- |
-| [Slim Morsel (w/ note)](#slim-morsel-w-note)[] |
+| __data__ | __order__ |
+| -------- | --------- |
+| [Slim Morsel (w/ note)](#slim-morsel-w-note)[] | `sort_order` DESC |
 
 <br />
 <br />
