@@ -16,9 +16,7 @@ module Search
 
     def call
       if query.present?
-        Keyword.paginate({
-          since_id: since_id,
-          max_id: max_id,
+        Keyword.page_paginate({
           page: page,
           count: count
         }, :id, Keyword)
@@ -27,9 +25,7 @@ module Search
         .search_promoted(promoted)
         .order(Keyword.arel_table[:id].desc)
       else
-        Keyword.paginate({
-          since_id: since_id,
-          max_id: max_id,
+        Keyword.page_paginate({
           page: page,
           count: count
         }, :id, Keyword)

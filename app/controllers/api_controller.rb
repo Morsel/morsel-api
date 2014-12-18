@@ -16,6 +16,7 @@ class ApiController < ActionController::Base
   rescue_from ActionController::ParameterMissing, with: :parameter_missing
   rescue_from Foursquare2::APIError, with: :foursquare_api_error
   rescue_from Twitter::Error::TooManyRequests, with: :too_many_requests
+  rescue_from MorselErrors::InvalidPaginationParams, with: :invalid_pagination_params
 
   rescue_from Authority::SecurityViolation do |error|
     render_json_errors({ api: ["Not authorized to #{error.action} #{error.resource.class}"] }, :forbidden)
@@ -89,6 +90,10 @@ class ApiController < ActionController::Base
 
   def too_many_requests
     render_json_errors({ api: ['too many requests'] }, :too_many_requests)
+  end
+
+  def invalid_pagination_params
+    render_json_errors({ api: ['invalid pagination params'] }, :bad_request)
   end
 
   def unauthorized_token

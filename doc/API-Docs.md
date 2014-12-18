@@ -27,7 +27,7 @@
 
 - [Feed Methods](#feed-methods)
   - [GET `/feed` - Feed](#get-feed---feed)
-  - [GET `/feed_all` - Feed (All)](#get-feed_all---feed-all)
+  - [GET `/feed_all` - Feed (All)](#get-feed_all---feed-all) [__DEPRECATED__](https://app.asana.com/0/19486350215520/22747456263132)
 
 - [Authentication Methods](#authentication-methods)
   - [POST `/authentications` - Create Authentication](#post-authentications---create-authentication)
@@ -441,6 +441,7 @@ __Request Behaviors__
 <br />
 
 ## GET `/feed_all` - Feed (All)
+[__DEPRECATED__](https://app.asana.com/0/19486350215520/22747456263132)
 Returns all Feed Items.
 
 __Request Behaviors__
@@ -1851,7 +1852,7 @@ Removes the [Morsel](#morsel) specified from the [Collection](#collection) speci
 <br />
 
 ## GET `/morsels/search` - Search Morsels
-Returns [Slim Morsels](#slim-morsel) whose `title`, `summary`, or item `description`s match `query`.
+Returns published [Slim Morsels](#slim-morsel) whose `title`, `summary`, or item `description`s match `query`. If no `morsel` is passed, returns all published morsels.
 
 __Request Behaviors__
 * [Paged Pagination](#paged-pagination)
@@ -1865,9 +1866,9 @@ __Request Behaviors__
 
 ### Response
 
-| __data__ |
-| -------- |
-| [Slim Morsels](#slim-morsel)[] |
+| __data__ | __order__ |
+| -------- | --------- |
+| [Slim Morsels](#slim-morsel)[] | `published_at` DESC |
 
 ### Unique Errors
 
@@ -2317,7 +2318,8 @@ Response for any Like Item related requests.
     "_320x320":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_320x320_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
     "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
     "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
-  }
+  },
+  "tagged_users_count": 0
 }
 ```
 
@@ -2411,6 +2413,7 @@ Response for any Like Morsel related requests.
     }
   }]
 }
+```
 
 
 ## User Objects
@@ -2587,7 +2590,7 @@ Response for any User Follower related requests.
   ],
   "information" {
       "website_url": "http://www.bigstarchicago.com",
-      "formatted_phone": '(773) 235-4039',
+      "formatted_phone": "(773) 235-4039",
       "price_tier": 2,
       "reservations_url": "http://www.opentable.com/single.aspx?rid=20791&ref=9601",
       "menu_url": "https://foursquare.com/v/big-star/4adbf2bbf964a520242b21e3/menu",
