@@ -4,7 +4,7 @@ class CollectionsController < ApiController
       Collection.where_user_id(params[:user_id])
                 .where_place_id(params[:place_id])
                 .order(Collection.arel_table[:id].asc)
-                .paginate(pagination_params),
+                .page_paginate(pagination_params),
       CollectionSerializer
     )
   end
@@ -50,7 +50,7 @@ class CollectionsController < ApiController
                               .joins(:collection_morsels)
                               .published
                               .order(CollectionMorsel.arel_table[:sort_order].asc, CollectionMorsel.arel_table[:id].asc)
-                              .paginate(pagination_params)
+                              .page_paginate(pagination_params)
                               .where_collection_id(params.fetch(:id))
                               .select('morsels.*, collection_morsels.note, collection_morsels.sort_order'),
                         each_serializer: SlimMorselWithNoteSerializer

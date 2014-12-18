@@ -108,14 +108,23 @@ class MorselsController < ApiController
   end
 
   public_actions << def search
-    morsel_params = MorselParams.build(params)
-    query = morsel_params.fetch(:query)
-    queue_user_event(:morsel_search, nil, { query: query })
-    custom_respond_with Morsel.includes(:items, :place, :creator)
-                              .published
-                              .full_search(query)
-                              .paginate(pagination_params),
-                        each_serializer: SlimMorselSerializer
+    if params[:morsel].present?
+      morsel_params = MorselParams.build(params)
+      query = morsel_params.fetch(:query)
+      queue_user_event(:morsel_search, nil, { query: query })
+      custom_respond_with Morsel.includes(:place, :creator)
+                                .published
+                                .full_search(query)
+                                .page_paginate(pagination_params)
+                                .order(Morsel.arel_table[:published_at].desc),
+                          each_serializer: SlimMorselSerializer
+    else
+      custom_respond_with Morsel.includes(:place, :creator)
+                                .published
+                                .page_paginate(pagination_params)
+                                .order(Morsel.arel_table[:published_at].desc),
+                          each_serializer: SlimMorselSerializer
+    end
   end
 
   class MorselParams

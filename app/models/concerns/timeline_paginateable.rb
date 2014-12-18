@@ -30,5 +30,15 @@ module TimelinePaginateable
         .limit(pagination_params[:count])
       end
     end
+
+    scope :page_paginate, -> (pagination_params) do
+      if pagination_params[:page].present?
+        page(pagination_params[:page]).per(pagination_params[:count])
+      elsif pagination_params[:max_id] || pagination_params[:since_id] || pagination_params[:after_date] || pagination_params[:before_date]
+        raise MorselErrors::InvalidPaginationParams
+      else
+        limit(pagination_params[:count])
+      end
+    end
   end
 end

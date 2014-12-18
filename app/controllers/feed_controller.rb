@@ -37,6 +37,7 @@ class FeedController < ApiController
     end
   end
 
+  # DEPRECATED, Remove: GET `/feed_all` - Feed (All) (https://app.asana.com/0/19486350215520/22747456263132)
   public_actions << def all
     custom_respond_with_cached_serializer(
       FeedItem.includes(:subject)

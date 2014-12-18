@@ -9,7 +9,7 @@ class KeywordsController < ApiController
 
   public_actions << def morsels_for_name
     custom_respond_with Morsel.joins(:keywords)
-                              .paginate(pagination_params)
+                              .page_paginate(pagination_params)
                               .where(Hashtag.arel_table[:name].lower.eq(params.fetch(:name).downcase))
                               .order(Tag.arel_table[:id].desc),
                         each_serializer: SlimMorselSerializer
