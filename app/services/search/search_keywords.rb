@@ -19,7 +19,7 @@ module Search
         Keyword.page_paginate({
           page: page,
           count: count
-        }, :id, Keyword)
+        })
         .where(type: type)
         .search_query(safe_query)
         .search_promoted(promoted)
@@ -28,7 +28,7 @@ module Search
         Keyword.page_paginate({
           page: page,
           count: count
-        }, :id, Keyword)
+        })
         .where(type: type)
         .search_promoted(promoted)
         .order(Keyword.arel_table[:id].desc)
