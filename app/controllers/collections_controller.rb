@@ -3,7 +3,7 @@ class CollectionsController < ApiController
     custom_respond_with_cached_serializer(
       Collection.where_user_id(params[:user_id])
                 .where_place_id(params[:place_id])
-                .order(Collection.arel_table[:id].asc)
+                .order(Collection.arel_table[:id].desc)
                 .page_paginate(pagination_params),
       CollectionSerializer
     )

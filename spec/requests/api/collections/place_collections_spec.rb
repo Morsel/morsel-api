@@ -20,5 +20,6 @@ describe 'GET /places/:id/collections' do
     expect_success
 
     expect_json_data_count collections_count
+    expect(json_data.first['id']).to eq(Collection.last.id)
   end
 end
