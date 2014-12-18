@@ -28,6 +28,7 @@ class FeedItem < ActiveRecord::Base
   belongs_to :subject, polymorphic: true
   belongs_to :place
   belongs_to :user
+  has_paper_trail
 
   order_query :order_for_index, [
     [:id, :desc]
