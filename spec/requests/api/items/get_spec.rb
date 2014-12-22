@@ -2,7 +2,7 @@ require_relative '_spec_helper'
 
 describe 'GET /items/{:item_id} items#show' do
   let(:endpoint) { "/items/#{item.id}" }
-  let(:item) { FactoryGirl.create(:item_with_creator_and_morsel) }
+  let(:item) { Sidekiq::Testing.inline! { FactoryGirl.create(:item_with_creator_and_morsel) }}
 
   it_behaves_like 'PresignedPhotoUploadable' do
     let(:current_user) { item.creator }
@@ -41,7 +41,9 @@ describe 'GET /items/{:item_id} items#show' do
   end
 
   context 'has a photo' do
-    before { item.update(photo: test_photo) }
+    before do
+      Sidekiq::Testing.inline! { item.update(photo: test_photo) }
+    end
 
     it 'returns the User with the appropriate image sizes' do
       get_endpoint

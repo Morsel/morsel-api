@@ -98,7 +98,7 @@ describe 'GET /users/:id|:username users#show' do
   context 'has a photo' do
     before do
       user_with_morsels.photo = Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
-      user_with_morsels.save
+      Sidekiq::Testing.inline! { user_with_morsels.save }
     end
 
     it 'returns the User with the appropriate image sizes' do
