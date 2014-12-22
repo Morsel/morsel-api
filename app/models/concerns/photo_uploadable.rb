@@ -8,6 +8,7 @@ module PhotoUploadable
 
   def photos
     return unless photo?
+    return if self.respond_to?(:photo_processing) && photo_processing == true
 
     photo.versions.keys.reduce({}) do |a, e|
       a[e] = photo_url(e)
