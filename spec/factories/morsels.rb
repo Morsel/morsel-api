@@ -31,7 +31,7 @@
 
 FactoryGirl.define do
   factory :morsel do
-    title { Faker::Lorem.sentence(rand(2..4)).truncate(70) }
+    title { Faker::Lorem.sentence(rand(2..6)).truncate(70) }
     draft false
     ignore do
       include_mrsl true
@@ -65,6 +65,9 @@ FactoryGirl.define do
       end
       association(:creator, factory: :user)
       association(:place)
+
+      factory :morsel_with_hashtags, traits: [:with_hashtags]
+
       factory :morsel_with_creator_and_photo do
         photo Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))
       end
@@ -102,6 +105,19 @@ FactoryGirl.define do
           draft true
           published_at nil
         end
+      end
+    end
+
+    # Traits
+
+    trait :with_hashtags do
+      ignore do
+        hashtags_count 3
+      end
+
+      before(:create) do |morsel, evaluator|
+        hashtags = Faker::Lorem.words(evaluator.hashtags_count).map { |w| "##{w} " }
+        morsel.title = "#{hashtags.join}#{morsel.title}".truncate(70)
       end
     end
   end
