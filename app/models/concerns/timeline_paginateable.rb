@@ -22,11 +22,11 @@ module TimelinePaginateable
       if pagination_params[:page].present?
         page(pagination_params[:page]).per(pagination_params[:count])
       elsif pagination_key == :id
-        since(pagination_params[:since_id], klass).max(pagination_params[:max_id], klass).order(klass.arel_table[pagination_key].desc, klass.arel_table[pagination_key].desc).limit(pagination_params[:count])
+        since(pagination_params[:since_id], klass).max(pagination_params[:max_id], klass).reorder(klass.arel_table[pagination_key].desc, klass.arel_table[pagination_key].desc).limit(pagination_params[:count])
       else
         after_date(pagination_params[:after_date], pagination_key, pagination_params[:after_id], klass)
         .before_date(pagination_params[:before_date], pagination_key, pagination_params[:before_id], klass)
-        .order(klass.arel_table[pagination_key].desc, klass.arel_table[pagination_key].desc)
+        .reorder(klass.arel_table[pagination_key].desc, klass.arel_table[pagination_key].desc)
         .limit(pagination_params[:count])
       end
     end
