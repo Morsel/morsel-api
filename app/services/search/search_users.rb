@@ -10,6 +10,7 @@ module Search
     attribute :count, Integer
     attribute :max_id, Integer
     attribute :since_id, Integer
+    attribute :page, Integer
 
     validates :query,
               allow_blank: true,
@@ -20,6 +21,7 @@ module Search
         SearchableUser.paginate({
           since_id: since_id,
           max_id: max_id,
+          page: page,
           count: count
         }, :id, SearchableUser)
         .search_query(query)
@@ -30,6 +32,7 @@ module Search
         SearchableUser.paginate({
           since_id: since_id,
           max_id: max_id,
+          page: page,
           count: count
         }, :id, SearchableUser)
         .search_first_name(first_name)
