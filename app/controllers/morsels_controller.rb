@@ -25,17 +25,17 @@ class MorselsController < ApiController
   def drafts
     # HACK: Support for older clients that don't yet support before_/after_date
     if pagination_params.include? :max_id
-      pagination_key = :id
+      custom_respond_with Morsel.includes(:items, :place, :creator)
+                                .drafts
+                                .paginate(pagination_params, :id)
+                                .where(creator_id: current_user.id)
     else
-      pagination_key = :updated_at
+      custom_respond_with Morsel.includes(:items, :place, :creator)
+                                .drafts
+                                .order(Morsel.arel_table[:updated_at].desc)
+                                .paginate(pagination_params, :updated_at)
+                                .where(creator_id: current_user.id)
     end
-
-    morsels = Morsel.includes(:items, :place, :creator)
-                    .drafts
-                    .paginate(pagination_params, pagination_key)
-                    .where(creator_id: current_user.id)
-
-    custom_respond_with morsels
   end
 
   public_actions << def show
@@ -157,12 +157,14 @@ class MorselsController < ApiController
 
         Morsel.includes(:items, :place, :creator)
               .published
+              .order(Morsel.arel_table[:published_at].desc)
               .paginate(pagination_params, pagination_key)
               .where_creator_id_or_tagged_user_id(user_id)
               .where_place_id(params[:place_id])
       elsif current_user.present?
         Morsel.includes(:items, :place, :creator)
               .with_drafts(true)
+              .order(Morsel.arel_table[:published_at].desc)
               .paginate(pagination_params, pagination_key)
               .where_creator_id_or_tagged_user_id(current_user.id)
       end
