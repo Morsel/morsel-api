@@ -16,4 +16,10 @@ class SlimMorselSerializer < ActiveModel::Serializer
 
   has_one :creator, serializer: SlimUserSerializer
   has_one :place, serializer: SlimPlaceSerializer
+
+  def attributes
+    hash = super
+    hash['rank'] = object.pg_search_rank if object.respond_to? :pg_search_rank
+    hash
+  end
 end
