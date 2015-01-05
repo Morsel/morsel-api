@@ -1,6 +1,6 @@
 class MorselsController < ApiController
   def create
-    morsel = Morsel.create(MorselParams.build(params)) do |m|
+    morsel = Morsel.create(params[:morsel].present ? MorselParams.build(params) : nil) do |m|
       m.creator = current_user
     end
 
