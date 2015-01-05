@@ -1852,7 +1852,7 @@ Removes the [Morsel](#morsel) specified from the [Collection](#collection) speci
 <br />
 
 ## GET `/morsels/search` - Search Morsels
-Returns published [Slim Morsels](#slim-morsel) whose `title`, `summary`, or item `description`s match `query`. If no `morsel` is passed, returns all published morsels.
+Returns published [Slim Morsels](#slim-morsel) whose `title`, `summary`, or item `description`s match `query` ordered by `rank` (determined by how much query matches `title`, then `summary`, then item `description`s. If no `morsel` is passed, returns all published morsels ordered by `published_at`.
 
 __Request Behaviors__
 * [Paged Pagination](#paged-pagination)
@@ -1868,7 +1868,7 @@ __Request Behaviors__
 
 | __data__ | __order__ |
 | -------- | --------- |
-| [Slim Morsels](#slim-morsel)[] | `published_at` DESC |
+| [Slim Morsels](#slim-morsel)[] | `rank` or `published_at` DESC |
 
 ### Unique Errors
 
@@ -2320,7 +2320,8 @@ Response for any Like Item related requests.
     "_640x640":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_640x640_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
     "_992x992":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_992x992_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png"
   },
-  "tagged_users_count": 0
+  "tagged_users_count": 0,
+  "rank": nil
 }
 ```
 
