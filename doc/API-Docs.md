@@ -1852,7 +1852,7 @@ Removes the [Morsel](#morsel) specified from the [Collection](#collection) speci
 <br />
 
 ## GET `/morsels/search` - Search Morsels
-Returns published [Slim Morsels](#slim-morsel) whose `title`, `summary`, or item `description`s match `query` ordered by `rank` (determined by how much query matches `title`, then `summary`, then item `description`s. If no `morsel` is passed, returns all published morsels ordered by `published_at`.
+Returns published [Slim Morsels](#slim-morsel) whose `title`, `summary`, or item `description`s match `query` ordered by `rank,` (determined by how much query matches `title`, then `summary`, then item `description`s) then `published_at`. If no `morsel` is passed, returns all published morsels ordered by `published_at`.
 
 __Request Behaviors__
 * [Paged Pagination](#paged-pagination)
@@ -1868,7 +1868,7 @@ __Request Behaviors__
 
 | __data__ | __order__ |
 | -------- | --------- |
-| [Slim Morsels](#slim-morsel)[] | `rank` or `published_at` DESC |
+| [Slim Morsels](#slim-morsel)[] | `rank` DESC, `published_at` DESC -or- `published_at` DESC |
 
 ### Unique Errors
 
