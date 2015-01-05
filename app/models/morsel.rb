@@ -78,7 +78,8 @@ class Morsel < ActiveRecord::Base
   validate :primary_item_belongs_to_morsel
 
   validates :title,
-            length: { maximum: 70 }
+            length: { maximum: 70 },
+            allow_nil: true
 
   pg_search_scope :full_search,
                   against: {

@@ -971,7 +971,7 @@ __Request Behaviors__
 
 | __data__ | __order__ |
 | -------- | --------- |
-| [Morsels](#morsel)[] | [Morsel](#morsel) `published_at` DESC |
+| [Slim Morsels](#slim-morsel)[] | `published_at` DESC |
 
 <br />
 <br />
@@ -1337,7 +1337,7 @@ __Request Behaviors__
 
 | __data__ | __order__ |
 | -------- | --------- |
-| [Morsels](#morsel)[] | [Morsel](#morsel) `published_at` DESC |
+| [Slim Morsels](#slim-morsel)[] | `published_at` DESC |
 
 <br />
 <br />
@@ -1563,7 +1563,7 @@ Creates a new Morsel for the current User.
 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
-| morsel[title] | String | The title (70 char max) for the new Morsel | | x |
+| morsel[title] | String | The title (70 char max) for the new Morsel | | |
 | morsel[summary] | String | The summary for the new Morsel | | |
 | morsel[place_id] | Number | A [Place](#place) to associate this Morsel to | | |
 | morsel[draft] | Boolean | Set to true if the Morsel is a draft | true | |
@@ -1588,7 +1588,7 @@ __Request Behaviors__
 
 | __data__ | __order__ |
 | -------- | --------- |
-| [Morsels](#morsel)[] | [Morsel](#morsel) `published_at` DESC |
+| [Slim Morsels](#slim-morsel)[] | `published_at` DESC |
 
 <br />
 <br />
@@ -2311,6 +2311,7 @@ Response for any Like Item related requests.
   "created_at": "2014-01-07T16:34:44.862Z",
   "updated_at": "2014-01-07T16:34:44.862Z",
   "published_at": "2014-01-07T16:34:44.862Z",
+  "draft": false,
   "primary_item_id": 2,
   "primary_item_photos": {
     "_50x50":"https://morsel-staging.s3.amazonaws.com/item-images/item/2/_50x50_648922f4-8850-4402-8ff8-8ffc1e2f8c01.png",
@@ -2341,7 +2342,6 @@ Response for any Like Item related requests.
 ```json
 {
   "summary": "Let's see what we can make with #kraftmacncheese today!"
-  "draft": false,
   "like_count": 10,
   "url": "https://eatmorsel.com/turdferg/4-butter-rocks",
   "template_id": null,
