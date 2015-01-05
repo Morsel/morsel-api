@@ -90,7 +90,8 @@ class Morsel < ActiveRecord::Base
                     items: {
                       description: 'C'
                     }
-                  }
+                  },
+                  order_within_rank: 'published_at DESC'
 
   scope :drafts, -> { where(draft: true) }
   scope :published, -> { where(draft: false) }
