@@ -17,7 +17,7 @@ class MorselsController < ApiController
     else
       custom_respond_with_cached_serializer(
         morsels_for_params,
-        MorselSerializer
+        (params[:client].present? && params[:client][:device] == 'proto' ? MorselSerializer : SlimMorselSerializer)
       )
     end
   end
