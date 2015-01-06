@@ -146,7 +146,8 @@ class UsersController < ApiController
 
     if followable_type == 'Keyword'
       custom_respond_with Keyword.followed_by(params[:id])
-                            .paginate(pagination_params, pagination_key, Follow),
+                                 .order(Follow.arel_table[:created_at].desc)
+                                 .paginate(pagination_params, pagination_key, Follow),
                           each_serializer: FollowedKeywordSerializer,
                           context: {
                             follower_id: params[:id],
@@ -155,7 +156,8 @@ class UsersController < ApiController
 
     elsif followable_type == 'User'
       custom_respond_with User.followed_by(params[:id])
-                            .paginate(pagination_params, pagination_key, Follow),
+                              .order(Follow.arel_table[:created_at].desc)
+                              .paginate(pagination_params, pagination_key, Follow),
                           each_serializer: SlimFollowedUserSerializer,
                           context: {
                             follower_id: params[:id],
@@ -170,8 +172,8 @@ class UsersController < ApiController
     if likeable_type == 'Item'
       custom_respond_with_cached_serializer(
         Item.includes(:creator, :morsel).liked_by(params[:id])
-            .paginate(pagination_params)
-            .order(Like.arel_table[:id].desc),
+            .order(Like.arel_table[:created_at].desc)
+            .paginate(pagination_params, :id, Like),
         LikedItemSerializer,
         liker_id: params[:id],
         likeable_type: likeable_type
@@ -179,8 +181,8 @@ class UsersController < ApiController
     elsif likeable_type == 'Morsel'
       custom_respond_with_cached_serializer(
         Morsel.includes(:creator).liked_by(params[:id])
-              .paginate(pagination_params)
-              .order(Like.arel_table[:id].desc),
+              .order(Like.arel_table[:created_at].desc)
+              .paginate(pagination_params, :id, Like),
         LikedMorselSerializer,
         liker_id: params[:id],
         likeable_type: likeable_type
