@@ -1721,7 +1721,7 @@ Publishes the Morsel with the specified `id` by setting a `published_at` DateTim
 
 | __data__ |
 | -------- |
-| Publishes [Morsel](#morsel) |
+| Published [Morsel](#morsel) |
 
 <br />
 <br />
