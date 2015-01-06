@@ -27,6 +27,7 @@
 # **`cached_url`**          | `string(255)`      |
 # **`summary`**             | `text`             |
 # **`tagged_users_count`**  | `integer`          | `default(0), not null`
+# **`publishing`**          | `boolean`          | `default(FALSE)`
 #
 
 FactoryGirl.define do

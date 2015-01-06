@@ -1,7 +1,7 @@
 class PublishMorselDecorator < SimpleDelegator
   def publish!(options = {})
     # TODO: Crap out if already published
-    self.draft = false
+    self.publishing = true
     if save
       PublishMorselWorker.perform_async(
         morsel_id: id,
