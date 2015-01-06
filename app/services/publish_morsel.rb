@@ -10,8 +10,6 @@ class PublishMorsel
   validate :primary_item_exists?
 
   def call
-    set_primary_item_id_if_specified
-
     publish_morsel = PublishMorselDecorator.new(morsel)
     if publish_morsel.publish! safe_social_params
       publish_morsel
@@ -40,6 +38,7 @@ class PublishMorsel
   end
 
   def primary_item_exists?
+    set_primary_item_id_if_specified
     errors.add(:cover_photo, 'is required') if morsel.primary_item.nil?
   end
 
