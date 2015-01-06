@@ -5,6 +5,8 @@ class MrslWorker
     return if options.nil?
 
     morsel = Morsel.find(options['morsel_id'])
+    morsel.published_at = nil
+    morsel.update! draft: false
 
     MorselMrslDecorator.new(morsel).generate_mrsl_links!
 
