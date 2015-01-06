@@ -33,6 +33,7 @@ class FollowsController < ApiController
       pagination_key = :created_at
     end
     custom_respond_with User.joins(:followable_follows)
+                            .order(Follow.arel_table[:created_at].desc)
                             .paginate(pagination_params, pagination_key, Follow)
                             .where(follows: { followable_id: params[:id], followable_type: followable_type }),
                         each_serializer: SlimFollowedUserSerializer,
