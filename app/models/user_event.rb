@@ -14,6 +14,7 @@
 # **`__utmz`**          | `text`             |
 # **`created_at`**      | `datetime`         |
 # **`updated_at`**      | `datetime`         |
+# **`properties`**      | `hstore`           | `default({})`
 #
 
 class UserEvent < ActiveRecord::Base

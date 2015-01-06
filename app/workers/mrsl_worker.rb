@@ -6,7 +6,7 @@ class MrslWorker
 
     morsel = Morsel.find(options['morsel_id'])
     morsel.published_at = nil
-    morsel.update! draft: false
+    morsel.update! draft: false, publishing: false
 
     MorselMrslDecorator.new(morsel).generate_mrsl_links!
 

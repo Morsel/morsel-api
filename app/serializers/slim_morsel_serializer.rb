@@ -9,6 +9,7 @@ class SlimMorselSerializer < ActiveModel::Serializer
              :created_at,
              :updated_at,
              :draft,
+             :publishing,
              :published_at,
              :primary_item_id,
              :primary_item_photos,
