@@ -45,6 +45,6 @@ guard :shell do
   watch('db/schema.rb') { system('rake annotate')}
 end
 
-guard 'sidekiq', environment: 'development' do
+guard 'sidekiq', environment: 'development', cli: ['-C', './config/sidekiq.yml'] do
   watch(%r{^workers/(.+)\.rb$})
 end
