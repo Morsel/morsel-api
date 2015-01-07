@@ -162,9 +162,9 @@ class MorselsController < ApiController
       elsif current_user.present?
         Morsel.includes(:items, :place, :creator)
               .with_drafts(true)
-              .order(Morsel.arel_table[:published_at].desc)
-              .paginate(pagination_params, pagination_key)
-              .where_creator_id_or_tagged_user_id(current_user.id)
+              .order(Morsel.arel_table[:updated_at].desc)
+              .paginate(pagination_params, :updated_at)
+              .where_creator_id(current_user.id)
       end
     end
   end
