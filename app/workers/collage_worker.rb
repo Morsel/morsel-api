@@ -12,7 +12,7 @@ class CollageWorker
 
     if morsel.items.map(&:photo_processing).uniq.include?(true)
       # photos still processing, retry job
-      raise Sidekiq::Retries::Retry.new(RuntimeError.new('item photos still processing'))
+      raise RuntimeError.new('item photos still processing')
     end
 
     service = GenerateCollage.call morsel: morsel
