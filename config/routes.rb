@@ -149,6 +149,7 @@ MorselApp::Application.routes.draw do
 
     member do
       post 'publish' => 'morsels#publish'
+      post 'republish' => 'morsels#republish'
       get 'tagged_users' => 'morsel_user_tags#users'
       get 'eligible_tagged_users' => 'morsel_user_tags#eligible_users'
       post 'tagged_users/:user_id' => 'morsel_user_tags#create'

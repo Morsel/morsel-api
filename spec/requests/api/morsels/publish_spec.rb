@@ -8,8 +8,10 @@ describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
   it 'should publish the Morsel by setting draft to false and setting a published_at DateTime' do
     stub_bitly_client
 
+    draft_morsel
+
     GenerateCollage.any_instance.should_receive(:call).exactly(1).times.and_return { Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))}
-    ShortenURL.should_receive(:call).exactly(12).times.and_call_original
+    ShortenURL.should_receive(:call).exactly(Mrslable.mrsl_sources.count).times.and_call_original
     FeedItem.should_receive(:new).exactly(1).times.and_call_original
     FacebookAuthenticatedUserDecorator.any_instance.should_not_receive(:post_facebook_photo_url)
     TwitterAuthenticatedUserDecorator.any_instance.should_not_receive(:post_twitter_photo_url)
@@ -17,9 +19,11 @@ describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
     Sidekiq::Testing.inline! { post_endpoint }
 
     expect_success
+
     expect_json_data_eq('draft' => false)
 
     new_morsel = Morsel.find(draft_morsel.id)
+    expect(new_morsel.publishing).to eq(false)
     expect(new_morsel.draft).to eq(false)
   end
 
@@ -64,7 +68,7 @@ describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
       stub_bitly_client
 
       GenerateCollage.any_instance.should_receive(:call).exactly(1).times.and_return { Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))}
-      ShortenURL.should_receive(:call).exactly(12).times.and_call_original
+      ShortenURL.should_receive(:call).exactly(Mrslable.mrsl_sources.count).times.and_call_original
       FeedItem.should_receive(:new).exactly(1).times.and_call_original
       FacebookAuthenticatedUserDecorator.any_instance.should_not_receive(:post_facebook_photo_url)
       TwitterAuthenticatedUserDecorator.any_instance.should_not_receive(:post_twitter_photo_url)
@@ -103,7 +107,7 @@ describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
       stub_bitly_client
 
       GenerateCollage.any_instance.should_receive(:call).exactly(1).times.and_return { Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))}
-      ShortenURL.should_receive(:call).exactly(12).times.and_call_original
+      ShortenURL.should_receive(:call).exactly(Mrslable.mrsl_sources.count).times.and_call_original
       FeedItem.should_receive(:new).exactly(1).times.and_call_original
       FacebookAuthenticatedUserDecorator.any_instance.should_receive(:post_facebook_photo_url).exactly(1).times.and_call_original
       TwitterAuthenticatedUserDecorator.any_instance.should_not_receive(:post_twitter_photo_url)
@@ -130,7 +134,7 @@ describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
       stub_bitly_client
 
       GenerateCollage.any_instance.should_receive(:call).exactly(1).times.and_return { Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))}
-      ShortenURL.should_receive(:call).exactly(12).times.and_call_original
+      ShortenURL.should_receive(:call).exactly(Mrslable.mrsl_sources.count).times.and_call_original
       FeedItem.should_receive(:new).exactly(1).times.and_call_original
       FacebookAuthenticatedUserDecorator.any_instance.should_not_receive(:post_facebook_photo_url)
       TwitterAuthenticatedUserDecorator.any_instance.should_receive(:post_twitter_photo_url).exactly(1).times.and_call_original
@@ -146,5 +150,38 @@ describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
     context 'authentication does NOT exist' do
       it 'does NOT crap out'
     end
+  end
+end
+
+describe 'POST /morsels/{:morsel_id}/publish morsels#republish' do
+  let(:endpoint) { "/morsels/#{published_morsel.id}/republish" }
+  let(:current_user) { FactoryGirl.create(:chef_with_photo) }
+  let(:published_morsel) { FactoryGirl.create(:morsel_with_items, creator: current_user, build_feed_item: true, include_mrsl: false) }
+
+  it 'should publish the Morsel by setting draft to false and setting a published_at DateTime' do
+    stub_bitly_client
+
+    published_morsel
+
+    GenerateCollage.any_instance.should_receive(:call).exactly(1).times.and_return { Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/morsels/morsel.png')))}
+    ShortenURL.should_receive(:call).exactly(Mrslable.mrsl_sources.count).times.and_call_original
+    FeedItem.should_receive(:new).exactly(1).times.and_call_original
+    FacebookAuthenticatedUserDecorator.any_instance.should_not_receive(:post_facebook_photo_url)
+    TwitterAuthenticatedUserDecorator.any_instance.should_not_receive(:post_twitter_photo_url)
+
+    existing_feed_item = published_morsel.feed_item
+
+    Sidekiq::Testing.inline! { post_endpoint }
+
+    expect_success
+
+    expect_json_data_eq('draft' => false)
+
+    new_morsel = Morsel.find(published_morsel.id)
+    expect(new_morsel.publishing).to eq(false)
+    expect(new_morsel.draft).to eq(false)
+    expect(new_morsel.feed_item).to_not eq(existing_feed_item)
+
+    expect(existing_feed_item.reload.deleted?).to be_true
   end
 end
