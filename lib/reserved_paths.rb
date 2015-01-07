@@ -27,6 +27,7 @@ module ReservedPaths
       city
       claim
       claimed
+      collection
       collections
       contact
       contacts
@@ -38,6 +39,7 @@ module ReservedPaths
       downloads
       eatmorsel
       engineering
+      event
       events
       explore
       faq
@@ -51,6 +53,7 @@ module ReservedPaths
       friendrequest
       friends
       goodies
+      hashtag
       hashtags
       help
       home
@@ -91,6 +94,7 @@ module ReservedPaths
       reset_password
       restaurant
       restaurants
+      ria
       rules
       saved_searches
       search
@@ -103,6 +107,7 @@ module ReservedPaths
       similar_to
       sitemap
       statistics
+      stream
       tag
       team
       tech
@@ -113,6 +118,7 @@ module ReservedPaths
       trends
       unsubscribe
       user
+      username
       users
       welcome
       who_to_follow
