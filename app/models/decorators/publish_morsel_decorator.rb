@@ -1,6 +1,5 @@
 class PublishMorselDecorator < SimpleDelegator
-  def publish!(options = {})
-    # TODO: Crap out if already published
+  def publish(options = {})
     self.publishing = true
     if save
       PublishMorselWorker.perform_async(
@@ -16,14 +15,11 @@ class PublishMorselDecorator < SimpleDelegator
     end
   end
 
-  def unpublish!
-    # TODO: Crap out if not already published
-    feed_item.destroy
-    update draft: true, published_at: nil
+  def unpublish
+    feed_item.destroy && update(draft: true, published_at: nil)
   end
 
-  def republish!
-    unpublish!
-    publish!
+  def republish
+    unpublish && publish
   end
 end

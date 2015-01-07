@@ -102,6 +102,7 @@
   - [DELETE `/morsels/:id/like` - Unlike Morsel](#delete-morselsidlike---unlike-morsel)
   - [GET `/morsels/:id/likers` - Likers](#get-morselsidlikers---likers)
   - [POST `/morsels/:id/publish` - Publish Morsel](#post-morselsidpublish---Publish-morsel)
+  - [POST `/morsels/:id/republish` - Republish Morsel](#post-morselsidrepublish---Republish-morsel)
   - [DELETE `/morsels/:id` - Delete Morsel](#delete-morselsid---delete-morsel)
   - [POST `/morsels/:id/tagged_users` - Tag User](#post-morselsidtagged_users---tag-user)
   - [DELETE `/morsels/:id/tagged_users` - Untag User](#delete-morselsidtagged_users---untag-user)
@@ -1705,9 +1706,28 @@ __Request Behaviors__
 <br />
 <br />
 
-
 ## POST `/morsels/:id/publish` - Publish Morsel
 Publishes the Morsel with the specified `id` by setting a `published_at` DateTime and `draft`=false
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| morsel[primary_item_id] | Number | The ID of the Item to set as the primary Item for this Morsel. Must be the ID of a Item that is part of the Morsel | | |
+| post_to_facebook | Boolean | Post to the [current_user](#current_user)'s Facebook wall with the Morsel's title and a link to the Morsel. | false | |
+| post_to_twitter | Boolean | Send a Tweet from the [current_user](#current_user) with the Morsel's title and a link to the Morsel. If the title and description are too long they will be truncated to allow enough room for the link. | false | |
+
+### Response
+
+| __data__ |
+| -------- |
+| Published [Morsel](#morsel) |
+
+<br />
+<br />
+
+## POST `/morsels/:id/republish` - Republish Morsel
+Republishes the Morsel with the specified `id` by setting a `published_at` DateTime and `draft`=false and deleting its existing [Feed Item](#feed-item).
 
 ### Request
 

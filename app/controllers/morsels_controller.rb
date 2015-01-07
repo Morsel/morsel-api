@@ -68,16 +68,14 @@ class MorselsController < ApiController
     morsel = Morsel.includes(:items, :place, :creator).find params[:id]
     authorize_action_for morsel
 
-    service = PublishMorsel.call(
-      morsel: morsel,
-      morsel_params: (params[:morsel].present? ? MorselParams.build(params) : nil),
-      social_params: {
-        post_to_facebook: params[:post_to_facebook],
-        post_to_twitter: params[:post_to_twitter]
-      }
-    )
+    custom_respond_with_service publish_service(morsel)
+  end
 
-    custom_respond_with_service service
+  def republish
+    morsel = Morsel.includes(:items, :place, :creator).find params[:id]
+    authorize_action_for morsel
+
+    custom_respond_with_service publish_service(morsel, true)
   end
 
   def collect
@@ -171,5 +169,17 @@ class MorselsController < ApiController
     end
   end
 
-  authorize_actions_for Morsel, except: public_actions, actions: { publish: :update, drafts: :read, collect: :read, uncollect: :read }
+  def publish_service(morsel, should_republish = false)
+    PublishMorsel.call(
+      morsel: morsel,
+      morsel_params: (params[:morsel].present? ? MorselParams.build(params) : nil),
+      social_params: {
+        post_to_facebook: params[:post_to_facebook],
+        post_to_twitter: params[:post_to_twitter]
+      },
+      should_republish: should_republish
+    )
+  end
+
+  authorize_actions_for Morsel, except: public_actions, actions: { publish: :update, republish: :update, drafts: :read, collect: :read, uncollect: :read }
 end

@@ -4,15 +4,15 @@ class PublishMorsel
   attribute :morsel, Morsel
   attribute :morsel_params, Hash
   attribute :social_params, Hash
+  attribute :should_republish, Boolean, default: false
 
   validates :morsel, presence: true
   validate :title_exists?
   validate :primary_item_exists?
 
   def call
-    publish_morsel = PublishMorselDecorator.new(morsel)
-    if publish_morsel.publish! safe_social_params
-      publish_morsel
+    if should_republish ? PublishMorselDecorator.new(morsel).republish : PublishMorselDecorator.new(morsel).publish(safe_social_params)
+      morsel.reload
     else
       errors.add(:morsel, 'unable to publish')
     end
