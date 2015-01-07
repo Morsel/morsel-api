@@ -46,7 +46,6 @@ gem 'seedbank'
 gem 'settingslogic'
 gem 'sidekiq', '~> 3.2.6'
 gem 'sidekiq-failures', '~> 0.4.3'
-gem 'sidekiq-retries', '~> 0.3.0'
 gem 'sinatra', '>= 1.3.0', require: nil
 gem 'slim-rails', '~> 2.1.5'
 gem 'slugged', '~> 2.0'
