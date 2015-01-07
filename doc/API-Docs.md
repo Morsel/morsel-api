@@ -962,7 +962,7 @@ Updates the User with the specified `user_id`. If a new `email`, `username`, or 
 <br />
 
 ## GET `/users/:id|:username/morsels` - User Morsels
-Returns the Morsels created by or tagged with the User with the specified `user_id` or `user_username`.
+Returns the published Morsels created by or tagged with the User with the specified `user_id` or `user_username`.
 
 __Request Behaviors__
 * [Timeline Pagination](#timeline-pagination)
@@ -1328,7 +1328,7 @@ __Request Behaviors__
 <br />
 
 ## GET `/places/:id/morsels` - Place Morsels
-Returns Morsels belonging to the Place with the specified `id`
+Returns published Morsels belonging to the Place with the specified `id`
 
 __Request Behaviors__
 * [Timeline Pagination](#timeline-pagination)
@@ -1580,7 +1580,7 @@ Creates a new Morsel for the current User.
 <br />
 
 ## GET `/morsels` - Morsels
-Returns the Morsels (including Drafts) for [current_user](#current_user) sorted by their `id`.
+Returns the Morsels (including Drafts) for [current_user](#current_user) sorted by `updated_at`
 
 __Request Behaviors__
 * [Timeline Pagination](#timeline-pagination)
@@ -1589,7 +1589,7 @@ __Request Behaviors__
 
 | __data__ | __order__ |
 | -------- | --------- |
-| [Slim Morsels](#slim-morsel)[] | `published_at` DESC |
+| [Slim Morsels](#slim-morsel)[] | `updated_at` DESC |
 
 <br />
 <br />
