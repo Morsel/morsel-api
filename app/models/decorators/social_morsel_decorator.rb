@@ -31,6 +31,6 @@ class SocialMorselDecorator < SimpleDelegator
   end
 
   def tweet_size
-    140 - base_twitter_message.length - 1
+    140 - base_twitter_message.length - 23 - 1
   end
 end
