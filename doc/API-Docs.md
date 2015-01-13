@@ -638,8 +638,8 @@ Image processing is done in a background job. `photo_processing` will be set to 
 | user[password] | String | The password for the new User. Minimum 8 characters. If an authentication is passed and this field is omitted the User's password will be randomly generated. | | X |
 | user[first_name] | String | The first name for the new User. | | |
 | user[last_name] | String | The last name for the new User. | | |
-| user[photo] | File | The profile photo for the new User. Can be GIF, JPG, or PNG. | | |
-| user[remote_photo_url] | String | URL to the profile photo for the new User. Can be GIF, JPG, or PNG. | | |
+| user[photo] | File | The profile photo for the new User. Can be JPG or PNG. | | |
+| user[remote_photo_url] | String | URL to the profile photo for the new User. Can be JPG or PNG. | | |
 | user[bio] | String | The bio for the new User. Maximum 255 characters. | | |
 | __utmz | String | Google Analytics information to pass to the server | | |
 | authentication[provider] | String | The authentication provider. Currently the only valid values are 'facebook', 'instagram', and 'twitter'. | | |
@@ -945,8 +945,8 @@ Updates the User with the specified `user_id`. If a new `email`, `username`, or 
 | user[password] | String | The new password for the User. Minimum 8 characters. | | |
 | user[first_name] | String | The new first name for the User. | | |
 | user[last_name] | String | The new last name for the User. | | |
-| user[photo] | File | The new profile photo for the User. Can be GIF, JPG, or PNG. | | |
-| user[remote_photo_url] | String | URL to the new profile photo for the User. Can be GIF, JPG, or PNG. | | |
+| user[photo] | File | The new profile photo for the User. Can be JPG or PNG. | | |
+| user[remote_photo_url] | String | URL to the new profile photo for the User. Can be JPG or PNG. | | |
 | user[bio] | String | The new bio for the User. Maximum 255 characters | | |
 | user[current_password] | String | The current password for the User. Required for sensitive changes such as `email`, `username`, or `password`.| | |
 | user[settings][auto_follow] | Boolean | `true` to have the User auto-follow social friends that join | | |
@@ -1373,7 +1373,8 @@ Image processing is done in a background job. `photo_processing` will be set to 
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | item[description] | String | The description for the new Item | | |
-| item[photo] | File | The photo. Can be GIF, JPG, or PNG. | | |
+| item[photo] | File | The photo. Can be JPG or PNG. | | |
+| item[remote_photo_url] | String | URL to a photo. Can be JPG or PNG. | | |
 | item[nonce] | String | Unique UUID to prevent duplicates | | |
 | item[sort_order] | Number | The `sort_order` for the Item in the Morsel. | end of Morsel | |
 | item[morsel_id] | Number | The ID of the Morsel to set this Item to. | | X |
@@ -1411,7 +1412,7 @@ Updates the Item with the specified `id`
 | Parameter           | Type    | Description | Default | Required? |
 | ------------------- | ------- | ----------- | ------- | --------- |
 | item[description] | String | The description for the Item | | |
-| item[photo] | File | The photo. Can be GIF, JPG, or PNG. | | |
+| item[photo] | File | The photo. Can be JPG or PNG. | | |
 | item[sort_order] | Number | Changes the `sort_order` of a Morsel when combined with `morsel_id`. | | |
 | item[morsel_id] | Number | Changes the `sort_order` of a Morsel when combined with `sort_order`. | | |
 
