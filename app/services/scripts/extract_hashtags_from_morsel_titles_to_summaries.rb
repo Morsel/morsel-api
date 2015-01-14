@@ -4,7 +4,6 @@ module Scripts
 
     def call
       Morsel.where(Morsel.arel_table[:title].matches('%#%')).find_each do |morsel|
-        puts "Morsel #{morsel.id}"
         title = morsel.title.dup
         ExtractHashtags.call(text: title).response.each do |hashtag|
           formatted_hashtag = "##{hashtag}"
