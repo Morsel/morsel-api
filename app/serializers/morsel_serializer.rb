@@ -18,10 +18,14 @@ class MorselSerializer < SlimMorselSerializer
   end
 
   def tagged
-    has_tagged_users && scope.present? && object.tagged_user?(scope)
+    if has_tagged_users
+      scope.present? ? object.tagged_user?(scope) : nil
+    else
+      scope.present? ? false : nil
+    end
   end
 
   def liked
-    scope.present? && scope.likes_morsel?(object)
+    scope.present? ? scope.likes_morsel?(object) : nil
   end
 end
