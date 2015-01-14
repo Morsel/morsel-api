@@ -19,7 +19,7 @@ describe 'Notifications API' do
         expect_success
 
         expect_first_json_data_eq({
-          'message' => "#{last_user.full_name} (#{last_user.username}) liked #{some_morsel.title}".truncate(Settings.morsel.notification_length, separator: ' ', omission: '... '),
+          'message' => "#{last_user.full_name} (#{last_user.username}) liked '#{some_morsel.title}'".truncate(Settings.morsel.notification_length, separator: ' ', omission: '... '),
           'marked_read_at' => nil,
           'payload_type' => 'Activity',
           'payload' => {

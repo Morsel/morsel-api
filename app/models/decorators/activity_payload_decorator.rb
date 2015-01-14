@@ -1,6 +1,6 @@
 class ActivityPayloadDecorator < SimpleDelegator
   def message(user_id = nil)
-    "#{creator.full_name} (#{creator.username}) #{past_tense_action} #{subject_message(user_id)}"
+    "#{creator.full_name} (#{creator.username}) #{past_tense_action} '#{subject_message(user_id)}'"
   end
 
   private
