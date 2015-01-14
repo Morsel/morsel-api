@@ -17,6 +17,6 @@ class UserSerializer < SlimUserSerializer
   end
 
   def following
-    scope.present? && scope.following_user?(object)
+    scope.present? ? scope.following_user?(object) : nil
   end
 end
