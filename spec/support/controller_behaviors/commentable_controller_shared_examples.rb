@@ -69,7 +69,7 @@ shared_examples 'CommentableController' do
       expect(notification.payload).to eq(activity)
 
       # TODO: Make this not Item-specific
-      expect(notification.message).to eq("#{current_user.full_name} (#{current_user.username}) commented on '#{commentable.morsel_title_with_description}'")
+      expect(notification.message).to eq("#{current_user.full_name_with_username} commented on '#{commentable.morsel_title_with_description}'")
     end
 
     context 'missing Commentable' do

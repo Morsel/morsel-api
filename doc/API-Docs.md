@@ -2684,7 +2684,7 @@ Response for any Follow Keyword related requests.
   "action_type":"Like",
   "created_at":"2014-03-13T17:01:38.370Z",
   "subject_type":"Item",
-  "message": "Drew Muller (user_jtu6g7nacn) followed Bob Dole"
+  "message": "Drew Muller (user_jtu6g7nacn) followed Bob Dole (bobdole)"
 }
 ```
 
