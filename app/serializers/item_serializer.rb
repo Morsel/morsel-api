@@ -26,6 +26,6 @@ class ItemSerializer < ActiveModel::Serializer
   end
 
   def liked
-    scope.present? && scope.likes_item?(object)
+    scope.present? ? scope.likes_item?(object) : nil
   end
 end
