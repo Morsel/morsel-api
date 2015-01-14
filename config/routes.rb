@@ -100,6 +100,7 @@ MorselApp::Application.routes.draw do
       post 'reserveusername(/:username)' => 'users#reserveusername'
       post 'forgot_password' => 'users#forgot_password'
       post 'reset_password' => 'users#reset_password'
+      get 'check_reset_password_token' => 'users#check_reset_password_token'
       get 'me' => 'users#me'
       post 'unsubscribe' => 'users#unsubscribe'
       get 'activities' => 'activities#index'

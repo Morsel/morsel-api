@@ -34,7 +34,7 @@ shared_examples 'LikeableController' do
         else
           likeable_description = likeable.morsel_title_with_description
         end
-        expect(notification.message).to eq("#{current_user.full_name} (#{current_user.username}) liked #{likeable_description}".truncate(Settings.morsel.notification_length, separator: ' ', omission: '... '))
+        expect(notification.message).to eq("#{current_user.full_name_with_username} liked '#{likeable_description}'".truncate(Settings.morsel.notification_length, separator: ' ', omission: '... '))
       end
 
       context 'already likes the Likeable' do

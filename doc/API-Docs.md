@@ -44,6 +44,7 @@
   - [POST `/users/sign_in` - User Authentication](#post-userssign_in---user-authentication)
   - [POST `/users/forgot_password` - Forgot Password](#post-usersforgot_password---forgot-password)
   - [POST `/users/reset_password` - Reset Password](#post-usersreset_password---reset-password)
+  - [GET `/users/check_reset_password_token` - Check Reset Password Token](#get-userscheck_reset_password_token---check-reset-password-token)
   - [GET `/users/me` - Me](#get-usersme---me)
   - [GET `/users/search` - Search Users](#get-userssearch---search-users)
   - [POST `/users/unsubscribe` - Unsubscribe](#post-usersunsubscribe---unsubscribe)
@@ -742,6 +743,29 @@ Sets the password for the User with the specified `reset_password_token` to the 
 | -------- |
 | Authenticated [User (w/ Auth Token)](#user-w-auth-token) |
 
+
+<br />
+<br />
+
+## GET `/users/check_reset_password_token` - Check Reset Password Token
+Returns `true` if the `reset_password_token` is valid. Both `reset_password_token` and `user_id` are passed from the email link.
+
+__Request Behaviors__
+* [Public](#public)
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| reset_password_token | String | The `reset_password_token` to check | | X |
+| user_id | String | The id of the user expected | | X |
+
+### Response
+
+| Condition | __data__ |
+| --------- | -------- |
+| `reset_password_token` is valid | true |
+| `reset_password_token` is NOT valid | false |
 
 <br />
 <br />
@@ -2684,7 +2708,7 @@ Response for any Follow Keyword related requests.
   "action_type":"Like",
   "created_at":"2014-03-13T17:01:38.370Z",
   "subject_type":"Item",
-  "message": "Drew Muller (user_jtu6g7nacn) followed Bob Dole"
+  "message": "Drew Muller (user_jtu6g7nacn) followed Bob Dole (bobdole)"
 }
 ```
 

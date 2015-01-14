@@ -124,6 +124,16 @@ class UsersController < ApiController
     end
   end
 
+  public_actions << def check_reset_password_token
+    reset_password_token = Devise.token_generator.digest(User, :reset_password_token, params.fetch(:reset_password_token))
+    user = User.find_by(id: params.fetch(:user_id), reset_password_token: reset_password_token)
+    if user.present?
+      render_json true
+    else
+      render_json false
+    end
+  end
+
   public_actions << def unsubscribe
     user = User.find_by User.arel_table[:email].lower.eq(params.fetch(:email).downcase)
 

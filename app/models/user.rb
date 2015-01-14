@@ -215,6 +215,14 @@ class User < ActiveRecord::Base
     end
   end
 
+  def full_name_with_username
+    if full_name
+      "#{full_name} (#{username})"
+    else
+      "(#{username})"
+    end
+  end
+
   def url
     # https://eatmorsel.com/marty
     "#{Settings.morsel.web_url}/#{username}"
