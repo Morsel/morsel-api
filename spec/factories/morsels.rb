@@ -4,30 +4,31 @@
 #
 # ### Columns
 #
-# Name                      | Type               | Attributes
-# ------------------------- | ------------------ | ---------------------------
-# **`id`**                  | `integer`          | `not null, primary key`
-# **`title`**               | `string(255)`      |
-# **`created_at`**          | `datetime`         |
-# **`updated_at`**          | `datetime`         |
-# **`creator_id`**          | `integer`          |
-# **`cached_slug`**         | `string(255)`      |
-# **`deleted_at`**          | `datetime`         |
-# **`draft`**               | `boolean`          | `default(TRUE), not null`
-# **`published_at`**        | `datetime`         |
-# **`primary_item_id`**     | `integer`          |
-# **`photo`**               | `string(255)`      |
-# **`photo_content_type`**  | `string(255)`      |
-# **`photo_file_size`**     | `string(255)`      |
-# **`photo_updated_at`**    | `datetime`         |
-# **`mrsl`**                | `hstore`           |
-# **`place_id`**            | `integer`          |
-# **`template_id`**         | `integer`          |
-# **`likes_count`**         | `integer`          | `default(0), not null`
-# **`cached_url`**          | `string(255)`      |
-# **`summary`**             | `text`             |
-# **`tagged_users_count`**  | `integer`          | `default(0), not null`
-# **`publishing`**          | `boolean`          | `default(FALSE)`
+# Name                              | Type               | Attributes
+# --------------------------------- | ------------------ | ---------------------------
+# **`id`**                          | `integer`          | `not null, primary key`
+# **`title`**                       | `string(255)`      |
+# **`created_at`**                  | `datetime`         |
+# **`updated_at`**                  | `datetime`         |
+# **`creator_id`**                  | `integer`          |
+# **`cached_slug`**                 | `string(255)`      |
+# **`deleted_at`**                  | `datetime`         |
+# **`draft`**                       | `boolean`          | `default(TRUE), not null`
+# **`published_at`**                | `datetime`         |
+# **`primary_item_id`**             | `integer`          |
+# **`photo`**                       | `string(255)`      |
+# **`photo_content_type`**          | `string(255)`      |
+# **`photo_file_size`**             | `string(255)`      |
+# **`photo_updated_at`**            | `datetime`         |
+# **`mrsl`**                        | `hstore`           |
+# **`place_id`**                    | `integer`          |
+# **`template_id`**                 | `integer`          |
+# **`likes_count`**                 | `integer`          | `default(0), not null`
+# **`cached_url`**                  | `string(255)`      |
+# **`summary`**                     | `text`             |
+# **`tagged_users_count`**          | `integer`          | `default(0), not null`
+# **`publishing`**                  | `boolean`          | `default(FALSE)`
+# **`cached_primary_item_photos`**  | `hstore`           |
 #
 
 FactoryGirl.define do
