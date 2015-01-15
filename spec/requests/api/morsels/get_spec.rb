@@ -33,7 +33,7 @@ describe 'GET /morsels morsels#show' do
       },
       'has_tagged_users' => false,
       'tagged_users_count' => 0,
-      'liked' => false,
+      'liked' => nil,
       'primary_item_photos' => morsel_with_items.primary_item_photos
     })
     expect(json_data['items'].count).to eq(items_count)

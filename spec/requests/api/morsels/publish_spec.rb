@@ -94,7 +94,7 @@ describe 'POST /morsels/{:morsel_id}/publish morsels#publish' do
       expect(notification.user).to eq(tagged_user)
       expect(notification.payload).to eq(activity)
 
-      expect(notification.message).to eq("#{current_user.full_name_with_username} tagged you in #{draft_morsel.title}".truncate(Settings.morsel.notification_length, separator: ' ', omission: '... '))
+      expect(notification.message).to eq("#{current_user.full_name_with_username} tagged you in '#{draft_morsel.title}'".truncate(Settings.morsel.notification_length, separator: ' ', omission: '... '))
     end
   end
 
