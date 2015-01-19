@@ -8,6 +8,9 @@ class ApiController < ActionController::Base
 
   before_filter :authenticate_user_from_token!,
                 :default_format_json
+
+  after_filter :queue_api_call_event
+
   include JSONEnvelopable
   include UserEventCreator
   include PaperTrailable
@@ -62,6 +65,10 @@ class ApiController < ActionController::Base
     end
   rescue ActiveRecord::RecordNotFound
     unauthorized_token
+  end
+
+  def queue_api_call_event
+    queue_user_event(:api_call, nil, { response_status: response.status })
   end
 
   def foursquare_api_error
