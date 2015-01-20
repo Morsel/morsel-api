@@ -28,6 +28,7 @@
 - [Feed Methods](#feed-methods)
   - [GET `/feed` - Feed](#get-feed---feed)
   - [GET `/feed_all` - Feed (All)](#get-feed_all---feed-all) [__DEPRECATED__](https://app.asana.com/0/19486350215520/22747456263132)
+  - [GET `/feed_latest` - Feed (Latest)](#get-feed_latest---feed-latest)
 
 - [Authentication Methods](#authentication-methods)
   - [POST `/authentications` - Create Authentication](#post-authentications---create-authentication)
@@ -419,7 +420,7 @@ Since we use S3 for hosting our photos, it makes sense to upload photos directly
 # Feed Methods
 
 ## GET `/feed` - Feed
-Returns the Feed. If [current_user](#current_user) exists, the results will include your Feed Items, any followed Users' Feed Items, any followed Places' Feed Items, and any Feed Items marked as `featured`. If no [current_user](#current_user) exists only Feed Items marked as `featured` will be returned. In either case results are sorted by their `created_at` date, with the most recent one's appearing first.
+Returns the Feed. If [current_user](#current_user) exists, the results will include your [Feed Items](#feed-item), any followed Users' [Feed Items](#feed-item), any followed Places' [Feed Items](#feed-item), and any [Feed Items](#feed-item) marked as `featured`. If no [current_user](#current_user) exists only [Feed Items](#feed-item) marked as `featured` will be returned. In either case results are sorted by their `created_at` date, with the most recent one's appearing first.
 
 __Request Behaviors__
 * [Timeline Pagination](#timeline-pagination)
@@ -444,7 +445,7 @@ __Request Behaviors__
 
 ## GET `/feed_all` - Feed (All)
 [__DEPRECATED__](https://app.asana.com/0/19486350215520/22747456263132)
-Returns all Feed Items.
+Returns all [Feed Items](#feed-item).
 
 __Request Behaviors__
 * [Timeline Pagination](#timelime-pagination)
@@ -455,6 +456,21 @@ __Request Behaviors__
 | __data__ |
 | -------- |
 | [Feed Items](#feed-item)[] |
+
+<br />
+<br />
+
+## GET `/feed_latest` - Feed (Latest)
+Returns the latest published [Feed Item](#feed-item)
+
+__Request Behaviors__
+* [Public](#public)
+
+### Response
+
+| __data__ |
+| -------- |
+| [Feed Item](#feed-item) |
 
 <br />
 <br />

@@ -207,4 +207,23 @@ describe 'Feed API' do
       expect_json_data_count morsels_count
     end
   end
+
+  describe 'GET /feed_latest' do
+    let(:endpoint) { '/feed_latest' }
+    let(:morsels_count) { rand(3..6) }
+    let(:expected_feed_item) { FeedItem.last }
+
+    before do
+      morsels_count.times { FactoryGirl.create(:morsel_with_items) }
+    end
+
+    it 'returns recent Feed Items' do
+      get_endpoint
+
+      expect_success
+      expect_json_data_eq({
+        'id' => expected_feed_item.id
+      })
+    end
+  end
 end
