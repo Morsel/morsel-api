@@ -48,6 +48,13 @@ class FeedController < ApiController
     )
   end
 
+  public_actions << def latest
+    custom_respond_with FeedItem.includes(:subject)
+                                .visible
+                                .order(FeedItem.arel_table[:id].desc)
+                                .first
+  end
+
   private
 
   authorize_actions_for FeedItem, except: public_actions, actions: { all: :read }

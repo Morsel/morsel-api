@@ -178,6 +178,7 @@ MorselApp::Application.routes.draw do
 
   get 'feed' => 'feed#index'
   get 'feed_all' => 'feed#all'
+  get 'feed_latest' => 'feed#latest'
 
   post 'contact' => 'contact#create'
 
