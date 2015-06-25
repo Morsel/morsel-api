@@ -68,6 +68,12 @@ class Morsel < ActiveRecord::Base
   has_many :morsel_user_tags, dependent: :destroy
   has_many :tagged_users, through: :morsel_user_tags, source: :user
 
+  has_many :morsel_morsel_keywords
+  has_many :morsel_keywords, through: :morsel_morsel_keywords
+
+  has_many :subscriptions
+  has_many :subscribers, through: :subscriptions, source: :user
+
   before_save :update_cached_primary_item_photos,
               :update_published_at_if_necessary,
               :update_url
