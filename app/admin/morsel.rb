@@ -147,6 +147,7 @@ ActiveAdmin.register Morsel do
     f.inputs 'Morsel' do
       f.input :title
       f.input :summary
+      f.input :morsel_keywords
     end
 
     f.inputs 'Feed Item', for: [:feed_item, f.object.feed_item] do |fi_f|

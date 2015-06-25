@@ -107,6 +107,13 @@ class User < ActiveRecord::Base
 
   has_many :morsel_user_tags, dependent: :destroy
 
+
+
+  has_many :subscriptions
+  has_many :subscribed_morsels, through: :subscriptions, source: :morsel
+
+  accepts_nested_attributes_for :subscriptions
+
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
   scope :promoted, -> { where(promoted: true) }
@@ -260,6 +267,10 @@ class User < ActiveRecord::Base
       end
     end
   end
+
+  def uniq_subcribed_morsels
+    subscribed_morsels.uniq
+  end  
 
   private
 

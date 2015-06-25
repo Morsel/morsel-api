@@ -52,6 +52,11 @@ class UsersController < ApiController
     end
   end
 
+  def morsel_subscribe
+    current_user.update_attributes(morsel_subscribe_params)      
+    render_json_ok  
+  end
+ 
   public_actions << def validate_email
     user = User.new(email: params[:email])
     user.validate_email
@@ -220,6 +225,12 @@ class UsersController < ApiController
 
   private
 
+
+  def morsel_subscribe_params
+    params.require(:user).permit(subscriptions_attributes: [:morsel_id])
+    
+  end
+
   def password_required?(user, user_params)
     current_password = user_params.delete(:current_password)
 
@@ -234,5 +245,5 @@ class UsersController < ApiController
     user.errors.count > 0
   end
 
-  authorize_actions_for User, except: public_actions, actions: { me: :read, search: :read, places: :read }
+  authorize_actions_for User, except: public_actions, actions: { me: :read, search: :read, places: :read ,morsel_subscribe: :create}
 end
