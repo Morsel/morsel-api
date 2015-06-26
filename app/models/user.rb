@@ -112,7 +112,10 @@ class User < ActiveRecord::Base
   has_many :subscriptions
   has_many :subscribed_morsels, through: :subscriptions, source: :morsel
 
+  has_one :profile
+
   accepts_nested_attributes_for :subscriptions
+  accepts_nested_attributes_for :profile
 
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
