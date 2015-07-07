@@ -20,6 +20,8 @@ ActiveAdmin.register ActivityLog do
     column "Share Type", :share_by
     column "Activity", :activity
     column "User Id", :user_id
+    column "Object Id", :activity_id
+    column "Object Type", :activity_type
 
      # actions
   end
