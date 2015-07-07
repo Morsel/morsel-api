@@ -9,6 +9,8 @@ class ApiController < ActionController::Base
   before_filter :authenticate_user_from_token!,
                 :default_format_json
 
+  before_action :activity_log!
+
   after_filter :queue_api_call_event
 
   include JSONEnvelopable
@@ -23,6 +25,25 @@ class ApiController < ActionController::Base
 
   rescue_from Authority::SecurityViolation do |error|
     render_json_errors({ api: ["Not authorized to #{error.action} #{error.resource.class}"] }, :forbidden)
+  end
+
+  def activity_log!
+        
+        
+      if request.headers["activity"]
+        
+        activity = 
+        { 
+            ip_address: request.remote_ip,host_site: request.headers["Origin"],
+            share_by: request.headers["share-by"],activity: request.headers["activity"],
+            activity_id: request.headers["activity-id"],activity_type: request.headers["activity-type"], user_id: request.headers["user-id"] 
+        }
+       
+         activity = ActivityLog.new(activity)
+         activity.save
+         
+      end
+
   end
 
   def authenticate_admin_user!
