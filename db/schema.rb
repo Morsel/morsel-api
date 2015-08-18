@@ -11,12 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150115211655) do
+ActiveRecord::Schema.define(version: 20150804072302) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
-  enable_extension "pg_stat_statements"
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -49,6 +48,20 @@ ActiveRecord::Schema.define(version: 20150115211655) do
   add_index "activities", ["subject_id"], name: "index_activities_on_subject_id", using: :btree
   add_index "activities", ["subject_type", "action_type"], name: "index_activities_on_subject_type_and_action_type", using: :btree
 
+  create_table "activity_logs", force: true do |t|
+    t.string   "ip_address"
+    t.string   "host_site"
+    t.string   "share_by"
+    t.string   "activity"
+    t.integer  "activity_id"
+    t.string   "activity_type"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "activity_logs", ["activity_id"], name: "index_activity_logs_on_activity_id", using: :btree
+
   create_table "activity_subscriptions", force: true do |t|
     t.integer  "subscriber_id"
     t.integer  "subject_id"
@@ -80,21 +93,6 @@ ActiveRecord::Schema.define(version: 20150115211655) do
   add_index "authentications", ["deleted_at"], name: "index_authentications_on_deleted_at", using: :btree
   add_index "authentications", ["uid", "name"], name: "index_authentications_on_uid_and_name", using: :btree
   add_index "authentications", ["user_id"], name: "index_authentications_on_user_id", using: :btree
-
-  create_table "authorizations", force: true do |t|
-    t.string   "provider"
-    t.string   "uid"
-    t.integer  "user_id"
-    t.string   "token"
-    t.string   "secret"
-    t.string   "name"
-    t.string   "link"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "authorizations", ["uid", "name"], name: "index_authorizations_on_uid_and_name", using: :btree
-  add_index "authorizations", ["user_id"], name: "index_authorizations_on_user_id", using: :btree
 
   create_table "collection_morsels", force: true do |t|
     t.integer  "collection_id"
@@ -150,6 +148,16 @@ ActiveRecord::Schema.define(version: 20150115211655) do
 
   add_index "devices", ["deleted_at"], name: "index_devices_on_deleted_at", using: :btree
   add_index "devices", ["user_id"], name: "index_devices_on_user_id", using: :btree
+
+  create_table "email_logs", force: true do |t|
+    t.integer  "morsel_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "email_logs", ["morsel_id"], name: "index_email_logs_on_morsel_id", using: :btree
+  add_index "email_logs", ["user_id"], name: "index_email_logs_on_user_id", using: :btree
 
   create_table "emails", force: true do |t|
     t.string   "class_name"
@@ -252,6 +260,20 @@ ActiveRecord::Schema.define(version: 20150115211655) do
   add_index "likes", ["likeable_type"], name: "index_likes_on_likeable_type", using: :btree
   add_index "likes", ["liker_id", "likeable_id"], name: "index_likes_on_liker_id_and_likeable_id", using: :btree
 
+  create_table "morsel_keywords", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
+  end
+
+  create_table "morsel_morsel_keywords", force: true do |t|
+    t.integer  "morsel_id"
+    t.integer  "morsel_keyword_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "morsel_user_tags", force: true do |t|
     t.integer  "morsel_id"
     t.integer  "user_id"
@@ -285,10 +307,14 @@ ActiveRecord::Schema.define(version: 20150115211655) do
     t.integer  "tagged_users_count",         default: 0,     null: false
     t.boolean  "publishing",                 default: false
     t.hstore   "cached_primary_item_photos"
+    t.integer  "morsel_keyword_id"
+    t.boolean  "news_letter_sent",           default: false
+    t.boolean  "is_submit",                  default: false
   end
 
   add_index "morsels", ["cached_slug"], name: "index_morsels_on_cached_slug", using: :btree
   add_index "morsels", ["creator_id"], name: "index_morsels_on_creator_id", using: :btree
+  add_index "morsels", ["morsel_keyword_id"], name: "index_morsels_on_morsel_keyword_id", using: :btree
   add_index "morsels", ["place_id"], name: "index_morsels_on_place_id", using: :btree
   add_index "morsels", ["updated_at", "published_at"], name: "index_morsels_on_updated_at_and_published_at", using: :btree
 
@@ -342,19 +368,14 @@ ActiveRecord::Schema.define(version: 20150115211655) do
 
   add_index "places", ["name", "foursquare_venue_id"], name: "index_places_on_name_and_foursquare_venue_id", using: :btree
 
-  create_table "posts", force: true do |t|
-    t.string   "title"
+  create_table "profiles", force: true do |t|
+    t.string   "host_url"
+    t.string   "host_logo"
+    t.string   "address"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "creator_id"
-    t.string   "cached_slug"
-    t.datetime "deleted_at"
-    t.boolean  "draft",        default: false, null: false
-    t.datetime "published_at"
   end
-
-  add_index "posts", ["cached_slug"], name: "index_posts_on_cached_slug", using: :btree
-  add_index "posts", ["creator_id"], name: "index_posts_on_creator_id", using: :btree
 
   create_table "remote_notifications", force: true do |t|
     t.integer  "device_id"
@@ -393,6 +414,14 @@ ActiveRecord::Schema.define(version: 20150115211655) do
   add_index "slugs", ["scope", "slug", "created_at"], name: "index_slugs_on_scope_and_slug_and_created_at", using: :btree
   add_index "slugs", ["scope", "slug"], name: "index_slugs_on_scope_and_slug", using: :btree
 
+  create_table "subscriptions", force: true do |t|
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "creator_id"
+    t.integer  "keyword_id"
+  end
+
   create_table "tags", force: true do |t|
     t.integer  "tagger_id"
     t.integer  "keyword_id"
@@ -419,6 +448,16 @@ ActiveRecord::Schema.define(version: 20150115211655) do
 
   add_index "user_events", ["name"], name: "index_user_events_on_name", using: :btree
   add_index "user_events", ["user_id"], name: "index_user_events_on_user_id", using: :btree
+
+  create_table "user_morsel_keywords", force: true do |t|
+    t.integer  "morsel_keyword_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_morsel_keywords", ["morsel_keyword_id"], name: "index_user_morsel_keywords_on_morsel_keyword_id", using: :btree
+  add_index "user_morsel_keywords", ["user_id"], name: "index_user_morsel_keywords_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "",    null: false

@@ -55,7 +55,7 @@ gem 'twitter-text', '~> 1.10.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'virtus', '~> 1.0.3'
 gem 'zendesk_api', '~> 1.4.6'
-
+gem "excon",'~>0.45.3'
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
@@ -75,7 +75,7 @@ group :development, :test do
   gem 'bullet', '~> 4.14.0'
   gem 'bundler-audit'
   gem 'childprocess', '0.3.6'
-  gem 'did_you_mean', '~> 0.8.0'
+  gem 'did_you_mean', '~> 0.9.6'
   gem 'dotenv-rails'
   gem 'factory_girl_rails'
   gem 'faker'
@@ -92,6 +92,7 @@ group :development, :test do
   gem 'rspec-instafail'
   gem 'rspec-rails'
   gem 'simplecov', '~> 0.9.1', require: false
+  gem 'mandrill-api', require: false
 end
 
 group :test do

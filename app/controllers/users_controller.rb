@@ -14,18 +14,22 @@ class UsersController < ApiController
   end
 
   def update
+   
     user = User.find(params[:id])
     authorize_action_for user
 
     user_params = UserParams.build(params)
     user_params.delete(:promoted) # delete the `promoted` flag since that should only be set via /admin
 
+    
     if user_params[:photo_key]
       handle_photo_key(user_params[:photo_key], user, serializer: UserWithPrivateAttributesSerializer)
     else
+          
       if password_required?(user, user_params)
         render_json_errors(user.errors)
       elsif user.update_attributes(user_params)
+        
         if params[:prepare_presigned_upload] == 'true'
           handle_presigned_upload(user, serializer: UserWithPrivateAttributesSerializer)
         else
@@ -53,8 +57,23 @@ class UsersController < ApiController
   end
 
   def morsel_subscribe
-    current_user.update_attributes(morsel_subscribe_params)      
-    render_json_ok  
+    if morsel_subscribe_params[:subscribed_morsel_ids].present?
+       subscriptions = morsel_subscribe_params[:subscribed_morsel_ids].compact.map(&:to_i) #| current_user.subscribed_morsel_ids.flatten
+        subscriptions.each do |morsel_id|
+          
+          morsel = Morsel.find(morsel_id)
+          morsel_keyword = morsel.morsel_morsel_keywords.map(&:morsel_keyword_id)
+          morsel_keyword.each do |keyword|
+           
+            current_user.subscriptions.create(morsel_id: morsel_id,creator_id:morsel.creator_id,keyword_id: keyword)
+          end
+        end
+       # current_user.subscribed_morsel_ids= subscriptions
+      render_json_ok  
+    else
+      render_json_errors({ api: ["Subscribed morsel ids blank."] }, :forbidden)
+    end
+
   end
  
   public_actions << def validate_email
@@ -227,11 +246,12 @@ class UsersController < ApiController
 
 
   def morsel_subscribe_params
-    params.require(:user).permit(subscriptions_attributes: [:morsel_id])
+    params.require(:user).permit(subscribed_morsel_ids: [])
     
   end
 
   def password_required?(user, user_params)
+
     current_password = user_params.delete(:current_password)
 
     if current_password.nil?

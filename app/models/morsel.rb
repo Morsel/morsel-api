@@ -74,6 +74,10 @@ class Morsel < ActiveRecord::Base
   has_many :subscriptions
   has_many :subscribers, through: :subscriptions, source: :user
 
+
+  has_many :email_logs 
+  has_many :sendemaillogs, through: :email_logs, source: :user
+
   before_save :update_cached_primary_item_photos,
               :update_published_at_if_necessary,
               :update_url
@@ -102,8 +106,9 @@ class Morsel < ActiveRecord::Base
                   },
                   order_within_rank: 'published_at DESC'
 
-  scope :drafts, -> { where(draft: true) }
-  scope :published, -> { where(draft: false) }
+  scope :drafts, -> { where(draft: true ) }
+  scope :published, -> { where(draft: false)}
+  scope :submitted, -> { where('draft= ? OR is_submit= ?',false,true)}
   scope :with_drafts, -> (include_drafts = true) { where(draft: false) unless include_drafts }
   scope :where_place_id, -> (place_id) { where(place_id: place_id) unless place_id.nil? }
   scope :where_collection_id, -> (collection_id) { joins(:collection_morsels).where(CollectionMorsel.arel_table[:collection_id].eq(collection_id)) unless collection_id.nil? }
@@ -148,6 +153,15 @@ class Morsel < ActiveRecord::Base
 
   def primary_item_photos
     cached_primary_item_photos || ( primary_item_id.present? ? primary_item.photos : nil)
+  end
+
+  def host_info
+    
+    if user.profile.present?      
+      {host_morsel_url: "http://#{user.profile.host_url.gsub(/^https?\:\/\//,"").gsub(/\/$/,"")}/morsel-info/?morselid=#{id}",host_logo:(user.profile.host_logo.blank? ? (cached_primary_item_photos.present? ? cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg') : user.profile.host_logo), address: user.profile.address}
+    else
+      {host_morsel_url:url,host_logo:(cached_primary_item_photos.present? ? cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg'), address: nil}
+    end  
   end
 
   private

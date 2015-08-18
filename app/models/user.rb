@@ -72,6 +72,8 @@ class User < ActiveRecord::Base
   alias_attribute :draft_count, :drafts_count
   alias_attribute :followed_user_count, :followed_users_count
 
+
+
   has_many :authentications, inverse_of: :user
 
   has_many :comments, through: :items
@@ -107,13 +109,18 @@ class User < ActiveRecord::Base
 
   has_many :morsel_user_tags, dependent: :destroy
 
-
+  
 
   has_many :subscriptions
   has_many :subscribed_morsels, through: :subscriptions, source: :morsel
 
-  has_one :profile
+  has_many :email_logs 
+  has_many :emaillogged_morsels, through: :email_logs, source: :morsel
 
+  has_many :morsel_keywords 
+
+  has_one :profile #, :dependent => :destroy
+  attr_accessor :creator_id,:keyword_id
   accepts_nested_attributes_for :subscriptions
   accepts_nested_attributes_for :profile
 
@@ -173,7 +180,18 @@ class User < ActiveRecord::Base
       send_devise_notification(:reserved_username_reminder, token, {})
     end
   end
-
+  def initialized_subscribed_morsels # this is the key method
+    #debugger
+      # [].tap do |o|
+      #   Morsel.all.each do |morsel|
+      #     if c = subscriptions.find { |c| c.morsel_id == morsel.id }
+      #       o << c.tap { |c| c.creator_id ||= true }
+      #     else
+      #       o << Subscriptions.new(morsel: morsel)
+      #     end
+      #   end
+      # end
+  end
   def self.find_first_by_auth_conditions(warden_conditions)
     conditions = warden_conditions.dup
     login = conditions.delete(:login)
@@ -273,6 +291,10 @@ class User < ActiveRecord::Base
 
   def uniq_subcribed_morsels
     subscribed_morsels.uniq
+  end  
+
+  def user_photo_logo
+    photo.present? ? photos[:_80x80] : 'https://www.eatmorsel.com/assets/images/utility/avatars/avatar_80x80.jpg'    
   end  
 
   private

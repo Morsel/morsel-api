@@ -12,13 +12,17 @@ class MorselsController < ApiController
   end
 
   public_actions << def index
+
+    
     if morsels_for_params.nil?
       unauthorized_token
     else
+      
       custom_respond_with_cached_serializer(
         morsels_for_params,
         MorselSerializer
       )
+
     end
   end
 
@@ -39,19 +43,67 @@ class MorselsController < ApiController
   end
 
   public_actions << def show
+    
     custom_respond_with Morsel.includes(:items, :place, :creator).find(params[:id])
   end
 
   def update
     morsel = Morsel.includes(:items, :place, :creator).find params[:id]
     authorize_action_for morsel
-
+     
     if morsel.update(MorselParams.build(params))
       custom_respond_with morsel
     else
       render_json_errors morsel.errors
     end
   end
+
+  public_actions << def update_morsel_keyword
+    
+    morsel = Morsel.find params[:morsel_id]
+    user = User.find params[:user_id]
+    if morsel.update(MorselParams.build(params, user)) && (morsel.feed_item ? morsel.feed_item.save : true)
+      
+       render_json_ok
+    
+    else
+        render_json_errors({ api: ["Invalid Parameter To call."] }, :forbidden) 
+    end
+  
+  end
+
+
+  public_actions << def check_publish
+    user= User.find(params[:userId]) if params[:userId]
+    profile = user.profile
+    if profile.nil?
+      render_json 'NO'
+    else
+      render_json 'OK'
+    end
+  end
+
+  public_actions << def check_then_publish
+
+    
+    user_profile = User.find(params[:userId]).profile
+    morsel_keyword = Morsel.find(params[:id]).morsel_morsel_keywords.pluck(:morsel_keyword_id)
+ 
+    if user_profile.present? && morsel_keyword.present?
+       
+       morsel = Morsel.includes(:items, :place, :creator).find params[:id]
+       authorize_action_for morsel
+       #morsel.update! draft: false, publishing: false, is_submit: false
+       custom_respond_with_service publish_service(morsel)
+         
+       #NewsletterWorker.new.perform(morsel:morsel)
+      
+       
+    else
+       render_json 'NOT'
+    end
+  end
+
 
   def destroy
     morsel = Morsel.find(params[:id])
@@ -65,9 +117,10 @@ class MorselsController < ApiController
   end
 
   def publish
+  
     morsel = Morsel.includes(:items, :place, :creator).find params[:id]
     authorize_action_for morsel
-
+    
     custom_respond_with_service publish_service(morsel)
   end
 
@@ -127,10 +180,11 @@ class MorselsController < ApiController
 
   class MorselParams
     def self.build(params, _scope = nil)
+      
       if _scope && _scope.admin?
         params.require(:morsel).permit(:title, :summary, :draft, :primary_item_id, :place_id, :template_id, :query, feed_item_attributes: [:id, :featured],morsel_keyword_ids: [])
       else
-        params.require(:morsel).permit(:title, :summary, :draft, :primary_item_id, :place_id, :template_id, :query)
+        params.require(:morsel).permit(:title, :summary, :draft, :primary_item_id, :place_id, :template_id, :query, :is_submit)
       end
     end
   end
@@ -138,6 +192,7 @@ class MorselsController < ApiController
   private
 
   def morsels_for_params
+    
     @morsels_for_params ||= begin
       # HACK: Support for older clients that don't yet support before_/after_date
       if pagination_params.include? :max_id
@@ -153,12 +208,24 @@ class MorselsController < ApiController
           user.id
         end
 
-        Morsel.includes(:items, :place, :creator)
-              .published
+        if !params[:submit]
+         
+          Morsel.includes(:items, :place, :creator)
+                .published
+                .order(Morsel.arel_table[:published_at].desc)
+                .paginate(pagination_params, pagination_key)
+                .where_creator_id_or_tagged_user_id(user_id)
+                .where_place_id(params[:place_id])
+        else
+
+          Morsel.includes(:items, :place, :creator)
+              .submitted
               .order(Morsel.arel_table[:published_at].desc)
               .paginate(pagination_params, pagination_key)
               .where_creator_id_or_tagged_user_id(user_id)
               .where_place_id(params[:place_id])
+
+        end
       elsif current_user.present?
         Morsel.includes(:items, :place, :creator)
               .with_drafts(true)
@@ -170,6 +237,7 @@ class MorselsController < ApiController
   end
 
   def publish_service(morsel, should_republish = false)
+    
     PublishMorsel.call(
       morsel: morsel,
       morsel_params: (params[:morsel].present? ? MorselParams.build(params) : nil),
@@ -181,5 +249,5 @@ class MorselsController < ApiController
     )
   end
 
-  authorize_actions_for Morsel, except: public_actions, actions: { publish: :update, republish: :update, drafts: :read, collect: :read, uncollect: :read }
+  authorize_actions_for Morsel, except: public_actions, actions: { publish: :update, republish: :update, drafts: :read, collect: :read, uncollect: :read, check_then_publish: :update }
 end

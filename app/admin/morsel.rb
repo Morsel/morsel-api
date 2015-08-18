@@ -31,9 +31,15 @@ ActiveAdmin.register Morsel do
   end
 
   controller do
-    def update
+    def update      
+      
       morsel = Morsel.find params[:id]
       if morsel.update(MorselsController::MorselParams.build(params, current_user)) && (morsel.feed_item ? morsel.feed_item.save : true)
+        
+        # NewsletterWorker.new.perform(morsel:morsel)  if !morsel.news_letter_sent? && morsel.morsel_keywords.present?
+    
+        # morsel.update_columns(news_letter_sent:true) if !morsel.news_letter_sent? && morsel.morsel_keywords.present?
+
         redirect_to(edit_admin_morsel_path(morsel), notice: 'Morsel updated!')
       else
         redirect_to(edit_admin_morsel_path(morsel), alert: 'Error updating morsel, ask Marty for help.')
