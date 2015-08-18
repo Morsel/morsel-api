@@ -71,6 +71,10 @@ MorselApp::Application.routes.draw do
   resources :keywords, only: [], concerns: [:followable] do
     collection do
       get 'search' => 'keywords#search'
+      post 'add_morsel_keyword' => 'keywords#add_keyword'
+      post 'show_morsel_keyword' => 'keywords#show_morsel_keyword'
+      post 'edit_morsel_keyword' => 'keywords#edit_morsel_keyword'
+      post 'selected_morsel_keyword' => 'keywords#selected_morsel_keyword'
     end
     member do
       get 'users' => 'keywords#users'
@@ -145,6 +149,7 @@ MorselApp::Application.routes.draw do
     collection do
       get 'drafts' => 'morsels#drafts'
       get 'search' => 'morsels#search'
+      post 'update_keyword' => 'morsels#update_morsel_keyword'
     end
 
     resources :items, only: [:update, :destroy]
@@ -158,6 +163,8 @@ MorselApp::Application.routes.draw do
       delete 'tagged_users/:user_id' => 'morsel_user_tags#destroy'
       post 'collect' => 'morsels#collect'
       delete 'collect' => 'morsels#uncollect'
+      post 'check_publish' => 'morsels#check_publish'
+      post 'check_then_publish' => 'morsels#check_then_publish'
     end
   end
 

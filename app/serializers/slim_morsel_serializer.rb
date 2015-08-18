@@ -13,7 +13,9 @@ class SlimMorselSerializer < ActiveModel::Serializer
              :published_at,
              :primary_item_id,
              :primary_item_photos,
-             :tagged_users_count
+             :tagged_users_count,
+             :is_submit
+
 
   has_one :creator, serializer: SlimUserSerializer
   has_one :place, serializer: SlimPlaceSerializer

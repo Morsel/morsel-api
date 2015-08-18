@@ -27,6 +27,66 @@ class KeywordsController < ApiController
     custom_respond_with_service service, each_serializer: KeywordSerializer
   end
 
+  public_actions << def add_keyword
+  
+    if MorselKeywordParams.build(params).present?
+        morselkeyword = MorselKeyword.create(name: params[:keyword][:name],user_id: params[:keyword][:user_id]);
+        
+          if morselkeyword.present?
+            render_json morselkeyword
+          end 
+    else
+        render_json_errors({ api: ["Invalid Parameter To call."] }, :forbidden) 
+    end
+
+  end
+
+  public_actions << def show_morsel_keyword
+    
+    if MorselKeywordParams.build(params).present?
+        all_morsel_keyword = User.find(params[:keyword][:user_id]).morsel_keywords
+          if all_morsel_keyword.present?
+            render_json all_morsel_keyword
+          else
+            render_json "blank"
+          end 
+
+    else
+        render_json_errors({ api: ["Invalid Parameter To call."] }, :forbidden) 
+    end
+  
+  end
+
+  public_actions << def edit_morsel_keyword
+   
+    if MorselKeywordParams.build(params).present?
+      morsel_keyword = MorselKeyword.find(params[:keyword][:id])
+        if morsel_keyword.update(name: params[:keyword][:name])
+            render_json_ok
+        end 
+    else
+        render_json_errors({ api: ["Invalid Parameter To call."] }, :forbidden) 
+    end
+  
+  end
+
+   public_actions << def selected_morsel_keyword
+    
+    if MorselKeywordParams.build(params).present?
+      selected_morsel_keyword = Morsel.find(params[:keyword][:morsel_id]).morsel_morsel_keywords.pluck(:morsel_keyword_id)
+      
+         if selected_morsel_keyword.present?
+             render_json selected_morsel_keyword
+         else
+              show_morsel_keyword
+         end 
+    else
+        render_json_errors({ api: ["Invalid Parameter To call."] }, :forbidden) 
+    end
+  
+  end
+
+
   private
 
   def keyword_type
@@ -39,5 +99,11 @@ class KeywordsController < ApiController
     end
   end
 
-  authorize_actions_for Keyword, except: public_actions, actions: { users: :read, morsels_for_name: :read, search: :read }
+  class MorselKeywordParams
+    def self.build(params, _scope = nil)
+      params.require(:keyword).permit(:name,:user_id,:id,:morsel_id)
+    end
+  end
+
+  authorize_actions_for Keyword, except: public_actions, actions: { users: :read, morsels_for_name: :read, search: :read, add_keyword: :read, show_morsel_keyword: :read }
 end
