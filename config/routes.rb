@@ -116,6 +116,7 @@ MorselApp::Application.routes.draw do
       get 'followables_activities' => 'activities#followables_activities'
       get 'notifications' => 'notifications#index'
       get 'search' => 'users#search'
+      post ':id/create_profile' => 'users#create_user_profile'
 
       # Note: Keep these at the end
       get ':id' => 'users#show', id: /\d+/

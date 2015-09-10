@@ -109,6 +109,7 @@ class Morsel < ActiveRecord::Base
   scope :drafts, -> { where(draft: true ) }
   scope :published, -> { where(draft: false)}
   scope :submitted, -> { where('draft= ? OR is_submit= ?',false,true)}
+  scope :where_keyword_id, -> (keyword_id) {  joins(:morsel_keywords).where(MorselKeyword.arel_table[:id].eq(keyword_id)) unless keyword_id.blank?}
   scope :with_drafts, -> (include_drafts = true) { where(draft: false) unless include_drafts }
   scope :where_place_id, -> (place_id) { where(place_id: place_id) unless place_id.nil? }
   scope :where_collection_id, -> (collection_id) { joins(:collection_morsels).where(CollectionMorsel.arel_table[:collection_id].eq(collection_id)) unless collection_id.nil? }
