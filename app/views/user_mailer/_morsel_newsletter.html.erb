@@ -1,72 +1,86 @@
-<table width='600' border='0' align='center' cellpadding='0' cellspacing='0' style='font-family:Arial, Helvetica, sans-serif; font-size:13px; background:#FCFCFC;'>
-    <tr>
-      <td height='35' align='center' ><a href='#' style='font-weight:bold; color:#333; text-decoration:none;'>Adjust your prefrences</a> &nbsp;| &nbsp;
+<table width="600" border="0" align="center" cellpadding="0" cellspacing="0" style="font-family:Arial, Helvetica, sans-serif; font-size:13px; background:#FCFCFC;">
+    <!-- <tr>
+          <td height='35' align='center' ><a href='#' style='font-weight:bold; color:#333; text-decoration:none;'>Adjust your prefrences</a> &nbsp;| &nbsp;
 
-      <%=link_to 'View this email in browser', morsel.host_info[:host_morsel_url],style:"font-weight:bold; color:#333; text-decoration:none;"%>
-      </td>
-    </tr>
- 
-    <tr>
-      <td align='center'>
+          <%=link_to 'View this email in browser', morsel.host_info[:host_morsel_url],style:"font-weight:bold; color:#333; text-decoration:none;"%>
+          </td>
+      </tr>  --> 
 
-     <!--  <img alt="logo" height="130" src="<%=morsel.host_info[:host_logo] %>"> -->
-     <div style="background-image: url('<%=morsel.host_info[:host_logo] %>'); height: 130px;"></div>
-       
-      </td>
-
-  <tr>    
-    <td height='10' align='center' style='font-size:20px; font-weight:bold; font-family:Tahoma, Geneva, sans-serif;'>
-      <div style="display: inline-block; vertical-align: middle;padding-bottom:10px;padding-top:10px;">
-         <div style="color:#ee8872"><%= link_to morsel.title,morsel.host_info[:host_morsel_url],style:"color:#ee8872;text-decoration:none" %></div>
-         <span style="font-size:15px;"><%= link_to "by "+morsel.user.full_name,"#{ENV['MORSEL_WEB_URL']}/#{morsel.user.try(&:username)}",style:"color:#ee8872;text-decoration:none" %> </span>
-      </div> 
-    </td>
-  </tr> 
-
-  <tr>
-    <td>
-     <%=link_to (image_tag (morsel.cached_primary_item_photos.present? ? morsel.cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg'),width:"640",height:"640",alt:'primary-image'),morsel.host_info[:host_morsel_url]%>
-     </td>
-  </tr>
-
-  <tr>
-    <td>&nbsp;</td>
-  </tr>
- <!--  <tr>
-    <td align='right' style='padding-right:15px;'>
-    <a href="<%=morsel.url%>">
-    <img src='http://w.sharethis.com/images/facebook_32.png' width='32' height='32' alt='facebook'></a> 
-    <a href="<%=morsel.url%>"><img src='http://w.sharethis.com/images/twitter_32.png' width='32' height='32' alt='twitter'></a> <a href="<%=morsel.url%>"><img src='http://w.sharethis.com/images/linkedin_32.png' width='32' height='32' alt='linked-in'></a> <a href="<%=morsel.url%>"><img src='http://w.sharethis.com/images/pinterest_32.png' width='32' height='32' alt='pintrest'></a> </td>
-  </tr> -->
-  <tr>
-       <td align="center">
-       <% other_morsel.each do |else_morsel| %>
-      
-          <div style="background-image: url(&quot;<%= (else_morsel.cached_primary_item_photos.present? ? else_morsel.cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://morsel.s3.amazonaws.com/item-photos/9241/_320x320_5d6c07dc.jpg')%>&quot;); height: 202px; display: table; font-family: &quot;Lato&quot;,&quot;Helvetica Neue Light&quot;,&quot;Helvetica Neue&quot;,&quot;Arial&quot;,sans-serif; float: left; width: 33%; margin-right: 0.33%; cursor:pointer; background-size: 100% 100%" onclick="document.location='<%= else_morsel.cached_url %>'">
-            <div style="background-image: linear-gradient(rgba(23, 20, 17, 0) 0%, rgba(23, 20, 17, 0) 1%, rgba(23, 20, 17, 0.05) 8%, rgba(23, 20, 17, 0.5) 64%, rgba(23, 20, 17, 0.7) 86%, rgba(23, 20, 17, 0.8) 100%); display: table-cell; vertical-align: bottom; text-align: center;">
-              <h1 style="font-size: 16px; line-height: 1.2; margin: 0px 0px 3px; padding: 0px 5px; vertical-align: bottom;"><a style="color: rgb(255, 255, 255); text-decoration: none;" href=""><%= else_morsel.title %></a></h1>
-              <h2 style="font-size: 14px; font-weight: 400; margin: 0px; padding: 0px 5px;"><a style="text-decoration: none; color: rgb(255, 255, 255); font-style: italic;" href="<%= else_morsel.cached_url %>">
-               <%= User.where(id: else_morsel.creator_id).map{|p| "#{p.first_name} #{p.last_name}"} %>
-
-              </a></h2>
+        <tr>
+          <td align="center">
+        
+            <img alt="logo" style="width:70%; height:100px " src="<%=morsel.host_info[:host_logo] %>">
                
+          </td>
+
+        </tr> 
+
+      <tr>    
+        <td height="10" align="center" style="font-size:20px; font-weight:bold; font-family:Tahoma, Geneva, sans-serif;">
+    
+        </td>
+      </tr> 
+
+      <tr>
+        <td>
+      
+         <%=link_to (image_tag (morsel.cached_primary_item_photos.present? ? morsel.cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg'),width:"100%",height:"640",alt:'primary-image'),morsel.host_info[:host_morsel_url]%>
+           
+              <h1 style="font-size: 24px; line-height: 1.2; margin: 0px 0px 3px; padding: 0px 5px; vertical-align: bottom; text-align:center">
+                <%= link_to morsel.title,morsel.host_info[:host_morsel_url],style:"color: #ee8872; text-decoration: none; text-align:center" %>
+             </h1>
+         <h2 style="font-size: 18px; font-weight: 400; margin: 0px; padding: 0px 5px; text-align:center">
+             <%= link_to "by "+morsel.user.full_name,'',style:"text-decoration: none; color: #000; font-style: italic; text-align:center" %>
+             
+         </h2>
+         </td>
+      </tr>
+
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+       
+      <tr>
+       <td align="center">
+
+          <% other_morsel.each do |else_morsel| %>
+      
+          <div style="height: 202px; display: table; font-family: &quot;Lato&quot;,&quot;Helvetica Neue Light&quot;,&quot;Helvetica Neue&quot;,&quot;Arial&quot;,sans-serif; float: left; width: 30%; margin-right: 3.33%; cursor:pointer;" >
+            <a href="<%= else_morsel.host_info[:host_morsel_url] %>" >
+            <%= image_tag (else_morsel.cached_primary_item_photos.present? ? else_morsel.cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://morsel.s3.amazonaws.com/item-photos/9241/_320x320_5d6c07dc.jpg'),width:"100%",height:"202"  %>
+             </a>
+               <div style="display:block; vertical-align: bottom; text-align: center;">
+                <h1 style="font-size: 16px; line-height: 1.2; margin: 0px 0px 3px; padding: 0px 5px; vertical-align: bottom;"><a style="color: #ee8872; text-decoration: none;" href="<%= else_morsel.host_info[:host_morsel_url] %>" ><%= else_morsel.title %></a></h1>
+                
+                <h2 style="font-size: 14px; font-weight: 400; margin: 0px; padding: 0px 5px;">
+                  <a style="text-decoration: none; color: #000; font-style: italic;"> 
+                  <%= else_morsel.user.full_name %>
+                  </a>
+                </h2>
               </div>
           </div>
-       
         <% end %>
-        </td>
-  </tr>
-  <tr>
-    <td align='center'>&nbsp;</td>
-  </tr>
-  
-  <tr>
-    <td align='center'>&nbsp;</td>
-  </tr>
-  <tr>
-    <td align='center'><span style='text-align:center'><a href='#unsubscribe-url' style='font-weight:bold; color:#ff2e6c; text-decoration:none;'>Unsubscribe</a> &nbsp;| &nbsp; Unsubscribe from this kind of morsels.</span></td>
-  </tr>
-  <tr>
-    <td align='center'>&nbsp;</td>
-  </tr>
+          
+      </td>
+      </tr>
+      <tr>
+        <td align="center">&nbsp;</td>
+      </tr>
+      <tr>
+        <td align="center">&nbsp;</td>
+      </tr>
+      <tr>
+        <td align="center">
+            <span style="border-top: 2px solid #feca42;padding-top:10px;text-align:center; display:block;">
+            <a style="font-weight:bold; color:#ff2e6c; text-decoration:none;">Unsubscribe</a> 
+            &nbsp;| &nbsp; Unsubscribe from these stories.
+            </span>
+            <span style="text-align:center; display:block"> 
+            <%= morsel.host_info[:address] %>
+           </span>
+            </td>
+      </tr>
+      <tr>
+        <td align="center">&nbsp;</td>
+      </tr>
 </table>
