@@ -36,7 +36,7 @@ ActiveAdmin.register Morsel do
       morsel = Morsel.find params[:id]
       if morsel.update(MorselsController::MorselParams.build(params, current_user)) && (morsel.feed_item ? morsel.feed_item.save : true)
         
-        # NewsletterWorker.new.perform(morsel:morsel)  if !morsel.news_letter_sent? && morsel.morsel_keywords.present?
+        NewsletterWorker.new.perform(morsel:morsel)  #if !morsel.news_letter_sent? && morsel.morsel_keywords.present?
     
         # morsel.update_columns(news_letter_sent:true) if !morsel.news_letter_sent? && morsel.morsel_keywords.present?
 

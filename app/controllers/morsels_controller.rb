@@ -203,14 +203,21 @@ class MorselsController < ApiController
 
       if params[:place_id] || params[:user_id] || params[:username]
         user_id = params[:user_id] || if params[:place_id].nil?
-          user = User.find_by_id_or_username params[:username]
-          raise ActiveRecord::RecordNotFound if user.nil?
-          user.id
-        end
-
-        if !params[:submit]
-         
+                                          user = User.find_by_id_or_username params[:username]
+                                          raise ActiveRecord::RecordNotFound if user.nil?
+                                          user.id
+                                      end
+     
+        if params[:keyword_id]
           Morsel.includes(:items, :place, :creator)
+                .published
+                .where_keyword_id(params[:keyword_id])
+                .order(Morsel.arel_table[:published_at].desc)
+                .paginate(pagination_params, pagination_key)
+      
+        elsif !params[:submit]
+         
+            Morsel.includes(:items, :place, :creator)
                 .published
                 .order(Morsel.arel_table[:published_at].desc)
                 .paginate(pagination_params, pagination_key)
@@ -224,8 +231,8 @@ class MorselsController < ApiController
               .paginate(pagination_params, pagination_key)
               .where_creator_id_or_tagged_user_id(user_id)
               .where_place_id(params[:place_id])
-
         end
+        
       elsif current_user.present?
         Morsel.includes(:items, :place, :creator)
               .with_drafts(true)

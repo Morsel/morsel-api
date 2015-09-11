@@ -20,8 +20,7 @@ class UsersController < ApiController
 
     user_params = UserParams.build(params)
     user_params.delete(:promoted) # delete the `promoted` flag since that should only be set via /admin
-
-    
+ 
     if user_params[:photo_key]
       handle_photo_key(user_params[:photo_key], user, serializer: UserWithPrivateAttributesSerializer)
     else
@@ -46,6 +45,22 @@ class UsersController < ApiController
     end
   end
 
+  def create_user_profile
+ 
+     user = User.find(params[:id])
+     authorize_action_for user
+     unless user.profile.present?
+          if user.create_profile(is_active: true)
+            render_json user.profile
+          else
+             render_json_errors({ api: ["Invalid User"] }, :forbidden)
+          end  
+      else
+        render_json user.profile
+      end
+
+   end
+
   def me
     if params[:prepare_presigned_upload] == 'true'
       Authority.enforce :update, User, current_user
@@ -57,6 +72,7 @@ class UsersController < ApiController
   end
 
   def morsel_subscribe
+  
     if morsel_subscribe_params[:subscribed_morsel_ids].present?
        subscriptions = morsel_subscribe_params[:subscribed_morsel_ids].compact.map(&:to_i) #| current_user.subscribed_morsel_ids.flatten
         subscriptions.each do |morsel_id|
@@ -64,7 +80,7 @@ class UsersController < ApiController
           morsel = Morsel.find(morsel_id)
           morsel_keyword = morsel.morsel_morsel_keywords.map(&:morsel_keyword_id)
           morsel_keyword.each do |keyword|
-           
+            debugger
             current_user.subscriptions.create(morsel_id: morsel_id,creator_id:morsel.creator_id,keyword_id: keyword)
           end
         end
@@ -238,7 +254,7 @@ class UsersController < ApiController
       params.require(:user).permit(:email, :username, :password, :current_password,
                                    :first_name, :last_name, :bio, :industry,
                                    :photo, :remote_photo_url, :promoted, :query,
-                                   :professional, :photo_key, settings: [:auto_follow],profile_attributes:[:host_url,:host_logo,:address,:id])
+                                   :professional, :photo_key, settings: [:auto_follow],profile_attributes:[:host_url,:host_logo,:address,:id,:is_active])
     end
   end
 
@@ -265,5 +281,5 @@ class UsersController < ApiController
     user.errors.count > 0
   end
 
-  authorize_actions_for User, except: public_actions, actions: { me: :read, search: :read, places: :read ,morsel_subscribe: :create}
+  authorize_actions_for User, except: public_actions, actions: { me: :read, search: :read, places: :read ,morsel_subscribe: :create,create_user_profile: :update}
 end
