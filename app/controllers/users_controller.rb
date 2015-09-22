@@ -80,8 +80,8 @@ class UsersController < ApiController
           morsel = Morsel.find(morsel_id)
           morsel_keyword = morsel.morsel_morsel_keywords.map(&:morsel_keyword_id)
           morsel_keyword.each do |keyword|
-            debugger
-            current_user.subscriptions.create(morsel_id: morsel_id,creator_id:morsel.creator_id,keyword_id: keyword)
+           
+          current_user.subscriptions.find_or_create_by(creator_id:morsel.creator_id,keyword_id: keyword)
           end
         end
        # current_user.subscribed_morsel_ids= subscriptions

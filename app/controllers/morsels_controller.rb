@@ -17,11 +17,8 @@ class MorselsController < ApiController
     if morsels_for_params.nil?
       unauthorized_token
     else
-      
-      custom_respond_with_cached_serializer(
-        morsels_for_params,
-        MorselSerializer
-      )
+
+      custom_respond_with_cached_serializer(morsels_for_params,MorselSerializer)
 
     end
   end
@@ -184,7 +181,7 @@ class MorselsController < ApiController
       if _scope && _scope.admin?
         params.require(:morsel).permit(:title, :summary, :draft, :primary_item_id, :place_id, :template_id, :query, feed_item_attributes: [:id, :featured],morsel_keyword_ids: [])
       else
-        params.require(:morsel).permit(:title, :summary, :draft, :primary_item_id, :place_id, :template_id, :query, :is_submit)
+        params.require(:morsel).permit(:title, :summary, :draft, :primary_item_id, :place_id, :template_id, :query, :is_submit,morsel_keyword_ids: [])
       end
     end
   end
@@ -225,7 +222,7 @@ class MorselsController < ApiController
                 .where_place_id(params[:place_id])
         else
 
-          Morsel.includes(:items, :place, :creator)
+          Morsel.includes(:items, :place, :creator,:morsel_keywords)
               .submitted
               .order(Morsel.arel_table[:published_at].desc)
               .paginate(pagination_params, pagination_key)
