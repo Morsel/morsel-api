@@ -119,7 +119,7 @@ class Morsel < ActiveRecord::Base
 
   concerning :Caching do
     def cache_key
-      [super, CachedModelDecorator.new(self).cache_key_for_has_many(:items)].join('/')
+      [super, [CachedModelDecorator.new(self).cache_key_for_has_many(:items),CachedModelDecorator.new(self).cache_key_for_has_many(:morsel_keywords)].join("-")  ].join('/')
     end
   end
 

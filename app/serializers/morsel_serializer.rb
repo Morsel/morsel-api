@@ -12,6 +12,7 @@ class MorselSerializer < SlimMorselSerializer
              :liked
 
   has_many :items, serializer: ItemSansMorselAndCreatorSerializer
+  has_many :morsel_keywords, serializer: MorselKeywordSerializer
 
   def has_tagged_users
     object.tagged_users?
