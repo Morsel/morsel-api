@@ -50,7 +50,7 @@ class NewsletterService
 	  				"to"=>[{"type"=>"to","email"=> TO ,"name"=>"Nishant"}],
 	  				"return_path_domain"=>nil,
 	  				"from_name"=> morsel.user.full_name,"from_email"=> FROM ,
-	  				"subject"=>"#{morsel.title} #{from} #{morsel.user.profile.try(&:host_url)}",
+	  				"subject"=>"#{morsel.title}",
 	  				"headers"=>{"Reply-To"=>"message.reply@example.com"},
 	  				"auto_html"=>nil,"important"=>false}
 		 begin	
