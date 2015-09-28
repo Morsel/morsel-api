@@ -5,6 +5,7 @@ class NewsletterService
   
   TO = "ellen@eatmorsel.com"
   FROM = "nishant.n@cisinlabs.com"
+ 
 
   def call
   	subscribers = Subscription.where(creator_id:morsel.creator_id)  #Subscription.all
@@ -27,12 +28,12 @@ class NewsletterService
      		 
       
         subscribe_morsel_keyword_ids = Subscription.where(user_id:user.id).map(&:keyword_id).sort()
-        
-        sendemail(view,other_morsel) if (subscribe_morsel_keyword_ids & morsel_keyword_ids).present?
-        
-
-        user.emaillogged_morsel_ids = [morsel.id] | user.emaillogged_morsel_ids.flatten
-      
+         email_per_day =  user.email_logs.email_per_day 
+         if email_per_day.zero?
+            
+            sendemail(view,other_morsel) if (subscribe_morsel_keyword_ids & morsel_keyword_ids).present?
+            user.emaillogged_morsel_ids = [morsel.id] | user.emaillogged_morsel_ids.flatten
+         end 
   	end	
   end	
   
