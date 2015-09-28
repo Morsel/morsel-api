@@ -211,6 +211,7 @@ class MorselsController < ApiController
                 .where_keyword_id(params[:keyword_id])
                 .order(Morsel.arel_table[:published_at].desc)
                 .paginate(pagination_params, pagination_key)
+                .where_creator_id_or_tagged_user_id(user_id)
       
         elsif !params[:submit]
          
