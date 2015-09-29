@@ -93,7 +93,7 @@ class MorselsController < ApiController
        #morsel.update! draft: false, publishing: false, is_submit: false
        custom_respond_with_service publish_service(morsel)
          
-       #NewsletterWorker.new.perform(morsel:morsel)
+       NewsletterWorker.new.perform(morsel:morsel)
       
        
     else
