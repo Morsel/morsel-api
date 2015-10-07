@@ -115,7 +115,7 @@ class Morsel < ActiveRecord::Base
   scope :where_collection_id, -> (collection_id) { joins(:collection_morsels).where(CollectionMorsel.arel_table[:collection_id].eq(collection_id)) unless collection_id.nil? }
   scope :where_creator_id, -> (creator_id) { where(creator_id: creator_id) unless creator_id.nil? }
   scope :where_tagged_user_id, -> (tagged_user_id) { includes(:morsel_user_tags).where(MorselUserTag.arel_table[:user_id].eq(tagged_user_id)) unless tagged_user_id.nil? }
-  scope :where_creator_id_or_tagged_user_id, -> (creator_id_or_tagged_user_id) { includes(:morsel_user_tags).where(Morsel.arel_table[:creator_id].eq(creator_id_or_tagged_user_id).or(MorselUserTag.arel_table[:user_id].eq(creator_id_or_tagged_user_id))).references(:morsel_user_tags) unless creator_id_or_tagged_user_id.nil? }
+  scope :where_creator_id_or_tagged_user_id, -> (creator_id_or_tagged_user_id) { includes(:morsel_user_tags).where(Morsel.arel_table[:creator_id].in(creator_id_or_tagged_user_id).or(MorselUserTag.arel_table[:user_id].in(creator_id_or_tagged_user_id))).references(:morsel_user_tags) unless creator_id_or_tagged_user_id.nil? }
 
   concerning :Caching do
     def cache_key
@@ -156,10 +156,15 @@ class Morsel < ActiveRecord::Base
     cached_primary_item_photos || ( primary_item_id.present? ? primary_item.photos : nil)
   end
 
+  def capitalize_name(string_part)
+    string_part.split.map(&:capitalize).join(' ')
+  end
+
   def host_info
     
-    if user.profile.present?      
-      {host_morsel_url: "http://#{user.profile.host_url.gsub(/^https?\:\/\//,"").gsub(/\/$/,"")}/morsel-info/?morselid=#{id}",host_logo:(user.profile.host_logo.blank? ? (cached_primary_item_photos.present? ? cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg') : user.profile.host_logo), address: user.profile.address}
+    if user.profile.present?    
+     
+      {host_morsel_url: "http://#{user.profile.host_url.gsub(/^https?\:\/\//,"").gsub(/\/$/,"")}/morsel-info/?morselid=#{id}",host_logo:(user.profile.host_logo.blank? ? (cached_primary_item_photos.present? ? cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg') : user.profile.host_logo), address: "#{capitalize_name(user.profile.company_name)}, #{user.profile.street_address}, #{capitalize_name(user.profile.city)}, #{user.profile.state.upcase} #{user.profile.zip}"}
     else
       {host_morsel_url:url,host_logo:(cached_primary_item_photos.present? ? cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg'), address: nil}
     end  

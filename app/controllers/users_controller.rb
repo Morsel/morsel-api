@@ -13,8 +13,64 @@ class UsersController < ApiController
     custom_respond_with user
   end
 
+  public_actions << def association_requests
+      user = User.find(params[:id])
+
+      if params[:approved]
+        render_json user.sent_association_requests.approved, each_serializer: AssociationRequestSerializer
+      else
+        custom_respond_with user.sent_association_requests, each_serializer: AssociationRequestSerializer
+      end
+
+  end
+
+  public_actions << def received_association_requests
+    user = User.find(params[:id])
+    custom_respond_with user.recieved_association_requests, each_serializer: AssociationRequestSerializer
+  end
+
+  def allow_association_request
+    if association_request_params.present?
+      user = User.find(params[:id])
+      association_request = user.recieved_association_requests.find_by_host_id(association_request_params[:request_creator_id])
+
+      if association_request.approve!
+        custom_respond_with user.recieved_association_requests, each_serializer: AssociationRequestSerializer
+      else
+        render_json "Invalid params"
+      end
+    else
+      render_json_errors({ api: ["Invalid Parameter To call."] }, :forbidden)
+    end
+  end
+
+
+  def create_association_request
+
+      if association_request_params.present?
+        host = User.find_by_email_or_username(params[:id])
+
+        if host
+          user_for_association = User.find_by_email_or_username(association_request_params[:name_or_email])
+        end
+
+        if user_for_association
+          association_request = host.sent_association_requests.find_or_create_by(:associated_user => user_for_association )
+        end
+
+        if association_request.present?
+          custom_respond_with association_request, serializer: AssociationRequestSerializer
+        else
+          render_json "Invalid user"
+        end
+
+    else
+        render_json_errors({ api: ["Invalid Parameter To call."] }, :forbidden)
+    end
+  end
+
   def update
-   
+
     user = User.find(params[:id])
     authorize_action_for user
 
@@ -24,7 +80,7 @@ class UsersController < ApiController
     if user_params[:photo_key]
       handle_photo_key(user_params[:photo_key], user, serializer: UserWithPrivateAttributesSerializer)
     else
-          
+
       if password_required?(user, user_params)
         render_json_errors(user.errors)
       elsif user.update_attributes(user_params)
@@ -254,7 +310,7 @@ class UsersController < ApiController
       params.require(:user).permit(:email, :username, :password, :current_password,
                                    :first_name, :last_name, :bio, :industry,
                                    :photo, :remote_photo_url, :promoted, :query,
-                                   :professional, :photo_key, settings: [:auto_follow],profile_attributes:[:host_url,:host_logo,:address,:id,:is_active])
+                                   :professional, :photo_key, settings: [:auto_follow],profile_attributes:[:host_url,:host_logo,:address,:id,:is_active,:company_name,:street_address,:city,:state,:zip,:preview_text])
     end
   end
 
@@ -263,7 +319,10 @@ class UsersController < ApiController
 
   def morsel_subscribe_params
     params.require(:user).permit(subscribed_morsel_ids: [])
-    
+  end
+
+  def association_request_params
+    params.require(:association_request_params).permit(:name_or_email, :id, :approved, :request_creator_id)
   end
 
   def password_required?(user, user_params)
@@ -281,5 +340,5 @@ class UsersController < ApiController
     user.errors.count > 0
   end
 
-  authorize_actions_for User, except: public_actions, actions: { me: :read, search: :read, places: :read ,morsel_subscribe: :create,create_user_profile: :update}
+  authorize_actions_for User, except: public_actions, actions: { me: :read, search: :read, places: :read ,morsel_subscribe: :create,create_user_profile: :update,create_association_request: :create,allow_association_request: :update}
 end
