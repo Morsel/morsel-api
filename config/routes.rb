@@ -117,6 +117,9 @@ MorselApp::Application.routes.draw do
       get 'notifications' => 'notifications#index'
       get 'search' => 'users#search'
       post ':id/create_profile' => 'users#create_user_profile'
+       
+
+
 
       # Note: Keep these at the end
       get ':id' => 'users#show', id: /\d+/
@@ -128,6 +131,10 @@ MorselApp::Application.routes.draw do
     resources :collections, only: [:index]
 
     member do
+      get 'association_requests' => 'users#association_requests'
+      get 'received_association_requests' => 'users#received_association_requests'
+      post 'create_association_request' => 'users#create_association_request'
+      put 'allow_association_request' => 'users#allow_association_request'
       put 'updateindustry' => 'users#updateindustry'
       get 'followables' => 'users#followables'
       get 'likeables' => 'users#likeables'

@@ -1,3 +1,4 @@
+<span style = "font-family:Arial, Helvetica, sans-serif; font-size:15px; background:#FCFCFC;"><%= morsel.user.profile.preview_text.present? ? morsel.user.profile.preview_text : 'Email is showing your subscribed morsel as well as latest morsel' %></span></br></br>
 <table width="600" border="0" align="center" cellpadding="0" cellspacing="0" style="font-family:Arial, Helvetica, sans-serif; font-size:13px; background:#FCFCFC;">
     <!-- <tr>
           <td height='35' align='center' ><a href='#' style='font-weight:bold; color:#333; text-decoration:none;'>Adjust your prefrences</a> &nbsp;| &nbsp;
@@ -70,15 +71,15 @@
         <td align="center">&nbsp;</td>
       </tr>
       <tr>
-        <td align="center">
-            <span style="border-top: 2px solid #feca42;padding-top:10px;text-align:center; display:block;">
-            <a style="font-weight:bold; color:#ff2e6c; text-decoration:none;">Unsubscribe</a> 
-            &nbsp;| &nbsp; Unsubscribe from these stories.
-            </span>
-            <span style="text-align:center; display:block"> 
-            <%= morsel.host_info[:address] %>
-           </span>
-            </td>
+          <td align="center">
+              <span style="border-top: 2px solid #feca42;padding-top:10px;text-align:center; display:block;">
+              <a style="font-weight:bold; color:#e96144; text-decoration:none;">Unsubscribe</a> 
+              &nbsp;| &nbsp; Unsubscribe from these stories.
+              </span>
+              <span style="text-align:center; display:block"> 
+              <%= morsel.host_info[:address] %>
+             </span>
+          </td>
       </tr>
       <tr>
         <td align="center">&nbsp;</td>

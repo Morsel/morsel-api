@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150821063414) do
+ActiveRecord::Schema.define(version: 20151007075155) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,6 +76,14 @@ ActiveRecord::Schema.define(version: 20150821063414) do
 
   add_index "activity_subscriptions", ["subject_id", "subject_type"], name: "index_activity_subscriptions_on_subject_id_and_subject_type", using: :btree
   add_index "activity_subscriptions", ["subscriber_id"], name: "index_activity_subscriptions_on_subscriber_id", using: :btree
+
+  create_table "association_requests", force: true do |t|
+    t.integer  "host_id",                            null: false
+    t.integer  "associated_user_id",                 null: false
+    t.boolean  "approved",           default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "authentications", force: true do |t|
     t.string   "provider"
@@ -371,11 +379,16 @@ ActiveRecord::Schema.define(version: 20150821063414) do
   create_table "profiles", force: true do |t|
     t.string   "host_url"
     t.string   "host_logo"
-    t.string   "address"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "is_active",  default: false
+    t.boolean  "is_active",      default: false
+    t.string   "company_name"
+    t.string   "street_address"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zip"
+    t.text     "preview_text"
   end
 
   create_table "remote_notifications", force: true do |t|

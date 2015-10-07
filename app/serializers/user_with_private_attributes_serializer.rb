@@ -15,6 +15,6 @@ class UserWithPrivateAttributesSerializer < UserSerializer
   end
 
   def profile
-    object.profile.blank? ? {} : {id: object.profile.id,host_url: object.profile.host_url,host_logo: object.profile.host_logo, address:object.profile.address}
+    object.profile.blank? ? {} : {id: object.profile.id,host_url: object.profile.host_url,host_logo: object.profile.host_logo, company_name:object.profile.company_name, street_address:object.profile.street_address, city:object.profile.city, state:object.profile.state, zip:object.profile.zip}
   end
 end

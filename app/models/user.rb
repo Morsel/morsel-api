@@ -109,13 +109,17 @@ class User < ActiveRecord::Base
 
   has_many :morsel_user_tags, dependent: :destroy
 
-  
-
   has_many :subscriptions
   has_many :subscribed_morsels, through: :subscriptions, source: :morsel
 
   has_many :email_logs 
   has_many :emaillogged_morsels, through: :email_logs, source: :morsel
+
+  has_many :sent_association_requests , :class_name => "AssociationRequest" , :foreign_key => "host_id"
+  has_many :recieved_association_requests , :class_name => "AssociationRequest" , :foreign_key => "associated_user_id"
+  has_many :associated_users , :through => :sent_association_requests
+  has_many :hosts , :through => :recieved_association_requests
+
 
   has_many :morsel_keywords 
 
@@ -206,6 +210,18 @@ class User < ActiveRecord::Base
       where(conditions).first
     end
   end
+
+  def self.find_by_email_or_username(email)
+      # email = conditions[:email]
+      if email =~ /@/ 
+        self.find_by_email(email)
+      elsif email.to_s =~ /\A[0-9]+\z/
+        self.find(Integer(email))
+      else
+        self.find_by_username(email)
+      end
+  end
+
 
   def self.find_by_id_or_username(id_or_username)
     return if id_or_username.nil?

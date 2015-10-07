@@ -223,11 +223,15 @@ class MorselsController < ApiController
                 .where_place_id(params[:place_id])
         else
 
+          host = User.find(params[:user_id])
+          associated_user_ids = host.sent_association_requests.approved.map(&:associated_user_id)
+          approved_ids = associated_user_ids.push(params[:user_id].to_i)
+
           Morsel.includes(:items, :place, :creator,:morsel_keywords)
               .submitted
               .order(Morsel.arel_table[:published_at].desc)
               .paginate(pagination_params, pagination_key)
-              .where_creator_id_or_tagged_user_id(user_id)
+              .where_creator_id_or_tagged_user_id(approved_ids)
               .where_place_id(params[:place_id])
         end
         
