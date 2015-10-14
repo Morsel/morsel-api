@@ -31,11 +31,28 @@ class UsersController < ApiController
 
   def allow_association_request
     if association_request_params.present?
-      user = User.find(params[:id])
-      association_request = user.recieved_association_requests.find_by_host_id(association_request_params[:request_creator_id])
+     
+      association_request = current_user.recieved_association_requests.find_by_host_id(association_request_params[:request_creator_id])
 
       if association_request.approve!
-        custom_respond_with user.recieved_association_requests, each_serializer: AssociationRequestSerializer
+        custom_respond_with current_user.recieved_association_requests, each_serializer: AssociationRequestSerializer
+      else
+        render_json "Invalid params"
+      end
+    else
+      render_json_errors({ api: ["Invalid Parameter To call."] }, :forbidden)
+    end
+  end
+
+
+  def delete_association_request
+   
+    if association_request_params.present?
+
+      association_request = current_user.sent_association_requests.find_by_associated_user_id(association_request_params[:associated_user_id]).destroy
+
+      if association_request.present?
+        custom_respond_with current_user.sent_association_requests, each_serializer: AssociationRequestSerializer
       else
         render_json "Invalid params"
       end
@@ -322,7 +339,7 @@ class UsersController < ApiController
   end
 
   def association_request_params
-    params.require(:association_request_params).permit(:name_or_email, :id, :approved, :request_creator_id)
+    params.require(:association_request_params).permit(:name_or_email, :id, :approved, :request_creator_id, :associated_user_id)
   end
 
   def password_required?(user, user_params)
@@ -340,5 +357,5 @@ class UsersController < ApiController
     user.errors.count > 0
   end
 
-  authorize_actions_for User, except: public_actions, actions: { me: :read, search: :read, places: :read ,morsel_subscribe: :create,create_user_profile: :update,create_association_request: :create,allow_association_request: :update}
+  authorize_actions_for User, except: public_actions, actions: { me: :read, search: :read, places: :read ,morsel_subscribe: :create,create_user_profile: :update,create_association_request: :create,allow_association_request: :update,delete_association_request: :delete}
 end
