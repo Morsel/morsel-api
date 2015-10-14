@@ -135,6 +135,7 @@ MorselApp::Application.routes.draw do
       get 'received_association_requests' => 'users#received_association_requests'
       post 'create_association_request' => 'users#create_association_request'
       put 'allow_association_request' => 'users#allow_association_request'
+      delete 'delete_association_request' => 'users#delete_association_request'
       put 'updateindustry' => 'users#updateindustry'
       get 'followables' => 'users#followables'
       get 'likeables' => 'users#likeables'

@@ -161,10 +161,10 @@ class Morsel < ActiveRecord::Base
   end
 
   def host_info
-    
+
     if user.profile.present?    
-     
-      {host_morsel_url: "http://#{user.profile.host_url.gsub(/^https?\:\/\//,"").gsub(/\/$/,"")}/morsel-info/?morselid=#{id}",host_logo:(user.profile.host_logo.blank? ? (cached_primary_item_photos.present? ? cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg') : user.profile.host_logo), address: "#{capitalize_name(user.profile.company_name)}, #{user.profile.street_address}, #{capitalize_name(user.profile.city)}, #{user.profile.state.upcase} #{user.profile.zip}"}
+      
+      {host_morsel_url:(!user.profile.host_url.blank? ? "http://#{user.profile.host_url.gsub(/^https?\:\/\//,"").gsub(/\/$/,"")}/morsel-info/?morselid=#{id}" : "https://www.eatmorsel.com/morsel-info/?morselid=#{id}"),host_logo:(user.profile.host_logo.blank? ? (cached_primary_item_photos.present? ? cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg') : user.profile.host_logo), address: "#{capitalize_name(user.profile.company_name)}, #{user.profile.street_address}, #{capitalize_name(user.profile.city)}, #{user.profile.state.upcase} #{user.profile.zip}"}
     else
       {host_morsel_url:url,host_logo:(cached_primary_item_photos.present? ? cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg'), address: nil}
     end  
