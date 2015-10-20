@@ -3,7 +3,7 @@ class MorselsController < ApiController
     morsel = Morsel.create(params[:morsel].present? ? MorselParams.build(params) : nil) do |m|
       m.creator = current_user
     end
-
+ 
     if morsel.valid?
       custom_respond_with morsel
     else
