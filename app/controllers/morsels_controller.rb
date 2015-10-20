@@ -71,9 +71,12 @@ class MorselsController < ApiController
 
 
   public_actions << def check_publish
+    
     user= User.find(params[:userId]) if params[:userId]
     profile = user.profile
-    if profile.nil?
+    associated_user = user.recieved_association_requests.approved
+    
+    if profile.nil? || !associated_user.present?
       render_json 'NO'
     else
       render_json 'OK'
