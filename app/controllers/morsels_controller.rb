@@ -76,10 +76,10 @@ class MorselsController < ApiController
     profile = user.profile
     associated_user = user.recieved_association_requests.approved
     
-    if profile.nil? || !associated_user.present?
-      render_json 'NO'
-    else
+    if profile.present? || associated_user.present?
       render_json 'OK'
+    else
+      render_json 'NO'
     end
   end
 
