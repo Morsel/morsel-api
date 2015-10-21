@@ -90,14 +90,12 @@ class MorselsController < ApiController
     morsel_keyword = Morsel.find(params[:id]).morsel_morsel_keywords.pluck(:morsel_keyword_id)
  
     if user_profile.present? && morsel_keyword.present?
-       
+      
+       NewsletterWorker.new.perform(morsel:morsel)
        morsel = Morsel.includes(:items, :place, :creator).find params[:id]
        authorize_action_for morsel
        #morsel.update! draft: false, publishing: false, is_submit: false
        custom_respond_with_service publish_service(morsel)
-         
-       NewsletterWorker.new.perform(morsel:morsel)
-      
        
     else
        render_json 'NOT'

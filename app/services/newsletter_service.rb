@@ -29,17 +29,17 @@ class NewsletterService
       
         subscribe_morsel_keyword_ids = Subscription.where(user_id:user.id).map(&:keyword_id).sort()
          email_per_day =  user.email_logs.email_per_day 
-         if email_per_day.zero?
+         #if email_per_day.zero?
             
-            sendemail(view,other_morsel) if (subscribe_morsel_keyword_ids & morsel_keyword_ids).present?
-            user.emaillogged_morsel_ids = [morsel.id] | user.emaillogged_morsel_ids.flatten
-         end 
+            sendemail(view,other_morsel,user) if (subscribe_morsel_keyword_ids & morsel_keyword_ids).present?
+            
+         #end 
   	end	
   end	
   
   	
   
-  def sendemail (view,other_morsel)
+  def sendemail (view,other_morsel,user)
 
 		html = view.render(partial: 'user_mailer/morsel_newsletter',locals:{morsel:morsel,other_morsel:other_morsel}).html_safe
     
@@ -48,7 +48,7 @@ class NewsletterService
 	  message= {"auto_text"=>false,
 	  				"preserve_recipients"=>nil,
 	  				"html"=>html,
-	  				"to"=>[{"type"=>"to","email"=> TO ,"name"=>"Nishant"}],
+	  				"to"=>[{"type"=>"to","email"=> TO ,"name"=>"Nishant"},{"type"=>"to","email"=> "prateek.s@cisinlabs.com" ,"name"=>"Nishant"}],
 	  				"return_path_domain"=>nil,
 	  				"from_name"=> morsel.user.full_name,"from_email"=> FROM ,
 	  				"subject"=>"#{morsel.title}",
@@ -58,6 +58,8 @@ class NewsletterService
       
        mandrill = MaindrillConnector.new.get_client
 		   mandrill.messages.send message
+       
+       user.emaillogged_morsel_ids = [morsel.id] | user.emaillogged_morsel_ids.flatten
 
 		 rescue Exception => e			
   		puts "********************Error log #{e}"

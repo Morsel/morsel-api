@@ -160,14 +160,25 @@ class Morsel < ActiveRecord::Base
     string_part.split.map(&:capitalize).join(' ')
   end
 
-  def host_info
+  def get_user_profile(user)
+    # user = User.find(user_id)
+    
+    if user.profile.present?
+      user.profile
+    elsif user.recieved_association_requests.first.present?
+      user.recieved_association_requests.first.host.profile
+    end
 
-    if user.profile.present?    
+
+  end
+
+  def host_info
+    
+       
+       {host_morsel_url:(get_user_profile(user).host_url.blank? ? "http://#{get_user_profile(user).host_url.gsub(/^https?\:\/\//,"").gsub(/\/$/,"")}/morsel-info/?morselid=#{id}" : "https://www.eatmorsel.com/morsel-info/?morselid=#{id}"),host_logo:(get_user_profile(user).host_logo.blank? ? (cached_primary_item_photos.present? ? cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg') : get_user_profile(user).host_logo), address: "#{capitalize_name(get_user_profile(user).company_name)}, #{get_user_profile(user).street_address}, #{capitalize_name(get_user_profile(user).city)}, #{get_user_profile(user).state.upcase} #{get_user_profile(user).zip}",preview_text: (!get_user_profile(user).preview_text.blank? ? get_user_profile(user).preview_text : 'Email is showing your subscribed morsel as well as latest morsel')}
+     
       
-      {host_morsel_url:(!user.profile.host_url.blank? ? "http://#{user.profile.host_url.gsub(/^https?\:\/\//,"").gsub(/\/$/,"")}/morsel-info/?morselid=#{id}" : "https://www.eatmorsel.com/morsel-info/?morselid=#{id}"),host_logo:(user.profile.host_logo.blank? ? (cached_primary_item_photos.present? ? cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg') : user.profile.host_logo), address: "#{capitalize_name(user.profile.company_name)}, #{user.profile.street_address}, #{capitalize_name(user.profile.city)}, #{user.profile.state.upcase} #{user.profile.zip}",preview_text: (!user.profile.preview_text.blank? ? user.profile.preview_text : 'Email is showing your subscribed morsel as well as latest morsel')}
-    else
-       {host_morsel_url:url,host_logo:(cached_primary_item_photos.present? ? cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg'), address: nil,preview_text: "Email is showing your subscribed morsel as well as latest morsel"}
-    end  
+
   end
 
   private
