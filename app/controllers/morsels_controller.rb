@@ -91,10 +91,11 @@ class MorselsController < ApiController
  
     if user_profile.present? && morsel_keyword.present?
       
-       NewsletterWorker.new.perform(morsel:morsel)
+       
        morsel = Morsel.includes(:items, :place, :creator).find params[:id]
        authorize_action_for morsel
        #morsel.update! draft: false, publishing: false, is_submit: false
+       NewsletterWorker.new.perform(morsel:morsel)
        custom_respond_with_service publish_service(morsel)
        
     else
