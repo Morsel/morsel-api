@@ -25,7 +25,7 @@
       <tr>
         <td>
       
-         <%=link_to (image_tag (morsel.primary_item_photos.present? ? morsel.primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg'),width:"100%",height:"640",alt:'primary-image'),morsel.host_info[:host_morsel_url]%>
+         <%=link_to (image_tag (morsel.primary_item_photos.present? ? morsel.primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg'),style:"width: 100%; max-width: 600px;",alt:'primary-image'),morsel.host_info[:host_morsel_url]%>
            
               <h1 style="font-size: 24px; line-height: 1.2; margin: 0px 0px 3px; padding: 0px 5px; vertical-align: bottom; text-align:center">
                 <%= link_to morsel.title,morsel.host_info[:host_morsel_url],style:"color: #ee8872; text-decoration: none; text-align:center" %>
@@ -87,7 +87,7 @@
       <tr>
         <td align="center" style="font-weight: bold">
         <a href="https://www.eatmorsel.com/">
-        <%= image_tag ('http://virtueciderpro.dreamhosters.com/wp-content/plugins/morsel/widget_assests/images/xpowered-by-morsel.png.pagespeed.ic.yjJsmc3Ce2.png')%>
+        <%= image_tag ('http://virtuecider.com/wp-content/plugins/morsel/widget_assests/images/powered-by-morsel.png')%>
         </a>
         </td>
       </tr>
