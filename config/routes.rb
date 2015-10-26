@@ -75,6 +75,7 @@ MorselApp::Application.routes.draw do
       post 'show_morsel_keyword' => 'keywords#show_morsel_keyword'
       post 'edit_morsel_keyword' => 'keywords#edit_morsel_keyword'
       post 'selected_morsel_keyword' => 'keywords#selected_morsel_keyword'
+      delete 'delete_morsel_keyword' => 'keywords#delete_morsel_keyword'
     end
     member do
       get 'users' => 'keywords#users'

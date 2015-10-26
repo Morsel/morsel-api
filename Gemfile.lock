@@ -325,8 +325,8 @@ GEM
       slop (~> 3.4, >= 3.4.5)
     perforated (0.8.2)
       activesupport (> 3.0.0)
-    pg (0.17.1)
-    pg_search (0.7.8)
+    pg (0.18.3)
+    pg_search (0.7.9)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
       arel
@@ -638,3 +638,6 @@ DEPENDENCIES
   unicorn (~> 4.8.3)
   virtus (~> 1.0.3)
   zendesk_api (~> 1.4.6)
+
+BUNDLED WITH
+   1.10.6
