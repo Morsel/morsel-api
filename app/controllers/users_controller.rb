@@ -14,6 +14,7 @@ class UsersController < ApiController
   end
 
   public_actions << def association_requests
+  
       user = User.find(params[:id])
 
       if params[:approved]
