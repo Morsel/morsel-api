@@ -3,7 +3,7 @@ class GenerateCollage
 
   COLLAGE_WIDTH = 840
   COLLAGE_HEIGHT = 420
-  COLLAGE_LOCAL_PATH  =  '' #Rails.env.development? ? "#{Rails.root}/public" : ''
+  COLLAGE_LOCAL_PATH  =  Rails.env.development? ? "#{Rails.root}/public" : ''
   COLLAGE_PADDING = 4
   COLLAGE_HALF_PADDING = 2
   COLLAGE_COVER_WIDTH = 630

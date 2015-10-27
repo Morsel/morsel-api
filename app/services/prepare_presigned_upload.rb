@@ -6,7 +6,7 @@ class PreparePresignedUpload
   validate :model_photo_uploadable?
 
   def self.store_dir_for_model(model)
-    if Rails.env.production? || Rails.env.staging? || Rails.env.development?
+    if Rails.env.production? || Rails.env.staging?
       "#{model.class.base_class.to_s.underscore}-photos/#{model.id}"
     elsif Rails.env.development?
       "#{Rails.root}/public/uploads_dev/#{model.class.base_class.to_s.underscore}-photos/#{model.id}"

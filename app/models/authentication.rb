@@ -65,16 +65,8 @@ class Authentication < ActiveRecord::Base
     end
   end
 
-  # def exchange_access_token
-  #   self.token = Koala::Facebook::OAuth.new(Settings.facebook.app_id, Settings.facebook.app_secret).exchange_access_token(token) if short_lived? && facebook?
-  # end
-
-   def exchange_access_token
-    if short_lived? && facebook?
-      @oauth = Koala::Facebook::OAuth.new(Settings.facebook.app_id, Settings.facebook.app_secret)
-      @oauth.url_for_oauth_code(:permissions => "publish_actions")
-      self.token = @oauth.exchange_access_token(token)
-    end  
+  def exchange_access_token
+    self.token = Koala::Facebook::OAuth.new(Settings.facebook.app_id, Settings.facebook.app_secret).exchange_access_token(token) if short_lived? && facebook?
   end
 
   def facebook?

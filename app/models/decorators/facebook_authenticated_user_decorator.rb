@@ -4,7 +4,6 @@ class FacebookAuthenticatedUserDecorator < SimpleDelegator
   end
 
   def post_facebook_photo_url(facebook_photo_url, facebook_message)
-    debugger
     facebook_client.put_picture(facebook_photo_url, message: facebook_message)
   end
 
