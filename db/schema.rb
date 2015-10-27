@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(version: 20151007075155) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
+  enable_extension "pg_stat_statements"
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -315,14 +316,12 @@ ActiveRecord::Schema.define(version: 20151007075155) do
     t.integer  "tagged_users_count",         default: 0,     null: false
     t.boolean  "publishing",                 default: false
     t.hstore   "cached_primary_item_photos"
-    t.integer  "morsel_keyword_id"
     t.boolean  "news_letter_sent",           default: false
     t.boolean  "is_submit",                  default: false
   end
 
   add_index "morsels", ["cached_slug"], name: "index_morsels_on_cached_slug", using: :btree
   add_index "morsels", ["creator_id"], name: "index_morsels_on_creator_id", using: :btree
-  add_index "morsels", ["morsel_keyword_id"], name: "index_morsels_on_morsel_keyword_id", using: :btree
   add_index "morsels", ["place_id"], name: "index_morsels_on_place_id", using: :btree
   add_index "morsels", ["updated_at", "published_at"], name: "index_morsels_on_updated_at_and_published_at", using: :btree
 
@@ -462,16 +461,6 @@ ActiveRecord::Schema.define(version: 20151007075155) do
 
   add_index "user_events", ["name"], name: "index_user_events_on_name", using: :btree
   add_index "user_events", ["user_id"], name: "index_user_events_on_user_id", using: :btree
-
-  create_table "user_morsel_keywords", force: true do |t|
-    t.integer  "morsel_keyword_id"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "user_morsel_keywords", ["morsel_keyword_id"], name: "index_user_morsel_keywords_on_morsel_keyword_id", using: :btree
-  add_index "user_morsel_keywords", ["user_id"], name: "index_user_morsel_keywords_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "",    null: false

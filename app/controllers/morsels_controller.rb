@@ -117,10 +117,12 @@ class MorselsController < ApiController
 
   def publish
   
-    morsel = Morsel.includes(:items, :place, :creator).find params[:id]
-    authorize_action_for morsel
-    
-    custom_respond_with_service publish_service(morsel)
+     morsel = Morsel.includes(:items, :place, :creator).find params[:id]
+     authorize_action_for morsel
+      debugger
+       options = {"post_to_facebook"=> true, "morsel_id"=> 2744, "user_id"=>2926}
+       SocialWorker.new.perform(options.except('post_to_twitter'))
+    #custom_respond_with_service publish_service(morsel)
   end
 
   def republish

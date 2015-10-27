@@ -85,7 +85,19 @@ class KeywordsController < ApiController
     end
   
   end
-
+  
+   public_actions << def delete_morsel_keyword
+    
+    if MorselKeywordParams.build(params).present?
+      morsel_keyword = MorselKeyword.find(params[:keyword][:id])
+        if morsel_keyword.destroy()
+            render_json_ok
+        end 
+    else
+        render_json_errors({ api: ["Invalid Parameter To call."] }, :forbidden) 
+    end
+  
+  end
 
   private
 

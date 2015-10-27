@@ -12,6 +12,7 @@ class SendMorselToSocial
 
   def call
     if facebook?
+      debugger
       authenticated_user.post_facebook_photo_url(morsel.photo_url, social_message)
     elsif twitter?
       authenticated_user.post_twitter_photo_url(morsel.photo_url, social_message)
