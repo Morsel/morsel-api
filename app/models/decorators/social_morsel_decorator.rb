@@ -1,6 +1,12 @@
 class SocialMorselDecorator < SimpleDelegator
+
   def facebook_message
-    "\"#{title}\" #{facebook_mrsl} via Morsel #{hashtags_with_hashes}".mrsl_normalize
+    if morsel_keywords.present?
+      "#{title} #{facebook_mrsl}".mrsl_normalize
+    else
+      "#{title} #{facebook_mrsl} via Morsel #{hashtags_with_hashes}".mrsl_normalize
+    end
+    #"\"#{title}\" #{facebook_mrsl} via Morsel #{hashtags_with_hashes}".mrsl_normalize
   end
 
   def twitter_message
@@ -10,7 +16,12 @@ class SocialMorselDecorator < SimpleDelegator
   private
 
   def base_twitter_message
-    "\"#{title}\" #{twitter_mrsl} via @#{Settings.morsel.twitter_username}"
+    if morsel_keywords.present?
+      "#{title} #{twitter_mrsl}"
+    else
+      "#{title} #{twitter_mrsl} via @#{Settings.morsel.twitter_username}"
+    end
+    #"\"#{title}\" #{twitter_mrsl} via @#{Settings.morsel.twitter_username}"
   end
 
   def hashtags_with_hashes(char_limit=0)
