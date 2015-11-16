@@ -71,11 +71,14 @@ class Morsel < ActiveRecord::Base
   has_many :morsel_morsel_keywords
   has_many :morsel_keywords, through: :morsel_morsel_keywords
 
+  has_many :morsel_morsel_topics
+  has_many :morsel_topics, through: :morsel_morsel_topics
+
   has_many :subscriptions
   has_many :subscribers, through: :subscriptions, source: :user
 
 
-  has_many :email_logs 
+  has_many :email_logs
   has_many :sendemaillogs, through: :email_logs, source: :user
 
   before_save :update_cached_primary_item_photos,
@@ -110,6 +113,7 @@ class Morsel < ActiveRecord::Base
   scope :published, -> { where(draft: false)}
   scope :submitted, -> { where('draft= ? OR is_submit= ?',false,true)}
   scope :where_keyword_id, -> (keyword_id) {  joins(:morsel_keywords).where(MorselKeyword.arel_table[:id].eq(keyword_id)) unless keyword_id.blank?}
+  scope :where_topic_id, -> (topic_id) {  joins(:morsel_topics).where(MorselTopic.arel_table[:id].eq(topic_id)) unless keyword_id.blank?}
   scope :with_drafts, -> (include_drafts = true) { where(draft: false) unless include_drafts }
   scope :where_place_id, -> (place_id) { where(place_id: place_id) unless place_id.nil? }
   scope :where_collection_id, -> (collection_id) { joins(:collection_morsels).where(CollectionMorsel.arel_table[:collection_id].eq(collection_id)) unless collection_id.nil? }
@@ -165,13 +169,13 @@ class Morsel < ActiveRecord::Base
     if user.profile.present?
       user_profile = user.profile
       {host_morsel_url:(!user_profile.host_url.blank? ? "http://#{user_profile.host_url.gsub(/^https?\:\/\//,"").gsub(/\/$/,"")}/morsel-info/?morselid=#{id}" : "https://www.eatmorsel.com/morsel-info/?morselid=#{id}"),host_logo:(user_profile.host_logo.blank? ? (cached_primary_item_photos.present? ? cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg') : user_profile.host_logo), address: "#{capitalize_name(user_profile.company_name)}, #{user_profile.street_address}, #{capitalize_name(user_profile.city)}, #{user_profile.state.upcase} #{user_profile.zip}",preview_text: (!user_profile.preview_text.blank? ? user_profile.preview_text : 'Email is showing your subscribed morsel as well as latest morsel')}
-        
+
     elsif user.recieved_association_requests.first.present?
       user_profile = user.recieved_association_requests.first.host.profile
       {host_morsel_url:(!user_profile.host_url.blank? ? "http://#{user_profile.host_url.gsub(/^https?\:\/\//,"").gsub(/\/$/,"")}/morsel-info/?morselid=#{id}" : "https://www.eatmorsel.com/morsel-info/?morselid=#{id}"),host_logo:(user_profile.host_logo.blank? ? (cached_primary_item_photos.present? ? cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg') : user_profile.host_logo), address: "#{capitalize_name(user_profile.company_name)}, #{user_profile.street_address}, #{capitalize_name(user_profile.city)}, #{user_profile.state.upcase} #{user_profile.zip}",preview_text: (!user_profile.preview_text.blank? ? user_profile.preview_text : 'Email is showing your subscribed morsel as well as latest morsel')}
 
     end
- 
+
   end
 
 

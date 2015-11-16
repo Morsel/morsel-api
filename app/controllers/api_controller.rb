@@ -28,20 +28,20 @@ class ApiController < ActionController::Base
   end
 
   def activity_log!
-        
-        
+
+
       if request.headers["activity"]
-        
-        activity = 
-        { 
+
+        activity =
+        {
             ip_address: request.remote_ip,host_site: request.headers["Origin"],
             share_by: request.headers["share-by"],activity: request.headers["activity"],
-            activity_id: request.headers["activity-id"],activity_type: request.headers["activity-type"], user_id: request.headers["user-id"] 
+            activity_id: request.headers["activity-id"],activity_type: request.headers["activity-type"], user_id: request.headers["user-id"]
         }
-       
+
          activity = ActivityLog.new(activity)
          activity.save
-         
+
       end
 
   end
@@ -99,7 +99,7 @@ class ApiController < ActionController::Base
   def pagination_params
     @pagination_params ||= begin
       pagination_params = params.slice(:max_id, :since_id, :before_date, :before_id, :after_date, :after_id, :page, :count)
-      pagination_params[:count] = pagination_count
+      pagination_params[:count] = pagination_count.to_i
       pagination_params
     end
   end

@@ -76,11 +76,25 @@ MorselApp::Application.routes.draw do
       post 'edit_morsel_keyword' => 'keywords#edit_morsel_keyword'
       post 'selected_morsel_keyword' => 'keywords#selected_morsel_keyword'
       delete 'delete_morsel_keyword' => 'keywords#delete_morsel_keyword'
+
     end
     member do
       get 'users' => 'keywords#users'
     end
   end
+
+  resources :topics, only: [] do
+    collection do
+      post 'add_morsel_topic' => 'topics#add_topic'
+      post 'show_morsel_topic' => 'topics#show_morsel_topic'
+      post 'edit_morsel_topic' => 'topics#edit_morsel_topic'
+      post 'selected_morsel_topic' => 'topics#selected_morsel_topic'
+      delete 'delete_morsel_topic' => 'topics#delete_morsel_topic'
+    end
+
+  end
+
+
   match 'cuisines/:id/users', to: 'keywords#users', via: :get
   match 'specialties/:id/users', to: 'keywords#users', via: :get
   match 'hashtags/:name/morsels', to: 'keywords#morsels_for_name', via: :get, name: /[A-Za-z0-9_]*/
@@ -118,7 +132,7 @@ MorselApp::Application.routes.draw do
       get 'notifications' => 'notifications#index'
       get 'search' => 'users#search'
       post ':id/create_profile' => 'users#create_user_profile'
-       
+
 
 
 
@@ -160,6 +174,7 @@ MorselApp::Application.routes.draw do
       get 'drafts' => 'morsels#drafts'
       get 'search' => 'morsels#search'
       post 'update_keyword' => 'morsels#update_morsel_keyword'
+      post 'update_topic' => 'morsels#update_morsel_topic'
     end
 
     resources :items, only: [:update, :destroy]
