@@ -112,7 +112,7 @@ class User < ActiveRecord::Base
   has_many :subscriptions
   has_many :subscribed_morsels, through: :subscriptions, source: :morsel
 
-  has_many :email_logs 
+  has_many :email_logs
   has_many :emaillogged_morsels, through: :email_logs, source: :morsel
 
   has_many :sent_association_requests , :class_name => "AssociationRequest" , :foreign_key => "host_id"
@@ -121,7 +121,8 @@ class User < ActiveRecord::Base
   has_many :hosts , :through => :recieved_association_requests
 
 
-  has_many :morsel_keywords 
+  has_many :morsel_keywords
+  has_many :morsel_topics
 
   has_one :profile #, :dependent => :destroy
   attr_accessor :creator_id,:keyword_id
@@ -213,7 +214,7 @@ class User < ActiveRecord::Base
 
   def self.find_by_email_or_username(email)
       # email = conditions[:email]
-      if email =~ /@/ 
+      if email =~ /@/
         self.find_by_email(email)
       elsif email.to_s =~ /\A[0-9]+\z/
         self.find(Integer(email))
@@ -307,11 +308,11 @@ class User < ActiveRecord::Base
 
   def uniq_subcribed_morsels
     subscribed_morsels.uniq
-  end  
+  end
 
   def user_photo_logo
-    photo.present? ? photos[:_80x80] : 'https://www.eatmorsel.com/assets/images/utility/avatars/avatar_80x80.jpg'    
-  end  
+    photo.present? ? photos[:_80x80] : 'https://www.eatmorsel.com/assets/images/utility/avatars/avatar_80x80.jpg'
+  end
 
   private
 
