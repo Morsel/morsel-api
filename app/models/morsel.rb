@@ -68,6 +68,8 @@ class Morsel < ActiveRecord::Base
   has_many :morsel_user_tags, dependent: :destroy
   has_many :tagged_users, through: :morsel_user_tags, source: :user
 
+  has_many :associated_morsel, class_name: 'AssociationRequest', primary_key: 'creator_id', foreign_key: 'associated_user_id'
+
   has_many :morsel_morsel_keywords
   has_many :morsel_keywords, through: :morsel_morsel_keywords
 
@@ -119,7 +121,8 @@ class Morsel < ActiveRecord::Base
   scope :where_collection_id, -> (collection_id) { joins(:collection_morsels).where(CollectionMorsel.arel_table[:collection_id].eq(collection_id)) unless collection_id.nil? }
   scope :where_creator_id, -> (creator_id) { where(creator_id: creator_id) unless creator_id.nil? }
   scope :where_tagged_user_id, -> (tagged_user_id) { includes(:morsel_user_tags).where(MorselUserTag.arel_table[:user_id].eq(tagged_user_id)) unless tagged_user_id.nil? }
-  scope :where_creator_id_or_tagged_user_id, -> (creator_id_or_tagged_user_id) { includes(:morsel_user_tags).where(Morsel.arel_table[:creator_id].in(creator_id_or_tagged_user_id).or(MorselUserTag.arel_table[:user_id].in(creator_id_or_tagged_user_id))).references(:morsel_user_tags) unless creator_id_or_tagged_user_id.nil? }
+  scope :where_creator_id_or_tagged_user_id, -> (creator_id_or_tagged_user_id,morsel_ids = 0) { includes(:morsel_user_tags).where(Morsel.arel_table[:creator_id].in(creator_id_or_tagged_user_id).or(MorselUserTag.arel_table[:user_id].in(creator_id_or_tagged_user_id)).or(Morsel.arel_table[:id].in(morsel_ids))).references(:morsel_user_tags) unless creator_id_or_tagged_user_id.nil? }
+  scope :where_associated_user, -> (associated_user) { joins(:associated_morsel).where(Morsel.arel_table[:created_at].gteq(AssociationRequest.arel_table[:created_at]).and(Morsel.arel_table[:creator_id].in(associated_user))) unless associated_user.nil? }
 
   concerning :Caching do
     def cache_key
@@ -178,6 +181,15 @@ class Morsel < ActiveRecord::Base
 
   end
 
+  def self.get_associated_users_morsels(approved_ids, host_id, pagination_params, pagination_key)
+    associated_morsels_ids = self.where_associated_user(approved_ids).map(&:id)
+
+    morsels = self.includes(:items, :place, :creator)
+                  .published
+                  .order(Morsel.arel_table[:published_at].desc)
+                  .where_creator_id_or_tagged_user_id(host_id, associated_morsels_ids)
+                  .paginate(pagination_params, pagination_key)
+  end
 
   private
 
