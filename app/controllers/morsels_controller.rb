@@ -222,40 +222,18 @@ class MorselsController < ApiController
                                       end
         host = User.find(user_id)
         associated_user_ids = host.sent_association_requests.approved.map(&:associated_user_id)
-        approved_ids = associated_user_ids.push(user_id.to_i)
+        # approved_ids = associated_user_ids.push(user_id.to_i)
+
+        fetch_morsels = Morsel.get_associated_users_morsels(associated_user_ids, host.id, pagination_params, pagination_key)
 
         if params[:topic_id]
-          Morsel.includes(:items, :place, :creator)
-                .published
-                .where_keyword_id(params[:topic_id])
-                .order(Morsel.arel_table[:published_at].desc)
-                .paginate(pagination_params, pagination_key)
-                .where_creator_id_or_tagged_user_id(approved_ids)
-
+          fetch_morsels.where_topic_id(params[:topic_id])
         elsif params[:keyword_id]
-          Morsel.includes(:items, :place, :creator)
-                .published
-                .where_keyword_id(params[:keyword_id])
-                .order(Morsel.arel_table[:published_at].desc)
-                .paginate(pagination_params, pagination_key)
-                .where_creator_id_or_tagged_user_id(approved_ids)
-
+          fetch_morsels.where_keyword_id(params[:keyword_id])
         elsif !params[:submit]
-
-            Morsel.includes(:items, :place, :creator)
-                .published
-                .order(Morsel.arel_table[:published_at].desc)
-                .paginate(pagination_params, pagination_key)
-                .where_creator_id_or_tagged_user_id(approved_ids)
-                .where_place_id(params[:place_id])
+          fetch_morsels.where_place_id(params[:place_id])
         else
-
-          Morsel.includes(:items, :place, :creator,:morsel_keywords)
-              .submitted
-              .order(Morsel.arel_table[:published_at].desc)
-              .paginate(pagination_params, pagination_key)
-              .where_creator_id_or_tagged_user_id(approved_ids)
-              .where_place_id(params[:place_id])
+          fetch_morsels.where_place_id(params[:place_id])
         end
 
       elsif current_user.present?

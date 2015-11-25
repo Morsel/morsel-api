@@ -14,7 +14,7 @@ class UsersController < ApiController
   end
 
   public_actions << def association_requests
-  
+
       user = User.find(params[:id])
 
       if params[:approved]
@@ -32,7 +32,7 @@ class UsersController < ApiController
 
   def allow_association_request
     if association_request_params.present?
-     
+
       association_request = current_user.recieved_association_requests.find_by_host_id(association_request_params[:request_creator_id])
 
       if association_request.approve!
@@ -47,7 +47,7 @@ class UsersController < ApiController
 
 
   def delete_association_request
-   
+
     if association_request_params.present?
 
       association_request = current_user.sent_association_requests.find_by_associated_user_id(association_request_params[:associated_user_id]).destroy
@@ -73,7 +73,11 @@ class UsersController < ApiController
         end
 
         if user_for_association
+          if association_request_params[:is_admin]
+          association_request = host.sent_association_requests.find_or_create_by(:associated_user => user_for_association,:approved => true )
+          else
           association_request = host.sent_association_requests.find_or_create_by(:associated_user => user_for_association )
+          end
         end
 
         if association_request.present?
@@ -94,7 +98,7 @@ class UsersController < ApiController
 
     user_params = UserParams.build(params)
     user_params.delete(:promoted) # delete the `promoted` flag since that should only be set via /admin
- 
+
     if user_params[:photo_key]
       handle_photo_key(user_params[:photo_key], user, serializer: UserWithPrivateAttributesSerializer)
     else
@@ -102,7 +106,7 @@ class UsersController < ApiController
       if password_required?(user, user_params)
         render_json_errors(user.errors)
       elsif user.update_attributes(user_params)
-        
+
         if params[:prepare_presigned_upload] == 'true'
           handle_presigned_upload(user, serializer: UserWithPrivateAttributesSerializer)
         else
@@ -120,7 +124,7 @@ class UsersController < ApiController
   end
 
   def create_user_profile
- 
+
      user = User.find(params[:id])
      authorize_action_for user
      unless user.profile.present?
@@ -128,7 +132,7 @@ class UsersController < ApiController
             render_json user.profile
           else
              render_json_errors({ api: ["Invalid User"] }, :forbidden)
-          end  
+          end
       else
         render_json user.profile
       end
@@ -146,26 +150,26 @@ class UsersController < ApiController
   end
 
   def morsel_subscribe
-  
+
     if morsel_subscribe_params[:subscribed_morsel_ids].present?
        subscriptions = morsel_subscribe_params[:subscribed_morsel_ids].compact.map(&:to_i) #| current_user.subscribed_morsel_ids.flatten
         subscriptions.each do |morsel_id|
-          
+
           morsel = Morsel.find(morsel_id)
           morsel_keyword = morsel.morsel_morsel_keywords.map(&:morsel_keyword_id)
           morsel_keyword.each do |keyword|
-           
+
           current_user.subscriptions.find_or_create_by(creator_id:morsel.creator_id,keyword_id: keyword)
           end
         end
        # current_user.subscribed_morsel_ids= subscriptions
-      render_json_ok  
+      render_json_ok
     else
       render_json_errors({ api: ["Subscribed morsel ids blank."] }, :forbidden)
     end
 
   end
- 
+
   public_actions << def validate_email
     user = User.new(email: params[:email])
     user.validate_email
