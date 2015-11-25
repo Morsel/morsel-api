@@ -344,7 +344,7 @@ class UsersController < ApiController
   end
 
   def association_request_params
-    params.require(:association_request_params).permit(:name_or_email, :id, :approved, :request_creator_id, :associated_user_id)
+    params.require(:association_request_params).permit(:name_or_email, :id, :approved, :request_creator_id, :associated_user_id, :is_admin)
   end
 
   def password_required?(user, user_params)
