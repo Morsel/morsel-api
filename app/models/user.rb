@@ -120,6 +120,8 @@ class User < ActiveRecord::Base
   has_many :associated_users , :through => :sent_association_requests
   has_many :hosts , :through => :recieved_association_requests
 
+  has_many :associated_morsels,:foreign_key => "host_id",dependent: :destroy
+  has_many :host_morsels, through: :associated_morsels,source: :morsel
 
   has_many :morsel_keywords
   has_many :morsel_topics

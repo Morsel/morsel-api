@@ -175,6 +175,7 @@ MorselApp::Application.routes.draw do
       get 'search' => 'morsels#search'
       post 'update_keyword' => 'morsels#update_morsel_keyword'
       post 'update_topic' => 'morsels#update_morsel_topic'
+      post 'associate_morsel_to_user' => 'morsels#associate_morsel_to_user'
     end
 
     resources :items, only: [:update, :destroy]

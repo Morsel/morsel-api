@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151104073605) do
+ActiveRecord::Schema.define(version: 20151201080313) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,6 +77,13 @@ ActiveRecord::Schema.define(version: 20151104073605) do
 
   add_index "activity_subscriptions", ["subject_id", "subject_type"], name: "index_activity_subscriptions_on_subject_id_and_subject_type", using: :btree
   add_index "activity_subscriptions", ["subscriber_id"], name: "index_activity_subscriptions_on_subscriber_id", using: :btree
+
+  create_table "associated_morsels", force: true do |t|
+    t.integer  "morsel_id"
+    t.integer  "host_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "association_requests", force: true do |t|
     t.integer  "host_id",                            null: false
