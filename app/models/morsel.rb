@@ -190,7 +190,6 @@ class Morsel < ActiveRecord::Base
     # morsel_ids = morsel_ids_associate_with_host.concat(associated_morsels_ids).uniq
     morsel_ids = self.morsel_ids_associate_with_host(host_id).map(&:id)
     morsels = self.includes(:items, :place, :creator)
-                  .published
                   .order(Morsel.arel_table[:published_at].desc)
                   .where_creator_id_or_tagged_user_id(host_id, morsel_ids)
                   .paginate(pagination_params, pagination_key)
