@@ -72,17 +72,13 @@ class MorselsController < ApiController
     morsel = Morsel.find params[:morsel_id]
     user = User.find params[:user_id]
     if morsel.update(MorselParams.build(params, user)) && (morsel.feed_item ? morsel.feed_item.save : true)
-
        render_json_ok
-
     else
         render_json_errors({ api: ["Invalid Parameter To call."] }, :forbidden)
     end
-
   end
 
   public_actions << def associate_morsel_to_user
-
     morsel = Morsel.find params[:morsel_id]
     #users = User.find params[:user_id]
     #morsel.associated_morsels.find_or_create_by(:user=>user)
@@ -91,7 +87,6 @@ class MorselsController < ApiController
     else
         render_json_errors({ api: ["Invalid Parameter To call."] }, :forbidden)
     end
-
   end
 
 
@@ -236,15 +231,14 @@ class MorselsController < ApiController
         # approved_ids = associated_user_ids.push(user_id.to_i)
 
         fetch_morsels = Morsel.get_associated_users_morsels(associated_user_ids, host.id, pagination_params, pagination_key)
-
         if params[:topic_id]
-          fetch_morsels.where_topic_id(params[:topic_id])
+          fetch_morsels.published.where_topic_id(params[:topic_id])
         elsif params[:keyword_id]
-          fetch_morsels.where_keyword_id(params[:keyword_id])
-        elsif !params[:submit]
-          fetch_morsels.where_place_id(params[:place_id])
+          fetch_morsels.published.where_keyword_id(params[:keyword_id])
+        elsif params[:submit]
+          fetch_morsels.submitted
         else
-          fetch_morsels.where_place_id(params[:place_id])
+          fetch_morsels.published.where_place_id(params[:place_id])
         end
 
       elsif current_user.present?
