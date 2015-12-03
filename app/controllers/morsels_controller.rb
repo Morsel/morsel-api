@@ -56,7 +56,6 @@ class MorselsController < ApiController
   end
 
   public_actions << def update_morsel_keyword
-
     morsel = Morsel.find params[:morsel_id]
     user = User.find params[:user_id]
     if morsel.update(MorselParams.build(params, user)) && (morsel.feed_item ? morsel.feed_item.save : true)
@@ -70,13 +69,25 @@ class MorselsController < ApiController
   end
 
    public_actions << def update_morsel_topic
-
     morsel = Morsel.find params[:morsel_id]
     user = User.find params[:user_id]
     if morsel.update(MorselParams.build(params, user)) && (morsel.feed_item ? morsel.feed_item.save : true)
 
        render_json_ok
 
+    else
+        render_json_errors({ api: ["Invalid Parameter To call."] }, :forbidden)
+    end
+
+  end
+
+  public_actions << def associate_morsel_to_user
+
+    morsel = Morsel.find params[:morsel_id]
+    #users = User.find params[:user_id]
+    #morsel.associated_morsels.find_or_create_by(:user=>user)
+    if morsel.update(MorselParams.build(params))
+       render_json_ok
     else
         render_json_errors({ api: ["Invalid Parameter To call."] }, :forbidden)
     end
@@ -195,9 +206,9 @@ class MorselsController < ApiController
     def self.build(params, _scope = nil)
 
       if _scope && _scope.admin?
-        params.require(:morsel).permit(:title, :summary, :draft, :primary_item_id, :place_id, :template_id, :query, feed_item_attributes: [:id, :featured],morsel_keyword_ids: [],morsel_topic_ids: [])
+        params.require(:morsel).permit(:title, :summary, :draft, :primary_item_id, :place_id, :template_id, :query, feed_item_attributes: [:id, :featured],morsel_keyword_ids: [],morsel_topic_ids: [],morsel_host_ids: [])
       else
-        params.require(:morsel).permit(:title, :summary, :draft, :primary_item_id, :place_id, :template_id, :query, :is_submit,morsel_keyword_ids: [],morsel_topic_ids: [])
+        params.require(:morsel).permit(:title, :summary, :draft, :primary_item_id, :place_id, :template_id, :query, :is_submit,morsel_keyword_ids: [],morsel_topic_ids: [],morsel_host_ids:[])
       end
     end
   end
