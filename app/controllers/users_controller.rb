@@ -51,8 +51,8 @@ class UsersController < ApiController
     if association_request_params.present?
 
       association_request = current_user.sent_association_requests.find_by_associated_user_id(association_request_params[:associated_user_id]).destroy
-
-      if association_request.present?
+      related_morsel = current_user.associated_morsels.find_by_user_id(association_request_params[:associated_user_id]).destroy
+      if association_request.present? && related_morsel.present?
         custom_respond_with current_user.sent_association_requests, each_serializer: AssociationRequestSerializer
       else
         render_json "Invalid params"
