@@ -227,10 +227,7 @@ class MorselsController < ApiController
                                           user.id
                                       end
         host = User.find(user_id)
-        associated_user_ids = host.sent_association_requests.approved.map(&:associated_user_id)
-        # approved_ids = associated_user_ids.push(user_id.to_i)
-
-        fetch_morsels = Morsel.get_associated_users_morsels(associated_user_ids, host.id, pagination_params, pagination_key)
+        fetch_morsels = Morsel.get_associated_users_morsels(host.id, pagination_params, pagination_key)
         if params[:topic_id]
           fetch_morsels.published.where_topic_id(params[:topic_id])
         elsif params[:keyword_id]

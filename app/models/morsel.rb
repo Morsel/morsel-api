@@ -118,7 +118,7 @@ class Morsel < ActiveRecord::Base
   scope :published, -> { where(draft: false)}
   scope :submitted, -> { where('draft= ? OR is_submit= ?',false,true)}
   scope :where_keyword_id, -> (keyword_id) {  joins(:morsel_keywords).where(MorselKeyword.arel_table[:id].eq(keyword_id)) unless keyword_id.blank?}
-  scope :where_topic_id, -> (topic_id) {  joins(:morsel_topics).where(MorselTopic.arel_table[:id].eq(topic_id)) unless keyword_id.blank?}
+  scope :where_topic_id, -> (topic_id) {  joins(:morsel_topics).where(MorselTopic.arel_table[:id].eq(topic_id)) unless topic_id.blank?}
   scope :with_drafts, -> (include_drafts = true) { where(draft: false) unless include_drafts }
   scope :where_place_id, -> (place_id) { where(place_id: place_id) unless place_id.nil? }
   scope :where_collection_id, -> (collection_id) { joins(:collection_morsels).where(CollectionMorsel.arel_table[:collection_id].eq(collection_id)) unless collection_id.nil? }
@@ -184,7 +184,7 @@ class Morsel < ActiveRecord::Base
 
   end
 
-  def self.get_associated_users_morsels(approved_ids, host_id, pagination_params, pagination_key)
+  def self.get_associated_users_morsels(host_id, pagination_params, pagination_key)
     # associated_morsels_ids = self.where_associated_user(approved_ids).map(&:id)
     # morsel_ids_associate_with_host = self.morsel_ids_associate_with_host(host_id).map(&:id)
     # morsel_ids = morsel_ids_associate_with_host.concat(associated_morsels_ids).uniq
