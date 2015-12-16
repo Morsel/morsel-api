@@ -55,6 +55,17 @@ class MorselsController < ApiController
     end
   end
 
+  def delete_morsel_keyword
+    morsel = Morsel.find params[:morsel_id]
+    ids = MorselParams.build(params)[:morsel_keyword_ids]
+    keyword_to_delete = morsel.morsel_morsel_keywords.find_by_morsel_keyword_id(ids)
+    if keyword_to_delete.delete
+      render_json "deleted"
+    else
+      render_json_errors morsel.errors
+    end
+  end
+
   public_actions << def update_morsel_keyword
     morsel = Morsel.find params[:morsel_id]
     user = User.find params[:user_id]
@@ -261,5 +272,5 @@ class MorselsController < ApiController
     )
   end
 
-  authorize_actions_for Morsel, except: public_actions, actions: { publish: :update, republish: :update, drafts: :read, collect: :read, uncollect: :read, check_then_publish: :update }
+  authorize_actions_for Morsel, except: public_actions, actions: { delete_morsel_keyword: :delete ,publish: :update, republish: :update, drafts: :read, collect: :read, uncollect: :read, check_then_publish: :update }
 end
