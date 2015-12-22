@@ -98,6 +98,18 @@ class UsersController < ApiController
     custom_respond_with keywords, each_serializer: UnsubscribeMorselSerializer
   end
 
+  def unsubscribe_users_keyword
+    user = User.find(params[:id])
+    #authorize_action_for user
+    user_params = UserParams.build(params)
+    subscriptions = user.subscriptions.where(keyword_id: user_params[:keyword_id])
+    if(subscriptions.delete_all)
+      render_json "deleted"
+    else
+      render_json_errors(user.errors)
+    end
+  end
+
   def update
 
     user = User.find(params[:id])
@@ -339,7 +351,12 @@ class UsersController < ApiController
       params.require(:user).permit(:email, :username, :password, :current_password,
                                    :first_name, :last_name, :bio, :industry,
                                    :photo, :remote_photo_url, :promoted, :query,
-                                   :professional, :photo_key, settings: [:auto_follow],profile_attributes:[:host_url,:host_logo,:address,:id,:is_active,:company_name,:street_address,:city,:state,:zip,:preview_text])
+                                   :professional, :photo_key, settings: [:auto_follow],keyword_id:[],
+                                   profile_attributes:[
+                                    :host_url,:host_logo,:address,:id,:is_active,
+                                    :company_name,:street_address,:city,:state,:zip,:preview_text
+                                   ]
+                                  )
     end
   end
 
@@ -369,5 +386,5 @@ class UsersController < ApiController
     user.errors.count > 0
   end
 
-  authorize_actions_for User, except: public_actions, actions: { me: :read, search: :read, places: :read ,morsel_subscribe: :create,create_user_profile: :update,create_association_request: :create,allow_association_request: :update,delete_association_request: :delete}
+  authorize_actions_for User, except: public_actions, actions: { me: :read, search: :read, places: :read ,morsel_subscribe: :create,create_user_profile: :update,create_association_request: :create,allow_association_request: :update,delete_association_request: :delete,unsubscribe_users_keyword: :delete}
 end
