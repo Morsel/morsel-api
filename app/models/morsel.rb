@@ -79,8 +79,8 @@ class Morsel < ActiveRecord::Base
   has_many :associated_morsels, class_name: 'AssociatedMorsel',foreign_key: 'morsel_id',:dependent=> :destroy
   has_many :morsel_hosts,through: :associated_morsels, source: :hostuser
 
-  has_many :subscriptions
-  has_many :subscribers, through: :subscriptions, source: :user
+  # has_many :subscriptions
+  # has_many :subscribers, through: :subscriptions, source: :user
 
 
   has_many :email_logs

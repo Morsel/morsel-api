@@ -91,6 +91,13 @@ class UsersController < ApiController
     end
   end
 
+  public_actions << def subscriptions_keywords_morsels
+    user = User.find(params[:id])
+    # keywords = user.subscribed_keywords.uniq
+    keywords = user.morsel_keywords
+    custom_respond_with keywords, each_serializer: UnsubscribeMorselSerializer
+  end
+
   def update
 
     user = User.find(params[:id])

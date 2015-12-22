@@ -110,7 +110,7 @@ class User < ActiveRecord::Base
   has_many :morsel_user_tags, dependent: :destroy
 
   has_many :subscriptions
-  has_many :subscribed_morsels, through: :subscriptions, source: :morsel
+  has_many :subscribed_keywords, through: :subscriptions,source: :morsel_keyword,:foreign_key => "keyword_id"
 
   has_many :email_logs
   has_many :emaillogged_morsels, through: :email_logs, source: :morsel

@@ -136,6 +136,7 @@ MorselApp::Application.routes.draw do
 
 
 
+
       # Note: Keep these at the end
       get ':id' => 'users#show', id: /\d+/
       get ':username' => 'users#show', username: /[a-zA-Z]([A-Za-z0-9_]*)/
@@ -155,6 +156,7 @@ MorselApp::Application.routes.draw do
       get 'followables' => 'users#followables'
       get 'likeables' => 'users#likeables'
       get 'places' => 'users#places'
+      get 'subscribe_morsels' => 'users#subscriptions_keywords_morsels'
     end
   end
 
