@@ -157,6 +157,7 @@ MorselApp::Application.routes.draw do
       get 'likeables' => 'users#likeables'
       get 'places' => 'users#places'
       get 'subscribe_morsels' => 'users#subscriptions_keywords_morsels'
+      get 'subscribed_keyword' => 'users#user_subscribed_keywords'
       delete 'unsubscribe_users_keyword'=> 'users#unsubscribe_users_keyword'
     end
   end
