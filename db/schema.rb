@@ -11,12 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151204104048) do
+ActiveRecord::Schema.define(version: 20151228130348) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
-  enable_extension "pg_stat_statements"
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -340,6 +339,7 @@ ActiveRecord::Schema.define(version: 20151204104048) do
     t.hstore   "cached_primary_item_photos"
     t.boolean  "news_letter_sent",           default: false
     t.boolean  "is_submit",                  default: false
+    t.datetime "schedual_date"
   end
 
   add_index "morsels", ["cached_slug"], name: "index_morsels_on_cached_slug", using: :btree
