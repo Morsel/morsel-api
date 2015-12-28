@@ -9,7 +9,8 @@ class MorselSerializer < SlimMorselSerializer
              :mrsl,
              :has_tagged_users, # DEPRECATED, Remove: has_tagged_users (https://app.asana.com/0/19486350215520/20107444356081)
              :tagged,
-             :liked
+             :liked,
+             :schedual_date
 
   has_many :items, serializer: ItemSansMorselAndCreatorSerializer
   has_many :morsel_keywords, serializer: MorselKeywordSerializer
