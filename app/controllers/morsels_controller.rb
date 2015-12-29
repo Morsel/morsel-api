@@ -48,7 +48,7 @@ class MorselsController < ApiController
     authorize_action_for morsel
     morsel_params = MorselParams.build(params)
     if morsel_params[:schedual_date]
-      morsel.keywords.present? ? morsel_update(morsel) : render_json_errors("error")
+      morsel.morsel_keywords.present? ? morsel_update(morsel) : render_json_errors("error")
     else
       morsel_update(morsel)
     end
