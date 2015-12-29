@@ -40,20 +40,26 @@ class MorselsController < ApiController
   end
 
   public_actions << def show
-
     custom_respond_with Morsel.includes(:items, :place, :creator).find(params[:id])
   end
 
   def update
-
     morsel = Morsel.includes(:items, :place, :creator).find params[:id]
     authorize_action_for morsel
-
-    if morsel.update(MorselParams.build(params))
-      custom_respond_with morsel
+    morsel_params = MorselParams.build(params)
+    if morsel_params[:schedual_date]
+      morsel.keywords.present? ? morsel_update(morsel) : render_json_errors("error")
     else
-      render_json_errors morsel.errors
+      morsel_update(morsel)
     end
+  end
+
+  def morsel_update(morsel)
+    if morsel.update(MorselParams.build(params))
+        custom_respond_with morsel
+      else
+        render_json_errors morsel.errors
+      end
   end
 
   def delete_morsel_keyword
