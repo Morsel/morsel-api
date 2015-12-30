@@ -56,11 +56,14 @@ gem 'uglifier', '>= 1.3.0'
 gem 'virtus', '~> 1.0.3'
 gem 'zendesk_api', '~> 1.4.6'
 gem "excon",'~>0.45.3'
+gem 'whenever', :require => false
+gem 'byebug'
+gem 'better_errors'
 group :development do
-  gem 'better_errors'
+  #gem 'better_errors'
   gem 'binding_of_caller'
   gem 'quiet_assets'
-  gem 'byebug'
+  #gem 'byebug'
   gem 'pry-byebug'
   gem 'rails_layout'
   gem 'rb-fchange', require: false
@@ -105,4 +108,5 @@ end
 
 group :production, :staging do
   gem 'rails_12factor'
+
 end
