@@ -209,9 +209,9 @@ class MorselsController < ApiController
     def self.build(params, _scope = nil)
 
       if _scope && _scope.admin?
-        params.require(:morsel).permit(:title, :summary, :schedual_date, :draft, :primary_item_id, :place_id, :template_id, :query, :user_id, feed_item_attributes: [:id, :featured],morsel_keyword_ids: [],morsel_topic_ids: [],morsel_host_ids: [],morsel_video:,video_text:)
+        params.require(:morsel).permit(:title, :summary, :schedual_date, :draft, :primary_item_id, :place_id, :template_id, :query, :user_id,morsel_video:,video_text:, feed_item_attributes: [:id, :featured],morsel_keyword_ids: [],morsel_topic_ids: [],morsel_host_ids: [])
       else
-        params.require(:morsel).permit(:title, :summary, :schedual_date, :draft, :primary_item_id, :place_id, :template_id, :query, :user_id, :is_submit,morsel_keyword_ids: [],morsel_topic_ids: [],morsel_host_ids:[],morsel_video:,video_text:)
+        params.require(:morsel).permit(:title, :summary, :schedual_date, :draft, :primary_item_id, :place_id, :template_id, :query, :user_id, :is_submit,morsel_video:,video_text:,morsel_keyword_ids: [],morsel_topic_ids: [],morsel_host_ids:[])
       end
     end
   end
