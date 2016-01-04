@@ -44,7 +44,15 @@ class AuthenticationsController < ApiController
 
   public_actions << def check
     authentication_params = AuthenticationParams.build(params)
+    if authentication_params[:provider].eql?("facebook")
+      if authentication_params[:email].present?
+        count = Authentication.auth_with_email(authentication_params).count
+      else
+        count = Authentication.auth_with_uid(authentication_params).count
+      end
+    else
     count = Authentication.where(provider: authentication_params[:provider], uid: authentication_params[:uid]).count
+    end
     render_json(count > 0)
   end
 
@@ -63,7 +71,7 @@ class AuthenticationsController < ApiController
 
   class AuthenticationParams
     def self.build(params, _scope = nil)
-      params.require(:authentication).permit(:provider, :uid, :user_id, :token, :secret, :short_lived)
+      params.require(:authentication).permit(:provider, :uid, :user_id, :token, :secret, :short_lived, :email)
     end
   end
 
