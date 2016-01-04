@@ -46,6 +46,9 @@ class Authentication < ActiveRecord::Base
                   }
   validates :user, presence: true
 
+  scope :auth_with_email, -> (params) { where("provider= ? and email= ?",params[:provider], params[:email]) }
+  scope :auth_with_uid, ->(params) { where("provider= ? and uid= ?",params[:provider], params[:uid])}
+
   concerning :AutoFollow do
     included do
       after_commit :fetch_and_follow_social_connections, on: :create
@@ -74,7 +77,8 @@ class Authentication < ActiveRecord::Base
       @oauth = Koala::Facebook::OAuth.new(Settings.facebook.app_id, Settings.facebook.app_secret, Settings.morsel.web_url)
       @oauth.url_for_oauth_code(:permissions => "publish_actions")
       self.token = @oauth.exchange_access_token(token)
-    end  
+      # self.uid = @oauth.graph.get_object("me")['uid']
+    end
   end
 
   def facebook?

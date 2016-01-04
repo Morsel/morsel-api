@@ -11,8 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151228130348) do
-
+ActiveRecord::Schema.define(version: 20151204104048) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
@@ -104,6 +103,7 @@ ActiveRecord::Schema.define(version: 20151228130348) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.string   "email"
   end
 
   add_index "authentications", ["deleted_at"], name: "index_authentications_on_deleted_at", using: :btree
@@ -340,6 +340,8 @@ ActiveRecord::Schema.define(version: 20151228130348) do
     t.boolean  "news_letter_sent",           default: false
     t.boolean  "is_submit",                  default: false
     t.datetime "schedual_date"
+    t.text     "morsel_video"
+    t.text     "video_text"
   end
 
   add_index "morsels", ["cached_slug"], name: "index_morsels_on_cached_slug", using: :btree

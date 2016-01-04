@@ -8,6 +8,7 @@ class SessionsController < Devise::SessionsController
     if params[:user].present?
       return sign_in_with_login_and_password((params[:user][:email] || params[:user][:username] || params[:user][:login]), params[:user][:password])
     elsif params[:authentication].present?
+
       return sign_in_with_authentication(AuthenticationsController::AuthenticationParams.build(params))
     elsif params[:shadow_token].present? && params[:user_id].present?
       return sign_in_with_shadow_token(params[:user_id], params[:shadow_token])
@@ -36,19 +37,26 @@ class SessionsController < Devise::SessionsController
   end
 
   def sign_in_with_authentication(authentication_params)
-    authentication = Authentication.find_by(provider: authentication_params[:provider], uid: authentication_params[:uid])
+    if authentication_params[:provider].eql?('facebook')
+      if authentication_params[:email].present?
+        authentication = Authentication.auth_with_email(authentication_params).first
+      else
+        authentication = Authentication.auth_with_uid(authentication_params).first
+      end
+    else
+      authentication = Authentication.find_by(provider: authentication_params[:provider], uid: authentication_params[:uid])
+    end
     return invalid_login_attempt unless authentication && authentication.user
-
     authentication.token = authentication_params[:token]
     authentication.secret = authentication_params[:secret]
     authentication.short_lived = authentication_params[:short_lived]
-
     return invalid_login_attempt unless ValidateAuthentication.call(authentication: authentication).valid?
 
     authentication.exchange_access_token
 
     if authentication.save
       sign_in authentication.user, store: false
+
       custom_respond_with authentication.user, serializer: UserWithAuthTokenSerializer
     else
       render_json_errors(authentication.errors)

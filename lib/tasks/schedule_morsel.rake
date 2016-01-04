@@ -3,7 +3,7 @@ require_relative '../../app/workers/collage_worker'
 namespace :schedual_morsel do
   desc 'Get Schedual morsel for publish'
   task publish_morsel: :environment do
-    morsels = Morsel.where('schedual_date <= ? and schedual_date IS NOT ? and draft = ?',Time.now.strftime("%Y-%m-%d %H:%M"),nil,true)
+    morsels = Morsel.where('schedual_date IS NOT ? and draft = ?',nil,true)
     morsels.each do |morsel|
       PublishMorsel.call(
         morsel: morsel,
