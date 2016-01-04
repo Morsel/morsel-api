@@ -12,14 +12,10 @@ class MorselsController < ApiController
   end
 
   public_actions << def index
-
-
     if morsels_for_params.nil?
       unauthorized_token
     else
-
       custom_respond_with_cached_serializer(morsels_for_params,MorselSerializer)
-
     end
   end
 
@@ -122,20 +118,14 @@ class MorselsController < ApiController
   end
 
   public_actions << def check_then_publish
-
-
     user_profile = User.find(params[:userId]).profile
     morsel_keyword = Morsel.find(params[:id]).morsel_morsel_keywords.pluck(:morsel_keyword_id)
-
     if user_profile.present? && morsel_keyword.present?
-
-
-       morsel = Morsel.includes(:items, :place, :creator).find params[:id]
-       authorize_action_for morsel
-       #morsel.update! draft: false, publishing: false, is_submit: false
-       NewsletterWorker.new.perform(morsel:morsel)
-       custom_respond_with_service publish_service(morsel)
-
+      morsel = Morsel.includes(:items, :place, :creator).find params[:id]
+      authorize_action_for morsel
+      #morsel.update! draft: false, publishing: false, is_submit: false
+      NewsletterWorker.new.perform(morsel:morsel)
+      custom_respond_with_service publish_service(morsel)
     else
        render_json 'NOT'
     end
@@ -219,9 +209,9 @@ class MorselsController < ApiController
     def self.build(params, _scope = nil)
 
       if _scope && _scope.admin?
-        params.require(:morsel).permit(:title, :summary, :schedual_date, :draft, :primary_item_id, :place_id, :template_id, :query, :user_id, feed_item_attributes: [:id, :featured],morsel_keyword_ids: [],morsel_topic_ids: [],morsel_host_ids: [])
+        params.require(:morsel).permit(:title, :summary, :schedual_date, :draft, :primary_item_id, :place_id, :template_id, :query, :user_id, feed_item_attributes: [:id, :featured],morsel_keyword_ids: [],morsel_topic_ids: [],morsel_host_ids: [],morsel_video:,:video_text)
       else
-        params.require(:morsel).permit(:title, :summary, :schedual_date, :draft, :primary_item_id, :place_id, :template_id, :query, :user_id, :is_submit,morsel_keyword_ids: [],morsel_topic_ids: [],morsel_host_ids:[])
+        params.require(:morsel).permit(:title, :summary, :schedual_date, :draft, :primary_item_id, :place_id, :template_id, :query, :user_id, :is_submit,morsel_keyword_ids: [],morsel_topic_ids: [],morsel_host_ids:[],morsel_video:,:video_text)
       end
     end
   end
@@ -267,7 +257,6 @@ class MorselsController < ApiController
   end
 
   def publish_service(morsel, should_republish = false)
-
     PublishMorsel.call(
       morsel: morsel,
       morsel_params: (params[:morsel].present? ? MorselParams.build(params) : nil),
