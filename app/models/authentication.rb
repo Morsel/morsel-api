@@ -77,7 +77,8 @@ class Authentication < ActiveRecord::Base
       @oauth = Koala::Facebook::OAuth.new(Settings.facebook.app_id, Settings.facebook.app_secret, Settings.morsel.web_url)
       @oauth.url_for_oauth_code(:permissions => "publish_actions")
       self.token = @oauth.exchange_access_token(token)
-      # self.uid = @oauth.graph.get_object("me")['uid']
+      test = Koala::Facebook::API.new(token) if token.present?
+      self.uid = test.get_object("me")['id']
     end
   end
 

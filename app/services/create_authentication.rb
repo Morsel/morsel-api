@@ -7,7 +7,7 @@ class CreateAuthentication
   attribute :token, String
   attribute :secret, String
   attribute :short_lived, String
-
+  attribute :email, String
   validates :provider, presence: true
   validates :token, presence: true
   validates :uid, presence: true

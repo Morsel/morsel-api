@@ -50,8 +50,8 @@ class SessionsController < Devise::SessionsController
     authentication.token = authentication_params[:token]
     authentication.secret = authentication_params[:secret]
     authentication.short_lived = authentication_params[:short_lived]
-    return invalid_login_attempt unless ValidateAuthentication.call(authentication: authentication).valid?
 
+    return invalid_login_attempt unless ValidateAuthentication.call(authentication: authentication).valid?
     authentication.exchange_access_token
 
     if authentication.save

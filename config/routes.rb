@@ -60,6 +60,7 @@ MorselApp::Application.routes.draw do
   resources :authentications, only: [:create, :index, :show, :update, :destroy] do
     collection do
       get 'check' => 'authentications#check'
+      get "auth_data" => 'authentications#authdata'
       get 'connections(/provider)' => 'authentications#connections' # DEPRECATED, Change: GET `/authentications/connections` - Authentication Connections -> POST `/authentications/connections` - Authentication Connections (https://app.asana.com/0/19486350215520/19486350215528)
       post 'connections(/provider)' => 'authentications#connections'
     end

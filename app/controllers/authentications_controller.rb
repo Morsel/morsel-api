@@ -56,6 +56,12 @@ class AuthenticationsController < ApiController
     render_json(count > 0)
   end
 
+   def authdata
+    response_data = Hash.new()
+    response_data["twitter_consumer_key"] = ENV["TWITTER_CONSUMER_KEY"]
+    response_data["twitter_consumer_secret"] = ENV["TWITTER_CONSUMER_SECRET"]
+    custom_respond_with response_data
+  end
   def connections
     provider = params.fetch(:provider)
 
@@ -77,5 +83,5 @@ class AuthenticationsController < ApiController
 
   private
 
-  authorize_actions_for Authentication, except: public_actions, actions: { connections: :read }
+  authorize_actions_for Authentication, except: public_actions, actions: { connections: :read, authdata: :read }
 end
