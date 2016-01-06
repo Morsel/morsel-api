@@ -43,7 +43,7 @@ class MorselsController < ApiController
     morsel = Morsel.includes(:items, :place, :creator).find params[:id]
     authorize_action_for morsel
     morsel_params = MorselParams.build(params)
-    debugger
+
     if morsel_params[:schedual_date]
       change_time_zone(morsel_params,morsel)
 
