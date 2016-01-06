@@ -167,7 +167,7 @@ class Morsel < ActiveRecord::Base
   end
 
   def capitalize_name(string_part)
-    string_part.split.map(&:capitalize).join(' ')
+    string_part.split.map(&:capitalize).join(' ') if string_part
   end
 
   def host_info

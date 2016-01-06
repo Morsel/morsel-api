@@ -43,8 +43,10 @@ class MorselsController < ApiController
     morsel = Morsel.includes(:items, :place, :creator).find params[:id]
     authorize_action_for morsel
     morsel_params = MorselParams.build(params)
+    debugger
     if morsel_params[:schedual_date]
       change_time_zone(morsel_params,morsel)
+
       morsel.morsel_keywords.present? ? morsel_schedule_update(morsel) : render_json_errors("error")
     else
       morsel_update(morsel)
@@ -60,6 +62,7 @@ class MorselsController < ApiController
   end
 
    def morsel_schedule_update(morsel)
+
     if morsel.save
         custom_respond_with morsel
       else
@@ -229,9 +232,11 @@ class MorselsController < ApiController
   def change_time_zone(morsel_params,morsel)
 
     if morsel_params[:schedual_date].present?
-      morsel.local_schedual_date = morsel_params[:schedual_date]
-      time = Time.parse(morsel_params[:schedual_date])
-      morsel.schedual_date = time.in_time_zone("Europe/London").strftime("%Y-%m-%d %H:%M:00")
+        morsel.local_schedual_date = morsel_params[:schedual_date]
+        morsel.save
+        morsel.schedual_date = morsel.updated_at
+      # time = Time.parse(morsel_params[:schedual_date])
+      # morsel.schedual_date = time.in_time_zone("Europe/London").strftime("%Y-%m-%d %H:%M:00")
     end
   end
   def morsels_for_params
