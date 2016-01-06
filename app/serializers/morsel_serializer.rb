@@ -12,7 +12,8 @@ class MorselSerializer < SlimMorselSerializer
              :liked,
              :schedual_date,
              :morsel_video,
-             :video_text
+             :video_text,
+             :local_schedual_date
 
   has_many :items, serializer: ItemSansMorselAndCreatorSerializer
   has_many :morsel_keywords, serializer: MorselKeywordSerializer
