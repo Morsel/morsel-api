@@ -43,10 +43,8 @@ class MorselsController < ApiController
     morsel = Morsel.includes(:items, :place, :creator).find params[:id]
     authorize_action_for morsel
     morsel_params = MorselParams.build(params)
-
     if morsel_params[:schedual_date]
       change_time_zone(morsel_params,morsel)
-
       morsel.morsel_keywords.present? ? morsel_schedule_update(morsel,morsel_params) : render_json_errors("error")
     else
       morsel_update(morsel)
@@ -62,8 +60,7 @@ class MorselsController < ApiController
   end
 
    def morsel_schedule_update(morsel,morsel_params)
-      time = Time.parse(morsel_params[:schedual_date])
-      if morsel.update_attributes(:local_schedual_date => morsel_params[:schedual_date], :schedual_date => time.in_time_zone("Europe/London").strftime("%Y-%m-%d %H:%M:00"))
+      if morsel.save()
         custom_respond_with morsel
       else
         render_json_errors morsel.errors
@@ -221,9 +218,9 @@ class MorselsController < ApiController
     def self.build(params, _scope = nil)
 
       if _scope && _scope.admin?
-        params.require(:morsel).permit(:title, :summary, :schedual_date,:local_schedual_date, :draft, :primary_item_id, :place_id, :template_id, :query, :user_id,:morsel_video,:video_text, feed_item_attributes: [:id, :featured],morsel_keyword_ids: [],morsel_topic_ids: [],morsel_host_ids: [])
+        params.require(:morsel).permit(:title, :summary, :gmt, :schedual_date,:local_schedual_date, :draft, :primary_item_id, :place_id, :template_id, :query, :user_id,:morsel_video,:video_text, feed_item_attributes: [:id, :featured],morsel_keyword_ids: [],morsel_topic_ids: [],morsel_host_ids: [])
       else
-        params.require(:morsel).permit(:title, :summary, :schedual_date,:local_schedual_date, :draft, :primary_item_id, :place_id, :template_id, :query, :user_id, :is_submit,:morsel_video,:video_text,morsel_keyword_ids: [],morsel_topic_ids: [],morsel_host_ids:[])
+        params.require(:morsel).permit(:title, :summary, :gmt, :schedual_date,:local_schedual_date, :draft, :primary_item_id, :place_id, :template_id, :query, :user_id, :is_submit,:morsel_video,:video_text,morsel_keyword_ids: [],morsel_topic_ids: [],morsel_host_ids:[])
       end
     end
   end
@@ -232,10 +229,9 @@ class MorselsController < ApiController
   def change_time_zone(morsel_params,morsel)
     if morsel_params[:schedual_date].present?
       morsel.local_schedual_date=morsel_params[:schedual_date]
-      Time.zone="London"
-
-      # morsel.schedual_date = time.in_time_zone("Europe/London").strftime("%Y-%m-%d %H:%M:00")
-      # morsel.update_attributes(:local_schedual_date => morsel_params[:schedual_date], :schedual_date => time.in_time_zone("Europe/London").strftime("%Y-%m-%d %H:%M:00"))
+      date_with_gmt = [morsel_params[:schedual_date],morsel_params[:gmt]].join(' ')
+      time = Time.parse(date_with_gmt)
+      morsel.schedual_date = time.in_time_zone("Europe/London").strftime("%Y-%m-%d %H:%M:00")
     end
   end
   def morsels_for_params
