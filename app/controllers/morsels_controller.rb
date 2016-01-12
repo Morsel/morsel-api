@@ -60,7 +60,7 @@ class MorselsController < ApiController
   end
 
    def morsel_schedule_update(morsel,morsel_params)
-      if morsel.save()
+      if morsel.save
         custom_respond_with morsel
       else
         render_json_errors morsel.errors
