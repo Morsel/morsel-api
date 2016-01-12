@@ -227,7 +227,6 @@ class MorselsController < ApiController
 
   private
   def change_time_zone(morsel_params,morsel)
-    debugger
     if morsel_params[:schedual_date].present?
       morsel.local_schedual_date=morsel_params[:schedual_date]
       # date_with_gmt = [morsel_params[:schedual_date],morsel_params[:gmt]].join(' ')
