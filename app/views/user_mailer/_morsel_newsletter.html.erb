@@ -1,3 +1,10 @@
+<style type="text/css">
+
+span.preheader { display: none !important; }
+
+</style>
+
+<body><span class="preheader" style="display: none !important;"><%=description%></span>
 <p style="font-size: 24px;font-weight:bold; color:#ee8872; text-decoration:none;text-align:center;"><%= morsel.capitalize_name(morsel.title) %> </p>
 <table width="600" border="0" align="center" cellpadding="0" cellspacing="0" style="font-family:Arial, Helvetica, sans-serif; font-size:13px; background:#FCFCFC;">
     <!-- <tr>
@@ -24,7 +31,6 @@
 
       <tr>
         <td>
-
          <%=link_to (image_tag (morsel.primary_item_photos.present? ? morsel.primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg'),style:"width: 100%; max-width: 600px;",alt:'primary-image'),morsel.host_info[:host_morsel_url]%>
               <h1 style="font-size: 24px; line-height: 1.2; margin: 0px 0px 3px; padding: 0px 5px; vertical-align: bottom; text-align:center">
                 <%= link_to morsel.title,morsel.host_info[:host_morsel_url],style:"color: #ee8872; text-decoration: none; text-align:center" %>
@@ -95,3 +101,4 @@
         <td align="center">&nbsp;</td>
       </tr>
 </table>
+</body>
