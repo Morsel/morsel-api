@@ -182,6 +182,7 @@ MorselApp::Application.routes.draw do
       post 'update_topic' => 'morsels#update_morsel_topic'
       post 'associate_morsel_to_user' => 'morsels#associate_morsel_to_user'
       delete 'remove_morsel_keywords' => 'morsels#delete_morsel_keyword'
+      delete 'remove_morsel_topics' => 'morsels#delete_morsel_topic'
     end
 
     resources :items, only: [:update, :destroy]

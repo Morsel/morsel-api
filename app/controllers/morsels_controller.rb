@@ -78,6 +78,17 @@ class MorselsController < ApiController
     end
   end
 
+  def delete_morsel_topic
+    morsel = Morsel.find params[:morsel_id]
+    ids = MorselParams.build(params)[:morsel_topic_ids]
+    topic_to_delete = morsel.morsel_morsel_topics.find_by_morsel_topic_id(ids)
+    if topic_to_delete.delete
+      render_json "deleted"
+    else
+      render_json_errors morsel.errors
+    end
+  end
+
   public_actions << def update_morsel_keyword
     morsel = Morsel.find params[:morsel_id]
     user = User.find params[:user_id]
@@ -218,9 +229,9 @@ class MorselsController < ApiController
     def self.build(params, _scope = nil)
 
       if _scope && _scope.admin?
-        params.require(:morsel).permit(:title, :summary, :gmt, :schedual_date,:local_schedual_date, :draft, :primary_item_id, :place_id, :template_id, :query, :user_id,:morsel_video,:video_text, feed_item_attributes: [:id, :featured],morsel_keyword_ids: [],morsel_topic_ids: [],morsel_host_ids: [])
+        params.require(:morsel).permit(:title, :summary, :gmt, :schedual_date,:local_schedual_date, :draft, :primary_item_id, :place_id, :template_id, :query, :user_id,:morsel_video,:video_text, feed_item_attributes: [:id, :featured],morsel_keyword_ids: [],morsel_topic_ids: [],morsel_topic_ids: [],morsel_host_ids: [])
       else
-        params.require(:morsel).permit(:title, :summary, :gmt, :schedual_date,:local_schedual_date, :draft, :primary_item_id, :place_id, :template_id, :query, :user_id, :is_submit,:morsel_video,:video_text,morsel_keyword_ids: [],morsel_topic_ids: [],morsel_host_ids:[])
+        params.require(:morsel).permit(:title, :summary, :gmt, :schedual_date,:local_schedual_date, :draft, :primary_item_id, :place_id, :template_id, :query, :user_id, :is_submit,:morsel_video,:video_text,morsel_keyword_ids: [],morsel_topic_ids: [],morsel_topic_ids: [],morsel_host_ids:[])
       end
     end
   end
@@ -286,5 +297,5 @@ class MorselsController < ApiController
     )
   end
 
-  authorize_actions_for Morsel, except: public_actions, actions: { delete_morsel_keyword: :delete ,publish: :update, republish: :update, drafts: :read, collect: :read, uncollect: :read, check_then_publish: :update }
+  authorize_actions_for Morsel, except: public_actions, actions: {delete_morsel_topic: :delete, delete_morsel_keyword: :delete ,publish: :update, republish: :update, drafts: :read, collect: :read, uncollect: :read, check_then_publish: :update }
 end
