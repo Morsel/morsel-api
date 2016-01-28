@@ -163,7 +163,7 @@ class Morsel < ActiveRecord::Base
   end
 
   def primary_item_photos
-    cached_primary_item_photos || ( primary_item_id.present? ? primary_item.photos : nil)
+    cached_primary_item_photos || ( primary_item_id.present? ? primary_item ? primary_item.photos : nil : nil)
   end
 
   def capitalize_name(string_part)
