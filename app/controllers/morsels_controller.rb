@@ -81,9 +81,8 @@ class MorselsController < ApiController
   def delete_morsel_topic
     morsel = Morsel.find params[:morsel_id]
     ids = MorselParams.build(params)[:morsel_topic_ids]
-    topic_to_delete = morsel.morsel_morsel_topics.unscoped.find_by_morsel_topic_id(ids)
-    # topic_to_delete.destroy
-    if topic_to_delete.destroy
+    topic_to_delete = morsel.morsel_morsel_topics.find_by_morsel_topic_id(ids)
+    if topic_to_delete.delete
       render_json "deleted"
     else
       render_json_errors morsel.errors

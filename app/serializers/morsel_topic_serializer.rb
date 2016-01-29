@@ -1,4 +1,5 @@
 class MorselTopicSerializer < ActiveModel::Serializer
   attributes :id,
-             :name
+             :name,
+             :user_id
 end
