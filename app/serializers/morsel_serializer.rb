@@ -15,9 +15,11 @@ class MorselSerializer < SlimMorselSerializer
              :video_text,
              :local_schedual_date
 
-  # has_many :morsel_topics, serializer: MorselTopicSerializer
+  has_many :morsel_topics, serializer: MorselNewTopicSerializer
   has_many :items, serializer: ItemSansMorselAndCreatorSerializer
   has_many :morsel_keywords, serializer: MorselKeywordSerializer
+  # has_many :morsel_topics, serializer: MorselTopicSerializer
+  # has_many :morsel_topics, through: :morsel_morsel_topics, serializer: MorselTopicSerializer
 
   def has_tagged_users
     object.tagged_users?
