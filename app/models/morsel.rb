@@ -129,8 +129,9 @@ class Morsel < ActiveRecord::Base
   scope :morsel_ids_associate_with_host, -> (host_id) { joins(:associated_morsels).where(AssociatedMorsel.arel_table[:host_id].eq(host_id)) unless host_id.nil? }
   concerning :Caching do
     def cache_key
-      [super, [CachedModelDecorator.new(self).cache_key_for_has_many(:items),CachedModelDecorator.new(self).cache_key_for_has_many(:morsel_keywords)].join("-")  ].join('/')
+      [super, [CachedModelDecorator.new(self).cache_key_for_has_many(:items),CachedModelDecorator.new(self).cache_key_for_has_many(:morsel_keywords),CachedModelDecorator.new(self).cache_key_for_has_many(:morsel_topics)].join("-")  ].join('/')
     end
+
   end
 
   def item_count
