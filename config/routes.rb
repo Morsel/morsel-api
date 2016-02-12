@@ -115,6 +115,7 @@ MorselApp::Application.routes.draw do
   resources :users, only: [:update], concerns: [:followable, :reportable, :taggable] do
     collection do
       get 'validate_email(/:email)' => 'users#validate_email'
+      get 'getUserByEmail(/:email)' => 'users#getUserByEmail'
       get 'validate_username(/:username)' => 'users#validate_username'
       get 'validateusername(/:username)' => 'users#validate_username' # DEPRECATED, Change: GET `/users/validateusername` - Validate Username -> [GET `/users/validate_username` - Validate Username (https://app.asana.com/0/19486350215520/19486350215530)
       post 'reserveusername(/:username)' => 'users#reserveusername'

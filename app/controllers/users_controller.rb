@@ -194,6 +194,16 @@ class UsersController < ApiController
 
   end
 
+  public_actions << def getUserByEmail
+    user = User.find_by_email(params[:email])
+    #user.validate_email
+    if user.present?
+      render_json user
+    else
+      render_json false
+    end
+  end
+
   public_actions << def validate_email
     user = User.new(email: params[:email])
     user.validate_email
