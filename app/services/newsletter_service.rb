@@ -27,9 +27,9 @@ class NewsletterService
   	uniq_subscribers.each do |user|
       subscribe_morsel_keyword_ids = Subscription.where(user_id:user.id).map(&:keyword_id).sort()
        email_per_day =  user.email_logs.email_per_day
-       #if email_per_day.zero?
+       if email_per_day.zero?
           sendemail(view,other_morsel,user) if (subscribe_morsel_keyword_ids & morsel_keyword_ids).present?
-       #end
+       end
   	end
   end
 
@@ -42,7 +42,7 @@ class NewsletterService
 	  message= {"auto_text"=>false,
 	  				"preserve_recipients"=>nil,
 	  				"html"=>html,
-	  				"to"=>[{"type"=>"to","email"=> TO ,"name"=>"Nishant"},{"type"=>"to","email"=> "prateek.s@cisinlabs.com" ,"name"=>"Nishant"},{"type"=>"to","email"=> "testpointerp@gmail.com" ,"name"=>"Nishant"}],
+	  				"to"=>[{"type"=>"to","email"=> TO ,"name"=>"Nishant"}],
 	  				"return_path_domain"=>nil,
 	  				"from_name"=> morsel.user.full_name,"from_email"=> FROM ,
 	  				"subject"=>"#{morsel.title} From #{morsel.user.full_name} ",
