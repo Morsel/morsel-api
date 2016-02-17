@@ -172,17 +172,14 @@ class Morsel < ActiveRecord::Base
   end
 
   def host_info
-
     if user.profile.present?
       user_profile = user.profile
-      {host_morsel_url:(!user_profile.host_url.blank? ? "http://#{user_profile.host_url.gsub(/^https?\:\/\//,"").gsub(/\/$/,"")}/morsel-info/?morselid=#{id}" : "https://www.eatmorsel.com/morsel-info/?morselid=#{id}"),host_logo:(user_profile.host_logo.blank? ? (cached_primary_item_photos.present? ? cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg') : user_profile.host_logo), address: "#{capitalize_name(user_profile.company_name)}, #{user_profile.street_address.titleize}, #{capitalize_name(user_profile.city)}, #{user_profile.state.upcase} #{user_profile.zip}",preview_text: (!user_profile.preview_text.blank? ? user_profile.preview_text : 'Email is showing your subscribed morsel as well as latest morsel')}
-
     elsif user.recieved_association_requests.first.present?
       user_profile = user.recieved_association_requests.first.host.profile
-      {host_morsel_url:(!user_profile.host_url.blank? ? "http://#{user_profile.host_url.gsub(/^https?\:\/\//,"").gsub(/\/$/,"")}/morsel-info/?morselid=#{id}" : "https://www.eatmorsel.com/morsel-info/?morselid=#{id}"),host_logo:(user_profile.host_logo.blank? ? (cached_primary_item_photos.present? ? cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg') : user_profile.host_logo), address: "#{capitalize_name(user_profile.company_name)}, #{user_profile.street_address.titleize}, #{capitalize_name(user_profile.city)}, #{user_profile.state.upcase} #{user_profile.zip}",preview_text: (!user_profile.preview_text.blank? ? user_profile.preview_text : 'Email is showing your subscribed morsel as well as latest morsel')}
-
+    elsif self.morsel_hosts.first.present?
+      user_profile = self.morsel_hosts.first.profile
     end
-
+    {host_morsel_url:(!user_profile.host_url.blank? ? "http://#{user_profile.host_url.gsub(/^https?\:\/\//,"").gsub(/\/$/,"")}/morsel-info/?morselid=#{id}" : "https://www.eatmorsel.com/morsel-info/?morselid=#{id}"),host_logo:(user_profile.host_logo.blank? ? (cached_primary_item_photos.present? ? cached_primary_item_photos.symbolize_keys[:_640x640] : 'https://www.eatmorsel.com/assets/images/utility/placeholders/morsel-placeholder_640x640.jpg') : user_profile.host_logo), address: "#{capitalize_name(user_profile.company_name)}, #{user_profile.street_address.titleize}, #{capitalize_name(user_profile.city)}, #{user_profile.state.upcase} #{user_profile.zip}",preview_text: (!user_profile.preview_text.blank? ? user_profile.preview_text : 'Email is showing your subscribed morsel as well as latest morsel')}
   end
 
   def self.get_associated_users_morsels(host_id, pagination_params, pagination_key)

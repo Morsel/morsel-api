@@ -138,13 +138,14 @@ class MorselsController < ApiController
   end
 
   public_actions << def check_then_publish
-    user_profile = User.find(params[:userId]).profile
+    user = User.find(params[:userId])
+    user_profile = user.profile
     morsel_keyword = Morsel.find(params[:id]).morsel_morsel_keywords.pluck(:morsel_keyword_id)
     if user_profile.present? && morsel_keyword.present?
       morsel = Morsel.includes(:items, :place, :creator).find params[:id]
       authorize_action_for morsel
       #morsel.update! draft: false, publishing: false, is_submit: false
-      NewsletterWorker.new.perform(morsel:morsel)
+      NewsletterWorker.new.perform(morsel:morsel,hostuser:user)
       custom_respond_with_service publish_service(morsel)
     else
        render_json 'NOT'
