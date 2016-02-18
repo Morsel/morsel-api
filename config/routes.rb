@@ -63,6 +63,7 @@ MorselApp::Application.routes.draw do
       get "auth_data" => 'authentications#authdata'
       get 'connections(/provider)' => 'authentications#connections' # DEPRECATED, Change: GET `/authentications/connections` - Authentication Connections -> POST `/authentications/connections` - Authentication Connections (https://app.asana.com/0/19486350215520/19486350215528)
       post 'connections(/provider)' => 'authentications#connections'
+      post 'destroyByUid(/uid)' => 'authentications#destroyByUid'
     end
   end
 

@@ -32,13 +32,27 @@ class AuthenticationsController < ApiController
   end
 
   def destroy
+
     authentication = Authentication.find(params[:id])
     authorize_action_for authentication
-
     if authentication.destroy
       render_json_ok
     else
       render_json_errors(authentication.errors)
+    end
+  end
+
+  def destroyByUid
+    authentication = Authentication.find_by_uid(params[:uid])
+    if authentication.present?
+      authorize_action_for authentication
+      if authentication.destroy
+        render_json_ok
+      else
+        render_json_errors(authentication.errors)
+      end
+    else
+      render_json 'Not found'
     end
   end
 
@@ -83,5 +97,5 @@ class AuthenticationsController < ApiController
 
   private
 
-  authorize_actions_for Authentication, except: public_actions, actions: { connections: :read, authdata: :read }
+  authorize_actions_for Authentication, except: public_actions, actions: { connections: :read, authdata: :read, destroyByUid: :delete }
 end
