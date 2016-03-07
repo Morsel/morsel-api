@@ -197,8 +197,10 @@ class UsersController < ApiController
   public_actions << def getUserByEmail
     user = User.find_by_email(params[:email])
     #user.validate_email
-    if user.present?
+    if user.present? && !params[:host]
       render_json user
+    elsif user.present? && params[:host]
+      custom_respond_with user
     else
       render_json false
     end
