@@ -1,19 +1,30 @@
 class CommentsController < ApiController
-  def create
-    comment = Comment.new({ commentable_id: params[:id], commentable_type: commentable_type, commenter_id: current_user.id }.merge(CommentParams.build(params)))
+  public_actions << def create
+    if current_user
+      comment = Comment.new({ commentable_id: params[:id], commentable_type: commentable_type, commenter_id: current_user.id }.merge(CommentParams.build(params)))
+    else
+      comment = Comment.new({ commentable_id: params[:id], commentable_type: commentable_type, commenter_id: 0 }.merge(CommentParams.build(params)))
+    end
 
     if comment.save
       custom_respond_with comment
     else
       render_json_errors comment.errors
     end
+
   end
 
   public_actions << def index
-    custom_respond_with Comment.includes(:commenter)
+    if current_user
+      custom_respond_with Comment.includes(:commenter)
                                .paginate(pagination_params)
                                .where(commentable_type: commentable_type, commentable_id: params[:id])
                                .order(Comment.arel_table[:id].desc)
+    else
+
+      custom_respond_with Comment.where(commentable_type: commentable_type, commentable_id: params[:id])
+                               .order(Comment.arel_table[:id].desc)
+    end
   end
 
   def destroy

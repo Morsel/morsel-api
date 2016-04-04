@@ -33,7 +33,7 @@ class Like < ActiveRecord::Base
   alias_attribute :creator, :liker
   alias_attribute :user, :liker
 
-  validates :liker_id, uniqueness: { scope: [:likeable_id, :likeable_type], conditions: -> { where(deleted_at: nil) } }
+  #validates :liker_id, uniqueness: { scope: [:likeable_id, :likeable_type], conditions: -> { where(deleted_at: nil) } }
   validates :likeable, presence: true
 
   private

@@ -40,32 +40,36 @@ class Comment < ActiveRecord::Base
 
   self.authorizer_name = 'CommentAuthorizer'
 
-  validates :commenter, presence: true
+  #validates :commenter, presence: true
   validates :commentable, presence: true
   validates :description, presence: true
 
   private
 
   def subscribe_commenter_to_item
-    SubscribeToSubjectActivityWorker.perform_async(
-      subject_id: commentable.id,
-      subject_type: commentable.class.to_s,
-      subscriber_id: commenter.id,
-      actions: %w(comment),
-      reason: 'commented',
-      active: true
-    )
+    if commenter
+      SubscribeToSubjectActivityWorker.perform_async(
+        subject_id: commentable.id,
+        subject_type: commentable.class.to_s,
+        subscriber_id: commenter.id,
+        actions: %w(comment),
+        reason: 'commented',
+        active: true
+      )
+    end
   end
 
   def unsubscribe_commenter_from_item
-    UnsubscribeFromSubjectActivityWorker.perform_async(
-      subject_id: commentable.id,
-      subject_type: commentable.class.to_s,
-      subscriber_id: commenter.id,
-      actions: %w(comment),
-      reason: 'commented',
-      active: true
-    )
+    if commenter
+      UnsubscribeFromSubjectActivityWorker.perform_async(
+        subject_id: commentable.id,
+        subject_type: commentable.class.to_s,
+        subscriber_id: commenter.id,
+        actions: %w(comment),
+        reason: 'commented',
+        active: true
+      )
+    end
   end
 
   def update_counter_caches
