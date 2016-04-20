@@ -264,8 +264,17 @@ class MorselsController < ApiController
                                           raise ActiveRecord::RecordNotFound if user.nil?
                                           user.id
                                       end
-        host = User.find(user_id)
-        fetch_morsels = Morsel.get_associated_users_morsels(host.id, pagination_params, pagination_key)
+
+        if(params[:associate_ids])
+          user_ids = params[:associate_ids].split(',')
+          host = User.find(user_ids)
+          host_ids = host.map(&:id)
+          fetch_morsels = Morsel.get_associated_users_morsels(host_ids, pagination_params, pagination_key)
+        else
+          host = User.find(user_id)
+          fetch_morsels = Morsel.get_associated_users_morsels(host.id, pagination_params, pagination_key)
+        end
+
         if params[:topic_id]
           fetch_morsels.published.where_topic_id(params[:topic_id])
         elsif params[:keyword_id]

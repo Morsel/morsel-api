@@ -126,7 +126,7 @@ class Morsel < ActiveRecord::Base
   scope :where_tagged_user_id, -> (tagged_user_id) { includes(:morsel_user_tags).where(MorselUserTag.arel_table[:user_id].eq(tagged_user_id)) unless tagged_user_id.nil? }
   scope :where_creator_id_or_tagged_user_id, -> (creator_id_or_tagged_user_id,morsel_ids = []) { includes(:morsel_user_tags).where(Morsel.arel_table[:creator_id].in(creator_id_or_tagged_user_id).or(MorselUserTag.arel_table[:user_id].in(creator_id_or_tagged_user_id)).or(Morsel.arel_table[:id].in(morsel_ids))).references(:morsel_user_tags) unless creator_id_or_tagged_user_id.nil? }
   scope :where_associated_user, -> (associated_user) { joins(:associated_morsel).where(Morsel.arel_table[:created_at].gteq(AssociationRequest.arel_table[:created_at]).and(Morsel.arel_table[:creator_id].in(associated_user))) unless associated_user.nil? }
-  scope :morsel_ids_associate_with_host, -> (host_id) { joins(:associated_morsels).where(AssociatedMorsel.arel_table[:host_id].eq(host_id)) unless host_id.nil? }
+  scope :morsel_ids_associate_with_host, -> (host_id) { joins(:associated_morsels).where(AssociatedMorsel.arel_table[:host_id].in(host_id)) unless host_id.nil? }
   concerning :Caching do
     def cache_key
       [super, [CachedModelDecorator.new(self).cache_key_for_has_many(:items),CachedModelDecorator.new(self).cache_key_for_has_many(:morsel_keywords),CachedModelDecorator.new(self).cache_key_for_has_many(:morsel_topics)].join("-")  ].join('/')
