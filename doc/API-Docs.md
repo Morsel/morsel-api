@@ -72,6 +72,11 @@
   - [POST `/users/devices` - Create User Device](#post-usersdevices---create-user-device)
   - [PUT `/users/devices/:id` - Update User Device](#put-usersdevicesid---update-user-device)
   - [DELETE `/users/devices/:id` - Delete User Device](#delete-usersdevicesid---delete-user-device)
+  - [GET `/users/:id/association_requests` - User Associations](#get-usersidassociation_requests---user-associations)
+  - [GET `/users/:id/received_association_requests` - Received Associations](#get-usersidreceived_association_requests---received-associations)
+  - [PUT `/users/:id/allow_association_request` - Allow Association Request](#put-usersidallow_association_request---allow-association-request)
+  - [DELETE `/users/:id/delete_association_request` - Delete Association Request](#delete-usersiddelete_association_request---delete_association_request)
+  - [POST `/users/:id/create_association_request` - Create Association Request](#post-usersidcreate_association_request---create-association-request)
 
 - [Place Methods](#place-methods)
   - [GET `/places/suggest` - Suggest Completion](#get-placessuggest---suggest-completion)
@@ -113,6 +118,12 @@
   - [POST `/morsels/:id/collect` - Add Morsel to Collection](#post-morselsidcollect---add-morsel-to-collection)
   - [DELETE `/morsels/:id/collect` - Remove Morsel from Collection](#delete-morselsidcollect---remove-morsel-from-collection)
   - [GET `/morsels/search` - Search Morsels](#get-morselssearch---search-morsels)
+  - [DELETE `/morsels/remove_morsel_keywords` - Remove Keyword from Morsel](#delete-morselsremove_morsel_keywords---remove-keyword-from-morsel)
+  - [DELETE `/morsels/remove_morsel_topics` - Remove Topics from Morsel](#delete-morselsremove_morsel_topics---remove-topics-from-morsel)
+  - [POST `/morsels/update_keyword` - update Keyword to Morsel](#post-morselsupdatekeyword---update-keyword-to-morsel)
+  - [POST `/morsels/update_topic` - update Topic to Morsel](#post-morselsupdatetopic---update-topic-to-morsel)
+  - [POST `/morsels/associate_morsel_to_user` - associate User to Morsel](#post-morselsassociatemorseltouser---associate-user-to-morsel)
+
 
 - [Collection Methods](#collection-methods)
   - [GET `/collections/:id` - Collection](#get-collectionsid---collection)
@@ -1273,6 +1284,82 @@ Deletes the device with the specified `id`
 <br />
 <br />
 
+## GET `/users/:id/association_requests` - User Associations
+Returns Sent associated requests belonging to the User with the specified `id`
+
+### Response
+
+| __data__ |
+| -------- |
+| [Slim User](#slim-user)[] |
+
+<br />
+<br />
+
+## GET `/users/:id/received_association_requests` - Received Associations
+Returns Received associated requests belonging to the User with the specified `id`
+
+### Response
+
+| __data__ |
+| -------- |
+| [Slim User](#slim-user)[] |
+
+<br />
+<br />
+
+## PUT `/users/:id/allow_association_request` - Allow Association Request
+Accept request for association with the specified `request_creator_id`.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+|request_creator_id | Number | using requester id accept request  | | X |
+
+
+### Response
+
+| Status Code |
+| ----------- |
+|         200 |
+
+
+<br />
+<br />
+
+## DELETE `/users/:id/delete_association_request` - Delete Association Request
+Deletes the user association with the specified `id`
+
+### Response
+
+| Status Code |
+| ----------- |
+|         204 |
+
+<br />
+<br />
+
+
+## POST `/users/:id/create_association_request` - Create Association Request
+Create a new association request for host and user. User can send request to associated and new request will generate for association.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| name_or_email | String | name or email of user | | X |
+| is_admin | boolean | admin permission for user | | X |
+| id | Number | Current user id | | X |
+
+### Response
+
+| Status Code |
+| ----------- |
+|         200 |
+
+<br />
+<br />
 
 # Place Methods
 * [\<Followable\>](#followable)
@@ -1940,6 +2027,115 @@ __Request Behaviors__
 <br />
 <br />
 
+## DELETE `/morsels/remove_morsel_keywords` - Remove Keyword from Morsel
+Removes the Keyword specified from the Morsel specified
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| morsel_id | Number | The `id` of the Morsel to get this Morsel | | X |
+| keyword_ids | Array | The `ids` of the Keyword to remove from Morsel | | X |
+
+### Response
+
+| Status Code |
+| ----------- |
+|         200 |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __keyword__: __not in this morsel__ | 400 (Bad Request) | The keyword is not in this morsel |
+| __user__: __not authorizedto remove to this keyword__ | 400 (Bad Request) | `current_user` is not the creator of the Morsel |
+
+<br />
+<br />
+
+## DELETE `/morsels/remove_morsel_topics` - Remove Topics from Morsel
+Removes the Topics specified from the Morsel specified
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| morsel_id | Number | The `id` of the Morsel to get this Morsel | | X |
+| topic_ids | Array | The `ids` of the Topics to remove from Morsel | | X |
+
+### Response
+
+| Status Code |
+| ----------- |
+|         200 |
+
+### Unique Errors
+
+| Message | Status | Description |
+| ------- | ------ |  ----------- |
+| __topics__: __not in this morsel__ | 400 (Bad Request) | The topics is not in this morsel |
+| __user__: __not authorizedto remove to this topics__ | 400 (Bad Request) | `current_user` is not the creator of the Morsel |
+
+<br />
+<br />
+
+## POST `/morsels/update_keyword` - update Keyword to Morsel
+Update the keyword specified to the Morsel specified.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| morsel_id | Number | The `id` of the Morsel | | X |
+| user_id | Number | Current user id | | X |
+
+### Response
+
+| Status Code |
+| -------- |
+| 200 |
+
+<br />
+<br />
+
+## POST `/morsels/update_topic` - update Topic to Morsel
+Update the Topic specified to the Morsel specified.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| morsel_id | Number | The `id` of the Morsel | | X |
+| user_id | Number | Current user id | | X |
+
+### Response
+
+| Status Code |
+| -------- |
+| 200 |
+
+<br />
+<br />
+
+
+## POST `/morsels/associate_morsel_to_user` - associate User to Morsel
+Associate the User specified to the Morsel specified.
+
+### Request
+
+| Parameter           | Type    | Description | Default | Required? |
+| ------------------- | ------- | ----------- | ------- | --------- |
+| morsel_id | Number | The `id` of the Morsel | | X |
+| user_id | Number | Current user id | | X |
+
+### Response
+
+| Status Code |
+| -------- |
+| 200 |
+
+<br />
+<br />
 
 # Collection Methods
 
